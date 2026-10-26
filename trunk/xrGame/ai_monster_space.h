@@ -63,9 +63,9 @@ namespace MonsterSpace {
 		eObjectActionTake,
 		eObjectActionMisfire1,
 		eObjectActionEmpty1,
-		eObjectActionNoItems		= eObjectActionIdle | u16(-1),
+		eObjectActionNoItems = eObjectActionIdle | u16(-1),
 		// 
-		eObjectActionDummy			= u32(-1),
+		eObjectActionDummy = u32(-1),
 	};
 
 	struct SBoneRotation {
@@ -82,45 +82,45 @@ namespace MonsterSpace {
 		eMA_Jump,
 		eMA_Steal
 	};
-	
+
 	enum EScriptMonsterSpeedParam {
-		eSP_Default				= u32(0),
-		eSP_ForceSpeed,	
-		eSP_None				= u32(-1),
+		eSP_Default = u32(0),
+		eSP_ForceSpeed,
+		eSP_None = u32(-1),
 	};
 
 	enum EScriptMonsterAnimAction {
-		eAA_StandIdle, 
-		eAA_SitIdle,			
-		eAA_LieIdle,			
-		eAA_Eat,				
-		eAA_Sleep,				
-		eAA_Rest,				
-		eAA_Attack,				
+		eAA_StandIdle,
+		eAA_SitIdle,
+		eAA_LieIdle,
+		eAA_Eat,
+		eAA_Sleep,
+		eAA_Rest,
+		eAA_Attack,
 		eAA_LookAround,
 		eAA_Turn,
-		eAA_NoAction			= u32(-1)
+		eAA_NoAction = u32(-1)
 	};
 
 	enum EScriptMonsterGlobalAction {
-		eGA_Rest				= u32(0),
+		eGA_Rest = u32(0),
 		eGA_Eat,
 		eGA_Attack,
 		eGA_Panic,
-		eGA_None				= u32(-1)
+		eGA_None = u32(-1)
 	};
 
 	enum EScriptSoundAnim {
-		eAnimSoundCustom		= u32(0),
+		eAnimSoundCustom = u32(0),
 		eAnimSoundDefault,
 	};
 
 	enum EMonsterHeadAnimType {
-		eHeadAnimNormal			= u32(0),
+		eHeadAnimNormal = u32(0),
 		eHeadAnimAngry,
 		eHeadAnimGlad,
 		eHeadAnimKind,
 
-		eHeadAnimNone			= u32(-1),
+		eHeadAnimNone = u32(-1),
 	};
 };

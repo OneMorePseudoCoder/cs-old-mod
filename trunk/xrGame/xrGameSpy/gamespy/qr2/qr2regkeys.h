@@ -8,12 +8,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 
 #define MAX_REGISTERED_KEYS 254
 #define NUM_RESERVED_KEYS 50
-	
-	
+
+
 #define HOSTNAME_KEY		1
 #define GAMENAME_KEY		2
 #define GAMEVER_KEY			3
@@ -44,22 +44,22 @@ extern "C" {
 #define TEAM_T_KEY			28
 #define SCORE_T_KEY			29
 #define NN_GROUP_ID_KEY		30
-	
+
 #ifndef GSI_UNICODE
-	#define qr2_register_key	qr2_register_keyA
+#define qr2_register_key	qr2_register_keyA
 #else
-	#define qr2_register_key	qr2_register_keyW
+#define qr2_register_key	qr2_register_keyW
 #endif
 
-extern const char *qr2_registered_key_list[];
-void qr2_register_key(int keyid, const gsi_char *key);
+	extern const char* qr2_registered_key_list[];
+	void qr2_register_key(int keyid, const gsi_char* key);
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-// Necessary for unicode support.  Must store a copy of the UTF8 keys
-// generated from qr2_register_keyW
-void qr2_internal_key_list_append(char* theKey);
-void qr2_internal_key_list_free(); // call this at qr2 shutdown
+	///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
+	// Necessary for unicode support.  Must store a copy of the UTF8 keys
+	// generated from qr2_register_keyW
+	void qr2_internal_key_list_append(char* theKey);
+	void qr2_internal_key_list_free(); // call this at qr2 shutdown
 
 
 #ifdef __cplusplus

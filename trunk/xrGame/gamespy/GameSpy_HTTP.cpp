@@ -6,13 +6,13 @@
 CGameSpy_HTTP::CGameSpy_HTTP()
 {
 	m_hGameSpyDLL = NULL;
-	m_LastRequest	= -1;
+	m_LastRequest = -1;
 
-	LPCSTR			g_name	= "xrGameSpy.dll";
-	Log				("Loading DLL:",g_name);
-	m_hGameSpyDLL			= LoadLibrary	(g_name);
-	if (0==m_hGameSpyDLL)	R_CHK			(GetLastError());
-	R_ASSERT2		(m_hGameSpyDLL,"GameSpy DLL raised exception during loading or there is no game DLL at all");
+	LPCSTR			g_name = "xrGameSpy.dll";
+	Log("Loading DLL:", g_name);
+	m_hGameSpyDLL = LoadLibrary(g_name);
+	if (0 == m_hGameSpyDLL)	R_CHK(GetLastError());
+	R_ASSERT2(m_hGameSpyDLL, "GameSpy DLL raised exception during loading or there is no game DLL at all");
 
 	LoadGameSpy(m_hGameSpyDLL);
 
@@ -22,7 +22,7 @@ CGameSpy_HTTP::CGameSpy_HTTP()
 CGameSpy_HTTP::CGameSpy_HTTP(HMODULE hGameSpyDLL)
 {
 	m_hGameSpyDLL = NULL;
-	m_LastRequest	= -1;
+	m_LastRequest = -1;
 
 	LoadGameSpy(hGameSpyDLL);
 
@@ -54,27 +54,27 @@ void	CGameSpy_HTTP::LoadGameSpy(HMODULE hGameSpyDLL)
 
 }
 
-void		CGameSpy_HTTP::StartUp		()
+void		CGameSpy_HTTP::StartUp()
 {
 	xrGS_ghttpStartup();
 }
 
-void		CGameSpy_HTTP::CleanUp		()
+void		CGameSpy_HTTP::CleanUp()
 {
 	xrGS_ghttpCleanup();
 }
 
-void		CGameSpy_HTTP::Think		()
+void		CGameSpy_HTTP::Think()
 {
 	xrGS_ghttpThink();
 }
-void __cdecl ProgressCallback ( GHTTPRequest request, GHTTPState state, const char * buffer, GHTTPByteCount bufferLen, GHTTPByteCount bytesReceived, GHTTPByteCount totalSize, void * param )
+void __cdecl ProgressCallback(GHTTPRequest request, GHTTPState state, const char* buffer, GHTTPByteCount bufferLen, GHTTPByteCount bytesReceived, GHTTPByteCount totalSize, void* param)
 {
 	if (state == GHTTPReceivingFile && totalSize != 0)
 		MainMenu()->OnDownloadPatchProgress(bytesReceived, totalSize);
 }
 
-string128	GHTTPResultStr	[] =  {
+string128	GHTTPResultStr[] = {
 	"GHTTPSuccess",               // 0:  Successfully retrieved file.
 	"GHTTPOutOfMemory",           // 1:  A memory allocation failed.
 	"GHTTPBufferOverflow",        // 2:  The user-supplied buffer was too small to hold the file.
@@ -96,7 +96,7 @@ string128	GHTTPResultStr	[] =  {
 	"GHTTPRequestCancelled"       // 18: User requested cancel and/or graceful close.
 };
 
-GHTTPBool	__cdecl	CompletedCallBack	(GHTTPRequest request, GHTTPResult result, char * buffer, GHTTPByteCount bufferLen, void * param )
+GHTTPBool	__cdecl	CompletedCallBack(GHTTPRequest request, GHTTPResult result, char* buffer, GHTTPByteCount bufferLen, void* param)
 {
 	switch (result)
 	{
@@ -104,32 +104,32 @@ GHTTPBool	__cdecl	CompletedCallBack	(GHTTPRequest request, GHTTPResult result, c
 		MainMenu()->OnDownloadPatchSuccess();
 		break;
 	default:
-		Msg ("! CompletedCallBack Result - %s", GHTTPResultStr[result]);
+		Msg("! CompletedCallBack Result - %s", GHTTPResultStr[result]);
 		MainMenu()->OnDownloadPatchError();
 		break;
 
 	}
-	
-//	CGameSpy_HTTP* pGSHTTP = (CGameSpy_HTTP*) param;
-//	if (pGSHTTP) pGSHTTP->StopDownload();
+
+	//	CGameSpy_HTTP* pGSHTTP = (CGameSpy_HTTP*) param;
+	//	if (pGSHTTP) pGSHTTP->StopDownload();
 	return GHTTPTrue;
 }
 
 void		CGameSpy_HTTP::DownloadFile(LPCSTR URL, LPCSTR FileName)
-{	
+{
 
-//	GHTTPRequest res = xrGS_ghttpSave(URL, FileName, GHTTPFalse, CompletedCallBack, this);
-	Msg		("URL:  %s",URL);
-	Msg		("File: %s",FileName);
+	//	GHTTPRequest res = xrGS_ghttpSave(URL, FileName, GHTTPFalse, CompletedCallBack, this);
+	Msg("URL:  %s", URL);
+	Msg("File: %s", FileName);
 	m_LastRequest = xrGS_ghttpSaveEx(URL, FileName, "", NULL, GHTTPFalse, GHTTPFalse, ProgressCallback, CompletedCallBack, this);
-	Msg		("Code: %d",m_LastRequest);
+	Msg("Code: %d", m_LastRequest);
 	if (m_LastRequest < 0)
 	{
 		MainMenu()->OnDownloadPatchError();
 	}
 }
 
-void		CGameSpy_HTTP::StopDownload	()
+void		CGameSpy_HTTP::StopDownload()
 {
 	if (m_LastRequest != -1)	xrGS_ghttpCancelRequest(m_LastRequest);
 	m_LastRequest = -1;

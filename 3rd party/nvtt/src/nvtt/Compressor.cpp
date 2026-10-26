@@ -107,7 +107,7 @@ namespace nvtt
 		~Mipmap() {}
 
 		// Reference input image.
-		void setFromInput(const InputOptions::Private & inputOptions, uint idx)
+		void setFromInput(const InputOptions::Private& inputOptions, uint idx)
 		{
 			m_inputImage = inputOptions.image(idx);
 			m_fixedImage = NULL;
@@ -115,7 +115,7 @@ namespace nvtt
 		}
 
 		// Assign and take ownership of given image.
-		void setImage(FloatImage * image)
+		void setImage(FloatImage* image)
 		{
 			m_inputImage = NULL;
 			m_fixedImage = NULL;
@@ -124,7 +124,7 @@ namespace nvtt
 
 
 		// Convert linear float image to fixed image ready for compression.
-		void toFixedImage(const InputOptions::Private & inputOptions)
+		void toFixedImage(const InputOptions::Private& inputOptions)
 		{
 			if (m_floatImage != NULL) // apfaffe - We should check that we have a float image, if so convert it!
 			{
@@ -140,7 +140,7 @@ namespace nvtt
 		}
 
 		// Convert input image to linear float image.
-		void toFloatImage(const InputOptions::Private & inputOptions)
+		void toFloatImage(const InputOptions::Private& inputOptions)
 		{
 			if (m_floatImage == NULL)
 			{
@@ -161,17 +161,17 @@ namespace nvtt
 			}
 		}
 
-		const FloatImage * asFloatImage() const
+		const FloatImage* asFloatImage() const
 		{
 			return m_floatImage.ptr();
 		}
 
-		FloatImage * asFloatImage()
+		FloatImage* asFloatImage()
 		{
 			return m_floatImage.ptr();
 		}
 
-		const Image * asFixedImage() const
+		const Image* asFixedImage() const
 		{
 			// - apfaffe - switched logic to return the 'processed image' rather than the input!
 			if (m_fixedImage != NULL && m_fixedImage.ptr() != NULL)
@@ -181,7 +181,7 @@ namespace nvtt
 			return m_inputImage;
 		}
 
-		Image * asMutableFixedImage()
+		Image* asMutableFixedImage()
 		{
 			if (m_inputImage != NULL)
 			{
@@ -194,7 +194,7 @@ namespace nvtt
 
 
 	private:
-		const Image * m_inputImage;
+		const Image* m_inputImage;
 		AutoPtr<Image> m_fixedImage;
 		AutoPtr<FloatImage> m_floatImage;
 	};
@@ -215,7 +215,7 @@ Compressor::Compressor() : m(*new Compressor::Private())
 Compressor::~Compressor()
 {
 	enableCudaAcceleration(false);
-	delete &m;
+	delete& m;
 }
 
 
@@ -263,14 +263,14 @@ bool Compressor::isCudaAccelerationEnabled() const
 
 
 /// Compress the input texture with the given compression options.
-bool Compressor::process(const InputOptions & inputOptions, const CompressionOptions & compressionOptions, const OutputOptions & outputOptions) const
+bool Compressor::process(const InputOptions& inputOptions, const CompressionOptions& compressionOptions, const OutputOptions& outputOptions) const
 {
 	return m.compress(inputOptions.m, compressionOptions.m, outputOptions.m);
 }
 
 
 /// Estimate the size of compressing the input with the given options.
-int Compressor::estimateSize(const InputOptions & inputOptions, const CompressionOptions & compressionOptions) const
+int Compressor::estimateSize(const InputOptions& inputOptions, const CompressionOptions& compressionOptions) const
 {
 	return m.estimateSize(inputOptions.m, compressionOptions.m);
 }
@@ -278,7 +278,7 @@ int Compressor::estimateSize(const InputOptions & inputOptions, const Compressio
 
 
 
-bool Compressor::Private::compress(const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const
+bool Compressor::Private::compress(const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const
 {
 	// Make sure enums match.
 	nvStaticCheck(FloatImage::WrapMode_Clamp == (FloatImage::WrapMode)WrapMode_Clamp);
@@ -315,7 +315,7 @@ bool Compressor::Private::compress(const InputOptions::Private & inputOptions, c
 
 
 // Output DDS header.
-bool Compressor::Private::outputHeader(const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const
+bool Compressor::Private::outputHeader(const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const
 {
 	// Output DDS header.
 	if (outputOptions.outputHandler == NULL || !outputOptions.outputHeader)
@@ -338,7 +338,7 @@ bool Compressor::Private::outputHeader(const InputOptions::Private & inputOption
 	}
 	else if (inputOptions.textureType == TextureType_Cube) {
 		header.setTextureCube();
-	}		
+	}
 	/*else if (inputOptions.textureType == TextureType_3D) {
 	header.setTexture3D();
 	header.setDepth(inputOptions.targetDepth);
@@ -396,7 +396,7 @@ bool Compressor::Private::outputHeader(const InputOptions::Private & inputOption
 }
 
 
-bool Compressor::Private::compressMipmaps(uint f, const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const
+bool Compressor::Private::compressMipmaps(uint f, const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const
 {
 	uint w = inputOptions.targetWidth;
 	uint h = inputOptions.targetHeight;
@@ -441,7 +441,7 @@ bool Compressor::Private::compressMipmaps(uint f, const InputOptions::Private & 
 	return true;
 }
 
-bool Compressor::Private::initMipmap(Mipmap & mipmap, const InputOptions::Private & inputOptions, uint w, uint h, uint d, uint f, uint m) const
+bool Compressor::Private::initMipmap(Mipmap& mipmap, const InputOptions::Private& inputOptions, uint w, uint h, uint d, uint f, uint m) const
 {
 	// Find image from input.
 	int inputIdx = findExactMipmap(inputOptions, w, h, d, f);
@@ -482,12 +482,12 @@ bool Compressor::Private::initMipmap(Mipmap & mipmap, const InputOptions::Privat
 	return true;
 }
 
-int Compressor::Private::findExactMipmap(const InputOptions::Private & inputOptions, uint w, uint h, uint d, uint f) const
+int Compressor::Private::findExactMipmap(const InputOptions::Private& inputOptions, uint w, uint h, uint d, uint f) const
 {
 	for (int m = 0; m < int(inputOptions.mipmapCount); m++)
 	{
 		int idx = f * inputOptions.mipmapCount + m;
-		const InputOptions::Private::InputImage & inputImage = inputOptions.images[idx];
+		const InputOptions::Private::InputImage& inputImage = inputOptions.images[idx];
 
 		if (inputImage.width == int(w) && inputImage.height == int(h) && inputImage.depth == int(d))
 		{
@@ -506,14 +506,14 @@ int Compressor::Private::findExactMipmap(const InputOptions::Private & inputOpti
 	return -1;
 }
 
-int Compressor::Private::findClosestMipmap(const InputOptions::Private & inputOptions, uint w, uint h, uint d, uint f) const
+int Compressor::Private::findClosestMipmap(const InputOptions::Private& inputOptions, uint w, uint h, uint d, uint f) const
 {
 	int bestIdx = -1;
 
 	for (int m = 0; m < int(inputOptions.mipmapCount); m++)
 	{
 		int idx = f * inputOptions.mipmapCount + m;
-		const InputOptions::Private::InputImage & inputImage = inputOptions.images[idx];
+		const InputOptions::Private::InputImage& inputImage = inputOptions.images[idx];
 
 		if (inputImage.data != NULL)
 		{
@@ -537,12 +537,12 @@ int Compressor::Private::findClosestMipmap(const InputOptions::Private & inputOp
 }
 
 // Create mipmap from the given image.
-void Compressor::Private::downsampleMipmap(Mipmap & mipmap, const InputOptions::Private & inputOptions) const
+void Compressor::Private::downsampleMipmap(Mipmap& mipmap, const InputOptions::Private& inputOptions) const
 {
 	// Make sure that floating point linear representation is available.
 	mipmap.toFloatImage(inputOptions);
 
-	const FloatImage * floatImage = mipmap.asFloatImage();
+	const FloatImage* floatImage = mipmap.asFloatImage();
 
 	if (inputOptions.mipmapFilter == MipmapFilter_Box)
 	{
@@ -570,7 +570,7 @@ void Compressor::Private::downsampleMipmap(Mipmap & mipmap, const InputOptions::
 }
 
 
-void Compressor::Private::scaleMipmap(Mipmap & mipmap, const InputOptions::Private & inputOptions, uint w, uint h, uint d) const
+void Compressor::Private::scaleMipmap(Mipmap& mipmap, const InputOptions::Private& inputOptions, uint w, uint h, uint d) const
 {
 	mipmap.toFloatImage(inputOptions);
 
@@ -584,7 +584,7 @@ void Compressor::Private::scaleMipmap(Mipmap & mipmap, const InputOptions::Priva
 
 
 // Process an input image: Convert to normal map, normalize, or convert to linear space.
-void Compressor::Private::processInputImage(Mipmap & mipmap, const InputOptions::Private & inputOptions) const
+void Compressor::Private::processInputImage(Mipmap& mipmap, const InputOptions::Private& inputOptions) const
 {
 	if (inputOptions.convertToNormalMap)
 	{
@@ -600,7 +600,7 @@ void Compressor::Private::processInputImage(Mipmap & mipmap, const InputOptions:
 			// If floating point image available, normalize in place.
 			if (mipmap.asFloatImage() == NULL)
 			{
-				FloatImage * floatImage = new FloatImage(mipmap.asFixedImage());
+				FloatImage* floatImage = new FloatImage(mipmap.asFixedImage());
 				normalizeNormalMap(floatImage);
 				mipmap.setImage(floatImage);
 			}
@@ -622,7 +622,7 @@ void Compressor::Private::processInputImage(Mipmap & mipmap, const InputOptions:
 
 
 // Quantize the given mipmap according to the compression options.
-void Compressor::Private::quantizeMipmap(Mipmap & mipmap, const CompressionOptions::Private & compressionOptions) const
+void Compressor::Private::quantizeMipmap(Mipmap& mipmap, const CompressionOptions::Private& compressionOptions) const
 {
 	nvDebugCheck(mipmap.asFixedImage() != NULL);
 
@@ -686,9 +686,9 @@ void Compressor::Private::quantizeMipmap(Mipmap & mipmap, const CompressionOptio
 
 
 // Compress the given mipmap.
-bool Compressor::Private::compressMipmap(const Mipmap & mipmap, const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const
+bool Compressor::Private::compressMipmap(const Mipmap& mipmap, const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const
 {
-	const Image * image = mipmap.asFixedImage();
+	const Image* image = mipmap.asFixedImage();
 	nvDebugCheck(image != NULL);
 
 	FastCompressor fast;
@@ -821,7 +821,7 @@ bool Compressor::Private::compressMipmap(const Mipmap & mipmap, const InputOptio
 }
 
 
-int Compressor::Private::estimateSize(const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions) const
+int Compressor::Private::estimateSize(const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions) const
 {
 	const Format format = compressionOptions.format;
 	const uint bitCount = compressionOptions.bitcount;

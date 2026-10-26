@@ -6,7 +6,7 @@ class CLAItem;
 
 class CUILabel : public CUIFrameLineWnd, public CUILinesOwner //IUITextControl 
 {
-	CLAItem*				m_lanim;
+	CLAItem* m_lanim;
 	float					m_lainm_start_time;
 
 public:
@@ -17,12 +17,12 @@ public:
 	// CUIFrameLineWnd
 	virtual void			Init(float x, float y, float width, float height);
 	virtual void			Draw();
-	virtual void			Update			();
+	virtual void			Update();
 
 	// own
 	CUILabel();
-			void			SetLightAnim			(LPCSTR lanim);
+	void			SetLightAnim(LPCSTR lanim);
 
 protected:
-//	Fvector2 m_textPos;
+	//	Fvector2 m_textPos;
 };

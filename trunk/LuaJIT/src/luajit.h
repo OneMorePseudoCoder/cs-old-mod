@@ -42,13 +42,13 @@
 #define LUAJIT_MODE_MASK	0x00ff
 
 enum {
-  LUAJIT_MODE_ENGINE,		/* Set mode for whole JIT engine. */
-  LUAJIT_MODE_DEBUG,		/* Set debug mode (idx = level). */
+	LUAJIT_MODE_ENGINE,		/* Set mode for whole JIT engine. */
+	LUAJIT_MODE_DEBUG,		/* Set debug mode (idx = level). */
 
-  LUAJIT_MODE_FUNC,		/* Change mode for a function. */
-  LUAJIT_MODE_ALLFUNC,		/* Recurse into subroutine protos. */
-  LUAJIT_MODE_ALLSUBFUNC,	/* Change only the subroutines. */
-  LUAJIT_MODE_MAX
+	LUAJIT_MODE_FUNC,		/* Change mode for a function. */
+	LUAJIT_MODE_ALLFUNC,		/* Recurse into subroutine protos. */
+	LUAJIT_MODE_ALLSUBFUNC,	/* Change only the subroutines. */
+	LUAJIT_MODE_MAX
 };
 
 /* Flags or'ed in to the mode. */
@@ -57,10 +57,10 @@ enum {
 
 
 /* Compile a Lua function. Pass arguments as hints. */
-LUA_API int luaJIT_compile(lua_State *L, int nargs);
+LUA_API int luaJIT_compile(lua_State* L, int nargs);
 
 /* Set the JIT mode for the whole engine or a function (idx = 0: self). */
-LUA_API int luaJIT_setmode(lua_State *L, int idx, int mode);
+LUA_API int luaJIT_setmode(lua_State* L, int idx, int mode);
 
 /* Enforce (dynamic) linker error for version mismatches. Call from main. */
 LUA_API void LUAJIT_VERSION_SYM(void);

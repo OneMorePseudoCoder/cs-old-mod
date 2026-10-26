@@ -6,24 +6,24 @@
 
 void CAnimatorCamEffectorScriptCB::ProcessIfInvalid(SCamEffectorInfo& info)
 {
-	if(m_bAbsolutePositioning)
+	if (m_bAbsolutePositioning)
 	{
-		const Fmatrix& m			= m_objectAnimator->XFORM();
-		info.d						= m.k;
-		info.n						= m.j;
-		info.p						= m.c;
+		const Fmatrix& m = m_objectAnimator->XFORM();
+		info.d = m.k;
+		info.n = m.j;
+		info.p = m.c;
 	}
 }
 
 BOOL CAnimatorCamEffectorScriptCB::Valid()
 {
 	BOOL res = inherited::Valid();
-	if(!res && cb_name.size() )
+	if (!res && cb_name.size())
 	{
 		luabind::functor<LPCSTR>			fl;
-		R_ASSERT							(ai().script_engine().functor<LPCSTR>(*cb_name,fl));
-		fl									();
-		cb_name								= "";
+		R_ASSERT(ai().script_engine().functor<LPCSTR>(*cb_name, fl));
+		fl();
+		cb_name = "";
 	}
 	return res;
 }

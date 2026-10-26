@@ -120,56 +120,56 @@ namespace ALife {
 	};
 
 	//возможность подключения аддонов
-	enum EWeaponAddonStatus{
-		eAddonDisabled				= 0,	//нельзя присоеденить
-		eAddonPermanent				= 1,	//постоянно подключено по умолчанию
-		eAddonAttachable			= 2		//можно присоединять
+	enum EWeaponAddonStatus {
+		eAddonDisabled = 0,	//нельзя присоеденить
+		eAddonPermanent = 1,	//постоянно подключено по умолчанию
+		eAddonAttachable = 2		//можно присоединять
 	};
 
 	IC EHitType	g_tfString2HitType(LPCSTR caHitType)
 	{
-		if (!stricmp(caHitType,"burn"))
+		if (!stricmp(caHitType, "burn"))
 			return(eHitTypeBurn);
-		else if (!stricmp(caHitType,"shock"))
-				return(eHitTypeShock);
-		else if (!stricmp(caHitType,"strike"))
-            	return(eHitTypeStrike);
-		else if (!stricmp(caHitType,"wound"))
-				return(eHitTypeWound);
-		else if (!stricmp(caHitType,"radiation"))
-				return(eHitTypeRadiation);
-		else if (!stricmp(caHitType,"telepatic"))
-				return(eHitTypeTelepatic);
-		else if (!stricmp(caHitType,"fire_wound"))
-				return(eHitTypeFireWound);
-		else if (!stricmp(caHitType,"chemical_burn"))
-				return(eHitTypeChemicalBurn);
-		else if (!stricmp(caHitType,"explosion"))
-				return(eHitTypeExplosion);
-		else if (!stricmp(caHitType,"wound_2"))
-				return(eHitTypeWound_2);
+		else if (!stricmp(caHitType, "shock"))
+			return(eHitTypeShock);
+		else if (!stricmp(caHitType, "strike"))
+			return(eHitTypeStrike);
+		else if (!stricmp(caHitType, "wound"))
+			return(eHitTypeWound);
+		else if (!stricmp(caHitType, "radiation"))
+			return(eHitTypeRadiation);
+		else if (!stricmp(caHitType, "telepatic"))
+			return(eHitTypeTelepatic);
+		else if (!stricmp(caHitType, "fire_wound"))
+			return(eHitTypeFireWound);
+		else if (!stricmp(caHitType, "chemical_burn"))
+			return(eHitTypeChemicalBurn);
+		else if (!stricmp(caHitType, "explosion"))
+			return(eHitTypeExplosion);
+		else if (!stricmp(caHitType, "wound_2"))
+			return(eHitTypeWound_2);
 		else
-				FATAL	("Unsupported hit type!");
+			FATAL("Unsupported hit type!");
 		NODEFAULT;
 #ifdef DEBUG
 		return(eHitTypeMax);
 #endif
 	}
-xr_token							hit_types_token							[ ];
+	xr_token							hit_types_token[];
 
 	IC LPCSTR g_cafHitType2String(EHitType tHitType)
 	{
 		return get_token_name(hit_types_token, tHitType);
 	}
 
-	DEFINE_VECTOR	(int,						INT_VECTOR,						INT_IT);
-	DEFINE_VECTOR	(_OBJECT_ID,				OBJECT_VECTOR,					OBJECT_IT);
-	DEFINE_VECTOR	(CSE_ALifeInventoryItem*,	ITEM_P_VECTOR,					ITEM_P_IT);
-	DEFINE_VECTOR	(CSE_ALifeItemWeapon*,		WEAPON_P_VECTOR,				WEAPON_P_IT);
-	DEFINE_VECTOR	(CSE_ALifeSchedulable*,		SCHEDULE_P_VECTOR,				SCHEDULE_P_IT);
+	DEFINE_VECTOR(int, INT_VECTOR, INT_IT);
+	DEFINE_VECTOR(_OBJECT_ID, OBJECT_VECTOR, OBJECT_IT);
+	DEFINE_VECTOR(CSE_ALifeInventoryItem*, ITEM_P_VECTOR, ITEM_P_IT);
+	DEFINE_VECTOR(CSE_ALifeItemWeapon*, WEAPON_P_VECTOR, WEAPON_P_IT);
+	DEFINE_VECTOR(CSE_ALifeSchedulable*, SCHEDULE_P_VECTOR, SCHEDULE_P_IT);
 
-	DEFINE_MAP		(_OBJECT_ID,				CSE_ALifeDynamicObject*,		D_OBJECT_P_MAP,				D_OBJECT_P_PAIR_IT);
-	DEFINE_MAP		(_STORY_ID,					CSE_ALifeDynamicObject*,		STORY_P_MAP,				STORY_P_PAIR_IT);
+	DEFINE_MAP(_OBJECT_ID, CSE_ALifeDynamicObject*, D_OBJECT_P_MAP, D_OBJECT_P_PAIR_IT);
+	DEFINE_MAP(_STORY_ID, CSE_ALifeDynamicObject*, STORY_P_MAP, STORY_P_PAIR_IT);
 };
 
 #endif //XRAY_ALIFE_SPACE

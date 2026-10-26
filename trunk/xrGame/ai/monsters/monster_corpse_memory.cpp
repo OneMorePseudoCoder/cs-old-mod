@@ -8,26 +8,26 @@
 
 CMonsterCorpseMemory::CMonsterCorpseMemory()
 {
-	monster			= 0;
-	time_memory		= 10000; 
+	monster = 0;
+	time_memory = 10000;
 }
 
 CMonsterCorpseMemory::~CMonsterCorpseMemory()
 {
 }
 
-void CMonsterCorpseMemory::init_external(CBaseMonster *M, TTime mem_time) 
+void CMonsterCorpseMemory::init_external(CBaseMonster* M, TTime mem_time)
 {
-	monster = M; 
+	monster = M;
 	time_memory = mem_time;
 }
 
 
-void CMonsterCorpseMemory::update() 
+void CMonsterCorpseMemory::update()
 {
-	for (xr_vector<const CGameObject *>::const_iterator I = monster->memory().item().objects().begin(); I != monster->memory().item().objects().end(); ++I) {
+	for (xr_vector<const CGameObject*>::const_iterator I = monster->memory().item().objects().begin(); I != monster->memory().item().objects().end(); ++I) {
 		if (monster->memory().visual().visible_now(*I)) {
-			const CEntityAlive *p_corpse = smart_cast<const CEntityAlive*>(*I);
+			const CEntityAlive* p_corpse = smart_cast<const CEntityAlive*>(*I);
 			if (!p_corpse || p_corpse->g_Alive()) continue;
 			add_corpse(p_corpse);
 		}
@@ -37,24 +37,25 @@ void CMonsterCorpseMemory::update()
 	remove_non_actual();
 }
 
-void CMonsterCorpseMemory::add_corpse(const CEntityAlive *corpse)
+void CMonsterCorpseMemory::add_corpse(const CEntityAlive* corpse)
 {
 	SMonsterCorpse corpse_info;
-	corpse_info.position	= corpse->Position();
-	corpse_info.vertex		= corpse->ai_location().level_vertex_id();
-	corpse_info.time		= Device.dwTimeGlobal;
+	corpse_info.position = corpse->Position();
+	corpse_info.vertex = corpse->ai_location().level_vertex_id();
+	corpse_info.time = Device.dwTimeGlobal;
 
 	CORPSE_MAP_IT it = m_objects.find(corpse);
 	if (it != m_objects.end()) {
 		// обновить данные о враге
 		it->second = corpse_info;
-	} else {
+	}
+	else {
 		// добавить врага в список объектов
 		m_objects.insert(mk_pair(corpse, corpse_info));
 	}
 }
 
-void CMonsterCorpseMemory::remove_non_actual() 
+void CMonsterCorpseMemory::remove_non_actual()
 {
 	TTime cur_time = Device.dwTimeGlobal;
 
@@ -63,17 +64,17 @@ void CMonsterCorpseMemory::remove_non_actual()
 	{
 		nit = it; ++nit;
 		// проверить условия удаления
-		if (!it->first					|| 
-			it->first->g_Alive()		|| 
-			it->first->getDestroy()		||
-			(it->second.time + time_memory < cur_time) || 
-			(it->first->m_fFood < 1)	 
-			) 
-			m_objects.erase (it);
+		if (!it->first ||
+			it->first->g_Alive() ||
+			it->first->getDestroy() ||
+			(it->second.time + time_memory < cur_time) ||
+			(it->first->m_fFood < 1)
+			)
+			m_objects.erase(it);
 	}
 }
 
-const CEntityAlive *CMonsterCorpseMemory::get_corpse()
+const CEntityAlive* CMonsterCorpseMemory::get_corpse()
 {
 	CORPSE_MAP_IT	it = find_best_corpse();
 	if (it != m_objects.end()) return it->first;
@@ -106,9 +107,9 @@ CORPSE_MAP_IT CMonsterCorpseMemory::find_best_corpse()
 	return it;
 }
 
-void CMonsterCorpseMemory::remove_links(CObject *O)
+void CMonsterCorpseMemory::remove_links(CObject* O)
 {
-	for (CORPSE_MAP_IT	I = m_objects.begin();I!=m_objects.end();++I) {
+	for (CORPSE_MAP_IT I = m_objects.begin(); I != m_objects.end(); ++I) {
 		if ((*I).first == O) {
 			m_objects.erase(I);
 			break;

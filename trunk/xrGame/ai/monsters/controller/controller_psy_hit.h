@@ -3,7 +3,7 @@
 #include "../layers/xrRender/SkeletonAnimated.h"
 
 class CPsyHitEffectorCam;
-class CPsyHitEffectorPP;	
+class CPsyHitEffectorPP;
 
 class CControllerPsyHit : public CControl_ComCustom<> {
 	typedef CControl_ComCustom<> inherited;
@@ -11,10 +11,10 @@ class CControllerPsyHit : public CControl_ComCustom<> {
 	MotionID			m_stage[4];
 	u8					m_current_index;
 
-	CPsyHitEffectorCam	*m_effector_cam;
-	CPsyHitEffectorPP	*m_effector_pp;
+	CPsyHitEffectorCam* m_effector_cam;
+	CPsyHitEffectorPP* m_effector_pp;
 
-	enum ESoundState{
+	enum ESoundState {
 		ePrepare,
 		eStart,
 		ePull,
@@ -29,24 +29,24 @@ class CControllerPsyHit : public CControl_ComCustom<> {
 	bool				m_blocked;
 
 public:
-	virtual void	load					(LPCSTR section);
-	virtual	void	reinit					();
-	virtual	void	update_frame			();
-	virtual bool	check_start_conditions	();
-	virtual void	activate				();
-	virtual void	deactivate				();
-	
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
+	virtual void	load(LPCSTR section);
+	virtual	void	reinit();
+	virtual	void	update_frame();
+	virtual bool	check_start_conditions();
+	virtual void	activate();
+	virtual void	deactivate();
 
-			void	on_death				();
+	virtual void	on_event(ControlCom::EEventType, ControlCom::IEventData*);
+
+	void	on_death();
 private:
 
-			void	play_anim				();
-			void	death_glide_start			();
-			void	death_glide_end			();
+	void	play_anim();
+	void	death_glide_start();
+	void	death_glide_end();
 
-			void	set_sound_state			(ESoundState state);
-			void	hit						();
-			bool	check_conditions_final	();
+	void	set_sound_state(ESoundState state);
+	void	hit();
+	bool	check_conditions_final();
 };
 

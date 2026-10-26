@@ -13,10 +13,10 @@
 
 CUIDialogWnd::CUIDialogWnd()
 {
-	m_pHolder		= NULL;
-	m_bWorkInPause	= false;
+	m_pHolder = NULL;
+	m_bWorkInPause = false;
 	m_bNeedToCenter = true;
-	Hide			();
+	Hide();
 }
 
 CUIDialogWnd::~CUIDialogWnd()
@@ -37,7 +37,7 @@ void CUIDialogWnd::Hide()
 
 	inherited::Enable(false);
 	inherited::Show(false);
-	
+
 }
 
 bool CUIDialogWnd::IR_OnKeyboardHold(int dik)
@@ -52,7 +52,7 @@ bool CUIDialogWnd::IR_OnKeyboardHold(int dik)
 		CObject* O = Level().CurrentEntity();
 		if (O)
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
+			IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
 			if (!IR)
 				return			(false);
 			IR->IR_OnKeyboardHold(get_binded_action(dik));
@@ -70,7 +70,7 @@ bool CUIDialogWnd::IR_OnKeyboardPress(int dik)
 	{
 		Fvector2 cp = GetUICursor()->GetCursorPosition();
 		EUIMessages action = (dik == MOUSE_1) ? WINDOW_LBUTTON_DOWN : (dik == MOUSE_2) ? WINDOW_RBUTTON_DOWN : WINDOW_CBUTTON_DOWN;
-		if (OnMouseAction(cp.x,cp.y, action))
+		if (OnMouseAction(cp.x, cp.y, action))
 			return true;
 	}
 
@@ -82,7 +82,7 @@ bool CUIDialogWnd::IR_OnKeyboardPress(int dik)
 		CObject* O = Level().CurrentEntity();
 		if (O)
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
+			IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
 			if (!IR)
 				return			(false);
 			IR->IR_OnKeyboardPress(get_binded_action(dik));
@@ -93,9 +93,9 @@ bool CUIDialogWnd::IR_OnKeyboardPress(int dik)
 
 bool CUIDialogWnd::IR_OnKeyboardRelease(int dik)
 {
-	if(!IR_process())
+	if (!IR_process())
 		return false;
-	
+
 	//mouse click
 	if (dik == MOUSE_1 || dik == MOUSE_2 || dik == MOUSE_3)
 	{
@@ -105,7 +105,7 @@ bool CUIDialogWnd::IR_OnKeyboardRelease(int dik)
 			return true;
 	}
 
-	if (OnKeyboardAction(dik,	WINDOW_KEY_RELEASED))
+	if (OnKeyboardAction(dik, WINDOW_KEY_RELEASED))
 		return true;
 
 	if (!StopAnyMove() && g_pGameLevel)
@@ -113,7 +113,7 @@ bool CUIDialogWnd::IR_OnKeyboardRelease(int dik)
 		CObject* O = Level().CurrentEntity();
 		if (O)
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
+			IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
 			if (!IR)
 				return			(false);
 			IR->IR_OnKeyboardRelease(get_binded_action(dik));
@@ -122,16 +122,16 @@ bool CUIDialogWnd::IR_OnKeyboardRelease(int dik)
 	return false;
 }
 
-bool CUIDialogWnd::IR_OnMouseWheel (int direction)
+bool CUIDialogWnd::IR_OnMouseWheel(int direction)
 {
 	if (!IR_process())
 		return false;
 	Fvector2 pos = GetUICursor()->GetCursorPosition();
 
 	if (direction > 0)
-		OnMouseAction(pos.x,pos.y,WINDOW_MOUSE_WHEEL_UP);
+		OnMouseAction(pos.x, pos.y, WINDOW_MOUSE_WHEEL_UP);
 	else
-		OnMouseAction(pos.x,pos.y,WINDOW_MOUSE_WHEEL_DOWN);
+		OnMouseAction(pos.x, pos.y, WINDOW_MOUSE_WHEEL_DOWN);
 
 	return true;
 }
@@ -140,24 +140,24 @@ bool CUIDialogWnd::IR_OnMouseMove(int dx, int dy)
 {
 	if (!IR_process())
 		return false;
-	
+
 	if (GetUICursor()->IsVisible())
-	{ 
+	{
 		GetUICursor()->UpdateCursorPosition(dx, dy);
 		Fvector2 cPos = GetUICursor()->GetCursorPosition();
 
-		OnMouseAction(cPos.x, cPos.y , WINDOW_MOUSE_MOVE);
+		OnMouseAction(cPos.x, cPos.y, WINDOW_MOUSE_MOVE);
 	}
 	else if (!StopAnyMove() && g_pGameLevel)
 	{
 		CObject* O = Level().CurrentEntity();
-		if( O )
+		if (O)
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+			IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
 			if (!IR)
 				return			(false);
 
-			IR->IR_OnMouseMove(dx,dy);
+			IR->IR_OnMouseMove(dx, dy);
 		}
 	};
 

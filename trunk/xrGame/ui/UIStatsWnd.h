@@ -8,15 +8,15 @@
 #include "UIButton.h"
 #include "UIMultiTextStatic.h"
 
-DEF_VECTOR (FIELDS_VECTOR, CUIButton*)
+DEF_VECTOR(FIELDS_VECTOR, CUIButton*)
 
 // Класс для определения нового члена списка
-class CUIStatsListItem: public CUIListItem
+class CUIStatsListItem : public CUIListItem
 {
 	typedef CUIListItem inherited;
 public:
 	virtual ~CUIStatsListItem() {};
-	void XmlInit(const char *path, CUIXml &uiXml);
+	void XmlInit(const char* path, CUIXml& uiXml);
 	void Highlight(bool bHighlight);
 	void SetSubItemColor(u32 uItemIndex, u32 uColor);
 
@@ -24,7 +24,7 @@ public:
 	FIELDS_VECTOR FieldsVector;
 };
 
-class CUIStatsWnd: public CUIDialogWnd
+class CUIStatsWnd : public CUIDialogWnd
 {
 private:
 	typedef CUIDialogWnd inherited;
@@ -35,17 +35,17 @@ public:
 	virtual ~CUIStatsWnd();
 
 	virtual void Init(LPCSTR XML = NULL);
-//	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData);
+	//	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData);
 
-	// Добавить 1 элемент. Заполнить поля необходимо самостоятельно. Возвращает указатель 
-	// на добавленный элемент
-	CUIStatsListItem * AddItem();
+		// Добавить 1 элемент. Заполнить поля необходимо самостоятельно. Возвращает указатель 
+		// на добавленный элемент
+	CUIStatsListItem* AddItem();
 	// Получить элемент, при п		омощи поиска в полях по строке. Можно искать
 	// элемент начиная с заданного номера
-	CUIStatsListItem * FindFrom(u32 beg_pos, const char *strCaption);
+	CUIStatsListItem* FindFrom(u32 beg_pos, const char* strCaption);
 	// Удалить элемент в котором есть статик с текстом strCaption. В каждом Item'е поиск 
 	// начать с позиции beg_pos
-	void RemoveItemFrom(u32 beg_pos, const char *strCaption);
+	void RemoveItemFrom(u32 beg_pos, const char* strCaption);
 	// Подсветить нужный элемент
 	void HighlightItem(u32 uItem);
 	// Получить номер подсвеченого эл-та
@@ -53,15 +53,15 @@ public:
 	// Выделить нужный элемент
 	void SelectItem(u32 uItem);
 	// Установить текст заголовка нужной колонки
-	void SetHeaderColumnText(u32 headerItem, const shared_str &text);
-	
-	Frect GetFrameRect () { return UIFrameWnd.GetWndRect();};
-	void RemoveItem (const u32 Index) {UIStatsList.RemoveItem(Index);};
+	void SetHeaderColumnText(u32 headerItem, const shared_str& text);
 
-	CUIFrameWindow*		GetFrameWindow	()	{return &UIFrameWnd;};
+	Frect GetFrameRect() { return UIFrameWnd.GetWndRect(); };
+	void RemoveItem(const u32 Index) { UIStatsList.RemoveItem(Index); };
+
+	CUIFrameWindow* GetFrameWindow() { return &UIFrameWnd; };
 protected:
-//	CUIButton			UIBtn;
-	// Фрейм - оболочка
+	//	CUIButton			UIBtn;
+		// Фрейм - оболочка
 	CUIFrameWindow		UIFrameWnd;
 	// Лист для отображения списка статичтики игроков
 	CUIListWnd			UIStatsList;

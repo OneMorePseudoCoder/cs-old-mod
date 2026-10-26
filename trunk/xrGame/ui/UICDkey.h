@@ -8,19 +8,19 @@ private:
 	typedef			CUIEditBox		inherited;
 
 public:
-					CUICDkey		();
-	virtual	void	SetText			(LPCSTR str) {}
-	virtual	LPCSTR	GetText			();
+	CUICDkey();
+	virtual	void	SetText(LPCSTR str) {}
+	virtual	LPCSTR	GetText();
 	// CUIOptionsItem
-	virtual void	SetCurrentValue	();
-	virtual void	SaveValue		();
-	virtual bool	IsChanged		();
-	
-			void	CreateCDKeyEntry();			
+	virtual void	SetCurrentValue();
+	virtual void	SaveValue();
+	virtual bool	IsChanged();
 
-	virtual void	Show			(bool status);
-	virtual void	Draw			();
-	virtual void	OnFocusLost		();
+	void	CreateCDKeyEntry();
+
+	virtual void	Show(bool status);
+	virtual void	Draw();
+	virtual void	OnFocusLost();
 
 private:
 	bool			m_view_access;
@@ -33,20 +33,20 @@ private:
 	typedef			CUIEditBox		inherited;
 
 public:
-					CUIMPPlayerName	() {};
+	CUIMPPlayerName() {};
 	virtual			~CUIMPPlayerName() {};
 
-//	virtual	void	SetText			(LPCSTR str) {}
+	//	virtual	void	SetText			(LPCSTR str) {}
 
-//	virtual void	SetCurrentValue();
-//	virtual void	SaveValue();
-//	virtual bool	IsChanged();
+	//	virtual void	SetCurrentValue();
+	//	virtual void	SaveValue();
+	//	virtual bool	IsChanged();
 
-	virtual void	OnFocusLost		();
+	virtual void	OnFocusLost();
 
 }; // class CUIMPPlayerName
 
-extern	void	GetCDKey_FromRegistry		(char* CDKeyStr);
-extern	void	WriteCDKey_ToRegistry		(LPSTR name);
-extern	void	GetPlayerName_FromRegistry	(char* name, u32 const name_size);
-extern	void	WritePlayerName_ToRegistry	(LPSTR name);
+extern	void	GetCDKey_FromRegistry(char* CDKeyStr);
+extern	void	WriteCDKey_ToRegistry(LPSTR name);
+extern	void	GetPlayerName_FromRegistry(char* name, u32 const name_size);
+extern	void	WritePlayerName_ToRegistry(LPSTR name);

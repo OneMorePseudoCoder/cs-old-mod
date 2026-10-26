@@ -34,10 +34,10 @@
  */
 
 
-/* WARNING: this file should *not* be used by applications. It is
-   part of the implementation of the library and is subject
-   to change.
- */
+ /* WARNING: this file should *not* be used by applications. It is
+	part of the implementation of the library and is subject
+	to change.
+  */
 
 
 #ifndef __LZO_CONF_H
@@ -67,9 +67,9 @@
 #endif
 
 
-/***********************************************************************
-// pragmas
-************************************************************************/
+  /***********************************************************************
+  // pragmas
+  ************************************************************************/
 
 #if (LZO_CC_BORLANDC && LZO_ARCH_I086)
 #  pragma option -h         /* enable fast huge pointers */
@@ -79,7 +79,7 @@
 #  pragma warning(disable: 4127 4701)
 #endif
 #if (LZO_CC_MSC && (_MSC_VER >= 1300))
-   /* avoid `-Wall' warnings in system header files */
+  /* avoid `-Wall' warnings in system header files */
 #  pragma warning(disable: 4820)
    /* avoid warnings about inlining */
 #  pragma warning(disable: 4514 4710 4711)
@@ -203,7 +203,7 @@
 #if !defined(DMUL)
 #if 0
    /* 32*32 multiplies may be faster than 64*64 on some 64-bit machines,
-    * but then we need extra casts from unsigned<->size_t */
+	* but then we need extra casts from unsigned<->size_t */
 #  define DMUL(a,b) ((lzo_xint) ((lzo_uint32)(a) * (lzo_uint32)(b)))
 #else
 #  define DMUL(a,b) ((lzo_xint) ((a) * (b)))
@@ -232,12 +232,12 @@
 #endif
 
 #if defined(LZO_UNALIGNED_OK_2)
-  LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(short) == 2)
+LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(short) == 2)
 #endif
 #if defined(LZO_UNALIGNED_OK_4)
-  LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
+LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
 #elif defined(LZO_ALIGNED_OK_4)
-  LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
+LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
 #endif
 
 
@@ -257,11 +257,11 @@
     do *dest++ = *src++; while (--len > 0)
 
 
-/***********************************************************************
-// some globals
-************************************************************************/
+ /***********************************************************************
+ // some globals
+ ************************************************************************/
 
-__LZO_EXTERN_C int __lzo_init_done;
+	__LZO_EXTERN_C int __lzo_init_done;
 __LZO_EXTERN_C const char __lzo_copyright[];
 LZO_EXTERN(const lzo_bytep) lzo_copyright(void);
 
@@ -299,7 +299,7 @@ LZO_EXTERN(const lzo_bytep) lzo_copyright(void);
 
 #endif /* already included */
 
-/*
-vi:ts=4:et
-*/
+ /*
+ vi:ts=4:et
+ */
 

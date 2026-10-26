@@ -3,77 +3,79 @@
 
 #include "GameFont.h"
 #ifndef _EDITOR
-	#include "Render.h"
+#include "Render.h"
 #endif
 #ifdef _EDITOR
 unsigned short int mbhMulti2Wide
-	( wide_char *WideStr , wide_char *WidePos , const unsigned short int WideStrSize , const char *MultiStr  ){return 0;};
+(wide_char* WideStr, wide_char* WidePos, const unsigned short int WideStrSize, const char* MultiStr) {
+	return 0;
+};
 #endif
 
-extern ENGINE_API BOOL g_bRendering; 
-ENGINE_API Fvector2		g_current_font_scale={1.0f, 1.0f};
+extern ENGINE_API BOOL g_bRendering;
+ENGINE_API Fvector2		g_current_font_scale = { 1.0f, 1.0f };
 
 CGameFont::CGameFont(LPCSTR section, u32 flags, bool need_prefix)
 {
-	fCurrentHeight				= 0.0f;
-	fRotationAngle				= 0.0f;
-	fXStep						= 0.0f;
-	fYStep						= 0.0f;
-	uFlags						= flags;
-	nNumChars					= 0x100;
-	TCMap						= nullptr;
-	LPCSTR shader_				= pSettings->r_string(section, "shader");
-	LPCSTR texture_				= pSettings->r_string(section, "texture");
-	Initialize	(shader_, texture_, need_prefix);
-	if (pSettings->line_exist(section,"size"))
+	fCurrentHeight = 0.0f;
+	fRotationAngle = 0.0f;
+	fXStep = 0.0f;
+	fYStep = 0.0f;
+	uFlags = flags;
+	nNumChars = 0x100;
+	TCMap = nullptr;
+	LPCSTR shader_ = pSettings->r_string(section, "shader");
+	LPCSTR texture_ = pSettings->r_string(section, "texture");
+	Initialize(shader_, texture_, need_prefix);
+	if (pSettings->line_exist(section, "size"))
 	{
-		float sz = pSettings->r_float(section,"size");
-		if (uFlags &fsDeviceIndependent)
+		float sz = pSettings->r_float(section, "size");
+		if (uFlags & fsDeviceIndependent)
 			SetHeightI(sz);
 		else
 			SetHeight(sz);
 	}
-	if (pSettings->line_exist(section,"interval"))
-		SetInterval(pSettings->r_fvector2(section,"interval"));
+	if (pSettings->line_exist(section, "interval"))
+		SetInterval(pSettings->r_fvector2(section, "interval"));
 }
 
 CGameFont::CGameFont(LPCSTR shader, LPCSTR texture, u32 flags, bool need_prefix)
 {
-	fCurrentHeight				= 0.0f;
-	fRotationAngle				= 0.0f;
-	fXStep						= 0.0f;
-	fYStep						= 0.0f;
-	uFlags						= flags;
-	nNumChars					= 0x100;
-	TCMap						= nullptr;
-	Initialize					(shader, texture, need_prefix);
+	fCurrentHeight = 0.0f;
+	fRotationAngle = 0.0f;
+	fXStep = 0.0f;
+	fYStep = 0.0f;
+	uFlags = flags;
+	nNumChars = 0x100;
+	TCMap = nullptr;
+	Initialize(shader, texture, need_prefix);
 }
 
-void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName, bool need_prefix)
+void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName, bool need_prefix)
 {
 	string_path					cTexture;
 
-	LPCSTR _lang				= pSettings->r_string("string_table", "font_prefix");
+	LPCSTR _lang = pSettings->r_string("string_table", "font_prefix");
 	if (_lang && need_prefix)
-		strconcat				(sizeof(cTexture), cTexture, cTextureName, _lang);
+		strconcat(sizeof(cTexture), cTexture, cTextureName, _lang);
 	else
-		strcpy_s				(cTexture, sizeof(cTexture), cTextureName);
+		strcpy_s(cTexture, sizeof(cTexture), cTextureName);
 
-	uFlags						&= ~fsValid;
-	vTS.set						(1.f, 1.f); // обязательно !!!
+	uFlags &= ~fsValid;
+	vTS.set(1.f, 1.f); // обязательно !!!
 
-	eCurrentAlignment			= alLeft;
-	vInterval.set				(1.f, 1.f);
+	eCurrentAlignment = alLeft;
+	vInterval.set(1.f, 1.f);
 
-	strings.reserve				(128);
+	strings.reserve(128);
 
 	// check ini exist
 	string_path fn, buf;
-	strcpy_s					(buf, cTexture);
+	strcpy_s(buf, cTexture);
 	if (strext(buf))
-		*strext(buf)			= 0;
-	R_ASSERT2					(FS.exist(fn, "$game_textures$", buf, ".ini"), fn);
-	CInifile* ini				= CInifile::Create(fn);
+		*strext(buf) = 0;
+	R_ASSERT2(FS.exist(fn, "$game_textures$", buf, ".ini"), fn);
+	CInifile* ini = CInifile::Create(fn);
 
 	nNumChars = 0x100; TCMap = (Fvector*)xr_realloc((void*)TCMap, nNumChars * sizeof(Fvector));
 
@@ -112,10 +114,10 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName, bool need_pref
 	}
 	else if (ini->section_exist("font_size"))
 	{
-		R_ASSERT			(ini->section_exist("font_size"));
-		fHeight				= ini->r_float("font_size", "height");
-		float width			= ini->r_float("font_size", "width");
-		const int cpl		= ini->r_s32("font_size", "cpl");
+		R_ASSERT(ini->section_exist("font_size"));
+		fHeight = ini->r_float("font_size", "height");
+		float width = ini->r_float("font_size", "width");
+		const int cpl = ini->r_s32("font_size", "cpl");
 		for (u32 i = 0; i < nNumChars; i++)
 		{
 			TCMap[i].set((i % cpl) * width, (i / cpl) * fHeight, width);
@@ -134,13 +136,13 @@ void CGameFont::Initialize		(LPCSTR cShader, LPCSTR cTextureName, bool need_pref
 	}
 
 
-	fCurrentHeight				= fHeight;
+	fCurrentHeight = fHeight;
 
-	CInifile::Destroy			(ini);
+	CInifile::Destroy(ini);
 
 	// Shading
-	pShader.create				(cShader, cTexture);
-	pGeom.create				(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
+	pShader.create(cShader, cTexture);
+	pGeom.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 }
 
 CGameFont::~CGameFont()
@@ -149,8 +151,8 @@ CGameFont::~CGameFont()
 		xr_free(TCMap);
 
 	// Shading
-	pShader.destroy		();
-	pGeom.destroy		();
+	pShader.destroy();
+	pGeom.destroy();
 }
 
 #define DI2PX(x) float(iFloor((x + 1) * float(::Render->getTarget()->get_width()) * 0.5f))
@@ -174,16 +176,16 @@ u32 CGameFont::smart_strlen(const char* S)
 
 void CGameFont::OnRender()
 {
-	VERIFY				(g_bRendering);
+	VERIFY(g_bRendering);
 	if (pShader)
 		RCache.set_Shader(pShader);
 
 	if (!(uFlags & fsValid))
 	{
-		CTexture* T		= RCache.get_ActiveTexture(0);
-		vTS.set			((int)T->get_Width(), (int)T->get_Height());
-		fTCHeight		= fHeight / float(vTS.y);
-		uFlags			|= fsValid;
+		CTexture* T = RCache.get_ActiveTexture(0);
+		vTS.set((int)T->get_Width(), (int)T->get_Height());
+		fTCHeight = fHeight / float(vTS.y);
+		uFlags |= fsValid;
 	}
 
 	float angleRad = GetRotation();
@@ -194,7 +196,7 @@ void CGameFont::OnRender()
 	for (u32 i = 0; i < strings.size(); )
 	{
 		// calculate first-fit
-		int		count	=	1;
+		int		count = 1;
 
 		int length = smart_strlen(strings[i].string);
 
@@ -212,8 +214,8 @@ void CGameFont::OnRender()
 
 		// lock AGP memory
 		u32	vOffset;
-		FVF::TL* v		= (FVF::TL*)RCache.Vertex.Lock(length * 4, pGeom.stride(), vOffset);
-		FVF::TL* start	= v;
+		FVF::TL* v = (FVF::TL*)RCache.Vertex.Lock(length * 4, pGeom.stride(), vOffset);
+		FVF::TL* start = v;
 
 		// fill vertices
 		u32 last = i + count;
@@ -228,10 +230,10 @@ void CGameFont::OnRender()
 
 			if (len)
 			{
-				float	X	= float(iFloor(PS.x));
-				float	Y	= float(iFloor(PS.y));
-				float	S	= PS.height * g_current_font_scale.y;
-				float	Y2	= Y + S;
+				float	X = float(iFloor(PS.x));
+				float	Y = float(iFloor(PS.y));
+				float	S = PS.height * g_current_font_scale.y;
+				float	Y2 = Y + S;
 				float fSize = 0;
 
 				if (PS.align)
@@ -247,7 +249,7 @@ void CGameFont::OnRender()
 					break;
 				}
 
-				u32	clr,clr2;
+				u32	clr, clr2;
 				clr2 = clr = PS.c;
 				if (uFlags & fsGradient)
 				{
@@ -264,12 +266,12 @@ void CGameFont::OnRender()
 
 				// Лямбда-функция для поворота точки
 				auto RotatePoint = [&](float& x, float& y)
-				{
-					float dx = x - centerX;
-					float dy = y - centerY;
-					x = centerX + dx * cosA - dy * sinA;
-					y = centerY + dx * sinA + dy * cosA;
-				};
+					{
+						float dx = x - centerX;
+						float dy = y - centerY;
+						x = centerX + dx * cosA - dy * sinA;
+						y = centerY + dx * sinA + dy * cosA;
+					};
 
 				float	tu, tv;
 				for (int j = 0; j < len; j++)
@@ -278,14 +280,14 @@ void CGameFont::OnRender()
 
 					l = IsMultibyte() ? GetCharTC(wsStr[1 + j]) : GetCharTC((u16)(u8)PS.string[j]);
 
-					float scw		= l.z * g_current_font_scale.x;
+					float scw = l.z * g_current_font_scale.x;
 
-					float fTCWidth	= l.z / vTS.x;
+					float fTCWidth = l.z / vTS.x;
 
 					if (!fis_zero(l.z))
 					{
-						tu			= (l.x / vTS.x) + (0.5f / vTS.x);
-						tv			= (l.y / vTS.y) + (0.5f / vTS.y);
+						tu = (l.x / vTS.x) + (0.5f / vTS.x);
+						tv = (l.y / vTS.y) + (0.5f / vTS.y);
 						// **Создаём вершины**
 						float X1 = X, Y1 = Y2;
 						float X2 = X, Y2_ = Y;
@@ -319,14 +321,14 @@ void CGameFont::OnRender()
 
 		// Unlock and draw
 		u32 vCount = (u32)(v - start);
-		RCache.Vertex.Unlock		(vCount, pGeom.stride());
+		RCache.Vertex.Unlock(vCount, pGeom.stride());
 		if (vCount)
 		{
-			RCache.set_Geometry		(pGeom);
-			RCache.Render			(D3DPT_TRIANGLELIST, vOffset, 0, vCount, 0, vCount / 2);
+			RCache.set_Geometry(pGeom);
+			RCache.Render(D3DPT_TRIANGLELIST, vOffset, 0, vCount, 0, vCount / 2);
 		}
 	}
-	strings.clear_not_free			();
+	strings.clear_not_free();
 }
 
 u16 CGameFont::GetCutLengthPos(float fTargetWidth, const char* pszText)
@@ -507,12 +509,12 @@ float CGameFont::CurrentHeight_()
 
 void CGameFont::SetHeightI(float S)
 {
-	VERIFY				(uFlags & fsDeviceIndependent);
-	fCurrentHeight	= S*Device.dwHeight;
+	VERIFY(uFlags & fsDeviceIndependent);
+	fCurrentHeight = S * Device.dwHeight;
 }
 
 void CGameFont::SetHeight(float S)
 {
-	VERIFY			(uFlags & fsDeviceIndependent);
-	fCurrentHeight	= S;
+	VERIFY(uFlags & fsDeviceIndependent);
+	fCurrentHeight = S;
 }

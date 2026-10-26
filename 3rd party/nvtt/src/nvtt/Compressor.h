@@ -43,24 +43,24 @@ namespace nvtt
 	{
 		Private() {}
 
-		bool compress(const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const;
-		int estimateSize(const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions) const;
+		bool compress(const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const;
+		int estimateSize(const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions) const;
 
 	private:
 
-		bool outputHeader(const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const;
-		bool compressMipmaps(uint f, const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const;
+		bool outputHeader(const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const;
+		bool compressMipmaps(uint f, const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const;
 
-		bool initMipmap(Mipmap & mipmap, const InputOptions::Private & inputOptions, uint w, uint h, uint d, uint f, uint m) const;
+		bool initMipmap(Mipmap& mipmap, const InputOptions::Private& inputOptions, uint w, uint h, uint d, uint f, uint m) const;
 
-		int findExactMipmap(const InputOptions::Private & inputOptions, uint w, uint h, uint d, uint f) const;
-		int findClosestMipmap(const InputOptions::Private & inputOptions, uint w, uint h, uint d, uint f) const;
+		int findExactMipmap(const InputOptions::Private& inputOptions, uint w, uint h, uint d, uint f) const;
+		int findClosestMipmap(const InputOptions::Private& inputOptions, uint w, uint h, uint d, uint f) const;
 
-		void downsampleMipmap(Mipmap & mipmap, const InputOptions::Private & inputOptions) const;
-		void scaleMipmap(Mipmap & mipmap, const InputOptions::Private & inputOptions, uint w, uint h, uint d) const;
-		void processInputImage(Mipmap & mipmap, const InputOptions::Private & inputOptions) const;
-		void quantizeMipmap(Mipmap & mipmap, const CompressionOptions::Private & compressionOptions) const;
-		bool compressMipmap(const Mipmap & mipmap, const InputOptions::Private & inputOptions, const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions) const;
+		void downsampleMipmap(Mipmap& mipmap, const InputOptions::Private& inputOptions) const;
+		void scaleMipmap(Mipmap& mipmap, const InputOptions::Private& inputOptions, uint w, uint h, uint d) const;
+		void processInputImage(Mipmap& mipmap, const InputOptions::Private& inputOptions) const;
+		void quantizeMipmap(Mipmap& mipmap, const CompressionOptions::Private& compressionOptions) const;
+		bool compressMipmap(const Mipmap& mipmap, const InputOptions::Private& inputOptions, const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions) const;
 
 
 

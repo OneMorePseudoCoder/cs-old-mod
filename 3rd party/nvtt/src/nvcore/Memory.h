@@ -13,39 +13,39 @@
 // Custom memory allocator
 namespace nv
 {
-	namespace mem 
+	namespace mem
 	{
-		NVCORE_API void * malloc(size_t size);
-		NVCORE_API void * malloc(size_t size, const char * file, int line);
-		
-		NVCORE_API void free(const void * ptr);
-		NVCORE_API void * realloc(void * ptr, size_t size);
-		
+		NVCORE_API void* malloc(size_t size);
+		NVCORE_API void* malloc(size_t size, const char* file, int line);
+
+		NVCORE_API void free(const void* ptr);
+		NVCORE_API void* realloc(void* ptr, size_t size);
+
 	} // mem namespace
-	
+
 } // nv namespace
 
 
 // Override new/delete
 
-inline void * operator new (size_t size) throw()
-{
-	return nv::mem::malloc(size); 
-}
-
-inline void operator delete (void *p) throw()
-{
-	nv::mem::free(p); 
-}
-
-inline void * operator new [] (size_t size) throw()
+inline void* operator new (size_t size) throw()
 {
 	return nv::mem::malloc(size);
 }
 
-inline void operator delete [] (void * p) throw()
+inline void operator delete (void* p) throw()
 {
-	nv::mem::free(p); 
+	nv::mem::free(p);
+}
+
+inline void* operator new[](size_t size) throw()
+{
+	return nv::mem::malloc(size);
+}
+
+inline void operator delete[](void* p) throw()
+{
+	nv::mem::free(p);
 }
 
 /*
@@ -57,13 +57,13 @@ inline void operator delete [] (void * p) throw()
 
 #if 0
 /*
-    File:	main.cpp
-    
-    Version:	1.0
+	File:	main.cpp
+
+	Version:	1.0
 
 	Abstract: Overrides the C++ 'operator new' and 'operator delete'.
 
-    Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
+	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
 		("Apple") in consideration of your agreement to the following terms, and your
 		use, installation, modification or redistribution of this Apple software
 		constitutes acceptance of these terms.  If you do not agree with these terms,
@@ -110,13 +110,13 @@ inline void operator delete [] (void * p) throw()
 
 /* Some variables and code to make the example do something.  */
 namespace {
-  unsigned long long gNewCounter; // number of times 'new' was called
-  unsigned long long gDeleteCounter;  // number of times 'delete' was called
-  
-  void printCounters()  // print the counters above
-  {
-	std::cout << "new was called " << gNewCounter << " times and delete was called " << gDeleteCounter << " times\n";
-  }
+	unsigned long long gNewCounter; // number of times 'new' was called
+	unsigned long long gDeleteCounter;  // number of times 'delete' was called
+
+	void printCounters()  // print the counters above
+	{
+		std::cout << "new was called " << gNewCounter << " times and delete was called " << gDeleteCounter << " times\n";
+	}
 }
 
 /* These are the overridden new and delete routines.
@@ -133,7 +133,7 @@ namespace {
    Your operators may be called by the system, even early in start-up before constructors have been executed.  */
 void* operator new(std::size_t sz) throw (std::bad_alloc)
 {
-	void *result = std::malloc (sz == 0 ? 1 : sz);
+	void* result = std::malloc(sz == 0 ? 1 : sz);
 	if (result == NULL)
 		throw std::bad_alloc();
 	gNewCounter++;
@@ -143,7 +143,7 @@ void operator delete(void* p) throw()
 {
 	if (p == NULL)
 		return;
-	std::free (p);
+	std::free(p);
 	gDeleteCounter++;
 }
 
@@ -153,10 +153,11 @@ void operator delete(void* p) throw()
 void* operator new(std::size_t sz, const std::nothrow_t&) throw()
 {
 	try {
-		void * result = ::operator new (sz);  // calls our overridden operator new
+		void* result = ::operator new (sz);  // calls our overridden operator new
 		return result;
-	} catch (std::bad_alloc &) {
-	  return NULL;
+	}
+	catch (std::bad_alloc&) {
+		return NULL;
 	}
 }
 void operator delete(void* p, const std::nothrow_t&) throw()
@@ -169,15 +170,16 @@ void operator delete(void* p, const std::nothrow_t&) throw()
    be seen by system libraries.  This is mostly a problem for test programs and small examples,
    since almost all real C++ programs complicated enough to override new and delete will have at
    least one weak symbol.  However, this is a small example, so:  */
-void __attribute__((weak, visibility("default"))) workaroundFor4067110 () { }
+void __attribute__((weak, visibility("default"))) workaroundFor4067110() {}
 
 /* This is a simple test program that causes the runtime library to call new and delete.  */
-int main() 
+int main()
 {
-	atexit (printCounters);
+	atexit(printCounters);
 	try {
-	  std::locale example("does_not_exist");
-	} catch (std::runtime_error &x) {
+		std::locale example("does_not_exist");
+	}
+	catch (std::runtime_error& x) {
 	}
 	return 0;
 }

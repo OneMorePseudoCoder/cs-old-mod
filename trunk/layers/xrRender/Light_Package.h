@@ -9,6 +9,6 @@ public:
 	xr_vector<light*>		v_spot;
 	xr_vector<light*>		v_shadowed;
 public:
-	void					clear				();
-	void					sort				();
+	void					clear();
+	void					sort();
 };

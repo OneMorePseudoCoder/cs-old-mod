@@ -2,22 +2,22 @@
 #include "../BaseMonster/base_monster.h"
 #include "../../../script_export_space.h"
 
-class CCat : public CBaseMonster{
+class CCat : public CBaseMonster {
 	typedef		CBaseMonster	inherited;
 public:
-					CCat				();
-	virtual			~CCat				();	
+	CCat();
+	virtual			~CCat();
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reinit				();
+	virtual void	Load(LPCSTR section);
+	virtual void	reinit();
 
-	virtual	void	UpdateCL			();
+	virtual	void	UpdateCL();
 
-	virtual void	CheckSpecParams		(u32 spec_params);
+	virtual void	CheckSpecParams(u32 spec_params);
 
-			void	try_to_jump			();
+	void	try_to_jump();
 
-	virtual	void	HitEntityInJump		(const CEntity *pEntity);
+	virtual	void	HitEntityInJump(const CEntity* pEntity);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

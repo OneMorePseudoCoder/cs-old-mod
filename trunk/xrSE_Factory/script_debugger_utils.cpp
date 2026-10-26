@@ -7,7 +7,7 @@
 #	include <errno.h>
 #endif*/
 
-xr_event::xr_event(bool broadcast, bool signalled )
+xr_event::xr_event(bool broadcast, bool signalled)
 {
 	m_event = CreateEvent(0, broadcast, signalled, 0);
 }
@@ -73,8 +73,8 @@ bool xr_mutex::unlock()
 	return true;
 }
 
-xr_sync::xr_sync(xr_mutex & mutex)
-: m_mutex(mutex)
+xr_sync::xr_sync(xr_mutex& mutex)
+	: m_mutex(mutex)
 {
 	m_mutex.lock();
 }
@@ -85,19 +85,20 @@ xr_sync::~xr_sync()
 }
 
 ////////////////////////////////////////////////////////////
-DWORD __stdcall xrThreadStart(void * th)
+DWORD __stdcall xrThreadStart(void* th)
 {
 	((xr_thread*)th)->run();
 	return 0;
 }
 
 xr_thread::xr_thread()
-: m_thread(0)
-{}
+	: m_thread(0)
+{
+}
 
 xr_thread::~xr_thread()
 {
-	if (m_thread) 
+	if (m_thread)
 		CloseHandle(m_thread);
 }
 
@@ -153,11 +154,13 @@ unsigned xr_thread::getTickCount()
 
 
 xr_waitableThread::xr_waitableThread()
-: m_event(true, true)
-{}
+	: m_event(true, true)
+{
+}
 
 xr_waitableThread::~xr_waitableThread()
-{}
+{
+}
 
 bool xr_waitableThread::start()
 {

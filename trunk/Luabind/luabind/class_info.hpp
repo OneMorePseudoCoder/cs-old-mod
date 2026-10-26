@@ -34,8 +34,9 @@ namespace luabind
 	{
 		class_info(lua_State* L)
 			: methods(L)
-		{}
-		
+		{
+		}
+
 		string_class name;
 		object methods;
 		object attributes;

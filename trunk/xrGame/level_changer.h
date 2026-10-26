@@ -22,18 +22,18 @@ private:
 	Fvector					m_position;
 	Fvector					m_angles;
 	float					m_entrance_time;
-	void					update_actor_invitation	();
+	void					update_actor_invitation();
 	bool					m_bSilentMode;
 	bool					get_reject_pos(Fvector& p, Fvector& r);
 public:
-	virtual				~CLevelChanger		();
-	virtual BOOL		net_Spawn			(CSE_Abstract* DC);
-	virtual void		net_Destroy			();
-	virtual void		Center				(Fvector& C) const;
-	virtual float		Radius				() const;
-	virtual void		shedule_Update		(u32 dt);
-	virtual void		feel_touch_new		(CObject* O);
-	virtual BOOL		feel_touch_contact	(CObject* O);
+	virtual				~CLevelChanger();
+	virtual BOOL		net_Spawn(CSE_Abstract* DC);
+	virtual void		net_Destroy();
+	virtual void		Center(Fvector& C) const;
+	virtual float		Radius() const;
+	virtual void		shedule_Update(u32 dt);
+	virtual void		feel_touch_new(CObject* O);
+	virtual BOOL		feel_touch_contact(CObject* O);
 
-	virtual bool		IsVisibleForZones() { return false;		}
+	virtual bool		IsVisibleForZones() { return false; }
 };

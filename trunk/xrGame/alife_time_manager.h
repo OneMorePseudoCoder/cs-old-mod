@@ -22,15 +22,15 @@ private:
 	ALife::_TIME_ID					m_start_game_time;
 
 public:
-									CALifeTimeManager		(LPCSTR		section);
-	virtual							~CALifeTimeManager		();
-	virtual void					save					(IWriter	&memory_stream);
-	virtual void					load					(IReader	&file_stream);
-			void					init					(LPCSTR		section);
-	IC		void					set_time_factor			(float		time_factor);
-	IC		ALife::_TIME_ID			game_time				() const;
-	IC		float					time_factor				() const;
-	IC		float					normal_time_factor		() const;
+	CALifeTimeManager(LPCSTR		section);
+	virtual							~CALifeTimeManager();
+	virtual void					save(IWriter& memory_stream);
+	virtual void					load(IReader& file_stream);
+	void					init(LPCSTR		section);
+	IC		void					set_time_factor(float		time_factor);
+	IC		ALife::_TIME_ID			game_time() const;
+	IC		float					time_factor() const;
+	IC		float					normal_time_factor() const;
 };
 
 #include "alife_time_manager_inline.h"

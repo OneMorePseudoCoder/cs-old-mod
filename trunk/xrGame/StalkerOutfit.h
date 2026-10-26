@@ -11,7 +11,7 @@
 
 class CStalkerOutfit : public CCustomOutfit {
 private:
-    typedef	CCustomOutfit inherited;
+	typedef	CCustomOutfit inherited;
 public:
 	CStalkerOutfit(void);
 	virtual ~CStalkerOutfit(void);

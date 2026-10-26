@@ -10,7 +10,7 @@ class CUICustomMap;
 
 class CUIZoneMap
 {
-	CUICustomMap*				m_activeMap;
+	CUICustomMap* m_activeMap;
 	float						m_fScale;
 
 	CUIStatic					m_background;
@@ -20,22 +20,22 @@ class CUIZoneMap
 	CUIStatic					m_pointerDistanceText;
 
 public:
-								CUIZoneMap		();
-	virtual						~CUIZoneMap		();
+	CUIZoneMap();
+	virtual						~CUIZoneMap();
 
-	void						SetHeading		(float angle);
-	void						Init			();
+	void						SetHeading(float angle);
+	void						Init();
 
-	void						Render			();
-	void						UpdateRadar		(Fvector pos);
+	void						Render();
+	void						UpdateRadar(Fvector pos);
 
-	void						SetScale		(float s)							{m_fScale = s;}
-	float						GetScale		()									{return m_fScale;}
+	void						SetScale(float s) { m_fScale = s; }
+	float						GetScale() { return m_fScale; }
 
-	bool						ZoomIn			();
-	bool						ZoomOut			();
+	bool						ZoomIn();
+	bool						ZoomOut();
 
-	CUIStatic&					Background		()									{return m_background;};
-	void						SetupCurrentMap	();
+	CUIStatic& Background() { return m_background; };
+	void						SetupCurrentMap();
 };
 

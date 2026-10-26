@@ -29,41 +29,46 @@
 #include <luabind/detail/other.hpp>
 #include <luabind/raw_policy.hpp>
 
-namespace luabind { namespace detail {
+namespace luabind {
+	namespace detail {
 
-    template<class W, class T> struct unwrap_parameter_type;
-    template<class Derived> struct operator_ {};
+		template<class W, class T> struct unwrap_parameter_type;
+		template<class Derived> struct operator_ {};
 
-    struct operator_void_return {};
+		struct operator_void_return {};
 
-    template<class T>
-    inline T const& operator,(T const& x, operator_void_return)
-    {
-        return x;
-    }
+		template<class T>
+		inline T const& operator,(T const& x, operator_void_return)
+		{
+			return x;
+		}
 
-}} // namespace luabind
+	}
+} // namespace luabind
 
-namespace luabind { namespace operators {
+namespace luabind {
+	namespace operators {
 
-   #define BOOST_PP_ITERATION_PARAMS_1 (3, \
+#define BOOST_PP_ITERATION_PARAMS_1 (3, \
        (0, LUABIND_MAX_ARITY, <luabind/detail/call_operator_iterate.hpp>))
-   #include BOOST_PP_ITERATE()
-    
-}} // namespace luabind::operators
+#include BOOST_PP_ITERATE()
+
+	}
+} // namespace luabind::operators
 
 #include <boost/preprocessor/iteration/local.hpp>
 
-namespace luabind { namespace detail {
+namespace luabind {
+	namespace detail {
 
-    template<class Derived>
-    struct self_base
-    {
-        operators::call_operator0<Derived> operator()() const
-        {
-            return 0;
-        }
-        
+		template<class Derived>
+		struct self_base
+		{
+			operators::call_operator0<Derived> operator()() const
+			{
+				return 0;
+			}
+
 #define BOOST_PP_LOCAL_MACRO(n) \
         template<BOOST_PP_ENUM_PARAMS(n, class A)> \
         BOOST_PP_CAT(operators::call_operator, n)< \
@@ -80,100 +85,101 @@ namespace luabind { namespace detail {
 #define BOOST_PP_LOCAL_LIMITS (1, LUABIND_MAX_ARITY)
 #include BOOST_PP_LOCAL_ITERATE()
 
-    };
+		};
 
-    struct self_type : self_base<self_type>
-    {
-    };
+		struct self_type : self_base<self_type>
+		{
+		};
 
-    struct const_self_type : self_base<const_self_type>
-    {
-    };
+		struct const_self_type : self_base<const_self_type>
+		{
+		};
 
-    template<class W, class T>
-    struct unwrap_parameter_type
-    {
-        typedef typename boost::mpl::apply_if<
-            boost::is_same<T, self_type>
-          , boost::mpl::identity<W&>
-          , boost::mpl::apply_if<
-                boost::is_same<T, const_self_type>
-              , boost::mpl::identity<W const&>
-              , unwrap_other<T>
-            >
-        >::type type;
-    };
+		template<class W, class T>
+		struct unwrap_parameter_type
+		{
+			typedef typename boost::mpl::apply_if<
+				boost::is_same<T, self_type>
+				, boost::mpl::identity<W&>
+				, boost::mpl::apply_if<
+				boost::is_same<T, const_self_type>
+				, boost::mpl::identity<W const&>
+				, unwrap_other<T>
+				>
+			>::type type;
+		};
 
-    template<class Derived, class A, class B>
-    struct binary_operator 
-        : operator_<binary_operator<Derived, A, B> >
-    {
-        binary_operator(int) {}
+		template<class Derived, class A, class B>
+		struct binary_operator
+			: operator_<binary_operator<Derived, A, B> >
+		{
+			binary_operator(int) {}
 
-        template<class T, class Policies>
-        struct apply 
-        {
-            typedef typename unwrap_parameter_type<T, A>::type arg0;
-            typedef typename unwrap_parameter_type<T, B>::type arg1;
+			template<class T, class Policies>
+			struct apply
+			{
+				typedef typename unwrap_parameter_type<T, A>::type arg0;
+				typedef typename unwrap_parameter_type<T, B>::type arg1;
 
-            static void execute(lua_State* L, arg0 _0, arg1 _1)
-            {
-                Derived::template apply<arg0, arg1, Policies>::execute(
-                    L, _0, _1);
-            }
-        };
+				static void execute(lua_State* L, arg0 _0, arg1 _1)
+				{
+					Derived::template apply<arg0, arg1, Policies>::execute(
+						L, _0, _1);
+				}
+			};
 
-        static char const* name()
-        {
-            return Derived::name();
-        }
-    };
+			static char const* name()
+			{
+				return Derived::name();
+			}
+		};
 
-    template<class Derived, class A>
-    struct unary_operator 
-        : operator_<unary_operator<Derived, A> >
-    {
-        unary_operator(int) {}
-        
-        template<class T, class Policies>
-        struct apply
-        {
-            typedef typename unwrap_parameter_type<T, A>::type arg0;
+		template<class Derived, class A>
+		struct unary_operator
+			: operator_<unary_operator<Derived, A> >
+		{
+			unary_operator(int) {}
 
-            static void execute(lua_State* L, arg0 _0)
-            {
-                Derived::template apply<arg0, Policies>::execute(L, _0);
-            }
-        };
+			template<class T, class Policies>
+			struct apply
+			{
+				typedef typename unwrap_parameter_type<T, A>::type arg0;
 
-        static char const* name()
-        {
-            return Derived::name();
-        }
-    };
+				static void execute(lua_State* L, arg0 _0)
+				{
+					Derived::template apply<arg0, Policies>::execute(L, _0);
+				}
+			};
 
-    template<class Policies>
-    inline void operator_result(lua_State* L, operator_void_return, Policies*)
-    {
-    }
+			static char const* name()
+			{
+				return Derived::name();
+			}
+		};
 
-    template<class T, class Policies>
-    inline void operator_result(lua_State* L, T const& x, Policies*)
-    {
-        typedef typename find_conversion_policy<
-            0
-          , Policies
-        >::type cv_policy;
+		template<class Policies>
+		inline void operator_result(lua_State* L, operator_void_return, Policies*)
+		{
+		}
 
-        typename cv_policy::template generate_converter<
-            T
-          , cpp_to_lua
-        >::type cv;
+		template<class T, class Policies>
+		inline void operator_result(lua_State* L, T const& x, Policies*)
+		{
+			typedef typename find_conversion_policy<
+				0
+				, Policies
+			>::type cv_policy;
 
-        cv.apply(L, x);
-    }
+			typename cv_policy::template generate_converter<
+				T
+				, cpp_to_lua
+			>::type cv;
 
-}} // namespace detail::luabind
+			cv.apply(L, x);
+		}
+
+	}
+} // namespace detail::luabind
 
 namespace luabind {
 
@@ -261,16 +267,16 @@ namespace luabind {
         return 0; \
     }
 
-    LUABIND_BINARY_OPERATOR(add, +)
-    LUABIND_BINARY_OPERATOR(sub, -)
-    LUABIND_BINARY_OPERATOR(mul, *)
-    LUABIND_BINARY_OPERATOR(div, /)
-    LUABIND_BINARY_OPERATOR(pow, ^)
-    LUABIND_BINARY_OPERATOR(lt,  <)
-    LUABIND_BINARY_OPERATOR(le,  <=)
-	LUABIND_BINARY_OPERATOR(gt,  >)
-	LUABIND_BINARY_OPERATOR(ge,  >=)
-    LUABIND_BINARY_OPERATOR(eq,  ==)
+	LUABIND_BINARY_OPERATOR(add, +)
+		LUABIND_BINARY_OPERATOR(sub, -)
+		LUABIND_BINARY_OPERATOR(mul, *)
+		LUABIND_BINARY_OPERATOR(div, / )
+		LUABIND_BINARY_OPERATOR(pow, ^)
+		LUABIND_BINARY_OPERATOR(lt, < )
+		LUABIND_BINARY_OPERATOR(le, <= )
+		LUABIND_BINARY_OPERATOR(gt, > )
+		LUABIND_BINARY_OPERATOR(ge, >= )
+		LUABIND_BINARY_OPERATOR(eq, == )
 
 #undef LUABIND_UNARY_OPERATOR
 
@@ -306,24 +312,24 @@ namespace luabind {
         return 0; \
     }
 
-    template<class T>
-    T const& tostring_operator(T const& x)
-    {
-        return x;
-    };
-    
-    LUABIND_UNARY_OPERATOR(tostring, tostring_operator, tostring)
-    LUABIND_UNARY_OPERATOR(unm, -, operator-)
+		template<class T>
+	T const& tostring_operator(T const& x)
+	{
+		return x;
+	};
+
+	LUABIND_UNARY_OPERATOR(tostring, tostring_operator, tostring)
+		LUABIND_UNARY_OPERATOR(unm, -, operator-)
 
 #undef LUABIND_BINARY_OPERATOR
 
-    namespace {
+		namespace {
 
-        LUABIND_ANONYMOUS_FIX detail::self_type m_self;
-        LUABIND_ANONYMOUS_FIX detail::const_self_type m_const_self;
+		LUABIND_ANONYMOUS_FIX detail::self_type m_self;
+		LUABIND_ANONYMOUS_FIX detail::const_self_type m_const_self;
 
-    } // namespace unnamed
-    
+	} // namespace unnamed
+
 } // namespace luabind
 
 #endif // OPERATOR_040729_HPP

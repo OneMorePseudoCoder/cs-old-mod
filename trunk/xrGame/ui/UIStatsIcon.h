@@ -10,7 +10,7 @@ public:
 
 
 protected:
-	enum DEF_TEX{
+	enum DEF_TEX {
 		RANK_0 = 0,
 		RANK_1,
 		RANK_2,

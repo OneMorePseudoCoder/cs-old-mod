@@ -10,7 +10,7 @@
  *	\param		in_clip_mask	[in] bitmask for active planes
  *	\return		TRUE if boxes overlap planes
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline_ BOOL PlanesCollider::PlanesAABBOverlap(const Point& center, const Point& extents, udword& out_clip_mask, udword in_clip_mask)
 {
 	// Stats
@@ -26,22 +26,22 @@ inline_ BOOL PlanesCollider::PlanesAABBOverlap(const Point& center, const Point&
 	// to be outside any of the planes. The loop also constructs a _new_ output
 	// clip mask. Most FPUs have a native single-cycle _abs() operation.
 
-	udword Mask				= 1;			// current mask index (1,2,4,8,..)
-	udword TmpOutClipMask	= 0;			// initialize output clip mask into empty. 
+	udword Mask = 1;			// current mask index (1,2,4,8,..)
+	udword TmpOutClipMask = 0;			// initialize output clip mask into empty. 
 
-	while(Mask<=in_clip_mask)				// keep looping while we have active planes left...
+	while (Mask <= in_clip_mask)				// keep looping while we have active planes left...
 	{
-		if(in_clip_mask & Mask)				// if clip plane is active, process it..
-		{               
-			float NP = extents.x*_abs(p->n.x) + extents.y*_abs(p->n.y) + extents.z*_abs(p->n.z);	// ### _abs could be precomputed
-			float MP = center.x*p->n.x + center.y*p->n.y + center.z*p->n.z + p->d;
+		if (in_clip_mask & Mask)				// if clip plane is active, process it..
+		{
+			float NP = extents.x * _abs(p->n.x) + extents.y * _abs(p->n.y) + extents.z * _abs(p->n.z);	// ### _abs could be precomputed
+			float MP = center.x * p->n.x + center.y * p->n.y + center.z * p->n.z + p->d;
 
-			if(NP < MP)						// near vertex behind the clip plane... 
+			if (NP < MP)						// near vertex behind the clip plane... 
 				return FALSE;				// .. so there is no intersection..
-			if((-NP) < MP)					// near and far vertices on different sides of plane..
+			if ((-NP) < MP)					// near and far vertices on different sides of plane..
 				TmpOutClipMask |= Mask;		// .. so update the clip mask...
 		}
-		Mask+=Mask;							// mk = (1<<plane)
+		Mask += Mask;							// mk = (1<<plane)
 		p++;								// advance to next plane
 	}
 

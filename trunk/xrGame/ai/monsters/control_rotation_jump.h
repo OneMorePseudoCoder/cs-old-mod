@@ -3,13 +3,13 @@
 #include "../layers/xrRender/SkeletonAnimated.h"
 
 struct SControlRotationJumpData : public ControlCom::IComData {
-	MotionID		anim_stop_ls,anim_run_ls;
-	MotionID		anim_stop_rs,anim_run_rs;
+	MotionID		anim_stop_ls, anim_run_ls;
+	MotionID		anim_stop_rs, anim_run_rs;
 	float			turn_angle;
 
-	enum EFlags {	
-		eStopAtOnce	= u32(1) << 0,  // stop at once
-		eRotateOnce	= u32(1) << 1,	// use only the first stage
+	enum EFlags {
+		eStopAtOnce = u32(1) << 0,  // stop at once
+		eRotateOnce = u32(1) << 1,	// use only the first stage
 	};
 
 	flags32			flags;
@@ -18,7 +18,7 @@ struct SControlRotationJumpData : public ControlCom::IComData {
 class CControlRotationJump : public CControl_ComCustom<SControlRotationJumpData> {
 	typedef CControl_ComCustom<SControlRotationJumpData> inherited;
 	u32				m_time_next_rotation_jump;
-	
+
 	float			m_target_velocity;
 	float			m_start_velocity;
 	float			m_accel;
@@ -29,23 +29,23 @@ class CControlRotationJump : public CControl_ComCustom<SControlRotationJumpData>
 
 	enum EStage {
 		eStop,
-		eRun, 
+		eRun,
 		eNone
 	} m_stage;
 
-	CKinematicsAnimated	*m_skeleton_animated;
+	CKinematicsAnimated* m_skeleton_animated;
 
 public:
-	virtual void	reinit					();
+	virtual void	reinit();
 
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
-	virtual void	activate				();
-	virtual void	on_release				();
-	virtual bool	check_start_conditions	();
+	virtual void	on_event(ControlCom::EEventType, ControlCom::IEventData*);
+	virtual void	activate();
+	virtual void	on_release();
+	virtual bool	check_start_conditions();
 
-private:	
-			void	build_line_first		();
-			void	build_line_second		();
-			void	stop_at_once			();
+private:
+	void	build_line_first();
+	void	build_line_second();
+	void	stop_at_once();
 };
 

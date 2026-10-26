@@ -10,11 +10,11 @@ class CStateMonsterRestFun : public CState<_Object> {
 	u32					time_last_hit;
 
 public:
-						CStateMonsterRestFun	(_Object *obj);
-	virtual	void		initialize				();
-	virtual	void		execute					();
-	virtual	bool		check_completion		();
-	virtual	bool		check_start_conditions	();
+	CStateMonsterRestFun(_Object* obj);
+	virtual	void		initialize();
+	virtual	void		execute();
+	virtual	bool		check_completion();
+	virtual	bool		check_start_conditions();
 };
 
 #include "monster_state_rest_fun_inline.h"

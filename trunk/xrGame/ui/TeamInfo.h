@@ -19,11 +19,11 @@ protected:
 
 	enum {
 		flTeam1_color = 1,
-		flTeam2_color = 1<<1,
-		flTeam1_name  = 1<<2,
-		flTeam2_name  = 1<<3,
-		flTeam1_col_t = 1<<4,
-		flTeam2_col_t = 1<<5
+		flTeam2_color = 1 << 1,
+		flTeam1_name = 1 << 2,
+		flTeam2_name = 1 << 3,
+		flTeam1_col_t = 1 << 4,
+		flTeam2_col_t = 1 << 5
 	};
 	static Flags32		flags;
 };

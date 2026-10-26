@@ -7,8 +7,8 @@
 #endif // DEBUG
 
 #ifdef PROFILE_CRITICAL_SECTIONS
-	typedef void	(*add_profile_portion_callback)	(LPCSTR id, const u64 &time);
-	void XRCORE_API	set_add_profile_portion			(add_profile_portion_callback callback);
+typedef void	(*add_profile_portion_callback)	(LPCSTR id, const u64& time);
+void XRCORE_API	set_add_profile_portion(add_profile_portion_callback callback);
 
 #	define STRINGIZER_HELPER(a)		#a
 #	define STRINGIZER(a)			STRINGIZER_HELPER(a)
@@ -22,21 +22,21 @@
 class XRCORE_API		xrCriticalSection
 {
 private:
-	void*				pmutex;
+	void* pmutex;
 #ifdef PROFILE_CRITICAL_SECTIONS
 	LPCSTR				m_id;
 #endif // PROFILE_CRITICAL_SECTIONS
 
 public:
 #ifdef PROFILE_CRITICAL_SECTIONS
-    xrCriticalSection	(LPCSTR id);
+	xrCriticalSection(LPCSTR id);
 #else // PROFILE_CRITICAL_SECTIONS
-    xrCriticalSection	();
+	xrCriticalSection();
 #endif // PROFILE_CRITICAL_SECTIONS
-    ~xrCriticalSection	();
+	~xrCriticalSection();
 
-    void				Enter	();
-    void				Leave	();
+	void				Enter();
+	void				Leave();
 	BOOL				TryEnter();
 };
 

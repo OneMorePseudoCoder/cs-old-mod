@@ -9,8 +9,8 @@ extern	BOOL		BOOL_Proc(BOOL ret);
 extern	float		FLOAT_Proc(float ret);
 extern	void		VOID_proc();
 //---------------------------------------------------------------------------
-extern	void		LogOut( const char *format, ... );
-extern	void		LogOut_File( const char *format, ... );
+extern	void		LogOut(const char* format, ...);
+extern	void		LogOut_File(const char* format, ...);
 
 #ifdef _DEBUG
 #define APIDEBUG(str)LogOut("---------------------"#str"-------------------------\n")//; LogOut_File("---------------------"#str"-------------------------\n")

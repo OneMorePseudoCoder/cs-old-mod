@@ -24,7 +24,7 @@
  *
  * Paul Heckbert's zoom library.
  * http://www.xmission.com/~legalize/zoom.html
- * 
+ *
  * Reconstruction Filters in Computer Graphics
  * http://www.mentallandscape.com/Papers_siggraph88.pdf
  *
@@ -47,7 +47,7 @@ namespace
 	{
 		if (fabs(x) < NV_EPSILON) {
 			//return 1.0;
-			return 1.0f + x*x*(-1.0f/6.0f + x*x*1.0f/120.0f);
+			return 1.0f + x * x * (-1.0f / 6.0f + x * x * 1.0f / 120.0f);
 		}
 		else {
 			return sin(x) / x;
@@ -105,7 +105,7 @@ Filter::Filter(float width) : m_width(width)
 
 float Filter::sampleDelta(float x, float scale) const
 {
-	return evaluate((x + 0.5f)* scale);
+	return evaluate((x + 0.5f) * scale);
 }
 
 float Filter::sampleBox(float x, float scale, int samples) const
@@ -113,13 +113,13 @@ float Filter::sampleBox(float x, float scale, int samples) const
 	float sum = 0;
 	float isamples = 1.0f / float(samples);
 
-	for(int s = 0; s < samples; s++)
+	for (int s = 0; s < samples; s++)
 	{
 		float p = (x + (float(s) + 0.5f) * isamples) * scale;
 		float value = evaluate(p);
 		sum += value;
 	}
-	
+
 	return sum * isamples;
 }
 
@@ -128,18 +128,18 @@ float Filter::sampleTriangle(float x, float scale, int samples) const
 	float sum = 0;
 	float isamples = 1.0f / float(samples);
 
-	for(int s = 0; s < samples; s++)
+	for (int s = 0; s < samples; s++)
 	{
-		float offset = (2 * float(s) + 1.0f) * isamples;		
+		float offset = (2 * float(s) + 1.0f) * isamples;
 		float p = (x + offset - 0.5f) * scale;
 		float value = evaluate(p);
-		
+
 		float weight = offset;
 		if (weight > 1.0f) weight = 2.0f - weight;
-		
+
 		sum += value * weight;
 	}
-	
+
 	return 2 * sum * isamples;
 }
 
@@ -163,8 +163,8 @@ TriangleFilter::TriangleFilter(float width) : Filter(width) {}
 float TriangleFilter::evaluate(float x) const
 {
 	x = fabs(x);
-    if( x < m_width ) return m_width - x;
-    return 0.0f;
+	if (x < m_width) return m_width - x;
+	return 0.0f;
 }
 
 
@@ -173,12 +173,12 @@ QuadraticFilter::QuadraticFilter() : Filter(1.5f) {}
 float QuadraticFilter::evaluate(float x) const
 {
 	x = fabs(x);
-    if( x < 0.5f ) return 0.75f - x * x;
-    if( x < 1.5f ) { 
-    	float t = x - 1.5f;
-    	return 0.5f * t * t;
-    }
-    return 0.0f;
+	if (x < 0.5f) return 0.75f - x * x;
+	if (x < 1.5f) {
+		float t = x - 1.5f;
+		return 0.5f * t * t;
+	}
+	return 0.0f;
 }
 
 
@@ -188,7 +188,7 @@ float CubicFilter::evaluate(float x) const
 {
 	// f(t) = 2|t|^3 - 3|t|^2 + 1, -1 <= t <= 1
 	x = fabs(x);
-	if( x < 1.0f ) return((2.0f * x - 3.0f) * x * x + 1.0f);
+	if (x < 1.0f) return((2.0f * x - 3.0f) * x * x + 1.0f);
 	return 0.0f;
 }
 
@@ -198,28 +198,28 @@ BSplineFilter::BSplineFilter() : Filter(2.0f) {}
 float BSplineFilter::evaluate(float x) const
 {
 	x = fabs(x);
-    if( x < 1.0f ) return (4.0f + x * x * (-6.0f + x * 3.0f)) / 6.0f;
-    if( x < 2.0f ) { 
-    	float t = 2.0f - x;
-    	return t * t * t / 6.0f;
-    }
-    return 0.0f;
+	if (x < 1.0f) return (4.0f + x * x * (-6.0f + x * 3.0f)) / 6.0f;
+	if (x < 2.0f) {
+		float t = 2.0f - x;
+		return t * t * t / 6.0f;
+	}
+	return 0.0f;
 }
 
 
-MitchellFilter::MitchellFilter() : Filter(2.0f) { setParameters(1.0f/3.0f, 1.0f/3.0f); }
+MitchellFilter::MitchellFilter() : Filter(2.0f) { setParameters(1.0f / 3.0f, 1.0f / 3.0f); }
 
 float MitchellFilter::evaluate(float x) const
 {
 	x = fabs(x);
-	if( x < 1.0f ) return p0 + x * x * (p2 + x * p3);
-	if( x < 2.0f ) return q0 + x * (q1 + x * (q2 + x * q3));
+	if (x < 1.0f) return p0 + x * x * (p2 + x * p3);
+	if (x < 2.0f) return q0 + x * (q1 + x * (q2 + x * q3));
 	return 0.0f;
 }
 
 void MitchellFilter::setParameters(float b, float c)
 {
-	p0 = (6.0f -  2.0f * b) / 6.0f;
+	p0 = (6.0f - 2.0f * b) / 6.0f;
 	p2 = (-18.0f + 12.0f * b + 6.0f * c) / 6.0f;
 	p3 = (12.0f - 9.0f * b - 6.0f * c) / 6.0f;
 	q0 = (8.0f * b + 24.0f * c) / 6.0f;
@@ -234,7 +234,7 @@ LanczosFilter::LanczosFilter() : Filter(3.0f) {}
 float LanczosFilter::evaluate(float x) const
 {
 	x = fabs(x);
-	if( x < 3.0f ) return sincf(PI * x) * sincf(PI * x / 3.0f);
+	if (x < 3.0f) return sincf(PI * x) * sincf(PI * x / 3.0f);
 	return 0.0f;
 }
 
@@ -266,19 +266,19 @@ void KaiserFilter::setParameters(float alpha, float stretch)
 
 
 /// Ctor.
-Kernel1::Kernel1(const Filter & f, int iscale, int samples/*= 32*/)
+Kernel1::Kernel1(const Filter& f, int iscale, int samples/*= 32*/)
 {
 	nvDebugCheck(iscale > 1);
 	nvDebugCheck(samples > 0);
-	
+
 	const float scale = 1.0f / iscale;
-	
+
 	m_width = f.width() * iscale;
 	m_windowSize = (int)ceilf(2 * m_width);
 	m_data = new float[m_windowSize];
-	
+
 	const float offset = float(m_windowSize) / 2;
-	
+
 	float total = 0.0f;
 	for (int i = 0; i < m_windowSize; i++)
 	{
@@ -286,7 +286,7 @@ Kernel1::Kernel1(const Filter & f, int iscale, int samples/*= 32*/)
 		m_data[i] = sample;
 		total += sample;
 	}
-	
+
 	const float inv = 1.0f / total;
 	for (int i = 0; i < m_windowSize; i++)
 	{
@@ -317,7 +317,7 @@ Kernel2::Kernel2(uint ws) : m_windowSize(ws)
 }
 
 /// Copy ctor.
-Kernel2::Kernel2(const Kernel2 & k) : m_windowSize(k.m_windowSize)
+Kernel2::Kernel2(const Kernel2& k) : m_windowSize(k.m_windowSize)
 {
 	m_data = new float[m_windowSize * m_windowSize];
 	for (uint i = 0; i < m_windowSize * m_windowSize; i++) {
@@ -336,12 +336,12 @@ Kernel2::~Kernel2()
 void Kernel2::normalize()
 {
 	float total = 0.0f;
-	for(uint i = 0; i < m_windowSize*m_windowSize; i++) {
+	for (uint i = 0; i < m_windowSize * m_windowSize; i++) {
 		total += fabs(m_data[i]);
 	}
-	
+
 	float inv = 1.0f / total;
-	for(uint i = 0; i < m_windowSize*m_windowSize; i++) {
+	for (uint i = 0; i < m_windowSize * m_windowSize; i++) {
 		m_data[i] *= inv;
 	}
 }
@@ -349,9 +349,9 @@ void Kernel2::normalize()
 /// Transpose the kernel.
 void Kernel2::transpose()
 {
-	for(uint i = 0; i < m_windowSize; i++) {
-		for(uint j = i+1; j < m_windowSize; j++) {
-			swap(m_data[i*m_windowSize + j], m_data[j*m_windowSize + i]);
+	for (uint i = 0; i < m_windowSize; i++) {
+		for (uint j = i + 1; j < m_windowSize; j++) {
+			swap(m_data[i * m_windowSize + j], m_data[j * m_windowSize + i]);
 		}
 	}
 }
@@ -360,17 +360,17 @@ void Kernel2::transpose()
 void Kernel2::initLaplacian()
 {
 	nvDebugCheck(m_windowSize == 3);
-//	m_data[0] = -1; m_data[1] = -1; m_data[2] = -1;
-//	m_data[3] = -1; m_data[4] = +8; m_data[5] = -1;
-//	m_data[6] = -1; m_data[7] = -1; m_data[8] = -1;	
-	
+	//	m_data[0] = -1; m_data[1] = -1; m_data[2] = -1;
+	//	m_data[3] = -1; m_data[4] = +8; m_data[5] = -1;
+	//	m_data[6] = -1; m_data[7] = -1; m_data[8] = -1;	
+
 	m_data[0] = +0; m_data[1] = -1; m_data[2] = +0;
 	m_data[3] = -1; m_data[4] = +4; m_data[5] = -1;
-	m_data[6] = +0; m_data[7] = -1; m_data[8] = +0;	
-	
-//	m_data[0] = +1; m_data[1] = -2; m_data[2] = +1;
-//	m_data[3] = -2; m_data[4] = +4; m_data[5] = -2;
-//	m_data[6] = +1; m_data[7] = -2; m_data[8] = +1;	
+	m_data[6] = +0; m_data[7] = -1; m_data[8] = +0;
+
+	//	m_data[0] = +1; m_data[1] = -2; m_data[2] = +1;
+	//	m_data[3] = -2; m_data[4] = +4; m_data[5] = -2;
+	//	m_data[6] = +1; m_data[7] = -2; m_data[8] = +1;	
 }
 
 
@@ -379,7 +379,7 @@ void Kernel2::initEdgeDetection()
 {
 	nvCheck(m_windowSize == 3);
 	m_data[0] = 0; m_data[1] = 0; m_data[2] = 0;
-	m_data[3] =-1; m_data[4] = 0; m_data[5] = 1;
+	m_data[3] = -1; m_data[4] = 0; m_data[5] = 1;
 	m_data[6] = 0; m_data[7] = 0; m_data[8] = 0;
 }
 
@@ -395,48 +395,48 @@ void Kernel2::initSobel()
 	else if (m_windowSize == 5)
 	{
 		float elements[] = {
-            -1, -2, 0, 2, 1,
-            -2, -3, 0, 3, 2,
-            -3, -4, 0, 4, 3,
-            -2, -3, 0, 3, 2,
-            -1, -2, 0, 2, 1
+			-1, -2, 0, 2, 1,
+			-2, -3, 0, 3, 2,
+			-3, -4, 0, 4, 3,
+			-2, -3, 0, 3, 2,
+			-1, -2, 0, 2, 1
 		};
 
-		for (int i = 0; i < 5*5; i++) {
+		for (int i = 0; i < 5 * 5; i++) {
 			m_data[i] = elements[i];
 		}
 	}
 	else if (m_windowSize == 7)
 	{
 		float elements[] = {
-            -1, -2, -3, 0, 3, 2, 1,
-            -2, -3, -4, 0, 4, 3, 2,
-            -3, -4, -5, 0, 5, 4, 3,
-            -4, -5, -6, 0, 6, 5, 4,
-            -3, -4, -5, 0, 5, 4, 3,
-            -2, -3, -4, 0, 4, 3, 2,
-            -1, -2, -3, 0, 3, 2, 1
+			-1, -2, -3, 0, 3, 2, 1,
+			-2, -3, -4, 0, 4, 3, 2,
+			-3, -4, -5, 0, 5, 4, 3,
+			-4, -5, -6, 0, 6, 5, 4,
+			-3, -4, -5, 0, 5, 4, 3,
+			-2, -3, -4, 0, 4, 3, 2,
+			-1, -2, -3, 0, 3, 2, 1
 		};
 
-		for (int i = 0; i < 7*7; i++) {
+		for (int i = 0; i < 7 * 7; i++) {
 			m_data[i] = elements[i];
 		}
 	}
 	else if (m_windowSize == 9)
 	{
 		float elements[] = {
-            -1, -2, -3, -4, 0, 4, 3, 2, 1,
-            -2, -3, -4, -5, 0, 5, 4, 3, 2,
-            -3, -4, -5, -6, 0, 6, 5, 4, 3,
-            -4, -5, -6, -7, 0, 7, 6, 5, 4,
-            -5, -6, -7, -8, 0, 8, 7, 6, 5,
-            -4, -5, -6, -7, 0, 7, 6, 5, 4,
-            -3, -4, -5, -6, 0, 6, 5, 4, 3,
-            -2, -3, -4, -5, 0, 5, 4, 3, 2,
-            -1, -2, -3, -4, 0, 4, 3, 2, 1
+			-1, -2, -3, -4, 0, 4, 3, 2, 1,
+			-2, -3, -4, -5, 0, 5, 4, 3, 2,
+			-3, -4, -5, -6, 0, 6, 5, 4, 3,
+			-4, -5, -6, -7, 0, 7, 6, 5, 4,
+			-5, -6, -7, -8, 0, 8, 7, 6, 5,
+			-4, -5, -6, -7, 0, 7, 6, 5, 4,
+			-3, -4, -5, -6, 0, 6, 5, 4, 3,
+			-2, -3, -4, -5, 0, 5, 4, 3, 2,
+			-1, -2, -3, -4, 0, 4, 3, 2, 1
 		};
-		
-		for (int i = 0; i < 9*9; i++) {
+
+		for (int i = 0; i < 9 * 9; i++) {
 			m_data[i] = elements[i];
 		}
 	}
@@ -455,50 +455,50 @@ void Kernel2::initPrewitt()
 	{
 		// @@ Is this correct?
 		float elements[] = {
-            -2, -1, 0, 1, 2,
-            -2, -1, 0, 1, 2,
-            -2, -1, 0, 1, 2,
-            -2, -1, 0, 1, 2,
-            -2, -1, 0, 1, 2
+			-2, -1, 0, 1, 2,
+			-2, -1, 0, 1, 2,
+			-2, -1, 0, 1, 2,
+			-2, -1, 0, 1, 2,
+			-2, -1, 0, 1, 2
 		};
 
-		for (int i = 0; i < 5*5; i++) {
+		for (int i = 0; i < 5 * 5; i++) {
 			m_data[i] = elements[i];
 		}
 	}
 }
 
 /// Init blended sobel filter.
-void Kernel2::initBlendedSobel(const Vector4 & scale)
+void Kernel2::initBlendedSobel(const Vector4& scale)
 {
 	nvCheck(m_windowSize == 9);
 
 	{
 		const float elements[] = {
-            -1, -2, -3, -4, 0, 4, 3, 2, 1,
-            -2, -3, -4, -5, 0, 5, 4, 3, 2,
-            -3, -4, -5, -6, 0, 6, 5, 4, 3,
-            -4, -5, -6, -7, 0, 7, 6, 5, 4,
-            -5, -6, -7, -8, 0, 8, 7, 6, 5,
-            -4, -5, -6, -7, 0, 7, 6, 5, 4,
-            -3, -4, -5, -6, 0, 6, 5, 4, 3,
-            -2, -3, -4, -5, 0, 5, 4, 3, 2,
-            -1, -2, -3, -4, 0, 4, 3, 2, 1
+			-1, -2, -3, -4, 0, 4, 3, 2, 1,
+			-2, -3, -4, -5, 0, 5, 4, 3, 2,
+			-3, -4, -5, -6, 0, 6, 5, 4, 3,
+			-4, -5, -6, -7, 0, 7, 6, 5, 4,
+			-5, -6, -7, -8, 0, 8, 7, 6, 5,
+			-4, -5, -6, -7, 0, 7, 6, 5, 4,
+			-3, -4, -5, -6, 0, 6, 5, 4, 3,
+			-2, -3, -4, -5, 0, 5, 4, 3, 2,
+			-1, -2, -3, -4, 0, 4, 3, 2, 1
 		};
-		
-		for (int i = 0; i < 9*9; i++) {
+
+		for (int i = 0; i < 9 * 9; i++) {
 			m_data[i] = elements[i] * scale.w();
 		}
 	}
 	{
 		const float elements[] = {
-            -1, -2, -3, 0, 3, 2, 1,
-            -2, -3, -4, 0, 4, 3, 2,
-            -3, -4, -5, 0, 5, 4, 3,
-            -4, -5, -6, 0, 6, 5, 4,
-            -3, -4, -5, 0, 5, 4, 3,
-            -2, -3, -4, 0, 4, 3, 2,
-            -1, -2, -3, 0, 3, 2, 1,
+			-1, -2, -3, 0, 3, 2, 1,
+			-2, -3, -4, 0, 4, 3, 2,
+			-3, -4, -5, 0, 5, 4, 3,
+			-4, -5, -6, 0, 6, 5, 4,
+			-3, -4, -5, 0, 5, 4, 3,
+			-2, -3, -4, 0, 4, 3, 2,
+			-1, -2, -3, 0, 3, 2, 1,
 		};
 
 		for (int i = 0; i < 7; i++) {
@@ -509,11 +509,11 @@ void Kernel2::initBlendedSobel(const Vector4 & scale)
 	}
 	{
 		const float elements[] = {
-            -1, -2, 0, 2, 1,
-            -2, -3, 0, 3, 2,
-            -3, -4, 0, 4, 3,
-            -2, -3, 0, 3, 2,
-            -1, -2, 0, 2, 1
+			-1, -2, 0, 2, 1,
+			-2, -3, 0, 3, 2,
+			-3, -4, 0, 4, 3,
+			-2, -3, 0, 3, 2,
+			-1, -2, 0, 2, 1
 		};
 
 		for (int i = 0; i < 5; i++) {
@@ -524,9 +524,9 @@ void Kernel2::initBlendedSobel(const Vector4 & scale)
 	}
 	{
 		const float elements[] = {
-            -1, 0, 1,
-            -2, 0, 2,
-            -1, 0, 1,
+			-1, 0, 1,
+			-2, 0, 2,
+			-1, 0, 1,
 		};
 
 		for (int i = 0; i < 3; i++) {
@@ -538,7 +538,7 @@ void Kernel2::initBlendedSobel(const Vector4 & scale)
 }
 
 
-PolyphaseKernel::PolyphaseKernel(const Filter & f, uint srcLength, uint dstLength, int samples/*= 32*/)
+PolyphaseKernel::PolyphaseKernel(const Filter& f, uint srcLength, uint dstLength, int samples/*= 32*/)
 {
 	nvDebugCheck(samples > 0);
 
@@ -561,20 +561,20 @@ PolyphaseKernel::PolyphaseKernel(const Filter & f, uint srcLength, uint dstLengt
 	for (uint i = 0; i < m_length; i++)
 	{
 		const float center = (0.5f + i) * iscale;
-		
+
 		const int left = (int)floorf(center - m_width);
 		const int right = (int)ceilf(center + m_width);
 		nvDebugCheck(right - left <= m_windowSize);
-		
+
 		float total = 0.0f;
 		for (int j = 0; j < m_windowSize; j++)
 		{
 			const float sample = f.sampleBox(left + j - center, scale, samples);
-			
+
 			m_data[i * m_windowSize + j] = sample;
 			total += sample;
 		}
-		
+
 		// normalize weights.
 		for (int j = 0; j < m_windowSize; j++)
 		{
@@ -585,7 +585,7 @@ PolyphaseKernel::PolyphaseKernel(const Filter & f, uint srcLength, uint dstLengt
 
 PolyphaseKernel::~PolyphaseKernel()
 {
-	delete [] m_data;
+	delete[] m_data;
 }
 
 

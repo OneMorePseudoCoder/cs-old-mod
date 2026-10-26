@@ -3,7 +3,7 @@
 template<typename _Object>
 class CStateControlHide : public CState<_Object> {
 	typedef	CState<_Object>		inherited;
-	typedef	CState<_Object>*	state_ptr;
+	typedef	CState<_Object>* state_ptr;
 
 	bool			m_cover_reached;
 
@@ -18,21 +18,21 @@ class CStateControlHide : public CState<_Object> {
 
 public:
 
-					CStateControlHide		(_Object *obj) : inherited(obj) {}
-	virtual			~CStateControlHide		() {}
+	CStateControlHide(_Object* obj) : inherited(obj) {}
+	virtual			~CStateControlHide() {}
 
-	virtual void	initialize				();
-	virtual void	execute					();
+	virtual void	initialize();
+	virtual void	execute();
 
-	virtual void	finalize				();
-	virtual void	critical_finalize		();
+	virtual void	finalize();
+	virtual void	critical_finalize();
 
-	virtual bool 	check_completion		();
-	virtual bool 	check_start_conditions	();
+	virtual bool 	check_completion();
+	virtual bool 	check_start_conditions();
 
 
 private:
-			void	select_target_point		();
+	void	select_target_point();
 };
 
 

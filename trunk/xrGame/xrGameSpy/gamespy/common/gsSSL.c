@@ -14,7 +14,7 @@ const struct gsSSLCipherSuiteDesc gsSSLCipherSuites[GS_SSL_NUM_CIPHER_SUITES] =
 	// Algorithm ID (fixed const), KeyLen, CipherLen, IV Len
 	{ TLS_RSA_WITH_RC4_128_MD5,            16, 16, 00 },
 	//{ TLS_RSA_WITH_3DES_EDE_CBC_SHA,       16, 20, 00 },
-	
+
 	// Use of single DES is questionable
 	// { TLS_RSA_WITH_DES_CBC_SHA,            00, 00, 00 },
 

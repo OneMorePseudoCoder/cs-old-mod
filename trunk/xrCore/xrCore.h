@@ -5,27 +5,27 @@
 #pragma warning(disable:4996)
 
 #if (defined(_DEBUG) || defined(MIXED) || defined(DEBUG)) && !defined(FORCE_NO_EXCEPTIONS)
-	// "debug" or "mixed"
-	#if !defined(_CPPUNWIND)
-		#error Please enable exceptions...
-	#endif
-	#define _HAS_EXCEPTIONS		1	// STL
-	#define XRAY_EXCEPTIONS		1	// XRAY
+// "debug" or "mixed"
+#if !defined(_CPPUNWIND)
+#error Please enable exceptions...
+#endif
+#define _HAS_EXCEPTIONS		1	// STL
+#define XRAY_EXCEPTIONS		1	// XRAY
 #else
-	// "release"
-	#if defined(_CPPUNWIND)
-		#error Please disable exceptions...
-	#endif
+// "release"
+#if defined(_CPPUNWIND)
+#error Please disable exceptions...
+#endif
 //	#define _HAS_EXCEPTIONS		1	// STL
-	#define XRAY_EXCEPTIONS		0	// XRAY
-	#define LUABIND_NO_EXCEPTIONS
-	#define BOOST_NO_EXCEPTIONS
-	#pragma warning(disable:4530)
+#define XRAY_EXCEPTIONS		0	// XRAY
+#define LUABIND_NO_EXCEPTIONS
+#define BOOST_NO_EXCEPTIONS
+#pragma warning(disable:4530)
 #endif
 
 #if !defined(_MT)
 	// multithreading disabled
-	#error Please enable multi-threaded library...
+#error Please enable multi-threaded library...
 #endif
 
 #	include "xrCore_platform.h"
@@ -36,19 +36,19 @@
 // *** disable exceptions for both STLport and VC7.1 STL
 // #define _STLP_NO_EXCEPTIONS	1
 // #if XRAY_EXCEPTIONS
- 	#define _HAS_EXCEPTIONS		1	// force STL again
+	#define _HAS_EXCEPTIONS		1	// force STL again
 // #endif
 */
 
 // *** try to minimize code bloat of STLport
 #ifdef __BORLANDC__
 #else
-	#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
-	#define _STLP_DESIGNATED_DLL	1
-	#define _STLP_USE_DECLSPEC		1
-	#else
-	#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
-	#endif
+#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
+#define _STLP_DESIGNATED_DLL	1
+#define _STLP_USE_DECLSPEC		1
+#else
+#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
+#endif
 #endif
 
 // #include <exception>
@@ -66,12 +66,12 @@
 //#include <process.h>
 
 #ifndef DEBUG
-	#ifdef _DEBUG
-    	#define DEBUG
-    #endif
-	#ifdef MIXED
-    	#define DEBUG
-    #endif
+#ifdef _DEBUG
+#define DEBUG
+#endif
+#ifdef MIXED
+#define DEBUG
+#endif
 #endif
 
 #ifdef XRCORE_STATIC
@@ -99,47 +99,47 @@
 #endif
 
 #ifndef DEBUG
-	#pragma inline_depth	( 254 )
-	#pragma inline_recursion( on )
-	#ifndef __BORLANDC__
-		#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcpy, strcat)
-	#endif
+#pragma inline_depth	( 254 )
+#pragma inline_recursion( on )
+#ifndef __BORLANDC__
+#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcpy, strcat)
+#endif
 #endif
 
 #include <time.h>
 // work-around dumb borland compiler
 #ifdef __BORLANDC__
-	#define ALIGN(a)
+#define ALIGN(a)
 
-	#include <assert.h>
-	#include <utime.h>
-	#define _utimbuf utimbuf
-	#define MODULE_NAME 		"xrCoreB.dll"
+#include <assert.h>
+#include <utime.h>
+#define _utimbuf utimbuf
+#define MODULE_NAME 		"xrCoreB.dll"
 
-	// function redefinition
-    #define fabsf(a) fabs(a)
-    #define sinf(a) sin(a)
-    #define asinf(a) asin(a)
-    #define cosf(a) cos(a)
-    #define acosf(a) acos(a)
-    #define tanf(a) tan(a)
-    #define atanf(a) atan(a)
-    #define sqrtf(a) sqrt(a)
-    #define expf(a) ::exp(a)
-    #define floorf floor
-    #define atan2f atan2
-    #define logf log
-	// float redefine
-	#define _PC_24 PC_24
-	#define _PC_53 PC_53
-	#define _PC_64 PC_64
-	#define _RC_CHOP RC_CHOP
-	#define _RC_NEAR RC_NEAR
-    #define _MCW_EM MCW_EM
+// function redefinition
+#define fabsf(a) fabs(a)
+#define sinf(a) sin(a)
+#define asinf(a) asin(a)
+#define cosf(a) cos(a)
+#define acosf(a) acos(a)
+#define tanf(a) tan(a)
+#define atanf(a) atan(a)
+#define sqrtf(a) sqrt(a)
+#define expf(a) ::exp(a)
+#define floorf floor
+#define atan2f atan2
+#define logf log
+// float redefine
+#define _PC_24 PC_24
+#define _PC_53 PC_53
+#define _PC_64 PC_64
+#define _RC_CHOP RC_CHOP
+#define _RC_NEAR RC_NEAR
+#define _MCW_EM MCW_EM
 #else
-	#define ALIGN(a)		__declspec(align(a))
-	#include <sys\utime.h>
-	#define MODULE_NAME 	"xrCore.dll"
+#define ALIGN(a)		__declspec(align(a))
+#include <sys\utime.h>
+#define MODULE_NAME 	"xrCore.dll"
 #endif
 
 
@@ -159,7 +159,7 @@
 #ifdef _M_AMD64
 #pragma warning (disable : 4512 )
 #endif
-       
+
 // stl
 #pragma warning (push)
 #pragma warning (disable:4702)
@@ -202,38 +202,38 @@
 #include "string_concatenations.h"
 
 // stl ext
-struct XRCORE_API xr_rtoken{
-    shared_str	name;
-    int	   	id;
-           	xr_rtoken	(LPCSTR _nm, int _id){name=_nm;id=_id;}
+struct XRCORE_API xr_rtoken {
+	shared_str	name;
+	int	   	id;
+	xr_rtoken(LPCSTR _nm, int _id) { name = _nm; id = _id; }
 public:
-    void	rename		(LPCSTR _nm)		{name=_nm;}
-    bool	equal		(LPCSTR _nm)		{return (0==xr_strcmp(*name,_nm));}
+	void	rename(LPCSTR _nm) { name = _nm; }
+	bool	equal(LPCSTR _nm) { return (0 == xr_strcmp(*name, _nm)); }
 };
 
 #pragma pack (push,1)
-struct XRCORE_API xr_shortcut{
-    enum{
-        flShift	= 0x20,
-        flCtrl	= 0x40,
-        flAlt	= 0x80,
-    };
-    union{
-    	struct{
-            u8	 	key;
-            Flags8	ext;
-        };
-        u16		hotkey;
-    };
-                xr_shortcut		(u8 k, BOOL a, BOOL c, BOOL s):key(k){ext.assign(u8((a?flAlt:0)|(c?flCtrl:0)|(s?flShift:0)));}
-                xr_shortcut		(){ext.zero();key=0;}
-    bool		similar			(const xr_shortcut& v)const{return ext.equal(v.ext)&&(key==v.key);}
+struct XRCORE_API xr_shortcut {
+	enum {
+		flShift = 0x20,
+		flCtrl = 0x40,
+		flAlt = 0x80,
+	};
+	union {
+		struct {
+			u8	 	key;
+			Flags8	ext;
+		};
+		u16		hotkey;
+	};
+	xr_shortcut(u8 k, BOOL a, BOOL c, BOOL s) :key(k) { ext.assign(u8((a ? flAlt : 0) | (c ? flCtrl : 0) | (s ? flShift : 0))); }
+	xr_shortcut() { ext.zero(); key = 0; }
+	bool		similar(const xr_shortcut& v)const { return ext.equal(v.ext) && (key == v.key); }
 };
 #pragma pack (pop)
 
-DEFINE_VECTOR	(shared_str,RStringVec,RStringVecIt);
-DEFINE_SET		(shared_str,RStringSet,RStringSetIt);
-DEFINE_VECTOR	(xr_rtoken,RTokenVec,RTokenVecIt);
+DEFINE_VECTOR(shared_str, RStringVec, RStringVecIt);
+DEFINE_SET(shared_str, RStringSet, RStringSetIt);
+DEFINE_VECTOR(xr_rtoken, RTokenVec, RTokenVecIt);
 
 #include "FS.h"
 #include "log.h"
@@ -255,14 +255,16 @@ class destructor
 {
 	T* ptr;
 public:
-	destructor(T* p)	{ ptr=p;			}
-	~destructor()		{ xr_delete(ptr);	}
+	destructor(T* p) { ptr = p; }
+	~destructor() { xr_delete(ptr); }
 	IC T& operator() ()
-	{	return *ptr; }
+	{
+		return *ptr;
+	}
 };
 
 // ********************************************** The Core definition
-class XRCORE_API xrCore 
+class XRCORE_API xrCore
 {
 public:
 	string64	ApplicationName;
@@ -273,8 +275,8 @@ public:
 	string512	Params;
 
 public:
-	void		_initialize	(LPCSTR ApplicationName, LogCallback cb=0, BOOL init_fs=TRUE, LPCSTR fs_fname=0);
-	void		_destroy	();
+	void		_initialize(LPCSTR ApplicationName, LogCallback cb = 0, BOOL init_fs = TRUE, LPCSTR fs_fname = 0);
+	void		_destroy();
 };
 extern XRCORE_API xrCore Core;
 

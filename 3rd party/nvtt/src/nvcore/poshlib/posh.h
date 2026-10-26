@@ -32,17 +32,17 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+	* Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
 
-    * Redistributions in binary form must reproduce the above
-      copyright notice, this list of conditions and the following
-      disclaimer in the documentation and/or other materials provided
-      with the distribution.
+	* Redistributions in binary form must reproduce the above
+	  copyright notice, this list of conditions and the following
+	  disclaimer in the documentation and/or other materials provided
+	  with the distribution.
 
-    * The names of this package'ss contributors contributors may not
-      be used to endorse or promote products derived from this
-      software without specific prior written permission.
+	* The names of this package'ss contributors contributors may not
+	  be used to endorse or promote products derived from this
+	  software without specific prior written permission.
 
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -63,9 +63,9 @@ I've been lax about revision histories, so this starts at, um, 1.3.001.
 Sorry for any inconveniences.
 
 1.3.001 - 2/23/2006 - Incorporated fix for bug reported by Bill Cary,
-                      where I was not detecting Visual Studio
-                      compilation on x86-64 systems.  Added check for
-                      _M_X64 which should fix that.
+					  where I was not detecting Visual Studio
+					  compilation on x86-64 systems.  Added check for
+					  _M_X64 which should fix that.
 
 */
 /*
@@ -121,7 +121,7 @@ DJGPP:
 
 Cray's C compiler:
    - _ADDR64: if 64-bit pointers
-   - _UNICOS: 
+   - _UNICOS:
    - __unix:
 
 SGI's CC compiler predefines the following (and more) with -ansi:
@@ -240,7 +240,7 @@ Metrowerks:
 #endif
 
 #if defined __APPLE_CC__
-   /* we don't define the compiler string here, let it be GNU */
+/* we don't define the compiler string here, let it be GNU */
 #  define POSH_COMPILER_APPLECC 1
 #endif
 
@@ -413,11 +413,11 @@ Metrowerks:
 #  define POSH_OS_STRING "MacOS"
 #endif
 
-/*
-** -----------------------------------------------------------------------------
-** Determine target CPU
-** -----------------------------------------------------------------------------
-*/
+   /*
+   ** -----------------------------------------------------------------------------
+   ** Determine target CPU
+   ** -----------------------------------------------------------------------------
+   */
 
 #if defined GEKKO
 #  define POSH_CPU_PPC750 1
@@ -516,11 +516,11 @@ Metrowerks:
 #  define POSH_CPU_STRING "Unknown" /* this is here for Doxygen's benefit */
 #endif
 
-/*
-** -----------------------------------------------------------------------------
-** Attempt to autodetect building for embedded on Sony PS2
-** -----------------------------------------------------------------------------
-*/
+   /*
+   ** -----------------------------------------------------------------------------
+   ** Attempt to autodetect building for embedded on Sony PS2
+   ** -----------------------------------------------------------------------------
+   */
 #if !defined POSH_OS_STRING
 #  if !defined FORCE_DOXYGEN
 #    define POSH_OS_EMBEDDED 1 
@@ -532,11 +532,11 @@ Metrowerks:
 #  endif
 #endif
 
-/*
-** ---------------------------------------------------------------------------
-** Handle cdecl, stdcall, fastcall, etc.
-** ---------------------------------------------------------------------------
-*/
+   /*
+   ** ---------------------------------------------------------------------------
+   ** Handle cdecl, stdcall, fastcall, etc.
+   ** ---------------------------------------------------------------------------
+   */
 #if defined POSH_CPU_X86 && !defined POSH_CPU_X86_64
 #  if defined __GNUC__
 #     define POSH_CDECL __attribute__((cdecl))
@@ -553,15 +553,15 @@ Metrowerks:
 #  define POSH_FASTCALL 
 #endif
 
-/*
-** ---------------------------------------------------------------------------
-** Define POSH_IMPORTEXPORT signature based on POSH_DLL and POSH_BUILDING_LIB
-** ---------------------------------------------------------------------------
-*/
+   /*
+   ** ---------------------------------------------------------------------------
+   ** Define POSH_IMPORTEXPORT signature based on POSH_DLL and POSH_BUILDING_LIB
+   ** ---------------------------------------------------------------------------
+   */
 
-/*
-** We undefine this so that multiple inclusions will work
-*/
+   /*
+   ** We undefine this so that multiple inclusions will work
+   */
 #if defined POSH_IMPORTEXPORT
 #  undef POSH_IMPORTEXPORT
 #endif
@@ -598,7 +598,7 @@ Metrowerks:
 #            endif
 #         endif
 #      endif /* defined __BORLANDC__ */
-       /* for all other compilers, we're just making a blanket assumption */
+   /* for all other compilers, we're just making a blanket assumption */
 #      if defined __GNUC__ || defined __WATCOMC__ || defined __MWERKS__
 #         if defined POSH_BUILDING_LIB
 #            define POSH_IMPORTEXPORT __declspec( dllexport )
@@ -626,7 +626,7 @@ Metrowerks:
 
 /*
 ** ----------------------------------------------------------------------------
-** (Re)define POSH_PUBLIC_API export signature 
+** (Re)define POSH_PUBLIC_API export signature
 ** ----------------------------------------------------------------------------
 */
 #ifdef POSH_PUBLIC_API
@@ -644,7 +644,7 @@ Metrowerks:
 ** Try to infer endianess.  Basically we just go through the CPUs we know are
 ** little endian, and assume anything that isn't one of those is big endian.
 ** As a sanity check, we also do this with operating systems we know are
-** little endian, such as Windows.  Some processors are bi-endian, such as 
+** little endian, such as Windows.  Some processors are bi-endian, such as
 ** the MIPS series, so we have to be careful about those.
 ** ----------------------------------------------------------------------------
 */
@@ -678,7 +678,7 @@ Metrowerks:
 */
 #if defined ( __LP64__ ) || defined ( __powerpc64__ ) || defined POSH_CPU_SPARC64
 #  define POSH_64BIT_INTEGER 1
-typedef long posh_i64_t; 
+typedef long posh_i64_t;
 typedef unsigned long posh_u64_t;
 #  define POSH_I64( x ) ((posh_i64_t)x)
 #  define POSH_U64( x ) ((posh_u64_t)x)
@@ -751,36 +751,36 @@ typedef signed char    posh_i8_t;
 
 /* 16-bit */
 #  if ( USHRT_MAX == 65535 ) 
-   typedef unsigned short posh_u16_t;
-   typedef short          posh_i16_t;
+typedef unsigned short posh_u16_t;
+typedef short          posh_i16_t;
 #  else
    /* Yes, in theory there could still be a 16-bit character type and shorts are
-      32-bits in size...if you find such an architecture, let me know =P */
+	  32-bits in size...if you find such an architecture, let me know =P */
 #    error No 16-bit type found
 #  endif
 
-/* 32-bit */
+	  /* 32-bit */
 #  if ( INT_MAX == 2147483647 )
-  typedef unsigned       posh_u32_t;
-  typedef int            posh_i32_t;
+typedef unsigned       posh_u32_t;
+typedef int            posh_i32_t;
 #  elif ( LONG_MAX == 2147483647 )
-  typedef unsigned long  posh_u32_t;
-  typedef long           posh_i32_t;
+typedef unsigned long  posh_u32_t;
+typedef long           posh_i32_t;
 #  else
-      error No 32-bit type found
+error No 32 - bit type found
 #  endif
 
 #else /* POSH_USE_LIMITS_H */
 
-  typedef unsigned short posh_u16_t;
-  typedef short          posh_i16_t;
+typedef unsigned short posh_u16_t;
+typedef short          posh_i16_t;
 
 #  if !defined POSH_OS_PALM
-  typedef unsigned       posh_u32_t;
-  typedef int            posh_i32_t;
+typedef unsigned       posh_u32_t;
+typedef int            posh_i32_t;
 #  else
-  typedef unsigned long  posh_u32_t;
-  typedef long           posh_i32_t;
+typedef unsigned long  posh_u32_t;
+typedef long           posh_i32_t;
 #  endif
 #endif
 
@@ -821,13 +821,13 @@ POSH_COMPILE_TIME_ASSERT(posh_u32_t, sizeof(posh_u32_t) == 4);
 POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
 
 #if !defined POSH_NO_FLOAT
-   POSH_COMPILE_TIME_ASSERT(posh_testfloat_t, sizeof(float)==4 );
-   POSH_COMPILE_TIME_ASSERT(posh_testdouble_t, sizeof(double)==8);
+POSH_COMPILE_TIME_ASSERT(posh_testfloat_t, sizeof(float) == 4);
+POSH_COMPILE_TIME_ASSERT(posh_testdouble_t, sizeof(double) == 8);
 #endif
 
 #if defined POSH_64BIT_INTEGER
-   POSH_COMPILE_TIME_ASSERT(posh_u64_t, sizeof(posh_u64_t) == 8);
-   POSH_COMPILE_TIME_ASSERT(posh_i64_t, sizeof(posh_i64_t) == 8);
+POSH_COMPILE_TIME_ASSERT(posh_u64_t, sizeof(posh_u64_t) == 8);
+POSH_COMPILE_TIME_ASSERT(posh_i64_t, sizeof(posh_i64_t) == 8);
 #endif
 
 #endif
@@ -850,7 +850,7 @@ POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
 #endif
 
 #if defined POSH_64BIT_POINTER
-   POSH_COMPILE_TIME_ASSERT( posh_64bit_pointer, sizeof( void * ) == 8 );
+POSH_COMPILE_TIME_ASSERT(posh_64bit_pointer, sizeof(void*) == 8);
 #elif !defined FORCE_DOXYGEN
 /* if this assertion is hit then you're on a system that either has 64-bit
    addressing and we didn't catch it, or you're on a system with 16-bit
@@ -858,9 +858,9 @@ POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
    triggering this assertion to make sure you're aware of the situation,
    so feel free to delete it.
 
-   If this assertion is triggered on a known 32 or 64-bit platform, 
+   If this assertion is triggered on a known 32 or 64-bit platform,
    please let us know (poshlib@poshlib.org) */
-   POSH_COMPILE_TIME_ASSERT( posh_32bit_pointer, sizeof( void * ) == 4 );
+POSH_COMPILE_TIME_ASSERT(posh_32bit_pointer, sizeof(void*) == 4);
 #endif
 
 #if defined FORCE_DOXYGEN
@@ -873,7 +873,7 @@ POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
 **
 ** These are optional POSH utility functions that are not required if you don't
 ** need anything except static checking of your host and target environment.
-** 
+**
 ** These functions are NOT wrapped with POSH_PUBLIC_API because I didn't want
 ** to enforce their export if your own library is only using them internally.
 ** ----------------------------------------------------------------------------
@@ -882,29 +882,29 @@ POSH_COMPILE_TIME_ASSERT(posh_i32_t, sizeof(posh_i32_t) == 4);
 extern "C" {
 #endif
 
-const char *POSH_GetArchString( void );
+	const char* POSH_GetArchString(void);
 
 #if !defined POSH_NO_FLOAT
 
-posh_u32_t  POSH_LittleFloatBits( float f );
-posh_u32_t  POSH_BigFloatBits( float f );
-float       POSH_FloatFromLittleBits( posh_u32_t bits );
-float       POSH_FloatFromBigBits( posh_u32_t bits );
+	posh_u32_t  POSH_LittleFloatBits(float f);
+	posh_u32_t  POSH_BigFloatBits(float f);
+	float       POSH_FloatFromLittleBits(posh_u32_t bits);
+	float       POSH_FloatFromBigBits(posh_u32_t bits);
 
-void        POSH_DoubleBits( double d, posh_byte_t dst[ 8 ] );
-double      POSH_DoubleFromBits( const posh_byte_t src[ 8 ] );
+	void        POSH_DoubleBits(double d, posh_byte_t dst[8]);
+	double      POSH_DoubleFromBits(const posh_byte_t src[8]);
 
-/* unimplemented
-float      *POSH_WriteFloatToLittle( void *dst, float f );
-float      *POSH_WriteFloatToBig( void *dst, float f );
-float       POSH_ReadFloatFromLittle( const void *src );
-float       POSH_ReadFloatFromBig( const void *src );
+	/* unimplemented
+	float      *POSH_WriteFloatToLittle( void *dst, float f );
+	float      *POSH_WriteFloatToBig( void *dst, float f );
+	float       POSH_ReadFloatFromLittle( const void *src );
+	float       POSH_ReadFloatFromBig( const void *src );
 
-double     *POSH_WriteDoubleToLittle( void *dst, double d );
-double     *POSH_WriteDoubleToBig( void *dst, double d );
-double      POSH_ReadDoubleFromLittle( const void *src );
-double      POSH_ReadDoubleFromBig( const void *src );
-*/
+	double     *POSH_WriteDoubleToLittle( void *dst, double d );
+	double     *POSH_WriteDoubleToBig( void *dst, double d );
+	double      POSH_ReadDoubleFromLittle( const void *src );
+	double      POSH_ReadDoubleFromBig( const void *src );
+	*/
 #endif /* !defined POSH_NO_FLOAT */
 
 #if defined FORCE_DOXYGEN
@@ -912,48 +912,48 @@ double      POSH_ReadDoubleFromBig( const void *src );
 #  undef  POSH_NO_FLOAT
 #endif
 
-extern posh_u16_t  POSH_SwapU16( posh_u16_t u );
-extern posh_i16_t  POSH_SwapI16( posh_i16_t u );
-extern posh_u32_t  POSH_SwapU32( posh_u32_t u );
-extern posh_i32_t  POSH_SwapI32( posh_i32_t u );
+	extern posh_u16_t  POSH_SwapU16(posh_u16_t u);
+	extern posh_i16_t  POSH_SwapI16(posh_i16_t u);
+	extern posh_u32_t  POSH_SwapU32(posh_u32_t u);
+	extern posh_i32_t  POSH_SwapI32(posh_i32_t u);
 
 #if defined POSH_64BIT_INTEGER
 
-extern posh_u64_t  POSH_SwapU64( posh_u64_t u );
-extern posh_i64_t  POSH_SwapI64( posh_i64_t u );
+	extern posh_u64_t  POSH_SwapU64(posh_u64_t u);
+	extern posh_i64_t  POSH_SwapI64(posh_i64_t u);
 
 #endif /*POSH_64BIT_INTEGER */
 
-extern posh_u16_t *POSH_WriteU16ToLittle( void *dst, posh_u16_t value );
-extern posh_i16_t *POSH_WriteI16ToLittle( void *dst, posh_i16_t value );
-extern posh_u32_t *POSH_WriteU32ToLittle( void *dst, posh_u32_t value );
-extern posh_i32_t *POSH_WriteI32ToLittle( void *dst, posh_i32_t value );
+	extern posh_u16_t* POSH_WriteU16ToLittle(void* dst, posh_u16_t value);
+	extern posh_i16_t* POSH_WriteI16ToLittle(void* dst, posh_i16_t value);
+	extern posh_u32_t* POSH_WriteU32ToLittle(void* dst, posh_u32_t value);
+	extern posh_i32_t* POSH_WriteI32ToLittle(void* dst, posh_i32_t value);
 
-extern posh_u16_t *POSH_WriteU16ToBig( void *dst, posh_u16_t value );
-extern posh_i16_t *POSH_WriteI16ToBig( void *dst, posh_i16_t value );
-extern posh_u32_t *POSH_WriteU32ToBig( void *dst, posh_u32_t value );
-extern posh_i32_t *POSH_WriteI32ToBig( void *dst, posh_i32_t value );
+	extern posh_u16_t* POSH_WriteU16ToBig(void* dst, posh_u16_t value);
+	extern posh_i16_t* POSH_WriteI16ToBig(void* dst, posh_i16_t value);
+	extern posh_u32_t* POSH_WriteU32ToBig(void* dst, posh_u32_t value);
+	extern posh_i32_t* POSH_WriteI32ToBig(void* dst, posh_i32_t value);
 
-extern posh_u16_t  POSH_ReadU16FromLittle( const void *src );
-extern posh_i16_t  POSH_ReadI16FromLittle( const void *src );
-extern posh_u32_t  POSH_ReadU32FromLittle( const void *src );
-extern posh_i32_t  POSH_ReadI32FromLittle( const void *src );
+	extern posh_u16_t  POSH_ReadU16FromLittle(const void* src);
+	extern posh_i16_t  POSH_ReadI16FromLittle(const void* src);
+	extern posh_u32_t  POSH_ReadU32FromLittle(const void* src);
+	extern posh_i32_t  POSH_ReadI32FromLittle(const void* src);
 
-extern posh_u16_t  POSH_ReadU16FromBig( const void *src );
-extern posh_i16_t  POSH_ReadI16FromBig( const void *src );
-extern posh_u32_t  POSH_ReadU32FromBig( const void *src );
-extern posh_i32_t  POSH_ReadI32FromBig( const void *src );
+	extern posh_u16_t  POSH_ReadU16FromBig(const void* src);
+	extern posh_i16_t  POSH_ReadI16FromBig(const void* src);
+	extern posh_u32_t  POSH_ReadU32FromBig(const void* src);
+	extern posh_i32_t  POSH_ReadI32FromBig(const void* src);
 
 #if defined POSH_64BIT_INTEGER
-extern posh_u64_t *POSH_WriteU64ToLittle( void *dst, posh_u64_t value );
-extern posh_i64_t *POSH_WriteI64ToLittle( void *dst, posh_i64_t value );
-extern posh_u64_t *POSH_WriteU64ToBig( void *dst, posh_u64_t value );
-extern posh_i64_t *POSH_WriteI64ToBig( void *dst, posh_i64_t value );
+	extern posh_u64_t* POSH_WriteU64ToLittle(void* dst, posh_u64_t value);
+	extern posh_i64_t* POSH_WriteI64ToLittle(void* dst, posh_i64_t value);
+	extern posh_u64_t* POSH_WriteU64ToBig(void* dst, posh_u64_t value);
+	extern posh_i64_t* POSH_WriteI64ToBig(void* dst, posh_i64_t value);
 
-extern posh_u64_t  POSH_ReadU64FromLittle( const void *src );
-extern posh_i64_t  POSH_ReadI64FromLittle( const void *src );
-extern posh_u64_t  POSH_ReadU64FromBig( const void *src );
-extern posh_i64_t  POSH_ReadI64FromBig( const void *src );
+	extern posh_u64_t  POSH_ReadU64FromLittle(const void* src);
+	extern posh_i64_t  POSH_ReadI64FromLittle(const void* src);
+	extern posh_u64_t  POSH_ReadU64FromBig(const void* src);
+	extern posh_i64_t  POSH_ReadI64FromBig(const void* src);
 #endif /* POSH_64BIT_INTEGER */
 
 #if defined POSH_LITTLE_ENDIAN

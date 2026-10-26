@@ -6,7 +6,7 @@
 
 #include "UIStatic.h"
 
-class CUIAnimatedStatic: public CUIStatic
+class CUIAnimatedStatic : public CUIStatic
 {
 	typedef CUIStatic inherited;
 	// Количекство кадров анимации
@@ -35,17 +35,17 @@ class CUIAnimatedStatic: public CUIStatic
 	void SetFrame(const u32 frameNum);
 public:
 	CUIAnimatedStatic();
-	
+
 	// Устанавливаем параметры
-	void SetOffset(float x, float y)					{m_pos.set(x,y);};
-	void SetFramesCount(u32 frameCnt)					{ m_uFrameCount = frameCnt; m_bParamsChanged = true; }
-	void SetAnimCols(u32 animCols)						{ m_uAnimCols = animCols; m_bParamsChanged = true; }
-	void SetAnimationDuration(u32 animDur)				{ m_uAnimationDuration = animDur; m_bParamsChanged = true; }
-	void SetFrameDimentions(u32 frameW, u32 frameH)		{ m_uFrameHeight = frameH; m_uFrameWidth = frameW; m_bParamsChanged = true; }
+	void SetOffset(float x, float y) { m_pos.set(x, y); };
+	void SetFramesCount(u32 frameCnt) { m_uFrameCount = frameCnt; m_bParamsChanged = true; }
+	void SetAnimCols(u32 animCols) { m_uAnimCols = animCols; m_bParamsChanged = true; }
+	void SetAnimationDuration(u32 animDur) { m_uAnimationDuration = animDur; m_bParamsChanged = true; }
+	void SetFrameDimentions(u32 frameW, u32 frameH) { m_uFrameHeight = frameH; m_uFrameWidth = frameW; m_bParamsChanged = true; }
 	// Управление
-	void Play()											{ m_bPlaying = true; m_prevTime = Device.dwTimeContinual;}
-	void Stop()											{ m_bPlaying = false; }
-	void Rewind(u32 delta = 0)							{ m_uCurFrame = 0xffffffff; m_uTimeElapsed = delta; }
+	void Play() { m_bPlaying = true; m_prevTime = Device.dwTimeContinual; }
+	void Stop() { m_bPlaying = false; }
+	void Rewind(u32 delta = 0) { m_uCurFrame = 0xffffffff; m_uTimeElapsed = delta; }
 	void SetAnimPos(float pos);
 	// Флаг-признак циклического проигрывания
 	bool m_bCyclic;

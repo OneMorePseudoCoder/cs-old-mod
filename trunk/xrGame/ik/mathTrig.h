@@ -1,4 +1,4 @@
- 
+
 /*
   This source code is a part of IKAN.
   Copyright (c) 2000 University of Pennsylvania
@@ -32,18 +32,18 @@
  */
 
 
-//
-// A collection of routines for doing various trigonometric operations
-// and operations on angles. 
-//
+ //
+ // A collection of routines for doing various trigonometric operations
+ // and operations on angles. 
+ //
 
 #ifndef _TRIGH
 #define _TRIGH
 
 
-inline float iszero(float x) 
+inline float iszero(float x)
 {
-    return x*x < 1e-6;
+	return x * x < 1e-6;
 }
 
 #if 0
@@ -78,16 +78,16 @@ int myasin(float x, float solns[2]);
 //
 // Use formula a^2 + b^2 - 2abcos(theta) = c^2 to get theta
 //
-inline int law_of_cosines(float a, float b, float c, float &angle)
+inline int law_of_cosines(float a, float b, float c, float& angle)
 {
-    float temp = (a*a+b*b-c*c)/(2*a*b);
+	float temp = (a * a + b * b - c * c) / (2 * a * b);
 
-    if (_abs(temp) > 1.0)
-	return 0;
-    else
-	angle = (float) acos(temp);
+	if (_abs(temp) > 1.0)
+		return 0;
+	else
+		angle = (float)acos(temp);
 
-    return 1;
+	return 1;
 }
 
 

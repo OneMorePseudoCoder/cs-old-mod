@@ -34,10 +34,10 @@
  */
 
 
-/* WARNING: this file should *not* be used by applications. It is
-   part of the implementation of the library and is subject
-   to change.
- */
+ /* WARNING: this file should *not* be used by applications. It is
+	part of the implementation of the library and is subject
+	to change.
+  */
 
 
 #ifndef __LZO_CONFIG1X_H
@@ -53,9 +53,9 @@
 #endif
 
 
-/***********************************************************************
-//
-************************************************************************/
+  /***********************************************************************
+  //
+  ************************************************************************/
 
 #define LZO_EOF_CODE
 #undef LZO_DETERMINISTIC
@@ -86,9 +86,9 @@
 #define M4_MARKER       16
 
 
-/***********************************************************************
-//
-************************************************************************/
+  /***********************************************************************
+  //
+  ************************************************************************/
 
 #ifndef MIN_LOOKAHEAD
 #define MIN_LOOKAHEAD       (M2_MAX_LEN + 1)
@@ -108,7 +108,7 @@
 
 #endif /* already included */
 
-/*
-vi:ts=4:et
-*/
+  /*
+  vi:ts=4:et
+  */
 

@@ -23,13 +23,13 @@ protected:
 	typedef GraphEngineSpace::_solver_value_type		_value_type;
 
 public:
-						CStalkerActionBase			(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
-	IC		CAI_Stalker	&object						() const
+	CStalkerActionBase(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
+	IC		CAI_Stalker& object() const
 	{
-		VERIFY			(m_object);
+		VERIFY(m_object);
 		return			(*m_object);
 	}
 };

@@ -2,13 +2,13 @@
 #include "ui\uistatic.h"
 class CObject;
 
-enum{
-	flVisObjNotValid		=(1<<0),
-	flTargetLocked			=(1<<1),
+enum {
+	flVisObjNotValid = (1 << 0),
+	flTargetLocked = (1 << 1),
 };
-struct SBinocVisibleObj{
-							SBinocVisibleObj		()					{};
-	CObject*				m_object;
+struct SBinocVisibleObj {
+	SBinocVisibleObj() {};
+	CObject* m_object;
 	CUIStatic				m_lt;
 	CUIStatic				m_lb;
 	CUIStatic				m_rt;
@@ -17,10 +17,10 @@ struct SBinocVisibleObj{
 
 	float					m_upd_speed;
 	Flags8					m_flags;
-	void					create_default			(u32 color);
-	void					Draw					();
-	void					Update					();
-	bool					operator <				(const SBinocVisibleObj& other) const{ return  m_flags.test(flVisObjNotValid) < other.m_flags.test(flVisObjNotValid);} //move non-actual to tail
+	void					create_default(u32 color);
+	void					Draw();
+	void					Update();
+	bool					operator <				(const SBinocVisibleObj& other) const { return  m_flags.test(flVisObjNotValid) < other.m_flags.test(flVisObjNotValid); } //move non-actual to tail
 };
 
 class CBinocularsVision
@@ -29,15 +29,15 @@ class CBinocularsVision
 	typedef VIS_OBJECTS::iterator			VIS_OBJECTS_IT;
 	VIS_OBJECTS								m_active_objects;
 public:
-	CBinocularsVision			(const shared_str& sect);
-	~CBinocularsVision			();
-	void	Update				();
-	void	Draw				();
-	void	remove_links		(CObject *object);
+	CBinocularsVision(const shared_str& sect);
+	~CBinocularsVision();
+	void	Update();
+	void	Draw();
+	void	remove_links(CObject* object);
 
-protected :
+protected:
 	Fcolor						m_frame_color;
 	float						m_rotating_speed;
-	void	Load				(const shared_str& section);
+	void	Load(const shared_str& section);
 	ref_sound					m_snd_found;
 };

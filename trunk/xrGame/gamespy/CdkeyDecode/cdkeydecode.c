@@ -5,7 +5,7 @@
 #include "base32.h"
 #include <string.h>
 
-int DecodeKeyData(const char *key, unsigned char *extradata)
+int DecodeKeyData(const char* key, unsigned char* extradata)
 {
 	char cleankey[MAX_ENCODED_KEY + 1];
 	unsigned char keyandcheck[MAX_EXTRA_DATA_LENGTH + KEY_LENGTH + CHECK_LENGTH];
@@ -21,19 +21,19 @@ int DecodeKeyData(const char *key, unsigned char *extradata)
 	extradatalen = keybytes - KEY_LENGTH - CHECK_LENGTH;
 	if (extradatalen <= 0)
 		return 0;
-	for (i = 0 ; i < extradatalen ; i++)
+	for (i = 0; i < extradatalen; i++)
 		extradata[i] = keyandcheck[i] ^ keyandcheck[extradatalen + (i % KEY_LENGTH)];
-	return extradatalen;	
+	return extradatalen;
 }
 
 
 
-static unsigned short CreateCheck(unsigned char *key, int keylen, unsigned short cskey)
+static unsigned short CreateCheck(unsigned char* key, int keylen, unsigned short cskey)
 {
 	int i;
 	unsigned int check = 0;
 
-	for (i = 0 ; i < keylen ; i++)
+	for (i = 0; i < keylen; i++)
 	{
 		check = check * 0x9CCF9319 + key[i];
 	}
@@ -42,7 +42,7 @@ static unsigned short CreateCheck(unsigned char *key, int keylen, unsigned short
 
 
 
-int VerifyClientCheck(const char *key, unsigned short cskey)
+int VerifyClientCheck(const char* key, unsigned short cskey)
 {
 	char cleankey[MAX_ENCODED_KEY + 1] = "";
 	unsigned char keyandcheck[MAX_EXTRA_DATA_LENGTH + KEY_LENGTH + CHECK_LENGTH] = "";
@@ -58,6 +58,6 @@ int VerifyClientCheck(const char *key, unsigned short cskey)
 	extradatalen = keybytes - KEY_LENGTH - CHECK_LENGTH;
 
 	correctcheck = CreateCheck(keyandcheck, KEY_LENGTH + extradatalen, cskey);
-	return (correctcheck == *(unsigned short *)(keyandcheck + extradatalen + KEY_LENGTH)) ? 1 : 0;
+	return (correctcheck == *(unsigned short*)(keyandcheck + extradatalen + KEY_LENGTH)) ? 1 : 0;
 }
 

@@ -2,7 +2,7 @@
 #include "ai_monster_defs.h"
 
 struct SMonsterSettings {
-	
+
 	// float speed factors
 
 	float					m_fDistToCorpse;
@@ -22,7 +22,7 @@ struct SMonsterSettings {
 	u32						m_dwDayTimeBegin;
 	u32						m_dwDayTimeEnd;
 	float					satiety_threshold;
-	
+
 	// ----------------------------------------------------------- 
 
 	float					m_fSoundThreshold;

@@ -2085,7 +2085,7 @@ static const float vwin8192[4096] = {
   1.0000000000F, 1.0000000000F, 1.0000000000F, 1.0000000000F,
 };
 
-static const float *const vwin[8] = {
+static const float* const vwin[8] = {
   vwin64,
   vwin128,
   vwin256,
@@ -2096,41 +2096,41 @@ static const float *const vwin[8] = {
   vwin8192,
 };
 
-const float *_vorbis_window_get(int n){
-  return vwin[n];
+const float* _vorbis_window_get(int n) {
+	return vwin[n];
 }
 
-void _vorbis_apply_window(float *d,int *winno,long *blocksizes,
-                          int lW,int W,int nW){
-  lW=(W?lW:0);
-  nW=(W?nW:0);
+void _vorbis_apply_window(float* d, int* winno, long* blocksizes,
+	int lW, int W, int nW) {
+	lW = (W ? lW : 0);
+	nW = (W ? nW : 0);
 
-  {
-    const float *windowLW=vwin[winno[lW]];
-    const float *windowNW=vwin[winno[nW]];
+	{
+		const float* windowLW = vwin[winno[lW]];
+		const float* windowNW = vwin[winno[nW]];
 
-    long n=blocksizes[W];
-    long ln=blocksizes[lW];
-    long rn=blocksizes[nW];
+		long n = blocksizes[W];
+		long ln = blocksizes[lW];
+		long rn = blocksizes[nW];
 
-    long leftbegin=n/4-ln/4;
-    long leftend=leftbegin+ln/2;
+		long leftbegin = n / 4 - ln / 4;
+		long leftend = leftbegin + ln / 2;
 
-    long rightbegin=n/2+n/4-rn/4;
-    long rightend=rightbegin+rn/2;
+		long rightbegin = n / 2 + n / 4 - rn / 4;
+		long rightend = rightbegin + rn / 2;
 
-    int i,p;
+		int i, p;
 
-    for(i=0;i<leftbegin;i++)
-      d[i]=0.f;
+		for (i = 0; i < leftbegin; i++)
+			d[i] = 0.f;
 
-    for(p=0;i<leftend;i++,p++)
-      d[i]*=windowLW[p];
+		for (p = 0; i < leftend; i++, p++)
+			d[i] *= windowLW[p];
 
-    for(i=rightbegin,p=rn/2-1;i<rightend;i++,p--)
-      d[i]*=windowNW[p];
+		for (i = rightbegin, p = rn / 2 - 1; i < rightend; i++, p--)
+			d[i] *= windowNW[p];
 
-    for(;i<n;i++)
-      d[i]=0.f;
-  }
+		for (; i < n; i++)
+			d[i] = 0.f;
+	}
 }

@@ -7,16 +7,16 @@
 #define CStateAbstract CState<_Object>
 
 TEMPLATE_SPECIALIZATION
-CStateAbstract::CState(_Object *obj, void *data) 
+CStateAbstract::CState(_Object* obj, void* data)
 {
-	reset		();
+	reset();
 
-	object		= obj;
-	_data		= data;
+	object = obj;
+	_data = data;
 }
 
 TEMPLATE_SPECIALIZATION
-CStateAbstract::~CState() 
+CStateAbstract::~CState()
 {
 	free_mem();
 }
@@ -26,7 +26,7 @@ void CStateAbstract::reinit()
 {
 	if (current_substate != u32(-1)) get_state_current()->critical_finalize();
 
-	for (STATE_MAP_IT it = substates.begin(); it != substates.end(); it++) 
+	for (STATE_MAP_IT it = substates.begin(); it != substates.end(); it++)
 		it->second->reinit();
 
 	reset();
@@ -34,17 +34,17 @@ void CStateAbstract::reinit()
 
 
 TEMPLATE_SPECIALIZATION
-void CStateAbstract::initialize() 
+void CStateAbstract::initialize()
 {
-	time_state_started	= Device.dwTimeGlobal;
+	time_state_started = Device.dwTimeGlobal;
 
-	current_substate	= u32(-1); // means need reselect state
-	prev_substate		= u32(-1);
+	current_substate = u32(-1); // means need reselect state
+	prev_substate = u32(-1);
 }
 
 TEMPLATE_SPECIALIZATION
-void CStateAbstract::execute() 
-{ 
+void CStateAbstract::execute()
+{
 	// проверить внешние условия изменения состояния
 	check_force_state();
 
@@ -55,7 +55,7 @@ void CStateAbstract::execute()
 	}
 
 	// выполнить текущее состояние
-	CSState *state = get_state(current_substate);
+	CSState* state = get_state(current_substate);
 	state->execute();
 
 	// сохранить текущее состояние
@@ -65,7 +65,7 @@ void CStateAbstract::execute()
 	if (state->check_completion()) {
 		state->finalize();
 		current_substate = u32(-1);
-	} 
+	}
 }
 
 TEMPLATE_SPECIALIZATION
@@ -82,18 +82,18 @@ void CStateAbstract::critical_finalize()
 }
 
 TEMPLATE_SPECIALIZATION
-void CStateAbstract::reset() 
+void CStateAbstract::reset()
 {
-	current_substate	= u32(-1);
-	prev_substate		= u32(-1);
-	time_state_started	= 0;
+	current_substate = u32(-1);
+	prev_substate = u32(-1);
+	time_state_started = 0;
 }
 
 TEMPLATE_SPECIALIZATION
-void CStateAbstract::select_state(u32 new_state_id) 
+void CStateAbstract::select_state(u32 new_state_id)
 {
-	if (current_substate == new_state_id) return;	
-	CSState *state;
+	if (current_substate == new_state_id) return;
+	CSState* state;
 
 	// если предыдущее состояние активно, завершить его
 	if (current_substate != u32(-1)) {
@@ -103,7 +103,7 @@ void CStateAbstract::select_state(u32 new_state_id)
 
 	// установить новое состояние
 	state = get_state(current_substate = new_state_id);
-	
+
 	// инициализировать новое состояние
 	setup_substates();
 
@@ -120,7 +120,7 @@ CStateAbstract* CStateAbstract::get_state(u32 state_id)
 }
 
 TEMPLATE_SPECIALIZATION
-void CStateAbstract::add_state(u32 state_id, CSState *s) 
+void CStateAbstract::add_state(u32 state_id, CSState* s)
 {
 	substates.insert(mk_pair(state_id, s));
 }
@@ -132,7 +132,7 @@ void CStateAbstract::free_mem()
 }
 
 TEMPLATE_SPECIALIZATION
-void CStateAbstract::fill_data_with	(void *ptr_src, u32 size)
+void CStateAbstract::fill_data_with(void* ptr_src, u32 size)
 {
 	VERIFY(ptr_src);
 	VERIFY(_data);
@@ -141,10 +141,10 @@ void CStateAbstract::fill_data_with	(void *ptr_src, u32 size)
 }
 
 TEMPLATE_SPECIALIZATION
-CStateAbstract *CStateAbstract::get_state_current()
+CStateAbstract* CStateAbstract::get_state_current()
 {
 	if (substates.empty() || (current_substate == u32(-1))) return 0;
-	
+
 	STATE_MAP_IT it = substates.find(current_substate);
 	VERIFY(it != substates.end());
 
@@ -154,9 +154,9 @@ TEMPLATE_SPECIALIZATION
 EMonsterState CStateAbstract::get_state_type()
 {
 	if (substates.empty() || (current_substate == u32(-1))) return eStateUnknown;
-	
+
 	EMonsterState state = get_state_current()->get_state_type();
-	return ( (state == eStateUnknown) ? EMonsterState(current_substate) : state);
+	return ((state == eStateUnknown) ? EMonsterState(current_substate) : state);
 }
 
 #undef TEMPLATE_SPECIALIZATION

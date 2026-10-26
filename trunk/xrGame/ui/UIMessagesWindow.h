@@ -22,27 +22,27 @@ struct GAME_NEWS_DATA;
 
 class CUIMessagesWindow : public CUIWindow {
 public:
-						CUIMessagesWindow				();
-	virtual				~CUIMessagesWindow				();
+	CUIMessagesWindow();
+	virtual				~CUIMessagesWindow();
 
-	void				AddIconedPdaMessage				(GAME_NEWS_DATA* news);
+	void				AddIconedPdaMessage(GAME_NEWS_DATA* news);
 
-	void				AddLogMessage					(const shared_str& msg);
-	void				AddLogMessage					(KillMessageStruct& msg);
-	void				AddChatMessage					(shared_str msg, shared_str author);
-	void				SetChatOwner					(game_cl_GameState* owner);
-	CUIChatWnd*			GetChatWnd						() {return m_pChatWnd;}
+	void				AddLogMessage(const shared_str& msg);
+	void				AddLogMessage(KillMessageStruct& msg);
+	void				AddChatMessage(shared_str msg, shared_str author);
+	void				SetChatOwner(game_cl_GameState* owner);
+	CUIChatWnd* GetChatWnd() { return m_pChatWnd; }
 
-	virtual void		Update							();
-	virtual void		Show							(bool status);
+	virtual void		Update();
+	virtual void		Show(bool status);
 
 
 protected:
 	virtual void Init(float x, float y, float width, float height);
 
 
-	CUIGameLog*			m_pChatLog;
-	CUIChatWnd*			m_pChatWnd;
-	CUIGameLog*			m_pGameLog;
-//	Frect				m_ListPos2;
+	CUIGameLog* m_pChatLog;
+	CUIChatWnd* m_pChatWnd;
+	CUIGameLog* m_pGameLog;
+	//	Frect				m_ListPos2;
 };

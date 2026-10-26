@@ -20,12 +20,12 @@
  *                                                                       *
  *************************************************************************/
 
-/*
+ /*
 
-old collision code. this code is deprecated and will eventually be removed
-from ODE.
+ old collision code. this code is deprecated and will eventually be removed
+ from ODE.
 
-*/
+ */
 
 #ifndef _ODE_SPACE_H_
 #define _ODE_SPACE_H_
@@ -36,46 +36,46 @@ from ODE.
 extern "C" {
 #endif
 
-struct dContactGeom;
+	struct dContactGeom;
 
-typedef void dNearCallback (void *data, dGeomID o1, dGeomID o2);
-
-
-/* extra information the space needs in every geometry object */
-
-typedef struct dGeomSpaceData {
-  dGeomID next;
-} dGeomSpaceData;
+	typedef void dNearCallback(void* data, dGeomID o1, dGeomID o2);
 
 
-dSpaceID dSimpleSpaceCreate (int dummy);
-dSpaceID dHashSpaceCreate (int dummy);
-dSpaceID dQuadTreeSpaceCreate (int dummy, dVector3 Center, dVector3 Extents, int Depth);
+	/* extra information the space needs in every geometry object */
 
-void dSpaceDestroy (dSpaceID);
-void dSpaceAdd (dSpaceID, dGeomID);
-void dSpaceRemove (dSpaceID, dGeomID);
-void dSpaceCollide (dSpaceID space, void *data, dNearCallback *callback);
-int dSpaceQuery (dSpaceID, dGeomID);
-
-void dHashSpaceSetLevels (dSpaceID space, int minlevel, int maxlevel);
+	typedef struct dGeomSpaceData {
+		dGeomID next;
+	} dGeomSpaceData;
 
 
-/* @@@ NOT FLEXIBLE ENOUGH
- *
- * generate contacts for those objects in the space that touch each other.
- * an array of contacts is created on the alternative stack using
- * StackAlloc(), and a pointer to the array is returned. the size of the
- * array is returned by the function.
- */
-/* int dSpaceCollide (dSpaceID space, dContactGeom **contact_array); */
+	dSpaceID dSimpleSpaceCreate(int dummy);
+	dSpaceID dHashSpaceCreate(int dummy);
+	dSpaceID dQuadTreeSpaceCreate(int dummy, dVector3 Center, dVector3 Extents, int Depth);
+
+	void dSpaceDestroy(dSpaceID);
+	void dSpaceAdd(dSpaceID, dGeomID);
+	void dSpaceRemove(dSpaceID, dGeomID);
+	void dSpaceCollide(dSpaceID space, void* data, dNearCallback* callback);
+	int dSpaceQuery(dSpaceID, dGeomID);
+
+	void dHashSpaceSetLevels(dSpaceID space, int minlevel, int maxlevel);
 
 
-/* HMMMMM... i dont think so.
- * tell the space that an object has moved, so its representation in the
- * space should be changed.
- */
-/* void dSpaceObjectMoved (dSpaceID, dGeomID); */
+	/* @@@ NOT FLEXIBLE ENOUGH
+	 *
+	 * generate contacts for those objects in the space that touch each other.
+	 * an array of contacts is created on the alternative stack using
+	 * StackAlloc(), and a pointer to the array is returned. the size of the
+	 * array is returned by the function.
+	 */
+	 /* int dSpaceCollide (dSpaceID space, dContactGeom **contact_array); */
+
+
+	 /* HMMMMM... i dont think so.
+	  * tell the space that an object has moved, so its representation in the
+	  * space should be changed.
+	  */
+	  /* void dSpaceObjectMoved (dSpaceID, dGeomID); */
 
 
 #ifdef __cplusplus

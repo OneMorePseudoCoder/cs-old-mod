@@ -96,27 +96,27 @@ struct SVelocityParam {
 	float	max_factor;
 
 	SVelocityParam() {
-		velocity.linear			= 0.f;
-		velocity.angular_real	= 0.f;
-		velocity.angular_path	= 0.f;
-		min_factor				= 1.0f;
-		max_factor				= 1.0f;
+		velocity.linear = 0.f;
+		velocity.angular_real = 0.f;
+		velocity.angular_path = 0.f;
+		min_factor = 1.0f;
+		max_factor = 1.0f;
 	}
 
-	void	Load (LPCSTR section, LPCSTR line) {
+	void	Load(LPCSTR section, LPCSTR line) {
 		string32 buffer;
-		velocity.linear			= float(atof(_GetItem(pSettings->r_string(section,line),0,buffer)));
-		velocity.angular_real	= float(atof(_GetItem(pSettings->r_string(section,line),1,buffer)));
-		velocity.angular_path	= float(atof(_GetItem(pSettings->r_string(section,line),2,buffer)));
-		min_factor				= float(atof(_GetItem(pSettings->r_string(section,line),3,buffer)));
-		max_factor				= float(atof(_GetItem(pSettings->r_string(section,line),4,buffer)));
+		velocity.linear = float(atof(_GetItem(pSettings->r_string(section, line), 0, buffer)));
+		velocity.angular_real = float(atof(_GetItem(pSettings->r_string(section, line), 1, buffer)));
+		velocity.angular_path = float(atof(_GetItem(pSettings->r_string(section, line), 2, buffer)));
+		min_factor = float(atof(_GetItem(pSettings->r_string(section, line), 3, buffer)));
+		max_factor = float(atof(_GetItem(pSettings->r_string(section, line), 4, buffer)));
 	}
 };
 
 
 // Activities
 enum EMotionAnim {
-	eAnimStandIdle			= u32(0),
+	eAnimStandIdle = u32(0),
 	eAnimStandTurnLeft,
 	eAnimStandTurnRight,
 
@@ -163,7 +163,7 @@ enum EMotionAnim {
 	eAnimSteal,
 
 	eAnimJumpStart,
-	eAnimJumpGlide,		
+	eAnimJumpGlide,
 	eAnimJumpFinish,
 
 	eAnimJumpLeft,
@@ -190,7 +190,7 @@ enum EMotionAnim {
 	eAnimUpperWalkFwd,
 	eAnimUpperThreaten,
 	eAnimUpperAttack,
-	
+
 	eAnimAttackPsi,
 
 	eAnimTeleRaise,
@@ -199,12 +199,12 @@ enum EMotionAnim {
 	eAnimGraviFire,
 
 	eAnimCount,
-	eAnimUndefined			= u32(-1)
+	eAnimUndefined = u32(-1)
 };
 
 // Generic actions
 enum EAction {
-	ACT_STAND_IDLE	= u32(0),
+	ACT_STAND_IDLE = u32(0),
 	ACT_SIT_IDLE,
 	ACT_LIE_IDLE,
 	ACT_WALK_FWD,
@@ -217,12 +217,12 @@ enum EAction {
 	ACT_ATTACK,
 	ACT_STEAL,
 	ACT_LOOK_AROUND,
-	ACT_NONE		= u32(-1)
+	ACT_NONE = u32(-1)
 };
 
 enum EPState {
 	PS_STAND,
-	PS_SIT, 
+	PS_SIT,
 	PS_LIE,
 	PS_STAND_UPPER
 };
@@ -236,7 +236,7 @@ struct SAnimItem {
 	anim_string		target_name;	// "stand_idle_"
 	int				spec_id;		// (-1) - any,  (0 - ...) - идентификатор 3
 	u8				count;			// количество анимаций : "idle_0", "idle_1", "idle_2" 
-	
+
 	SVelocityParam	velocity;
 
 	EPState			pos_state;
@@ -270,7 +270,7 @@ struct SMotionItem {
 	EMotionAnim		anim;
 	bool			is_turn_params;
 
-	struct{
+	struct {
 		EMotionAnim	anim_left;			// speed, r_speed got from turn_left member
 		EMotionAnim	anim_right;
 		float		min_angle;
@@ -281,7 +281,7 @@ struct SMotionItem {
 struct SReplacedAnim {
 	EMotionAnim cur_anim;
 	EMotionAnim new_anim;
-	bool		*flag;
+	bool* flag;
 };
 
 // Определение времени аттаки по анимации
@@ -325,7 +325,7 @@ struct SAAParam {
 		float	from_pitch;
 		float	to_pitch;
 	} foh;
-	
+
 	float		dist;
 };
 
@@ -340,17 +340,17 @@ struct SCurrentAnimationInfo {
 	TTime		time_started;
 
 	struct {
-		IC void		_set_current	(float v)			{ current=v; VERIFY2(_abs(v)<1000,"_set_current(). monster speed is too big"); }
-		IC void		_set_target		(float v)			{ target=v;	VERIFY2(_abs(v)<1000,"_set_target(). monster speed is too big");}
-		IC float	_get_current	()					{ return current; }
-		IC float	_get_target		()					{ return target; }
+		IC void		_set_current(float v) { current = v; VERIFY2(_abs(v) < 1000, "_set_current(). monster speed is too big"); }
+		IC void		_set_target(float v) { target = v;	VERIFY2(_abs(v) < 1000, "_set_target(). monster speed is too big"); }
+		IC float	_get_current() { return current; }
+		IC float	_get_target() { return target; }
 	private:
 		float		current;
 		float		target;
 	} speed;
 
 	float			speed_change_vel;
-	CBlend			*blend;
+	CBlend* blend;
 };
 
 
@@ -358,43 +358,43 @@ struct SCurrentAnimationInfo {
 //////////////////////////////////////////////////////////////////////////
 
 struct t_fx_index {
-	s8 front;	
-	s8 back;	
+	s8 front;
+	s8 back;
 };
 
 enum EHitSide {
-	eSideFront	= u32(0),
+	eSideFront = u32(0),
 	eSideBack,
 	eSideLeft,
 	eSideRight
 };
 
 
-DEFINE_VECTOR	(SAnimItem*,		ANIM_ITEM_VECTOR,		ANIM_ITEM_VECTOR_IT);
-DEFINE_VECTOR	(STransition,		TRANSITION_ANIM_VECTOR, TRANSITION_ANIM_VECTOR_IT);
-DEFINE_MAP		(EAction,			SMotionItem,			MOTION_ITEM_MAP,			MOTION_ITEM_MAP_IT);
-DEFINE_VECTOR	(EMotionAnim,		SEQ_VECTOR,				SEQ_VECTOR_IT);
-DEFINE_VECTOR	(SAttackAnimation,	ATTACK_ANIM,			ATTACK_ANIM_IT);
-DEFINE_VECTOR	(SReplacedAnim,		REPLACED_ANIM,			REPLACED_ANIM_IT);
+DEFINE_VECTOR(SAnimItem*, ANIM_ITEM_VECTOR, ANIM_ITEM_VECTOR_IT);
+DEFINE_VECTOR(STransition, TRANSITION_ANIM_VECTOR, TRANSITION_ANIM_VECTOR_IT);
+DEFINE_MAP(EAction, SMotionItem, MOTION_ITEM_MAP, MOTION_ITEM_MAP_IT);
+DEFINE_VECTOR(EMotionAnim, SEQ_VECTOR, SEQ_VECTOR_IT);
+DEFINE_VECTOR(SAttackAnimation, ATTACK_ANIM, ATTACK_ANIM_IT);
+DEFINE_VECTOR(SReplacedAnim, REPLACED_ANIM, REPLACED_ANIM_IT);
 
-DEFINE_MAP		(u16,				t_fx_index,				FX_MAP_U16,					FX_MAP_U16_IT);	
-DEFINE_MAP		(shared_str,			t_fx_index,				FX_MAP_STRING,				FX_MAP_STRING_IT);
+DEFINE_MAP(u16, t_fx_index, FX_MAP_U16, FX_MAP_U16_IT);
+DEFINE_MAP(shared_str, t_fx_index, FX_MAP_STRING, FX_MAP_STRING_IT);
 
 
-DEFINE_VECTOR	(SEQ_VECTOR, VELOCITY_CHAIN_VEC, VELOCITY_CHAIN_VEC_IT);
+DEFINE_VECTOR(SEQ_VECTOR, VELOCITY_CHAIN_VEC, VELOCITY_CHAIN_VEC_IT);
 
 
 struct SVelocity {
 	float	current;
 	float	target;
-	
-	void	set		(float c, float t) {current = c; target = t;}
-}; 
+
+	void	set(float c, float t) { current = c; target = t; }
+};
 
 struct SMotionVel {
 	float linear;
 	float angular;
-	void	set		(float l, float a) {linear = l; angular = a;}
+	void	set(float l, float a) { linear = l; angular = a; }
 };
 
 enum EAccelType {
@@ -440,7 +440,7 @@ struct SMonsterEnemy {
 
 class CEntityAlive;
 
-DEFINE_MAP(const CEntityAlive *,SMonsterEnemy,ENEMIES_MAP, ENEMIES_MAP_IT);
+DEFINE_MAP(const CEntityAlive*, SMonsterEnemy, ENEMIES_MAP, ENEMIES_MAP_IT);
 
 struct SMonsterCorpse {
 	Fvector position;
@@ -448,22 +448,22 @@ struct SMonsterCorpse {
 	TTime	time;
 };
 
-DEFINE_MAP(const CEntityAlive *,SMonsterCorpse,CORPSE_MAP, CORPSE_MAP_IT);
+DEFINE_MAP(const CEntityAlive*, SMonsterCorpse, CORPSE_MAP, CORPSE_MAP_IT);
 
 
 
 struct SMonsterHit {
-	CObject		*object;
+	CObject* object;
 	TTime		time;
 	EHitSide	side;
 	Fvector		position;
 
-	bool	operator==(const CObject *obj) {
+	bool	operator==(const CObject* obj) {
 		return (object == obj);
 	}
 };
 
-DEFINE_VECTOR(SMonsterHit,MONSTER_HIT_VECTOR, MONSTER_HIT_VECTOR_IT);
+DEFINE_VECTOR(SMonsterHit, MONSTER_HIT_VECTOR, MONSTER_HIT_VECTOR_IT);
 
 
 enum EDangerType {

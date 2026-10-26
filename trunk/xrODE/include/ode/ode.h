@@ -23,7 +23,7 @@
 #ifndef _ODE_ODE_H_
 #define _ODE_ODE_H_
 
-/* include *everything* here */
+ /* include *everything* here */
 
 #include "config.h"
 #include "compatibility.h"

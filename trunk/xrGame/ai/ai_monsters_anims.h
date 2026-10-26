@@ -11,22 +11,22 @@
 #include "../layers/xrRender/SkeletonAnimated.h"
 #include "../ai_debug.h"
 
-DEFINE_VECTOR	(MotionID,ANIM_VECTOR, ANIM_IT);
+DEFINE_VECTOR(MotionID, ANIM_VECTOR, ANIM_IT);
 
 class CAniVector {
 public:
 	ANIM_VECTOR		A;
 
-			void	Load	(CKinematicsAnimated *tpKinematics, LPCSTR caBaseName);
+	void	Load(CKinematicsAnimated* tpKinematics, LPCSTR caBaseName);
 };
 
 template <LPCSTR caBaseNames[]> class CAniFVector {
 public:
 	ANIM_VECTOR		A;
 
-	IC	void		Load(CKinematicsAnimated *tpKinematics, LPCSTR caBaseName)
+	IC	void		Load(CKinematicsAnimated* tpKinematics, LPCSTR caBaseName)
 	{
-		A.clear			();
+		A.clear();
 		string256		S;
 
 		int j = 0;
@@ -50,9 +50,9 @@ template <class TYPE_NAME, LPCSTR caBaseNames[]> class CAniCollection {
 public:
 	xr_vector<TYPE_NAME>	A;
 
-	IC	void		Load(CKinematicsAnimated *tpKinematics, LPCSTR caBaseName)
+	IC	void		Load(CKinematicsAnimated* tpKinematics, LPCSTR caBaseName)
 	{
-		A.clear		();
+		A.clear();
 		string256	S;
 
 		int j = 0;

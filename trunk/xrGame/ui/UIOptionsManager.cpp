@@ -7,12 +7,12 @@
 #include "UIOptionsItem.h"
 #include "../xr_3da/XR_IOConsole.h"
 
-CUIOptionsManager::CUIOptionsManager(){
+CUIOptionsManager::CUIOptionsManager() {
 	m_b_vid_restart = false;
 	m_b_vid_restart = false;
 }
 
-void CUIOptionsManager::RegisterItem(CUIOptionsItem* item, const char* group){
+void CUIOptionsManager::RegisterItem(CUIOptionsItem* item, const char* group) {
 	groups_it it = m_groups.find(group);
 
 	if (m_groups.end() != it)
@@ -29,22 +29,23 @@ void CUIOptionsManager::RegisterItem(CUIOptionsItem* item, const char* group){
 	}
 }
 
-void CUIOptionsManager::UnRegisterGroup(const char* group){
+void CUIOptionsManager::UnRegisterGroup(const char* group) {
 	groups_it it = m_groups.find(group);
 
 	if (it != m_groups.end())
 		m_groups.erase(it);
 }
-void CUIOptionsManager::UnRegisterItem(CUIOptionsItem* item){
+void CUIOptionsManager::UnRegisterItem(CUIOptionsItem* item) {
 	groups_it it;
-	for (it = m_groups.begin(); it!= m_groups.end(); it++){
+	for (it = m_groups.begin(); it != m_groups.end(); it++) {
 		for (u32 i = 0; i < (*it).second.size(); i++)
-			if ((*it).second[i] == item){
-				(*it).second.erase((*it).second.begin() + i); return;}
+			if ((*it).second[i] == item) {
+				(*it).second.erase((*it).second.begin() + i); return;
+			}
 	}
 }
 
-void CUIOptionsManager::SendMessage2Group(const char* group, const char* message){
+void CUIOptionsManager::SendMessage2Group(const char* group, const char* message) {
 	groups_it it = m_groups.find(group);
 
 	R_ASSERT2(m_groups.end() != it, "invalid group name");
@@ -57,37 +58,37 @@ void CUIOptionsManager::SeveBackupValues(const char* group)
 {
 	groups_it it = m_groups.find(group);
 
-	R_ASSERT3(m_groups.end() != it, "invalid group name",group);
+	R_ASSERT3(m_groups.end() != it, "invalid group name", group);
 
-	for (u32 i = 0; i < (*it).second.size(); i++){
+	for (u32 i = 0; i < (*it).second.size(); i++) {
 		(*it).second[i]->SaveBackUpValue();
 	}
 }
 
-void CUIOptionsManager::SetCurrentValues(const char* group){
+void CUIOptionsManager::SetCurrentValues(const char* group) {
 	groups_it it = m_groups.find(group);
 
-	R_ASSERT3(m_groups.end() != it, "invalid group name",group);
+	R_ASSERT3(m_groups.end() != it, "invalid group name", group);
 
-	for (u32 i = 0; i < (*it).second.size(); i++){
+	for (u32 i = 0; i < (*it).second.size(); i++) {
 		(*it).second[i]->SetCurrentValue();
-//.		(*it).second[i]->SaveBackUpValue();
+		//.		(*it).second[i]->SaveBackUpValue();
 	}
 }
 
-void CUIOptionsManager::SaveValues(const char* group){
+void CUIOptionsManager::SaveValues(const char* group) {
 	groups_it it = m_groups.find(group);
 
-	R_ASSERT3(m_groups.end() != it, "invalid group name",group);
+	R_ASSERT3(m_groups.end() != it, "invalid group name", group);
 
-	for (u32 i = 0; i < (*it).second.size(); i++){
+	for (u32 i = 0; i < (*it).second.size(); i++) {
 		if ((*it).second[i]->IsChanged())
 			(*it).second[i]->SaveValue();
 	}
 }
 
-bool CUIOptionsManager::IsGroupChanged(const char* group){
-	groups_it it = m_groups.find(group);	
+bool CUIOptionsManager::IsGroupChanged(const char* group) {
+	groups_it it = m_groups.find(group);
 	R_ASSERT2(m_groups.end() != it, "invalid group name");
 
 	for (u32 i = 0; i < (*it).second.size(); i++)
@@ -99,17 +100,17 @@ bool CUIOptionsManager::IsGroupChanged(const char* group){
 	return false;
 }
 
-void CUIOptionsManager::UndoGroup(const char* group){
-	groups_it it = m_groups.find(group);	
+void CUIOptionsManager::UndoGroup(const char* group) {
+	groups_it it = m_groups.find(group);
 	R_ASSERT2(m_groups.end() != it, "invalid group name");
 
-	for (u32 i = 0; i < (*it).second.size(); i++){
+	for (u32 i = 0; i < (*it).second.size(); i++) {
 		if ((*it).second[i]->IsChanged())
 			(*it).second[i]->Undo();
 	}
 }
 
-void CUIOptionsManager::OptionsPostAccept(){
+void CUIOptionsManager::OptionsPostAccept() {
 	if (m_b_vid_restart)
 		Console->Execute("vid_restart");
 	if (m_b_snd_restart)
@@ -119,11 +120,11 @@ void CUIOptionsManager::OptionsPostAccept(){
 	m_b_snd_restart = false;
 }
 
-void CUIOptionsManager::DoVidRestart(){
+void CUIOptionsManager::DoVidRestart() {
 	m_b_vid_restart = true;
 }
 
-void CUIOptionsManager::DoSndRestart(){
+void CUIOptionsManager::DoSndRestart() {
 	m_b_snd_restart = true;
 }
 

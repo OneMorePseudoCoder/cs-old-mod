@@ -93,35 +93,35 @@
 // 	define nvStaticCheck(x) switch(0) { case 0: case x:; }
 #endif
 
-NVCORE_API int nvAbort(const char *exp, const char *file, int line, const char * func = 0);
-NVCORE_API void NV_CDECL nvDebug( const char *msg, ... ) __attribute__((format (printf, 1, 2)));
+NVCORE_API int nvAbort(const char* exp, const char* file, int line, const char* func = 0);
+NVCORE_API void NV_CDECL nvDebug(const char* msg, ...) __attribute__((format(printf, 1, 2)));
 
 namespace nv
 {
 	/** Message handler interface. */
 	struct MessageHandler {
-		virtual void log(const char * str, va_list arg) = 0;
-		virtual ~MessageHandler() {}	
+		virtual void log(const char* str, va_list arg) = 0;
+		virtual ~MessageHandler() {}
 	};
-	
+
 	/** Assert handler interface. */
 	struct AssertHandler {
-		virtual int assert(const char *exp, const char *file, int line, const char *func = 0) = 0;
-		virtual ~AssertHandler() {}	
+		virtual int assert(const char* exp, const char* file, int line, const char* func = 0) = 0;
+		virtual ~AssertHandler() {}
 	};
 
 
 	namespace debug
 	{
 		NVCORE_API void dumpInfo();
-	
+
 		// These functions are not thread safe.
-		NVCORE_API void setMessageHandler( MessageHandler * messageHandler );
+		NVCORE_API void setMessageHandler(MessageHandler* messageHandler);
 		NVCORE_API void resetMessageHandler();
-	
-		NVCORE_API void setAssertHandler( AssertHandler * assertHanlder );
+
+		NVCORE_API void setAssertHandler(AssertHandler* assertHanlder);
 		NVCORE_API void resetAssertHandler();
-	
+
 		NVCORE_API void enableSigHandler();
 		NVCORE_API void disableSigHandler();
 	}

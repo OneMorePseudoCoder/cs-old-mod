@@ -14,7 +14,7 @@
 using namespace luabind;
 
 #pragma optimize("s",on)
-void CSE_ALifeItemPDA::script_register(lua_State *L)
+void CSE_ALifeItemPDA::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -25,7 +25,7 @@ void CSE_ALifeItemPDA::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemDocument::script_register(lua_State *L)
+void CSE_ALifeItemDocument::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -36,7 +36,7 @@ void CSE_ALifeItemDocument::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemGrenade::script_register(lua_State *L)
+void CSE_ALifeItemGrenade::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -47,7 +47,7 @@ void CSE_ALifeItemGrenade::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemExplosive::script_register(lua_State *L)
+void CSE_ALifeItemExplosive::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -58,7 +58,7 @@ void CSE_ALifeItemExplosive::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemBolt::script_register(lua_State *L)
+void CSE_ALifeItemBolt::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -69,7 +69,7 @@ void CSE_ALifeItemBolt::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemCustomOutfit::script_register(lua_State *L)
+void CSE_ALifeItemCustomOutfit::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -80,13 +80,13 @@ void CSE_ALifeItemCustomOutfit::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemWeaponMagazined::script_register(lua_State *L)
+void CSE_ALifeItemWeaponMagazined::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
 			CSE_ALifeItemWeaponMagazined,
 			"cse_alife_item_weapon_magazined",
 			CSE_ALifeItemWeapon
-			)
+		)
 	];
 }

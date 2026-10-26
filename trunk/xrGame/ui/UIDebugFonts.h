@@ -14,12 +14,12 @@
 class CUIDebugFonts : public CUIDialogWnd
 {
 public:
-			CUIDebugFonts();
+	CUIDebugFonts();
 	virtual ~CUIDebugFonts();
 
 	virtual void Init(float x, float y, float width, float height);
 	virtual bool OnKeyboardAction(int dik, EUIMessages keyboard_action);
-			void FillUpList();
+	void FillUpList();
 protected:
 	CUIStatic  m_background;
 };

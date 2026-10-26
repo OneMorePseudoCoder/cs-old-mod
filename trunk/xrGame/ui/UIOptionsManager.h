@@ -6,9 +6,9 @@
 
 class CUIOptionsItem;
 
-class CUIOptionsManager{
+class CUIOptionsManager {
 	friend class CUIOptionsItem;
-public:	
+public:
 	CUIOptionsManager();
 
 	void SeveBackupValues(const char* group);
@@ -23,7 +23,7 @@ public:
 
 	void SendMessage2Group(const char* group, const char* message);
 
-protected:	
+protected:
 	void RegisterItem(CUIOptionsItem* item, const char* group);
 	void UnRegisterGroup(const char* group);
 	void UnRegisterItem(CUIOptionsItem* item);

@@ -11,7 +11,7 @@
  ********************************************************************
 
   function:
-    last mod: $Id: apiwrapper.h 13596 2007-08-23 20:05:38Z tterribe $
+	last mod: $Id: apiwrapper.h 13596 2007-08-23 20:05:38Z tterribe $
 
  ********************************************************************/
 
@@ -30,25 +30,25 @@ typedef struct th_api_info    th_api_info;
    want to break pieces off into a common base library shared by encoder and
    decoder.
   In addition, this makes several other pieces of the API wrapper cleaner.*/
-typedef void (*oc_setup_clear_func)(void *_ts);
+typedef void (*oc_setup_clear_func)(void* _ts);
 
 /*Generally only one of these pointers will be non-NULL in any given instance.
   Technically we do not even really need this struct, since we should be able
    to figure out which one from "context", but doing it this way makes sure we
    don't flub it up.*/
-struct th_api_wrapper{
-  oc_setup_clear_func  clear;
-  th_setup_info       *setup;
-  th_dec_ctx          *decode;
-  th_enc_ctx          *encode;
+struct th_api_wrapper {
+	oc_setup_clear_func  clear;
+	th_setup_info* setup;
+	th_dec_ctx* decode;
+	th_enc_ctx* encode;
 };
 
-struct th_api_info{
-  th_api_wrapper api;
-  theora_info    info;
+struct th_api_info {
+	th_api_wrapper api;
+	theora_info    info;
 };
 
 
-void oc_theora_info2th_info(th_info *_info,const theora_info *_ci);
+void oc_theora_info2th_info(th_info* _info, const theora_info* _ci);
 
 #endif

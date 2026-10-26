@@ -38,19 +38,20 @@ namespace luabind
 
 	struct value
 	{
-	friend class std::vector<value>;
+		friend class std::vector<value>;
 		template<class T>
 		value(const char* name, T v)
 			: name_(name)
 			, val_(v)
-		{}
+		{
+		}
 
 		const char* name_;
 		int val_;
 
 		value_vector operator,(const value& rhs) const;
 
-	private: 
+	private:
 
 		value() {}
 	};
@@ -97,15 +98,15 @@ namespace luabind
 		template<class From>
 		struct enum_maker
 		{
-			explicit enum_maker(From& from): from_(from) {}
+			explicit enum_maker(From& from) : from_(from) {}
 
 			From& operator[](const value& val)
 			{
 				from_.add_static_constant(val.name_, val.val_);
 				return from_;
 			}
-			
-			enum_maker<From>& operator=(const enum_maker<From> &val)
+
+			enum_maker<From>& operator=(const enum_maker<From>& val)
 			{
 				return 	(*this = val);
 			}

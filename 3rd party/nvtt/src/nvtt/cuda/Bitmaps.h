@@ -31,15 +31,15 @@ static void doPrecomputation()
 			{
 				indices[j] = 1;
 			}
-			
+
 			uint bitmap = 0;
-			
+
 			for(int p = 0; p < 16; p++) {
 				bitmap |= indices[p] << (p * 2);
 			}
-				
+
 			bitmaps[num] = bitmap;
-			
+
 			num++;
 		}
 	}
@@ -75,7 +75,7 @@ static void doPrecomputation()
 			{
 				indices[m] = 3;
 			}
-			
+
 			int kmax = ( j == 0 ) ? 15 : 16;
 			for( int k = kmax; k >= j; --k )
 			{
@@ -84,16 +84,16 @@ static void doPrecomputation()
 				{
 					indices[k] = 1;
 				}
-				
+
 				uint bitmap = 0;
-				
+
 				bool hasThree = false;
 				for(int p = 0; p < 16; p++) {
 					bitmap |= indices[p] << (p * 2);
-					
+
 					if (indices[p] == 3) hasThree = true;
 				}
-				
+
 				if (hasThree) {
 					bitmaps[num] = bitmap;
 					num++;
@@ -102,7 +102,7 @@ static void doPrecomputation()
 		}
 	}
 	nvDebugCheck(num == 975);
-	
+
 	// Align to 1024.
 	for(int i = 0; i < 49; i++)
 	{
@@ -1115,5 +1115,5 @@ const static uint s_bitmapTable[992] =
 	0x55555557,
 	0x55555557,
 	0x55555557,
- 	0x55555557,
+	0x55555557,
 };

@@ -2,19 +2,19 @@
 #include "../xr_3da/Fmesh.h"
 #include "flod.h"
 
-struct _hw 
+struct _hw
 {
-	Fvector		p0		;
-	Fvector		p1		;
-	Fvector		n0		;
-	Fvector		n1		;
-	u32			sun_af	;
-	Fvector2	t0		;
-	Fvector2	t1		;
-	u32			rgbh0	;
-	u32			rgbh1	;
+	Fvector		p0;
+	Fvector		p1;
+	Fvector		n0;
+	Fvector		n1;
+	u32			sun_af;
+	Fvector2	t0;
+	Fvector2	t1;
+	u32			rgbh0;
+	u32			rgbh1;
 };
-static D3DVERTEXELEMENT9 dwDecl[]	=
+static D3DVERTEXELEMENT9 dwDecl[] =
 {
 	{ 0, 0,  D3DDECLTYPE_FLOAT3,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,	0 },	// pos-0
 	{ 0, 12, D3DDECLTYPE_FLOAT3,	D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,	1 },	// pos-1
@@ -28,51 +28,51 @@ static D3DVERTEXELEMENT9 dwDecl[]	=
 	D3DDECL_END()
 };
 
-void FLOD::Load			(LPCSTR N, IReader *data, u32 dwFlags)
+void FLOD::Load(LPCSTR N, IReader* data, u32 dwFlags)
 {
-	inherited::Load		(N,data,dwFlags);
+	inherited::Load(N, data, dwFlags);
 
 	// LOD-def
-	R_ASSERT			(data->find_chunk(OGF_LODDEF2));
-	for (int f=0; f<8; f++)
+	R_ASSERT(data->find_chunk(OGF_LODDEF2));
+	for (int f = 0; f < 8; f++)
 	{
-		data->r					(facets[f].v,sizeof(facets[f].v));
-		_vertex* v				= facets[f].v;
+		data->r(facets[f].v, sizeof(facets[f].v));
+		_vertex* v = facets[f].v;
 
-		Fvector					_N,T;
-		_N.set					(0,0,0);
-		T.mknormal				(v[0].v,v[1].v,v[2].v);	_N.add	(T);
-		T.mknormal				(v[1].v,v[2].v,v[3].v);	_N.add	(T);
-		T.mknormal				(v[2].v,v[3].v,v[0].v);	_N.add	(T);
-		T.mknormal				(v[3].v,v[0].v,v[1].v);	_N.add	(T);
-		_N.div					(4.f);
-		facets[f].N.normalize	(_N);
-		facets[f].N.invert		();
+		Fvector					_N, T;
+		_N.set(0, 0, 0);
+		T.mknormal(v[0].v, v[1].v, v[2].v);	_N.add(T);
+		T.mknormal(v[1].v, v[2].v, v[3].v);	_N.add(T);
+		T.mknormal(v[2].v, v[3].v, v[0].v);	_N.add(T);
+		T.mknormal(v[3].v, v[0].v, v[1].v);	_N.add(T);
+		_N.div(4.f);
+		facets[f].N.normalize(_N);
+		facets[f].N.invert();
 	}
 
 	// VS
-	geom.create			(dwDecl, RCache.Vertex.Buffer(), RCache.QuadIB);
+	geom.create(dwDecl, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 	// lod correction
 	Fvector3			S;
-	vis.box.getradius	(S);
-	float r 			= vis.sphere.R;
-	std::sort			(&S.x,&S.x+3);
-	float a				= S.y;
-	float Sf			= 4.f*(0.5f*(r*r*asin(a/r)+a*_sqrt(r*r-a*a)));
-	float Ss			= M_PI*r*r;
-	lod_factor			= Sf/Ss;
+	vis.box.getradius(S);
+	float r = vis.sphere.R;
+	std::sort(&S.x, &S.x + 3);
+	float a = S.y;
+	float Sf = 4.f * (0.5f * (r * r * asin(a / r) + a * _sqrt(r * r - a * a)));
+	float Ss = M_PI * r * r;
+	lod_factor = Sf / Ss;
 }
-void FLOD::Copy			(IRender_Visual *pFrom	)
+void FLOD::Copy(IRender_Visual* pFrom)
 {
-	inherited::Copy		(pFrom);
+	inherited::Copy(pFrom);
 
-	FLOD* F				= (FLOD*)pFrom;
-	geom				= F->geom		;
-	lod_factor			= F->lod_factor	;
-	CopyMemory		(facets,F->facets,sizeof(facets));
+	FLOD* F = (FLOD*)pFrom;
+	geom = F->geom;
+	lod_factor = F->lod_factor;
+	CopyMemory(facets, F->facets, sizeof(facets));
 }
-void FLOD::Render		(float LOD)
+void FLOD::Render(float LOD)
 {
 	/*
 	Fvector				Ldir;

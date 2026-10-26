@@ -7,7 +7,7 @@ struct ENGINE_API SBaseEffector
 	virtual ~SBaseEffector() {}
 };
 
-enum ECameraStyle       {
+enum ECameraStyle {
 	csCamDebug,
 	csFirstEye,
 	csLookAt,
@@ -16,8 +16,8 @@ enum ECameraStyle       {
 	cs_forcedword = u32(-1)
 };
 
-enum ECamEffectorType		{
-	cefDemo		=0,
+enum ECamEffectorType {
+	cefDemo = 0,
 	cefNext
 };
 
@@ -71,8 +71,8 @@ struct ENGINE_API SCamEffectorInfo
 	}
 };
 
-enum EEffectorPPType	{
-	ppeNext		=0,
+enum EEffectorPPType {
+	ppeNext = 0,
 };
 
 // refs

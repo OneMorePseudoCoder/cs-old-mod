@@ -26,7 +26,7 @@ public:
 	shared_str			m_caParticleToRun;
 	shared_str			m_caBoneName;
 	EGoalType			m_tGoalType;
-	CParticlesObject	*m_tpParticleSystem;
+	CParticlesObject* m_tpParticleSystem;
 	bool				m_bStartedToPlay;
 	Fvector				m_tParticlePosition;
 	Fvector				m_tParticleAngles;
@@ -34,16 +34,16 @@ public:
 	bool				m_bAutoRemove;
 
 public:
-	IC					CScriptParticleAction	();
-	IC					CScriptParticleAction	(LPCSTR caPartcileToRun, LPCSTR caBoneName, const CParticleParams &tParticleParams = CParticleParams(), bool bAutoRemove = false);
-	IC					CScriptParticleAction	(LPCSTR caPartcileToRun, const CParticleParams &tParticleParams = CParticleParams(), bool bAutoRemove = false);
-	virtual				~CScriptParticleAction	();
-			void		SetParticle				(LPCSTR caParticleToRun, bool bAutoRemove);
-	IC		void		SetPosition				(const Fvector &tPosition);
-	IC		void		SetBone					(LPCSTR caBoneName);
-	IC		void		SetAngles				(const Fvector &tAngleOffset);
-	IC		void		SetVelocity				(const Fvector &tVelocity);
-	IC		void		initialize				();
+	IC					CScriptParticleAction();
+	IC					CScriptParticleAction(LPCSTR caPartcileToRun, LPCSTR caBoneName, const CParticleParams& tParticleParams = CParticleParams(), bool bAutoRemove = false);
+	IC					CScriptParticleAction(LPCSTR caPartcileToRun, const CParticleParams& tParticleParams = CParticleParams(), bool bAutoRemove = false);
+	virtual				~CScriptParticleAction();
+	void		SetParticle(LPCSTR caParticleToRun, bool bAutoRemove);
+	IC		void		SetPosition(const Fvector& tPosition);
+	IC		void		SetBone(LPCSTR caBoneName);
+	IC		void		SetAngles(const Fvector& tAngleOffset);
+	IC		void		SetVelocity(const Fvector& tVelocity);
+	IC		void		initialize();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

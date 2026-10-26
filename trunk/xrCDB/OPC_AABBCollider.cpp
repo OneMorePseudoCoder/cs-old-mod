@@ -4,30 +4,30 @@
  *	Copyright (C) 2001 Pierre Terdiman
  *	Homepage: http://www.codercorner.com/Opcode.htm
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- *	Contains code for an AABB collider.
- *	\file		OPC_AABBCollider.cpp
- *	\author		Pierre Terdiman
- *	\date		January, 1st, 2002
- */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ /**
+  *	Contains code for an AABB collider.
+  *	\file		OPC_AABBCollider.cpp
+  *	\author		Pierre Terdiman
+  *	\date		January, 1st, 2002
+  */
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- *	Contains an AABB-vs-tree collider.
- *
- *	\class		AABBCollider
- *	\author		Pierre Terdiman
- *	\version	1.2
- *	\date		January, 1st, 2002
-*/
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**
+   *	Contains an AABB-vs-tree collider.
+   *
+   *	\class		AABBCollider
+   *	\author		Pierre Terdiman
+   *	\version	1.2
+   *	\date		January, 1st, 2002
+  */
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Precompiled Header
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Precompiled Header
 #include "stdafx.h"
 #pragma hdrstop
 
@@ -38,7 +38,7 @@ using namespace Opcode;
 
 //! AABB-triangle test
 #ifdef OPC_USE_CALLBACKS
-	#define AABB_PRIM(primindex, flag)									\
+#define AABB_PRIM(primindex, flag)									\
 		/* Request vertices from the app */								\
 		VertexPointers VP;	(mObjCallback)(primindex, VP, mUserData);	\
 		mLeafVerts[0] = *VP.Vertex[0];									\
@@ -52,7 +52,7 @@ using namespace Opcode;
 			mTouchedPrimitives->Add(primindex);							\
 		}
 #else
-	#define AABB_PRIM(primindex, flag)									\
+#define AABB_PRIM(primindex, flag)									\
 		/* Direct access to vertices */									\
 		const IndexedTriangle* T = &mFaces[primindex];					\
 		mLeafVerts[0] = mVerts[T->mVRef[0]];							\
@@ -71,7 +71,7 @@ using namespace Opcode;
 /**
  *	Constructor.
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBCollider::AABBCollider()
 {
 }
@@ -80,7 +80,7 @@ AABBCollider::AABBCollider()
 /**
  *	Destructor.
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBCollider::~AABBCollider()
 {
 }
@@ -90,7 +90,7 @@ AABBCollider::~AABBCollider()
  *	Validates current settings. You should call this method after all the settings and callbacks have been defined.
  *	\return		null if everything is ok, else a string describing the problem
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* AABBCollider::ValidateSettings()
 {
 	return VolumeCollider::ValidateSettings();
@@ -109,21 +109,21 @@ const char* AABBCollider::ValidateSettings()
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, OPCODE_Model* model)
 {
 	// Checkings
-	if(!model)	return false;
+	if (!model)	return false;
 
 	// Simple double-dispatch
-	if(!model->HasLeafNodes())
+	if (!model->HasLeafNodes())
 	{
-		if(model->IsQuantized())	return Collide(cache, box, (const AABBQuantizedNoLeafTree*)model->GetTree());
+		if (model->IsQuantized())	return Collide(cache, box, (const AABBQuantizedNoLeafTree*)model->GetTree());
 		else						return Collide(cache, box, (const AABBNoLeafTree*)model->GetTree());
 	}
 	else
 	{
-		if(model->IsQuantized())	return Collide(cache, box, (const AABBQuantizedTree*)model->GetTree());
+		if (model->IsQuantized())	return Collide(cache, box, (const AABBQuantizedTree*)model->GetTree());
 		else						return Collide(cache, box, (const AABBCollisionTree*)model->GetTree());
 	}
 }
@@ -133,12 +133,12 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, OPCODE_Mo
  *	Initializes a collision query :
  *	- reset stats & contact status
  *	- check temporal coherence
- *           
+ *
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] AABB in world space
  *	\return		contact status
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 {
 	// 1) Call the base method
@@ -151,14 +151,14 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 	mTouchedPrimitives = &cache.TouchedPrimitives;
 
 	// 4) Check temporal coherence :
-	if(TemporalCoherenceEnabled())
+	if (TemporalCoherenceEnabled())
 	{
 		// Here we use temporal coherence
 		// => check results from previous frame before performing the collision query
-		if(FirstContactEnabled())
+		if (FirstContactEnabled())
 		{
 			// We're only interested in the first contact found => test the unique previously touched face
-			if(mTouchedPrimitives->GetNbEntries())
+			if (mTouchedPrimitives->GetNbEntries())
 			{
 				// Get index of previously touched face = the first entry in the array
 				udword PreviouslyTouchedFace = mTouchedPrimitives->GetEntry(0);
@@ -177,13 +177,13 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 		else
 		{
 			// We're interested in all contacts =>test the _new_ real box N(ew) against the previous fat box P(revious):
-			if(mBox.IsInside(cache.FatBox))
+			if (mBox.IsInside(cache.FatBox))
 			{
 				// - if N is included in P, return previous list
 				// => we simply leave the list (mTouchedFaces) unchanged
 
 				// Set contact status if needed
-				if(mTouchedPrimitives->GetNbEntries())	mFlags |= OPC_TEMPORAL_CONTACT;
+				if (mTouchedPrimitives->GetNbEntries())	mFlags |= OPC_TEMPORAL_CONTACT;
 			}
 			else
 			{
@@ -207,7 +207,7 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 	}
 
 	// 5) Precompute min & max bounds if needed
-	if(!GetContactStatus())
+	if (!GetContactStatus())
 	{
 		mMin = box.mCenter - box.mExtents;
 		mMax = box.mCenter + box.mExtents;
@@ -224,19 +224,19 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
  *	\param		tree		[in] model's AABB tree
  *	\return		true if success
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AABBCollisionTree* tree)
 {
 	// Checkings
-	if(!tree)				return false;
+	if (!tree)				return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)		return false;
+	if (!mObjCallback)		return false;
 #else
-	if(!mFaces || !mVerts)	return false;
+	if (!mFaces || !mVerts)	return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, box))	return true;
+	if (InitQuery(cache, box))	return true;
 
 	// Perform collision query
 	_Collide(tree->GetNodes());
@@ -252,19 +252,19 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AAB
  *	\param		tree		[in] model's AABB tree
  *	\return		true if success
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AABBNoLeafTree* tree)
 {
 	// Checkings
-	if(!tree)				return false;
+	if (!tree)				return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)		return false;
+	if (!mObjCallback)		return false;
 #else
-	if(!mFaces || !mVerts)	return false;
+	if (!mFaces || !mVerts)	return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, box))	return true;
+	if (InitQuery(cache, box))	return true;
 
 	// Perform collision query
 	_Collide(tree->GetNodes());
@@ -280,23 +280,23 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AAB
  *	\param		tree		[in] model's AABB tree
  *	\return		true if success
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AABBQuantizedTree* tree)
 {
 	// Checkings
-	if(!tree)				return false;
+	if (!tree)				return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)		return false;
+	if (!mObjCallback)		return false;
 #else
-	if(!mFaces || !mVerts)	return false;
+	if (!mFaces || !mVerts)	return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, box))	return true;
+	if (InitQuery(cache, box))	return true;
 
 	// Setup dequantization coeffs
-	mCenterCoeff	= tree->mCenterCoeff;
-	mExtentsCoeff	= tree->mExtentsCoeff;
+	mCenterCoeff = tree->mCenterCoeff;
+	mExtentsCoeff = tree->mExtentsCoeff;
 
 	// Perform collision query
 	_Collide(tree->GetNodes());
@@ -312,23 +312,23 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AAB
  *	\param		tree		[in] model's AABB tree
  *	\return		true if success
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AABBQuantizedNoLeafTree* tree)
 {
 	// Checkings
-	if(!tree)				return false;
+	if (!tree)				return false;
 #ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)		return false;
+	if (!mObjCallback)		return false;
 #else
-	if(!mFaces || !mVerts)	return false;
+	if (!mFaces || !mVerts)	return false;
 #endif
 
 	// Init collision query
-	if(InitQuery(cache, box))	return true;
+	if (InitQuery(cache, box))	return true;
 
 	// Setup dequantization coeffs
-	mCenterCoeff	= tree->mCenterCoeff;
-	mExtentsCoeff	= tree->mExtentsCoeff;
+	mCenterCoeff = tree->mCenterCoeff;
+	mExtentsCoeff = tree->mExtentsCoeff;
 
 	// Perform collision query
 	_Collide(tree->GetNodes());
@@ -344,19 +344,19 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AAB
  *	\param		tree		[in] AABB tree
  *	\return		true if success
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AABBTree* tree)
 {
 	// This is typically called for a scene tree, full of -AABBs-, not full of triangles.
 	// So we don't really have "primitives" to deal with. Hence it doesn't work with
 	// "FirstContact" + "TemporalCoherence".
-	ASSERT( !(FirstContactEnabled() && TemporalCoherenceEnabled()) );
+	ASSERT(!(FirstContactEnabled() && TemporalCoherenceEnabled()));
 
 	// Checkings
-	if(!tree)	return false;
+	if (!tree)	return false;
 
 	// Init collision query
-	if(InitQuery(cache, box))	return true;
+	if (InitQuery(cache, box))	return true;
 
 	// Perform collision query
 	_Collide(tree);
@@ -371,16 +371,16 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AAB
  *	\param		be	[in] box extents
  *	\return		true if the AABB contains the whole box
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline_ BOOL AABBCollider::AABBContainsBox(const Point& bc, const Point& be)
 {
-	if(mMin.x > bc.x - be.x)	return FALSE;
-	if(mMin.y > bc.y - be.y)	return FALSE;
-	if(mMin.z > bc.z - be.z)	return FALSE;
+	if (mMin.x > bc.x - be.x)	return FALSE;
+	if (mMin.y > bc.y - be.y)	return FALSE;
+	if (mMin.z > bc.z - be.z)	return FALSE;
 
-	if(mMax.x < bc.x + be.x)	return FALSE;
-	if(mMax.y < bc.y + be.y)	return FALSE;
-	if(mMax.z < bc.z + be.z)	return FALSE;
+	if (mMax.x < bc.x + be.x)	return FALSE;
+	if (mMax.y < bc.y + be.y)	return FALSE;
+	if (mMax.z < bc.z + be.z)	return FALSE;
 
 	return TRUE;
 }
@@ -399,26 +399,26 @@ inline_ BOOL AABBCollider::AABBContainsBox(const Point& bc, const Point& be)
  *	Recursive collision query for normal AABB trees.
  *	\param		node	[in] current collision node
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AABBCollider::_Collide(const AABBCollisionNode* node)
 {
 	// Perform AABB-AABB overlap test
-	if(!AABBAABBOverlap(node->mAABB.mExtents, node->mAABB.mCenter))	return;
+	if (!AABBAABBOverlap(node->mAABB.mExtents, node->mAABB.mCenter))	return;
 
 	TEST_AABB_IN_BOX(node->mAABB.mCenter, node->mAABB.mExtents)
 
-	if(node->IsLeaf())
-	{
-		AABB_PRIM(node->GetPrimitive(), OPC_CONTACT)
-	}
-	else
-	{
-		_Collide(node->GetPos());
+		if (node->IsLeaf())
+		{
+			AABB_PRIM(node->GetPrimitive(), OPC_CONTACT)
+		}
+		else
+		{
+			_Collide(node->GetPos());
 
-		if(ContactFound()) return;
+			if (ContactFound()) return;
 
-		_Collide(node->GetNeg());
-	}
+			_Collide(node->GetNeg());
+		}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -426,7 +426,7 @@ void AABBCollider::_Collide(const AABBCollisionNode* node)
  *	Recursive collision query for quantized AABB trees.
  *	\param		node	[in] current collision node
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AABBCollider::_Collide(const AABBQuantizedNode* node)
 {
 	// Dequantize box
@@ -435,22 +435,22 @@ void AABBCollider::_Collide(const AABBQuantizedNode* node)
 	const Point Extents(float(Box->mExtents[0]) * mExtentsCoeff.x, float(Box->mExtents[1]) * mExtentsCoeff.y, float(Box->mExtents[2]) * mExtentsCoeff.z);
 
 	// Perform AABB-AABB overlap test
-	if(!AABBAABBOverlap(Extents, Center))	return;
+	if (!AABBAABBOverlap(Extents, Center))	return;
 
 	TEST_AABB_IN_BOX(Center, Extents)
 
-	if(node->IsLeaf())
-	{
-		AABB_PRIM(node->GetPrimitive(), OPC_CONTACT)
-	}
-	else
-	{
-		_Collide(node->GetPos());
+		if (node->IsLeaf())
+		{
+			AABB_PRIM(node->GetPrimitive(), OPC_CONTACT)
+		}
+		else
+		{
+			_Collide(node->GetPos());
 
-		if(ContactFound()) return;
+			if (ContactFound()) return;
 
-		_Collide(node->GetNeg());
-	}
+			_Collide(node->GetNeg());
+		}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -458,20 +458,20 @@ void AABBCollider::_Collide(const AABBQuantizedNode* node)
  *	Recursive collision query for no-leaf AABB trees.
  *	\param		node	[in] current collision node
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AABBCollider::_Collide(const AABBNoLeafNode* node)
 {
 	// Perform AABB-AABB overlap test
-	if(!AABBAABBOverlap(node->mAABB.mExtents, node->mAABB.mCenter))	return;
+	if (!AABBAABBOverlap(node->mAABB.mExtents, node->mAABB.mCenter))	return;
 
 	TEST_AABB_IN_BOX(node->mAABB.mCenter, node->mAABB.mExtents)
 
-	if(node->HasLeaf())		{ AABB_PRIM(node->GetPrimitive(), OPC_CONTACT) }
-	else					_Collide(node->GetPos());
+		if (node->HasLeaf()) { AABB_PRIM(node->GetPrimitive(), OPC_CONTACT) }
+		else					_Collide(node->GetPos());
 
-	if(ContactFound()) return;
+	if (ContactFound()) return;
 
-	if(node->HasLeaf2())	{ AABB_PRIM(node->GetPrimitive2(), OPC_CONTACT) }
+	if (node->HasLeaf2()) { AABB_PRIM(node->GetPrimitive2(), OPC_CONTACT) }
 	else					_Collide(node->GetNeg());
 }
 
@@ -480,7 +480,7 @@ void AABBCollider::_Collide(const AABBNoLeafNode* node)
  *	Recursive collision query for quantized no-leaf AABB trees.
  *	\param		node	[in] current collision node
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AABBCollider::_Collide(const AABBQuantizedNoLeafNode* node)
 {
 	// Dequantize box
@@ -489,16 +489,16 @@ void AABBCollider::_Collide(const AABBQuantizedNoLeafNode* node)
 	const Point Extents(float(Box->mExtents[0]) * mExtentsCoeff.x, float(Box->mExtents[1]) * mExtentsCoeff.y, float(Box->mExtents[2]) * mExtentsCoeff.z);
 
 	// Perform AABB-AABB overlap test
-	if(!AABBAABBOverlap(Extents, Center))	return;
+	if (!AABBAABBOverlap(Extents, Center))	return;
 
 	TEST_AABB_IN_BOX(Center, Extents)
 
-	if(node->HasLeaf())		{ AABB_PRIM(node->GetPrimitive(), OPC_CONTACT) }
-	else					_Collide(node->GetPos());
+		if (node->HasLeaf()) { AABB_PRIM(node->GetPrimitive(), OPC_CONTACT) }
+		else					_Collide(node->GetPos());
 
-	if(ContactFound()) return;
+	if (ContactFound()) return;
 
-	if(node->HasLeaf2())	{ AABB_PRIM(node->GetPrimitive2(), OPC_CONTACT) }
+	if (node->HasLeaf2()) { AABB_PRIM(node->GetPrimitive2(), OPC_CONTACT) }
 	else					_Collide(node->GetNeg());
 }
 
@@ -507,22 +507,22 @@ void AABBCollider::_Collide(const AABBQuantizedNoLeafNode* node)
  *	Recursive collision query for vanilla AABB trees.
  *	\param		node	[in] current collision node
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AABBCollider::_Collide(const AABBTreeNode* node)
 {
 	// Perform AABB-AABB overlap test
 	Point Center, Extents;
 	node->GetAABB()->GetCenter(Center);
 	node->GetAABB()->GetExtents(Extents);
-	if(!AABBAABBOverlap(Center, Extents))	return;
+	if (!AABBAABBOverlap(Center, Extents))	return;
 
-	if(node->IsLeaf())
+	if (node->IsLeaf())
 	{
 		mTouchedPrimitives->Add(node->GetPrimitives(), node->GetNbPrimitives());
 	}
 	else
 	{
-		if(AABBContainsBox(Center, Extents))
+		if (AABBContainsBox(Center, Extents))
 		{
 			mTouchedPrimitives->Add(node->GetPrimitives(), node->GetNbPrimitives());
 			return;

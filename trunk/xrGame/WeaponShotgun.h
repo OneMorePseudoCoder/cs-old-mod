@@ -3,44 +3,44 @@
 #include "weaponcustompistol.h"
 #include "script_export_space.h"
 
-class CWeaponShotgun :	public CWeaponCustomPistol
+class CWeaponShotgun : public CWeaponCustomPistol
 {
 	typedef CWeaponCustomPistol inherited;
 public:
 	CWeaponShotgun(void);
 	virtual ~CWeaponShotgun(void);
 
-	virtual void	Load			(LPCSTR section);
-	
-	virtual void	net_Destroy			();
-	virtual void	net_Export			(NET_Packet& P);
-	virtual void	net_Import			(NET_Packet& P);
+	virtual void	Load(LPCSTR section);
 
-	virtual void	Reload				();
-	virtual void	Fire2Start			();
-	virtual void	Fire2End			();
-	virtual void	OnShot				();
-	virtual void	OnShotBoth			();
-	virtual void	switch2_Fire		();
-	virtual void	switch2_Fire2		();
-	void			switch2_StartReload ();
+	virtual void	net_Destroy();
+	virtual void	net_Export(NET_Packet& P);
+	virtual void	net_Import(NET_Packet& P);
+
+	virtual void	Reload();
+	virtual void	Fire2Start();
+	virtual void	Fire2End();
+	virtual void	OnShot();
+	virtual void	OnShotBoth();
+	virtual void	switch2_Fire();
+	virtual void	switch2_Fire2();
+	void			switch2_StartReload();
 	void			switch2_AddCartgidge();
-	void			switch2_EndReload	();
+	void			switch2_EndReload();
 
-	virtual void	UpdateSounds		();
-	virtual void	PlayAnimOpenWeapon	();
+	virtual void	UpdateSounds();
+	virtual void	PlayAnimOpenWeapon();
 	virtual void	PlayAnimAddOneCartridgeWeapon();
-	void			PlayAnimCloseWeapon	();
+	void			PlayAnimCloseWeapon();
 
 	virtual bool	Action(s32 cmd, u32 flags);
 
 protected:
-	virtual void	OnAnimationEnd		(u32 state);
-	void			TriStateReload		();
-	virtual void	OnStateSwitch		(u32 S);
+	virtual void	OnAnimationEnd(u32 state);
+	void			TriStateReload();
+	virtual void	OnStateSwitch(u32 S);
 
 	bool			HaveCartridgeInInventory(u8 cnt);
-	virtual u8		AddCartridge		(u8 cnt);
+	virtual u8		AddCartridge(u8 cnt);
 
 	HUD_SOUND		sndShotBoth;
 	ESoundTypes		m_eSoundShotBoth;

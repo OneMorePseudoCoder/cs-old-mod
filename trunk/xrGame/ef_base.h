@@ -19,14 +19,14 @@ protected:
 	float					m_fMinResultValue;
 	float					m_fMaxResultValue;
 	char					m_caName[260];
-	CEF_Storage				*m_storage;
+	CEF_Storage* m_storage;
 
 public:
 
-					CBaseFunction(CEF_Storage *storage)
+	CBaseFunction(CEF_Storage* storage)
 	{
-		m_storage	= storage;
-		VERIFY		(m_storage);
+		m_storage = storage;
+		VERIFY(m_storage);
 		m_caName[0] = 0;
 	};
 
@@ -34,9 +34,9 @@ public:
 	{
 	};
 
-	IC	CEF_Storage &ef_storage() const
+	IC	CEF_Storage& ef_storage() const
 	{
-		VERIFY		(m_storage);
+		VERIFY(m_storage);
 		return		(*m_storage);
 	}
 
@@ -51,7 +51,7 @@ public:
 			if (fTemp >= m_fMaxResultValue)
 				return(dwDiscretizationValue - 1);
 			else
-				return(iFloor((fTemp - m_fMinResultValue)/(m_fMaxResultValue - m_fMinResultValue)*float(dwDiscretizationValue - 1) + .5f));
+				return(iFloor((fTemp - m_fMinResultValue) / (m_fMaxResultValue - m_fMinResultValue) * float(dwDiscretizationValue - 1) + .5f));
 	}
 
 	IC		float	ffGetMaxResultValue()
@@ -69,8 +69,8 @@ public:
 		return	(m_caName);
 	}
 
-	IC	CLASS_ID clsid_member		() const;
-	IC	CLASS_ID clsid_enemy		() const;
-	IC	CLASS_ID clsid_member_item	() const;
-	IC	CLASS_ID clsid_enemy_item	() const;
+	IC	CLASS_ID clsid_member() const;
+	IC	CLASS_ID clsid_enemy() const;
+	IC	CLASS_ID clsid_member_item() const;
+	IC	CLASS_ID clsid_enemy_item() const;
 };

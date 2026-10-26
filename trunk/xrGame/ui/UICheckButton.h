@@ -14,15 +14,15 @@ public:
 	virtual void	SetCurrentValue();
 	virtual void	SaveValue();
 	virtual bool	IsChanged();
-	virtual void 	SaveBackUpValue			();
-	virtual void 	Undo					();
+	virtual void 	SaveBackUpValue();
+	virtual void 	Undo();
 
 	virtual void Init(float x, float y, float width, float height);
-	virtual void SetTextX(float x) {/*do nothing*/}
+	virtual void SetTextX(float x) {/*do nothing*/ }
 
 	//состояние кнопки
-	bool GetCheck()					{return m_eButtonState == BUTTON_PUSHED;}
-	void SetCheck(bool ch)			{m_eButtonState = ch ? BUTTON_PUSHED : BUTTON_NORMAL;}
+	bool GetCheck() { return m_eButtonState == BUTTON_PUSHED; }
+	void SetCheck(bool ch) { m_eButtonState = ch ? BUTTON_PUSHED : BUTTON_NORMAL; }
 
 	void SetDependControl(CUIWindow* pWnd);
 

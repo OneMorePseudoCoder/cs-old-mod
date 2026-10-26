@@ -12,23 +12,23 @@ namespace nv
 	class NVMATH_CLASS Quaternion
 	{
 	public:
-		typedef Quaternion const & Arg;
-		
+		typedef Quaternion const& Arg;
+
 		Quaternion();
 		explicit Quaternion(zero_t);
 		Quaternion(float x, float y, float z, float w);
 		Quaternion(Vector4::Arg v);
-		
-		const Quaternion & operator=(Quaternion::Arg v);
-		
+
+		const Quaternion& operator=(Quaternion::Arg v);
+
 		scalar x() const;
 		scalar y() const;
 		scalar z() const;
 		scalar w() const;
-		
-		const Vector4 & asVector() const;
-		Vector4 & asVector();
-		
+
+		const Vector4& asVector() const;
+		Vector4& asVector();
+
 	private:
 		Vector4 q;
 	};
@@ -37,26 +37,26 @@ namespace nv
 	inline Quaternion::Quaternion(zero_t) : q(zero) {}
 	inline Quaternion::Quaternion(float x, float y, float z, float w) : q(x, y, z, w) {}
 	inline Quaternion::Quaternion(Vector4::Arg v) : q(v) {}
-	
-	inline const Quaternion & Quaternion::operator=(Quaternion::Arg v) { q = v.q; return *this; }
-	
+
+	inline const Quaternion& Quaternion::operator=(Quaternion::Arg v) { q = v.q; return *this; }
+
 	inline scalar Quaternion::x() const { return q.x(); }
 	inline scalar Quaternion::y() const { return q.y(); }
 	inline scalar Quaternion::z() const { return q.z(); }
 	inline scalar Quaternion::w() const { return q.w(); }
 
-	inline const Vector4 & Quaternion::asVector() const { return q; }
-	inline Vector4 & Quaternion::asVector() { return q; }
+	inline const Vector4& Quaternion::asVector() const { return q; }
+	inline Vector4& Quaternion::asVector() { return q; }
 
 
 	inline Quaternion mul(Quaternion::Arg a, Quaternion::Arg b)
 	{
 		// @@ Efficient SIMD implementation?
 		return Quaternion(
-			+ a.x() * b.w() + a.y()*b.z() - a.z()*b.y() + a.w()*b.x(),
-			- a.x() * b.z() + a.y()*b.w() + a.z()*b.x() + a.w()*b.y(),
-			+ a.x() * b.y() - a.y()*b.x() + a.z()*b.w() + a.w()*b.z(),
-			- a.x() * b.x() - a.y()*b.y() - a.z()*b.z() + a.w()*b.w());
+			+a.x() * b.w() + a.y() * b.z() - a.z() * b.y() + a.w() * b.x(),
+			-a.x() * b.z() + a.y() * b.w() + a.z() * b.x() + a.w() * b.y(),
+			+a.x() * b.y() - a.y() * b.x() + a.z() * b.w() + a.w() * b.z(),
+			-a.x() * b.x() - a.y() * b.y() - a.z() * b.z() + a.w() * b.w());
 	}
 
 	inline Quaternion scale(Quaternion::Arg q, float s)

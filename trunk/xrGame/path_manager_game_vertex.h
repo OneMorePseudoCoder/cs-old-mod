@@ -17,28 +17,28 @@ template <
 	typename _index_type,
 	typename _iteration_type
 >	class CPathManager <
-		CGameGraph,
-		_DataStorage,
-		SGameVertex<
-			_dist_type,
-			_index_type,
-			_iteration_type
-		>,
-		_dist_type,
-		_index_type,
-		_iteration_type
-	> : public CPathManager <
-			CGameGraph,
-			_DataStorage,
-			SBaseParameters<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>,
-			_dist_type,
-			_index_type,
-			_iteration_type
-		>
+	CGameGraph,
+	_DataStorage,
+	SGameVertex<
+	_dist_type,
+	_index_type,
+	_iteration_type
+	>,
+	_dist_type,
+	_index_type,
+	_iteration_type
+> : public CPathManager <
+	CGameGraph,
+	_DataStorage,
+	SBaseParameters<
+	_dist_type,
+	_index_type,
+	_iteration_type
+	>,
+	_dist_type,
+	_index_type,
+	_iteration_type
+>
 {
 protected:
 	typedef CGameGraph _Graph;
@@ -61,12 +61,12 @@ protected:
 			> inherited;
 
 protected:
-	_Parameters		*m_evaluator;
+	_Parameters* m_evaluator;
 	bool			m_start_is_accessible;
 
 public:
-	IC		void		setup			(const _Graph *graph, _DataStorage *_data_storage, xr_vector<_index_type> *_path, const _index_type	&_start_node_index, const _index_type &_goal_node_index, _Parameters &params);
-	IC		bool		is_accessible	(const _index_type &vertex_id) const;
+	IC		void		setup(const _Graph* graph, _DataStorage* _data_storage, xr_vector<_index_type>* _path, const _index_type& _start_node_index, const _index_type& _goal_node_index, _Parameters& params);
+	IC		bool		is_accessible(const _index_type& vertex_id) const;
 };
 
 #include "path_manager_game_vertex_inline.h"

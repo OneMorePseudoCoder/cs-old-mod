@@ -4,7 +4,7 @@ Copyright (c) 1997-2000 John Robbins -- All rights reserved.
 ------------------------------------------------------------------------
 FILE        :   WarningsOff.h
 DISCUSSION  :
-    Turns off warnings so standard headers will compile.  Any warning
+	Turns off warnings so standard headers will compile.  Any warning
 turned off, must be turned back in in WarningsOn.h
 ----------------------------------------------------------------------*/
 
@@ -25,7 +25,7 @@ turned off, must be turned back in in WarningsOn.h
 #pragma warning ( disable : 4786 )
 
 
-/* Force everything to warning level 3. */
+   /* Force everything to warning level 3. */
 #pragma warning ( push , 3 )
 
 #endif  /* _WARNINGSOFF_H */

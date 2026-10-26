@@ -7,7 +7,7 @@
 #define CStateChimeraHuntingMoveToCoverAbstract CStateChimeraHuntingMoveToCover<_Object>
 
 TEMPLATE_SPECIALIZATION
-CStateChimeraHuntingMoveToCoverAbstract::CStateChimeraHuntingMoveToCover(_Object *obj) : inherited(obj)
+CStateChimeraHuntingMoveToCoverAbstract::CStateChimeraHuntingMoveToCover(_Object* obj) : inherited(obj)
 {
 }
 

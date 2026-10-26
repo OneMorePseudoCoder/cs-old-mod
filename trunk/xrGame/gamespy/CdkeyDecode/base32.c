@@ -15,7 +15,7 @@ char* gpcBase32Set = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 //// LeftShift /////////////////////////////////////////////////////////
 // Shift an array of s characters left n bits.
 
-static void 
+static void
 LeftShift(unsigned char* pc, int s, int n)
 {
 	int i;
@@ -95,7 +95,7 @@ MakeBase32Pretty(char* pcOut, const char* pcIn)
 // there to make it easier for humans to read.  The poor weak souls...)
 
 int
-CleanForBase32(char* newstr, const char *oldstr, int maxoutput)
+CleanForBase32(char* newstr, const char* oldstr, int maxoutput)
 {
 	int numout = 0;
 	for (/* */; *oldstr != 0; ++oldstr) {
@@ -112,7 +112,7 @@ CleanForBase32(char* newstr, const char *oldstr, int maxoutput)
 
 	*newstr = '\0';
 	return 1;
-} 
+}
 
 
 //// ConvertFromBase32 /////////////////////////////////////////////////
@@ -128,7 +128,7 @@ ConvertFromBase32(char* pcOut, const char* pcIn, int nInBytes)
 	int nValue;
 	int i;
 	int nTotalOut = 0;
-	
+
 	while (nInBytes > 0) {
 		int nCopyableBytes = (nInBytes > 8 ? 8 : nInBytes);
 		int nOutBytes = ((nCopyableBytes * 5)/* + 7*/) / 8;
@@ -153,9 +153,9 @@ ConvertFromBase32(char* pcOut, const char* pcIn, int nInBytes)
 		}
 
 		nInBytes -= nCopyableBytes;
-		
+
 		memcpy(pcOut, acShift, nOutBytes);
-		
+
 		pcOut += nOutBytes;
 		nTotalOut += nOutBytes;
 	}

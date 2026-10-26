@@ -12,7 +12,7 @@ class CScope : public CInventoryItemObject {
 private:
 	typedef CInventoryItemObject inherited;
 public:
-			CScope ();
+	CScope();
 	virtual ~CScope();
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

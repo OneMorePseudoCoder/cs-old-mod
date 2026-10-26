@@ -7,6 +7,6 @@ class CStateManagerBloodsucker : public CMonsterStateManager<CAI_Bloodsucker> {
 	typedef CMonsterStateManager<CAI_Bloodsucker> inherited;
 
 public:
-					CStateManagerBloodsucker	(CAI_Bloodsucker *monster); 
-	virtual void	execute						();
+	CStateManagerBloodsucker(CAI_Bloodsucker* monster);
+	virtual void	execute();
 };

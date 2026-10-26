@@ -9,13 +9,13 @@ class CStateMonsterLookToPoint : public CState<_Object> {
 	SStateDataLookToPoint	data;
 
 public:
-						CStateMonsterLookToPoint	(_Object *obj);
-	virtual				~CStateMonsterLookToPoint	();
+	CStateMonsterLookToPoint(_Object* obj);
+	virtual				~CStateMonsterLookToPoint();
 
-	virtual void		initialize					();
-	virtual	void		execute						();
+	virtual void		initialize();
+	virtual	void		execute();
 
-	virtual bool		check_completion			();
+	virtual bool		check_completion();
 };
 
 #include "state_look_point_inline.h"

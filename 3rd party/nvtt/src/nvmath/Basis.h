@@ -48,16 +48,16 @@ namespace nv
 		/// Compute the determinant of this basis.
 		float determinant() const
 		{
-			return 
+			return
 				tangent.x() * bitangent.y() * normal.z() - tangent.z() * bitangent.y() * normal.x() +
-				tangent.y() * bitangent.z() * normal.x() - tangent.y() * bitangent.x() * normal.z() + 
+				tangent.y() * bitangent.z() * normal.x() - tangent.y() * bitangent.x() * normal.z() +
 				tangent.z() * bitangent.x() * normal.y() - tangent.x() * bitangent.z() * normal.y();
 		}
-		
+
 		/*
 		// Get transform matrix for this basis.
 		NVMATH_API Matrix matrix() const;
-		
+
 		// Transform by this basis. (From this basis to object space).
 		NVMATH_API Vector3 transform(Vector3::Arg v) const;
 
@@ -67,7 +67,7 @@ namespace nv
 		// Transform by the inverse. (From object space to this basis).
 		NVMATH_API Vector3 transformI(Vector3::Arg v) const;
 		*/
-		
+
 		Vector3 tangent;
 		Vector3 bitangent;
 		Vector3 normal;

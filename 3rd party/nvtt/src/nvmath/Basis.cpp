@@ -40,7 +40,7 @@ void Basis::robustOrthonormalize(float epsilon /*= NV_EPSILON*/)
 	if (length(normal) < epsilon)
 	{
 		normal = cross(tangent, bitangent);
-		
+
 		if (length(normal) < epsilon)
 		{
 			tangent = Vector3(1, 0, 0);
@@ -50,10 +50,10 @@ void Basis::robustOrthonormalize(float epsilon /*= NV_EPSILON*/)
 		}
 	}
 	normal = ::normalize(normal, epsilon);
-	
+
 	tangent -= normal * dot(normal, tangent);
 	bitangent -= normal * dot(normal, bitangent);
-	
+
 	if (length(tangent) < epsilon)
 	{
 		if (length(bitangent) < epsilon)
@@ -70,7 +70,7 @@ void Basis::robustOrthonormalize(float epsilon /*= NV_EPSILON*/)
 	{
 		tangent = ::normalize(tangent, epsilon);
 		bitangent -= tangent * dot(tangent, bitangent);
-		
+
 		if (length(bitangent) < epsilon)
 		{
 			bitangent = cross(tangent, normal);
@@ -81,7 +81,7 @@ void Basis::robustOrthonormalize(float epsilon /*= NV_EPSILON*/)
 			tangent = ::normalize(tangent, epsilon);
 		}
 	}
-	
+
 	// Check vector lengths.
 	nvCheck(isNormalized(normal, epsilon));
 	nvCheck(isNormalized(tangent, epsilon));
@@ -149,7 +149,7 @@ Vector3 Basis::transformI(Vector3::Arg v) const
 {
 	const float det = determinant();
 	nvCheck(!equalf(det, 0.0f));
-	
+
 	const float idet = 1.0f / det;
 
 	// Rows of the inverse matrix.
@@ -167,7 +167,7 @@ Vector3 Basis::transformI(Vector3::Arg v) const
 	r2.z =  (tangent.x() * bitangent.y() - tangent.y() * bitangent.x()) * idet;
 
 	return Vector3(dot(v, r0), dot(v, r1), dot(v, r2));
-}	
+}
 */
 
 

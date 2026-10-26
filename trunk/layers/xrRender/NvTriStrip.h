@@ -28,12 +28,12 @@ struct PrimitiveGroup
 	unsigned int	numIndices;
 	unsigned short* indices;
 
-////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
 
 	PrimitiveGroup() : type(PT_STRIP), numIndices(0), indices(NULL) {}
 	~PrimitiveGroup()
 	{
-		if(indices)	xr_free(indices);
+		if (indices)	xr_free(indices);
 	}
 };
 
@@ -94,7 +94,7 @@ void SetListsOnly(const bool bListsOnly);
 //
 // Be sure to call xr_free on the returned primGroups to avoid leaking mem
 //
-void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<PrimitiveGroup> &primGroups);
+void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<PrimitiveGroup>& primGroups);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // RemapIndices()
@@ -112,6 +112,6 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 //
 // Credit goes to the MS Xbox crew for the idea for this interface.
 //
-void RemapIndices(const xr_vector<PrimitiveGroup> &in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup> &remappedGroups);
+void RemapIndices(const xr_vector<PrimitiveGroup>& in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup>& remappedGroups);
 
 #endif

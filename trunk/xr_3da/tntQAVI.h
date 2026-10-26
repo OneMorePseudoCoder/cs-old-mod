@@ -56,18 +56,18 @@ typedef struct {
 		WORD	right;
 		WORD	bottom;
 	};
-//	RECT   rcFrame;		- лажа в MSDN
+	//	RECT   rcFrame;		- лажа в MSDN
 } AVIStreamHeaderCustom;
 
 class CAviPlayerCustom
 {
 protected:
-	CAviPlayerCustom	*alpha;
+	CAviPlayerCustom* alpha;
 protected:
-	AVIINDEXENTRY		*m_pMovieIndex;
-	BYTE				*m_pMovieData;
+	AVIINDEXENTRY* m_pMovieIndex;
+	BYTE* m_pMovieData;
 	HIC					m_aviIC;
-	BYTE				*m_pDecompressedBuf;
+	BYTE* m_pDecompressedBuf;
 
 	BITMAPINFOHEADER	m_biOutFormat;
 	BITMAPINFOHEADER	m_biInFormat;
@@ -80,23 +80,23 @@ protected:
 	u32					m_dwFirstFrameOffset;
 
 
-	DWORD				CalcFrame			();
+	DWORD				CalcFrame();
 
-	BOOL				DecompressFrame		( DWORD	dwFrameNum );
-	VOID				PreRoll				( DWORD dwFrameNum );
+	BOOL				DecompressFrame(DWORD	dwFrameNum);
+	VOID				PreRoll(DWORD dwFrameNum);
 
 public:
-						CAviPlayerCustom		( );
-						~CAviPlayerCustom		( );
+	CAviPlayerCustom();
+	~CAviPlayerCustom();
 
 	DWORD				m_dwWidth, m_dwHeight;
 
-	VOID				GetSize				( DWORD *dwWidth, DWORD *dwHeight );
-	
-	BOOL				Load				( char *fname  );
-	BOOL				GetFrame			( BYTE **pDest );
+	VOID				GetSize(DWORD* dwWidth, DWORD* dwHeight);
 
-	BOOL				NeedUpdate			( ) { return CalcFrame( ) != m_dwFrameCurrent; }
-	INT					SetSpeed			( INT nPercent );
+	BOOL				Load(char* fname);
+	BOOL				GetFrame(BYTE** pDest);
+
+	BOOL				NeedUpdate() { return CalcFrame() != m_dwFrameCurrent; }
+	INT					SetSpeed(INT nPercent);
 };
 #endif

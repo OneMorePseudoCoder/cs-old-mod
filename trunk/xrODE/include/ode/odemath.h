@@ -31,31 +31,31 @@
 #define PURE_INLINE inline
 #endif
 
-/*
- * macro to access elements i,j in an NxM matrix A, independent of the
- * matrix storage convention.
- */
+ /*
+  * macro to access elements i,j in an NxM matrix A, independent of the
+  * matrix storage convention.
+  */
 #define dACCESS33(A,i,j) ((A)[(i)*4+(j)])
 
 
-/*
- * 3-way dot product. dDOTpq means that elements of `a' and `b' are spaced
- * p and q indexes apart respectively. dDOT() means dDOT11.
- * in C++ we could use function templates to get all the versions of these
- * functions - but on some compilers this will result in sub-optimal code.
- */
+  /*
+   * 3-way dot product. dDOTpq means that elements of `a' and `b' are spaced
+   * p and q indexes apart respectively. dDOT() means dDOT11.
+   * in C++ we could use function templates to get all the versions of these
+   * functions - but on some compilers this will result in sub-optimal code.
+   */
 
 #define dDOTpq(a,b,p,q) ((a)[0]*(b)[0] + (a)[p]*(b)[q] + (a)[2*(p)]*(b)[2*(q)])
 
 #ifdef __cplusplus
 
-PURE_INLINE dReal dDOT   (const dReal *a, const dReal *b) { return dDOTpq(a,b,1,1); }
-PURE_INLINE dReal dDOT13 (const dReal *a, const dReal *b) { return dDOTpq(a,b,1,3); }
-PURE_INLINE dReal dDOT31 (const dReal *a, const dReal *b) { return dDOTpq(a,b,3,1); }
-PURE_INLINE dReal dDOT33 (const dReal *a, const dReal *b) { return dDOTpq(a,b,3,3); }
-PURE_INLINE dReal dDOT14 (const dReal *a, const dReal *b) { return dDOTpq(a,b,1,4); }
-PURE_INLINE dReal dDOT41 (const dReal *a, const dReal *b) { return dDOTpq(a,b,4,1); }
-PURE_INLINE dReal dDOT44 (const dReal *a, const dReal *b) { return dDOTpq(a,b,4,4); }
+PURE_INLINE dReal dDOT(const dReal* a, const dReal* b) { return dDOTpq(a, b, 1, 1); }
+PURE_INLINE dReal dDOT13(const dReal* a, const dReal* b) { return dDOTpq(a, b, 1, 3); }
+PURE_INLINE dReal dDOT31(const dReal* a, const dReal* b) { return dDOTpq(a, b, 3, 1); }
+PURE_INLINE dReal dDOT33(const dReal* a, const dReal* b) { return dDOTpq(a, b, 3, 3); }
+PURE_INLINE dReal dDOT14(const dReal* a, const dReal* b) { return dDOTpq(a, b, 1, 4); }
+PURE_INLINE dReal dDOT41(const dReal* a, const dReal* b) { return dDOTpq(a, b, 4, 1); }
+PURE_INLINE dReal dDOT44(const dReal* a, const dReal* b) { return dDOTpq(a, b, 4, 4); }
 
 #else
 
@@ -70,12 +70,12 @@ PURE_INLINE dReal dDOT44 (const dReal *a, const dReal *b) { return dDOTpq(a,b,4,
 #endif /* __cplusplus */
 
 
-/*
- * cross product, set a = b x c. dCROSSpqr means that elements of `a', `b'
- * and `c' are spaced p, q and r indexes apart respectively.
- * dCROSS() means dCROSS111. `op' is normally `=', but you can set it to
- * +=, -= etc to get other effects.
- */
+   /*
+	* cross product, set a = b x c. dCROSSpqr means that elements of `a', `b'
+	* and `c' are spaced p, q and r indexes apart respectively.
+	* dCROSS() means dCROSS111. `op' is normally `=', but you can set it to
+	* +=, -= etc to get other effects.
+	*/
 
 #define dCROSS(a,op,b,c) \
   (a)[0] op ((b)[1]*(c)[2] - (b)[2]*(c)[1]); \
@@ -94,13 +94,13 @@ PURE_INLINE dReal dDOT44 (const dReal *a, const dReal *b) { return dDOTpq(a,b,4,
 #define dCROSS444(a,op,b,c) dCROSSpqr(a,op,b,c,4,4,4)
 
 
-/*
- * set a 3x3 submatrix of A to a matrix such that submatrix(A)*b = a x b.
- * A is stored by rows, and has `skip' elements per row. the matrix is
- * assumed to be already zero, so this does not write zero elements!
- * if (plus,minus) is (+,-) then a positive version will be written.
- * if (plus,minus) is (-,+) then a negative version will be written.
- */
+	/*
+	 * set a 3x3 submatrix of A to a matrix such that submatrix(A)*b = a x b.
+	 * A is stored by rows, and has `skip' elements per row. the matrix is
+	 * assumed to be already zero, so this does not write zero elements!
+	 * if (plus,minus) is (+,-) then a positive version will be written.
+	 * if (plus,minus) is (-,+) then a negative version will be written.
+	 */
 
 #define dCROSSMAT(A,a,skip,plus,minus) \
   (A)[1] = minus (a)[2]; \
@@ -111,24 +111,28 @@ PURE_INLINE dReal dDOT44 (const dReal *a, const dReal *b) { return dDOTpq(a,b,4,
   (A)[2*(skip)+1] = plus (a)[0];
 
 
-/*
- * compute the distance between two 3-vectors
- */
+	 /*
+	  * compute the distance between two 3-vectors
+	  */
 
 #ifdef __cplusplus
-PURE_INLINE float dDISTANCE (const float a[3], const float b[3])
-	{ return (float) dSqrt( (a[0]-b[0])*(a[0]-b[0]) + (a[1]-b[1])*(a[1]-b[1]) + (a[2]-b[2])*(a[2]-b[2]) ); }
-PURE_INLINE double dDISTANCE (const double a[3], const double b[3])
-	{ return dSqrt( (a[0]-b[0])*(a[0]-b[0]) + (a[1]-b[1])*(a[1]-b[1]) + (a[2]-b[2])*(a[2]-b[2]) ); }
+PURE_INLINE float dDISTANCE(const float a[3], const float b[3])
+{
+	return (float)dSqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]));
+}
+PURE_INLINE double dDISTANCE(const double a[3], const double b[3])
+{
+	return dSqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]));
+}
 #else
 #define dDISTANCE(a,b) \
 	(dSqrt( ((a)[0]-(b)[0])*((a)[0]-(b)[0]) + ((a)[1]-(b)[1])*((a)[1]-(b)[1]) + ((a)[2]-(b)[2])*((a)[2]-(b)[2]) ))
 #endif
 
 
-/*
- * special case matrix multipication, with operator selection
- */
+	  /*
+	   * special case matrix multipication, with operator selection
+	   */
 
 #define dMULTIPLYOP0_331(A,op,B,C) \
   (A)[0] op dDOT((B),(C)); \
@@ -177,19 +181,19 @@ PURE_INLINE double dDISTANCE (const double a[3], const double b[3])
 
 #define DECL template <class TA, class TB, class TC> PURE_INLINE void
 
-DECL dMULTIPLY0_331(TA *A, const TB *B, const TC *C) { dMULTIPLYOP0_331(A,=,B,C) }
-DECL dMULTIPLY1_331(TA *A, const TB *B, const TC *C) { dMULTIPLYOP1_331(A,=,B,C) }
-DECL dMULTIPLY0_133(TA *A, const TB *B, const TC *C) { dMULTIPLYOP0_133(A,=,B,C) }
-DECL dMULTIPLY0_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP0_333(A,=,B,C) }
-DECL dMULTIPLY1_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP1_333(A,=,B,C) }
-DECL dMULTIPLY2_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP2_333(A,=,B,C) }
+DECL dMULTIPLY0_331(TA* A, const TB* B, const TC* C) { dMULTIPLYOP0_331(A, =, B, C) }
+DECL dMULTIPLY1_331(TA* A, const TB* B, const TC* C) { dMULTIPLYOP1_331(A, =, B, C) }
+DECL dMULTIPLY0_133(TA* A, const TB* B, const TC* C) { dMULTIPLYOP0_133(A, =, B, C) }
+DECL dMULTIPLY0_333(TA* A, const TB* B, const TC* C) { dMULTIPLYOP0_333(A, =, B, C) }
+DECL dMULTIPLY1_333(TA* A, const TB* B, const TC* C) { dMULTIPLYOP1_333(A, =, B, C) }
+DECL dMULTIPLY2_333(TA* A, const TB* B, const TC* C) { dMULTIPLYOP2_333(A, =, B, C) }
 
-DECL dMULTIPLYADD0_331(TA *A, const TB *B, const TC *C) { dMULTIPLYOP0_331(A,+=,B,C) }
-DECL dMULTIPLYADD1_331(TA *A, const TB *B, const TC *C) { dMULTIPLYOP1_331(A,+=,B,C) }
-DECL dMULTIPLYADD0_133(TA *A, const TB *B, const TC *C) { dMULTIPLYOP0_133(A,+=,B,C) }
-DECL dMULTIPLYADD0_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP0_333(A,+=,B,C) }
-DECL dMULTIPLYADD1_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP1_333(A,+=,B,C) }
-DECL dMULTIPLYADD2_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP2_333(A,+=,B,C) }
+DECL dMULTIPLYADD0_331(TA* A, const TB* B, const TC* C) { dMULTIPLYOP0_331(A, +=, B, C) }
+DECL dMULTIPLYADD1_331(TA* A, const TB* B, const TC* C) { dMULTIPLYOP1_331(A, +=, B, C) }
+DECL dMULTIPLYADD0_133(TA* A, const TB* B, const TC* C) { dMULTIPLYOP0_133(A, +=, B, C) }
+DECL dMULTIPLYADD0_333(TA* A, const TB* B, const TC* C) { dMULTIPLYOP0_333(A, +=, B, C) }
+DECL dMULTIPLYADD1_333(TA* A, const TB* B, const TC* C) { dMULTIPLYOP1_333(A, +=, B, C) }
+DECL dMULTIPLYADD2_333(TA* A, const TB* B, const TC* C) { dMULTIPLYOP2_333(A, +=, B, C) }
 
 #undef DECL
 
@@ -216,34 +220,34 @@ DECL dMULTIPLYADD2_333(TA *A, const TB *B, const TC *C) { dMULTIPLYOP2_333(A,+=,
 extern "C" {
 #endif
 
-/*
- * normalize 3x1 and 4x1 vectors (i.e. scale them to unit length)
- */
-void dNormalize3_slow	(dVector3 a);
-void dNormalize4		(dVector4 a);
+	/*
+	 * normalize 3x1 and 4x1 vectors (i.e. scale them to unit length)
+	 */
+	void dNormalize3_slow(dVector3 a);
+	void dNormalize4(dVector4 a);
 
-__forceinline void dNormalize3 (dVector3 a)
-{
-	dReal	sqr_magnitude	= a[0]*a[0] + a[1]*a[1] + a[2]*a[2];
-	dReal	epsilon			= 1.192092896e-05F;
-	if		(sqr_magnitude < epsilon)	dNormalize3_slow	(a)	;
-	else	{
-		dReal	l	=	dRecipSqrt(sqr_magnitude);
-		a[0]		*=	l;
-		a[1]		*=	l;
-		a[2]		*=	l;
-	}	
-}
+	__forceinline void dNormalize3(dVector3 a)
+	{
+		dReal	sqr_magnitude = a[0] * a[0] + a[1] * a[1] + a[2] * a[2];
+		dReal	epsilon = 1.192092896e-05F;
+		if (sqr_magnitude < epsilon)	dNormalize3_slow(a);
+		else {
+			dReal	l = dRecipSqrt(sqr_magnitude);
+			a[0] *= l;
+			a[1] *= l;
+			a[2] *= l;
+		}
+	}
 
-/*
- * given a unit length "normal" vector n, generate vectors p and q vectors
- * that are an orthonormal basis for the plane space perpendicular to n.
- * i.e. this makes p,q such that n,p,q are all perpendicular to each other.
- * q will equal n x p. if n is not unit length then p will be unit length but
- * q wont be.
- */
+	/*
+	 * given a unit length "normal" vector n, generate vectors p and q vectors
+	 * that are an orthonormal basis for the plane space perpendicular to n.
+	 * i.e. this makes p,q such that n,p,q are all perpendicular to each other.
+	 * q will equal n x p. if n is not unit length then p will be unit length but
+	 * q wont be.
+	 */
 
-void dPlaneSpace (const dVector3 n, dVector3 p, dVector3 q);
+	void dPlaneSpace(const dVector3 n, dVector3 p, dVector3 q);
 
 #ifdef __cplusplus
 }

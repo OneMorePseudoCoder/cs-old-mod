@@ -17,12 +17,12 @@ private:
 	float				m_panic;
 
 public:
-						CStalkerVelocityCollection	(const shared_str &section);
-	inline	float		velocity					(
-		const MonsterSpace::EMentalState		&mental_state,
-		const MonsterSpace::EBodyState			&body_state,
-		const MonsterSpace::EMovementType		&movement_type,
-		const MonsterSpace::EMovementDirection	&movement_direction
+	CStalkerVelocityCollection(const shared_str& section);
+	inline	float		velocity(
+		const MonsterSpace::EMentalState& mental_state,
+		const MonsterSpace::EBodyState& body_state,
+		const MonsterSpace::EMovementType& movement_type,
+		const MonsterSpace::EMovementDirection& movement_direction
 	) const;
 };
 

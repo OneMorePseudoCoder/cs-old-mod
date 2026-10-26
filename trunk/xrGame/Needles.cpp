@@ -13,10 +13,10 @@
 #include "PhysicsShell.h"
 
 
-CNeedles::CNeedles(void) 
+CNeedles::CNeedles(void)
 {
 }
 
-CNeedles::~CNeedles(void) 
+CNeedles::~CNeedles(void)
 {
 }

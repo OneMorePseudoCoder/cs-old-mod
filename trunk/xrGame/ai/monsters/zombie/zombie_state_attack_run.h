@@ -10,16 +10,16 @@ class CStateZombieAttackRun : public CState<_Object> {
 	EAction				action;
 
 public:
-						CStateZombieAttackRun	(_Object *obj);
-	virtual				~CStateZombieAttackRun	();
+	CStateZombieAttackRun(_Object* obj);
+	virtual				~CStateZombieAttackRun();
 
-	virtual void		initialize				();
-	virtual	void		execute					();
+	virtual void		initialize();
+	virtual	void		execute();
 
-	virtual bool 		check_completion		();
-	virtual bool 		check_start_conditions	();
+	virtual bool 		check_completion();
+	virtual bool 		check_start_conditions();
 private:
-			void		choose_action			();
+	void		choose_action();
 
 };
 

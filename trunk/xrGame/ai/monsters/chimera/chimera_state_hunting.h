@@ -13,11 +13,11 @@ protected:
 	};
 
 public:
-						CStateChimeraHunting	(_Object *obj);
+	CStateChimeraHunting(_Object* obj);
 
-	virtual	void		reselect_state			();
-	virtual bool 		check_start_conditions	();	
-	virtual bool 		check_completion		();	
+	virtual	void		reselect_state();
+	virtual bool 		check_start_conditions();
+	virtual bool 		check_completion();
 
 };
 

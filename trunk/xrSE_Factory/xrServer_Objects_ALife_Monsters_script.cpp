@@ -13,31 +13,31 @@
 
 using namespace luabind;
 
-LPCSTR profile_name_script (CSE_ALifeTraderAbstract* ta)
+LPCSTR profile_name_script(CSE_ALifeTraderAbstract* ta)
 {
 	return *ta->character_profile();
 }
 
 #pragma optimize("s",on)
-void CSE_ALifeTraderAbstract::script_register(lua_State *L)
+void CSE_ALifeTraderAbstract::script_register(lua_State* L)
 {
 	module(L)[
-		def("cast_alife_object_to_creature",&_dynamic_cast<CSE_ALifeCreatureAbstract,CSE_ALifeObject>),
-		def("cast_alife_object_to_trader_abstract",&_dynamic_cast<CSE_ALifeTraderAbstract,CSE_ALifeObject>),
+		def("cast_alife_object_to_creature", &_dynamic_cast<CSE_ALifeCreatureAbstract, CSE_ALifeObject>),
+		def("cast_alife_object_to_trader_abstract", &_dynamic_cast<CSE_ALifeTraderAbstract, CSE_ALifeObject>),
 
 		class_<CSE_ALifeTraderAbstract>
-			("cse_alife_trader_abstract")
-//			.def(		constructor<LPCSTR>())
+		("cse_alife_trader_abstract")
+		//			.def(		constructor<LPCSTR>())
 #ifdef XRGAME_EXPORTS
-			.def("community",		CommunityName)
-			.def("profile_name",	profile_name_script)
-			.def("rank",			Rank)
-			.def("reputation",		Reputation)
+		.def("community", CommunityName)
+		.def("profile_name", profile_name_script)
+		.def("rank", Rank)
+		.def("reputation", Reputation)
 #endif // XRGAME_EXPORTS
 	];
 }
 
-void CSE_ALifeTrader::script_register(lua_State *L)
+void CSE_ALifeTrader::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_dynamic_alife2(
@@ -49,7 +49,7 @@ void CSE_ALifeTrader::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeCustomZone::script_register(lua_State *L)
+void CSE_ALifeCustomZone::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_dynamic_alife2(
@@ -61,7 +61,7 @@ void CSE_ALifeCustomZone::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeAnomalousZone::script_register(lua_State *L)
+void CSE_ALifeAnomalousZone::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_dynamic_alife1(
@@ -70,7 +70,7 @@ void CSE_ALifeAnomalousZone::script_register(lua_State *L)
 			CSE_ALifeCustomZone
 		)
 #ifdef XRGAME_EXPORTS
-		.def("spawn_artefacts",	CSE_ALifeAnomalousZone::spawn_artefacts)
+			.def("spawn_artefacts", CSE_ALifeAnomalousZone::spawn_artefacts)
 #endif
 	];
 }

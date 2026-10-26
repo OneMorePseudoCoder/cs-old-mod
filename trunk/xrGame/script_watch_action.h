@@ -28,7 +28,7 @@ public:
 	};
 
 public:
-	CObject						*m_tpObjectToWatch;
+	CObject* m_tpObjectToWatch;
 	SightManager::ESightType	m_tWatchType;
 	EGoalType					m_tGoalType;
 	Fvector						m_tWatchVector;
@@ -40,20 +40,20 @@ public:
 	float						vel_bone_y;
 
 public:
-					CScriptWatchAction	();
-	IC				CScriptWatchAction	(SightManager::ESightType tWatchType);
-	IC				CScriptWatchAction	(SightManager::ESightType tWatchType, const Fvector &tDirection);
-	IC				CScriptWatchAction	(SightManager::ESightType tWatchType, CScriptGameObject *tpObjectToWatch, LPCSTR bone_to_watch = "");
+	CScriptWatchAction();
+	IC				CScriptWatchAction(SightManager::ESightType tWatchType);
+	IC				CScriptWatchAction(SightManager::ESightType tWatchType, const Fvector& tDirection);
+	IC				CScriptWatchAction(SightManager::ESightType tWatchType, CScriptGameObject* tpObjectToWatch, LPCSTR bone_to_watch = "");
 	// Searchlight look ///////////////////////////////////////////////
-					CScriptWatchAction	(const Fvector &tTarget, float vel1, float vel2);
-	IC				CScriptWatchAction	(CScriptGameObject *tpObjectToWatch, float vel1, float vel2);
+	CScriptWatchAction(const Fvector& tTarget, float vel1, float vel2);
+	IC				CScriptWatchAction(CScriptGameObject* tpObjectToWatch, float vel1, float vel2);
 	///////////////////////////////////////////////////////////////////
-	virtual			~CScriptWatchAction	();
-			void	SetWatchObject		(CScriptGameObject *tpObjectToWatch);
-	IC		void	SetWatchType		(SightManager::ESightType tWatchType);
-	IC		void	SetWatchDirection	(const Fvector &tDirection);
-	IC		void	SetWatchBone		(LPCSTR bone_to_watch);
-	IC		void	initialize			();
+	virtual			~CScriptWatchAction();
+	void	SetWatchObject(CScriptGameObject* tpObjectToWatch);
+	IC		void	SetWatchType(SightManager::ESightType tWatchType);
+	IC		void	SetWatchDirection(const Fvector& tDirection);
+	IC		void	SetWatchBone(LPCSTR bone_to_watch);
+	IC		void	initialize();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

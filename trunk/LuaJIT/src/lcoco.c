@@ -102,25 +102,25 @@ typedef LPFIBER_START_ROUTINE coco_MainFunc;
 #if defined(__i386) || defined(__i386__)
 
 #ifdef __PIC__
-typedef void *coco_ctx[4];  /* eip, esp, ebp, ebx */
+typedef void* coco_ctx[4];  /* eip, esp, ebp, ebx */
 static inline void coco_switch(coco_ctx from, coco_ctx to)
 {
-  __asm__ __volatile__ (
-    "call 1f\n" "1:\tpopl %%eax\n\t" "addl $(2f-1b),%%eax\n\t"
-    "movl %%eax, (%0)\n\t" "movl %%esp, 4(%0)\n\t"
-    "movl %%ebp, 8(%0)\n\t" "movl %%ebx, 12(%0)\n\t"
-    "movl 12(%1), %%ebx\n\t" "movl 8(%1), %%ebp\n\t"
-    "movl 4(%1), %%esp\n\t" "jmp *(%1)\n" "2:\n"
-    : "+S" (from), "+D" (to) : : "eax", "ecx", "edx", "memory", "cc");
+	__asm__ __volatile__(
+		"call 1f\n" "1:\tpopl %%eax\n\t" "addl $(2f-1b),%%eax\n\t"
+		"movl %%eax, (%0)\n\t" "movl %%esp, 4(%0)\n\t"
+		"movl %%ebp, 8(%0)\n\t" "movl %%ebx, 12(%0)\n\t"
+		"movl 12(%1), %%ebx\n\t" "movl 8(%1), %%ebp\n\t"
+		"movl 4(%1), %%esp\n\t" "jmp *(%1)\n" "2:\n"
+		: "+S" (from), "+D" (to) : : "eax", "ecx", "edx", "memory", "cc");
 }
 #else
-typedef void *coco_ctx[3];  /* eip, esp, ebp */
+typedef void* coco_ctx[3];  /* eip, esp, ebp */
 static inline void coco_switch(coco_ctx from, coco_ctx to)
 {
-  __asm__ __volatile__ (
-    "movl $1f, (%0)\n\t" "movl %%esp, 4(%0)\n\t" "movl %%ebp, 8(%0)\n\t"
-    "movl 8(%1), %%ebp\n\t" "movl 4(%1), %%esp\n\t" "jmp *(%1)\n" "1:\n"
-    : "+S" (from), "+D" (to) : : "eax", "ebx", "ecx", "edx", "memory", "cc");
+	__asm__ __volatile__(
+		"movl $1f, (%0)\n\t" "movl %%esp, 4(%0)\n\t" "movl %%ebp, 8(%0)\n\t"
+		"movl 8(%1), %%ebp\n\t" "movl 4(%1), %%esp\n\t" "jmp *(%1)\n" "1:\n"
+		: "+S" (from), "+D" (to) : : "eax", "ebx", "ecx", "edx", "memory", "cc");
 }
 #endif
 
@@ -138,22 +138,22 @@ static inline void coco_switch(coco_ctx from, coco_ctx to)
 
 static void coco_wrap_main(void)
 {
-  __asm__ __volatile__ ("\tmovq %r13, %rdi\n\tjmpq *%r12\n");
+	__asm__ __volatile__("\tmovq %r13, %rdi\n\tjmpq *%r12\n");
 }
 
-typedef void *coco_ctx[8];  /* rip, rsp, rbp, rbx, r12, r13, r14, r15 */
+typedef void* coco_ctx[8];  /* rip, rsp, rbp, rbx, r12, r13, r14, r15 */
 static inline void coco_switch(coco_ctx from, coco_ctx to)
 {
-  __asm__ __volatile__ (
-    "leaq 1f(%%rip), %%rax\n\t"
-    "movq %%rax, (%0)\n\t" "movq %%rsp, 8(%0)\n\t" "movq %%rbp, 16(%0)\n\t"
-    "movq %%rbx, 24(%0)\n\t" "movq %%r12, 32(%0)\n\t" "movq %%r13, 40(%0)\n\t"
-    "movq %%r14, 48(%0)\n\t" "movq %%r15, 56(%0)\n\t"
-    "movq 56(%1), %%r15\n\t" "movq 48(%1), %%r14\n\t" "movq 40(%1), %%r13\n\t"
-    "movq 32(%1), %%r12\n\t" "movq 24(%1), %%rbx\n\t" "movq 16(%1), %%rbp\n\t"
-    "movq 8(%1), %%rsp\n\t" "jmpq *(%1)\n" "1:\n"
-    : "+S" (from), "+D" (to) :
-    : "rax", "rcx", "rdx", "r8", "r9", "r10", "r11", "memory", "cc");
+	__asm__ __volatile__(
+		"leaq 1f(%%rip), %%rax\n\t"
+		"movq %%rax, (%0)\n\t" "movq %%rsp, 8(%0)\n\t" "movq %%rbp, 16(%0)\n\t"
+		"movq %%rbx, 24(%0)\n\t" "movq %%r12, 32(%0)\n\t" "movq %%r13, 40(%0)\n\t"
+		"movq %%r14, 48(%0)\n\t" "movq %%r15, 56(%0)\n\t"
+		"movq 56(%1), %%r15\n\t" "movq 48(%1), %%r14\n\t" "movq 40(%1), %%r13\n\t"
+		"movq 32(%1), %%r12\n\t" "movq 24(%1), %%rbx\n\t" "movq 16(%1), %%rbp\n\t"
+		"movq 8(%1), %%rsp\n\t" "jmpq *(%1)\n" "1:\n"
+		: "+S" (from), "+D" (to) :
+		: "rax", "rcx", "rdx", "r8", "r9", "r10", "r11", "memory", "cc");
 }
 
 #define COCO_CTX		coco_ctx
@@ -199,7 +199,7 @@ static const unsigned int coco_switch[] = {
 #endif
 };
 
-typedef void *coco_ctx[2];  /* ra, sp */
+typedef void* coco_ctx[2];  /* ra, sp */
 #define COCO_CTX		coco_ctx
 #define COCO_SWITCH(from, to) \
   ((void (*)(coco_ctx, coco_ctx))coco_switch)(from, to);
@@ -212,7 +212,7 @@ typedef void *coco_ctx[2];  /* ra, sp */
 
 #elif defined(__sparc__)
 
-typedef void *coco_ctx[4];
+typedef void* coco_ctx[4];
 #define COCO_CTX		coco_ctx
 #define COCO_SWITCH(from, to)	coco_switch(from, to);
 #define COCO_STACKADJUST	24
@@ -222,61 +222,61 @@ typedef void *coco_ctx[4];
 #define COCO_PTR2SP(stack)	(((unsigned long)stack)-COCO_STACKBIAS)
 static inline void coco_switch(coco_ctx from, coco_ctx to)
 {
-  void *__stack[16] __attribute__((aligned (16)));
-  unsigned long __tmp_sp = COCO_PTR2SP(__stack);
-  __asm__ __volatile__
-    (/* Flush register window(s) to stack and save the previous stack
+	void* __stack[16] __attribute__((aligned(16)));
+	unsigned long __tmp_sp = COCO_PTR2SP(__stack);
+	__asm__ __volatile__
+	(/* Flush register window(s) to stack and save the previous stack
 	pointer to capture the current registers, %l0-%l7 and %i0-%i7. */
-     "ta 3\n\t"
-     "stx %%sp,[%0+8]\n\t"
-     /* Move to a temporary stack. If the register window is flushed
-	for some reason (e.g. context switch), not the next stack
-	but the temporary stack should be used so as not to break
-	neither the previous nor next stack */
-     "mov %2,%%sp\n\t"
-     "sethi %%hh(1f),%%g1\n\t"		/* i.e. setx 1f,%%g1 */
-     "or %%g1,%%hm(1f),%%g1\n\t"
-     "sethi %%lm(1f),%%g2\n\t"
-     "or %%g2,%%lo(1f),%%g2\n\t"
-     "sllx %%g1,32,%%g1\n\t"
-     "or %%g1,%%g2,%%g1\n\t"
-     "stx %%g1,[%0]\n\t"
-     /* Restore registers from stack. DO NOT load the next stack
-	pointer directly to %sp. The register window can be possibly
-	flushed and restored asynchronous (e.g. context switch). */
-     "mov %1,%%o1\n\t"
-     "ldx [%%o1+8],%%o2\n\t"
-     "ldx [%%o2+%3],%%l0\n\t"
-     "ldx [%%o2+%3+8],%%l1\n\t"
-     "ldx [%%o2+%3+0x10],%%l2\n\t"
-     "ldx [%%o2+%3+0x18],%%l3\n\t"
-     "ldx [%%o2+%3+0x20],%%l4\n\t"
-     "ldx [%%o2+%3+0x28],%%l5\n\t"
-     "ldx [%%o2+%3+0x30],%%l6\n\t"
-     "ldx [%%o2+%3+0x38],%%l7\n\t"
-     "ldx [%%o2+%3+0x40],%%i0\n\t"
-     "ldx [%%o2+%3+0x48],%%i1\n\t"
-     "ldx [%%o2+%3+0x50],%%i2\n\t"
-     "ldx [%%o2+%3+0x58],%%i3\n\t"
-     "ldx [%%o2+%3+0x60],%%i4\n\t"
-     "ldx [%%o2+%3+0x68],%%i5\n\t"
-     "ldx [%%o2+%3+0x70],%%i6\n\t"
-     "ldx [%%o2+%3+0x78],%%i7\n\t"
-     /* Move to the next stack with the consistent registers atomically */
-     "mov %%o2,%%sp\n\t"
-     "ldx [%%o1],%%o2\n\t"
-     /* Since %o0-%o7 are marked as clobbered, values are safely overwritten
-	across the inline assembly.  %o0-%o7 will have meaningless values
-	after leaving the inline assembly. The only exception is %o0, which
-	serves as an argument to coco_main */
-     "ldx [%%o1+16],%%o0\n\t"
-     "jmpl %%o2,%%g0\n\t"
-     "nop\n\t"
-     "1:\n"
-     /* An assumption is made here; no input operand is assigned to %g1
-	nor %g2. It's the case for the currently avilable gcc's */
-     : : "r"(from),"r"(to),"r"(__tmp_sp),"i"(COCO_STACKBIAS)
-     : "g1","g2","o0","o1","o2","o3","o4","o5","o7","memory","cc");
+		"ta 3\n\t"
+		"stx %%sp,[%0+8]\n\t"
+		/* Move to a temporary stack. If the register window is flushed
+	   for some reason (e.g. context switch), not the next stack
+	   but the temporary stack should be used so as not to break
+	   neither the previous nor next stack */
+		"mov %2,%%sp\n\t"
+		"sethi %%hh(1f),%%g1\n\t"		/* i.e. setx 1f,%%g1 */
+		"or %%g1,%%hm(1f),%%g1\n\t"
+		"sethi %%lm(1f),%%g2\n\t"
+		"or %%g2,%%lo(1f),%%g2\n\t"
+		"sllx %%g1,32,%%g1\n\t"
+		"or %%g1,%%g2,%%g1\n\t"
+		"stx %%g1,[%0]\n\t"
+		/* Restore registers from stack. DO NOT load the next stack
+	   pointer directly to %sp. The register window can be possibly
+	   flushed and restored asynchronous (e.g. context switch). */
+		"mov %1,%%o1\n\t"
+		"ldx [%%o1+8],%%o2\n\t"
+		"ldx [%%o2+%3],%%l0\n\t"
+		"ldx [%%o2+%3+8],%%l1\n\t"
+		"ldx [%%o2+%3+0x10],%%l2\n\t"
+		"ldx [%%o2+%3+0x18],%%l3\n\t"
+		"ldx [%%o2+%3+0x20],%%l4\n\t"
+		"ldx [%%o2+%3+0x28],%%l5\n\t"
+		"ldx [%%o2+%3+0x30],%%l6\n\t"
+		"ldx [%%o2+%3+0x38],%%l7\n\t"
+		"ldx [%%o2+%3+0x40],%%i0\n\t"
+		"ldx [%%o2+%3+0x48],%%i1\n\t"
+		"ldx [%%o2+%3+0x50],%%i2\n\t"
+		"ldx [%%o2+%3+0x58],%%i3\n\t"
+		"ldx [%%o2+%3+0x60],%%i4\n\t"
+		"ldx [%%o2+%3+0x68],%%i5\n\t"
+		"ldx [%%o2+%3+0x70],%%i6\n\t"
+		"ldx [%%o2+%3+0x78],%%i7\n\t"
+		/* Move to the next stack with the consistent registers atomically */
+		"mov %%o2,%%sp\n\t"
+		"ldx [%%o1],%%o2\n\t"
+		/* Since %o0-%o7 are marked as clobbered, values are safely overwritten
+	   across the inline assembly.  %o0-%o7 will have meaningless values
+	   after leaving the inline assembly. The only exception is %o0, which
+	   serves as an argument to coco_main */
+		"ldx [%%o1+16],%%o0\n\t"
+		"jmpl %%o2,%%g0\n\t"
+		"nop\n\t"
+		"1:\n"
+		/* An assumption is made here; no input operand is assigned to %g1
+	   nor %g2. It's the case for the currently avilable gcc's */
+		: : "r"(from), "r"(to), "r"(__tmp_sp), "i"(COCO_STACKBIAS)
+		: "g1", "g2", "o0", "o1", "o2", "o3", "o4", "o5", "o7", "memory", "cc");
 }
 
 #define COCO_MAKECTX(coco, buf, func, stack, a0) \
@@ -303,31 +303,31 @@ static inline void coco_switch(coco_ctx from, coco_ctx to)
 #else
 static inline void coco_switch(coco_ctx from, coco_ctx to)
 {
-  void *__tmp_stack[16] __attribute__((aligned (16)));
-  __asm__ __volatile__ 
-    ("ta 3\n\t"
-     "st %%sp,[%0+4]\n\t"
-     "mov %2,%%sp\n\t"
-     "set 1f,%%g1\n\t"
-     "st %%g1,[%0]\n\t"
-     "mov %1,%%o1\n\t"
-     "ld [%%o1+4],%%o2\n\t"
-     "ldd [%%o2],%%l0\n\t"
-     "ldd [%%o2+8],%%l2\n\t"
-     "ldd [%%o2+0x10],%%l4\n\t"
-     "ldd [%%o2+0x18],%%l6\n\t"
-     "ldd [%%o2+0x20],%%i0\n\t"
-     "ldd [%%o2+0x28],%%i2\n\t"
-     "ldd [%%o2+0x30],%%i4\n\t"
-     "ldd [%%o2+0x38],%%i6\n\t"
-     "mov %%o2,%%sp\n\t"
-     "ld [%%o1],%%o2\n\t"
-     "ld [%%o1+8],%%o0\n\t"
-     "jmpl %%o2,%%g0\n\t"
-     "nop\n\t"
-     "1:\n"
-     : : "r"(from),"r"(to),"r"(__tmp_stack)
-     : "g1","o0","o1","o2","o3","o4","o5","o7","memory","cc");
+	void* __tmp_stack[16] __attribute__((aligned(16)));
+	__asm__ __volatile__
+	("ta 3\n\t"
+		"st %%sp,[%0+4]\n\t"
+		"mov %2,%%sp\n\t"
+		"set 1f,%%g1\n\t"
+		"st %%g1,[%0]\n\t"
+		"mov %1,%%o1\n\t"
+		"ld [%%o1+4],%%o2\n\t"
+		"ldd [%%o2],%%l0\n\t"
+		"ldd [%%o2+8],%%l2\n\t"
+		"ldd [%%o2+0x10],%%l4\n\t"
+		"ldd [%%o2+0x18],%%l6\n\t"
+		"ldd [%%o2+0x20],%%i0\n\t"
+		"ldd [%%o2+0x28],%%i2\n\t"
+		"ldd [%%o2+0x30],%%i4\n\t"
+		"ldd [%%o2+0x38],%%i6\n\t"
+		"mov %%o2,%%sp\n\t"
+		"ld [%%o1],%%o2\n\t"
+		"ld [%%o1+8],%%o0\n\t"
+		"jmpl %%o2,%%g0\n\t"
+		"nop\n\t"
+		"1:\n"
+		: : "r"(from), "r"(to), "r"(__tmp_stack)
+		: "g1", "o0", "o1", "o2", "o3", "o4", "o5", "o7", "memory", "cc");
 }
 
 #define COCO_MAKECTX(coco, buf, func, stack, a0) \
@@ -538,14 +538,14 @@ static inline void coco_switch(coco_ctx from, coco_ctx to)
 
 struct coco_State {
 #ifdef COCO_STATE_HEAD
-  COCO_STATE_HEAD
+	COCO_STATE_HEAD
 #endif
-  COCO_CTX ctx;			/* Own context. */
-  COCO_CTX back;		/* Context to switch back to. */
-  void *allocptr;		/* Pointer to allocated memory. */
-  int allocsize;		/* Size of allocated memory. */
-  int nargs;			/* Number of arguments to pass. */
-  STACK_VGID			/* Optional valgrind stack id. See above. */
+		COCO_CTX ctx;			/* Own context. */
+	COCO_CTX back;		/* Context to switch back to. */
+	void* allocptr;		/* Pointer to allocated memory. */
+	int allocsize;		/* Size of allocated memory. */
+	int nargs;			/* Number of arguments to pass. */
+	STACK_VGID			/* Optional valgrind stack id. See above. */
 };
 
 typedef void (*coco_MainFunc)(void);
@@ -590,10 +590,10 @@ typedef void (*coco_MainFunc)(void);
 static int defaultcstacksize = COCO_DEFAULT_CSTACKSIZE;
 
 /* Start the Lua or C function. */
-static void coco_start(lua_State *L, void *ud)
+static void coco_start(lua_State* L, void* ud)
 {
-  if (luaD_precall(L, (StkId)ud, LUA_MULTRET) == PCRLUA)
-    luaV_execute(L, L->ci - L->base_ci);
+	if (luaD_precall(L, (StkId)ud, LUA_MULTRET) == PCRLUA)
+		luaV_execute(L, L->ci - L->base_ci);
 }
 
 #ifndef COCO_MAIN_PARAM
@@ -608,86 +608,86 @@ static void coco_start(lua_State *L, void *ud)
 static void COCO_MAIN_DECL coco_main(COCO_MAIN_PARAM)
 {
 #ifdef COCO_MAIN_GETL
-  COCO_MAIN_GETL
+	COCO_MAIN_GETL
 #endif
-  coco_State *coco = L2COCO(L);
-  for (;;) {
-    L->status = luaD_rawrunprotected(L, coco_start, L->top - (coco->nargs+1));
-    if (L->status != 0) luaD_seterrorobj(L, L->status, L->top);
-    COCO_JUMPOUT(coco)
-  }
+		coco_State* coco = L2COCO(L);
+	for (;;) {
+		L->status = luaD_rawrunprotected(L, coco_start, L->top - (coco->nargs + 1));
+		if (L->status != 0) luaD_seterrorobj(L, L->status, L->top);
+		COCO_JUMPOUT(coco)
+	}
 }
 
 /* Add a C stack to a coroutine. */
-lua_State *lua_newcthread(lua_State *OL, int cstacksize)
+lua_State* lua_newcthread(lua_State* OL, int cstacksize)
 {
-  lua_State *NL = lua_newthread(OL);
+	lua_State* NL = lua_newthread(OL);
 
-  if (cstacksize < 0)
-    return NL;
-  if (cstacksize == 0)
-    cstacksize = defaultcstacksize;
-  else if (cstacksize < COCO_MIN_CSTACKSIZE)
-    cstacksize = COCO_MIN_CSTACKSIZE;
-  cstacksize &= -16;
+	if (cstacksize < 0)
+		return NL;
+	if (cstacksize == 0)
+		cstacksize = defaultcstacksize;
+	else if (cstacksize < COCO_MIN_CSTACKSIZE)
+		cstacksize = COCO_MIN_CSTACKSIZE;
+	cstacksize &= -16;
 
-  COCO_NEW(OL, NL, cstacksize, ((coco_MainFunc)(coco_main)))
+	COCO_NEW(OL, NL, cstacksize, ((coco_MainFunc)(coco_main)))
 
-  return NL;
+		return NL;
 }
 
 /* Free the C stack of a coroutine. Called from lstate.c. */
-void luaCOCO_free(lua_State *L)
+void luaCOCO_free(lua_State* L)
 {
-  COCO_FREE(L)
+	COCO_FREE(L)
 }
 
 /* Resume a coroutine with a C stack. Called from ldo.c. */
-int luaCOCO_resume(lua_State *L, int nargs)
+int luaCOCO_resume(lua_State* L, int nargs)
 {
-  coco_State *coco = L2COCO(L);
-  coco->nargs = nargs;
-  COCO_JUMPIN(coco)
+	coco_State* coco = L2COCO(L);
+	coco->nargs = nargs;
+	COCO_JUMPIN(coco)
 #ifndef COCO_DISABLE_EARLY_FREE
-  if (L->status != LUA_YIELD) {
-    COCO_FREE(L)
-  }
+		if (L->status != LUA_YIELD) {
+			COCO_FREE(L)
+		}
 #endif
-  return L->status;
+	return L->status;
 }
 
 /* Yield from a coroutine with a C stack. Called from ldo.c. */
-int luaCOCO_yield(lua_State *L)
+int luaCOCO_yield(lua_State* L)
 {
-  coco_State *coco = L2COCO(L);
-  L->status = LUA_YIELD;
-  COCO_JUMPOUT(coco)
-  L->status = 0;
-  {
-    StkId base = L->top - coco->nargs;
-    StkId rbase = L->base;
-    if (rbase < base) {  /* Need to move args down? */
-      while (base < L->top)
-	setobjs2s(L, rbase++, base++);
-      L->top = rbase;
-    }
-  }
-  L->base = L->ci->base;  /* Restore invariant. */
-  return coco->nargs;
+	coco_State* coco = L2COCO(L);
+	L->status = LUA_YIELD;
+	COCO_JUMPOUT(coco)
+		L->status = 0;
+	{
+		StkId base = L->top - coco->nargs;
+		StkId rbase = L->base;
+		if (rbase < base) {  /* Need to move args down? */
+			while (base < L->top)
+				setobjs2s(L, rbase++, base++);
+			L->top = rbase;
+		}
+	}
+	L->base = L->ci->base;  /* Restore invariant. */
+	return coco->nargs;
 }
 
 /* Get/set the default C stack size. */
 int luaCOCO_cstacksize(int cstacksize)
 {
-  int oldsz = defaultcstacksize;
-  if (cstacksize >= 0) {
-    if (cstacksize == 0)
-      cstacksize = COCO_DEFAULT_CSTACKSIZE;
-    else if (cstacksize < COCO_MIN_CSTACKSIZE)
-      cstacksize = COCO_MIN_CSTACKSIZE;
-    defaultcstacksize = cstacksize;
-  }
-  return oldsz;
+	int oldsz = defaultcstacksize;
+	if (cstacksize >= 0) {
+		if (cstacksize == 0)
+			cstacksize = COCO_DEFAULT_CSTACKSIZE;
+		else if (cstacksize < COCO_MIN_CSTACKSIZE)
+			cstacksize = COCO_MIN_CSTACKSIZE;
+		defaultcstacksize = cstacksize;
+	}
+	return oldsz;
 }
 
 #endif

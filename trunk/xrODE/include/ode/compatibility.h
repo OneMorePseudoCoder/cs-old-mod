@@ -23,15 +23,15 @@
 #ifndef _ODE_COMPATIBILITY_H_
 #define _ODE_COMPATIBILITY_H_
 
-/*
- * ODE's backward compatibility system ensures that as ODE's API
- * evolves, user code will not break.
- */
+ /*
+  * ODE's backward compatibility system ensures that as ODE's API
+  * evolves, user code will not break.
+  */
 
-/*
- * These new rotation function names are more consistent with the
- * rest of the API.
- */
+  /*
+   * These new rotation function names are more consistent with the
+   * rest of the API.
+   */
 #define dQtoR(q,R) dRfromQ((R),(q))
 #define dRtoQ(R,q) dQfromR((q),(R))
 #define dWtoDQ(w,q,dq) dDQfromW((dq),(w),(q))

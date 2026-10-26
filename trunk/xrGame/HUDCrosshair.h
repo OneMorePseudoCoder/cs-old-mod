@@ -7,7 +7,7 @@
 #define HUD_CURSOR_SECTION "hud_cursor"
 
 
-class CHUDCrosshair	
+class CHUDCrosshair
 {
 private:
 	float			cross_length_perc;
@@ -17,18 +17,18 @@ private:
 	//текущий радиус прицела
 	float			radius;
 	float			target_radius;
-	float			radius_speed_perc; 
+	float			radius_speed_perc;
 
 	ref_geom 		hGeomLine;
 	ref_shader		hShader;
 public:
 	u32				cross_color;
 
-					CHUDCrosshair	();
-					~CHUDCrosshair	();
+	CHUDCrosshair();
+	~CHUDCrosshair();
 
-			void	OnRender		();
-			void	SetDispersion	(float disp);
+	void	OnRender();
+	void	SetDispersion(float disp);
 
-			void	Load			();
+	void	Load();
 };

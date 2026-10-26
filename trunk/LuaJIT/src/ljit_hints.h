@@ -29,16 +29,16 @@
 
 /* Hints for functions. */
 HH_START(FH)
-  HH(FH, NOCLOSE),		/* No luaF_close() needed. */
+HH(FH, NOCLOSE),		/* No luaF_close() needed. */
 HH_END(FH);
 
 /* Hints for individual bytecode instruction. */
 HH_START(H)
-  HH(H, COMBINE),	/* Combine/dead instruction: true/false. */
-  HH(H, FOR_STEP_K),	/* FORPREP/FORLOOP step is const: step. */
-  HH(H, TYPE),		/* Type hint: typed object. */
-  HH(H, TYPEKEY),	/* Type hint for keys: typed object. */
-  HH(H, INLINE),	/* Inline function call: internal index. */
+HH(H, COMBINE),	/* Combine/dead instruction: true/false. */
+HH(H, FOR_STEP_K),	/* FORPREP/FORLOOP step is const: step. */
+HH(H, TYPE),		/* Type hint: typed object. */
+HH(H, TYPEKEY),	/* Type hint for keys: typed object. */
+HH(H, INLINE),	/* Inline function call: internal index. */
 HH_END(H);
 
 #undef HH
@@ -59,77 +59,77 @@ HH_END(H);
 
 /* Library index numbers. */
 enum {
-  JIT_IHLIB_INTERNAL,
-  JIT_IHLIB_BASE,
-  JIT_IHLIB_COROUTINE,
-  JIT_IHLIB_STRING,
-  JIT_IHLIB_TABLE,
-  JIT_IHLIB_MATH,
-  JIT_IHLIB__LAST
+	JIT_IHLIB_INTERNAL,
+	JIT_IHLIB_BASE,
+	JIT_IHLIB_COROUTINE,
+	JIT_IHLIB_STRING,
+	JIT_IHLIB_TABLE,
+	JIT_IHLIB_MATH,
+	JIT_IHLIB__LAST
 };
 
 /* Internal functions. */
 enum {
-  JIT_IH_INTERNAL_RECURSIVE,  /* Recursive call. */
-  JIT_IH_INTERNAL__LAST
+	JIT_IH_INTERNAL_RECURSIVE,  /* Recursive call. */
+	JIT_IH_INTERNAL__LAST
 };
 
 /* Base library functions. */
 enum {
-  JIT_IH_BASE_PAIRS,
-  JIT_IH_BASE_IPAIRS,
-  JIT_IH_BASE__LAST
+	JIT_IH_BASE_PAIRS,
+	JIT_IH_BASE_IPAIRS,
+	JIT_IH_BASE__LAST
 };
 
 /* Coroutine library functions. */
 enum {
-  JIT_IH_COROUTINE_YIELD,
-  JIT_IH_COROUTINE_RESUME,
-  JIT_IH_COROUTINE__LAST
+	JIT_IH_COROUTINE_YIELD,
+	JIT_IH_COROUTINE_RESUME,
+	JIT_IH_COROUTINE__LAST
 };
 
 /* String library functions. */
 enum {
-  JIT_IH_STRING_LEN,
-  JIT_IH_STRING_SUB,
-  JIT_IH_STRING_CHAR,
-  JIT_IH_STRING__LAST
+	JIT_IH_STRING_LEN,
+	JIT_IH_STRING_SUB,
+	JIT_IH_STRING_CHAR,
+	JIT_IH_STRING__LAST
 };
 
 /* Table library functions. */
 enum {
-  JIT_IH_TABLE_INSERT,
-  JIT_IH_TABLE_REMOVE,
-  JIT_IH_TABLE_GETN,
-  JIT_IH_TABLE__LAST
+	JIT_IH_TABLE_INSERT,
+	JIT_IH_TABLE_REMOVE,
+	JIT_IH_TABLE_GETN,
+	JIT_IH_TABLE__LAST
 };
 
 /* Math library functions. */
 /* CHECK: order must match with function table for jit_inline_math(). */
 enum {
-  /* 1 arg, 1 result. */
-  /* Partially inlined. Call C function from libm: */
-  JIT_IH_MATH_LOG,
-  JIT_IH_MATH_LOG10,
-  JIT_IH_MATH_EXP,
-  JIT_IH_MATH_SINH,
-  JIT_IH_MATH_COSH,
-  JIT_IH_MATH_TANH,
-  JIT_IH_MATH_ASIN,
-  JIT_IH_MATH_ACOS,
-  JIT_IH_MATH_ATAN,
-  /* Fully inlined: */
-  JIT_IH_MATH_SIN,
-  JIT_IH_MATH_COS,
-  JIT_IH_MATH_TAN,
-  JIT_IH_MATH_CEIL,
-  JIT_IH_MATH_FLOOR,
-  JIT_IH_MATH_ABS,
-  JIT_IH_MATH_SQRT,
-  /* 2 args, 1 result. */
-  JIT_IH_MATH_FMOD,
-  JIT_IH_MATH_ATAN2,
-  JIT_IH_MATH__LAST
+	/* 1 arg, 1 result. */
+	/* Partially inlined. Call C function from libm: */
+	JIT_IH_MATH_LOG,
+	JIT_IH_MATH_LOG10,
+	JIT_IH_MATH_EXP,
+	JIT_IH_MATH_SINH,
+	JIT_IH_MATH_COSH,
+	JIT_IH_MATH_TANH,
+	JIT_IH_MATH_ASIN,
+	JIT_IH_MATH_ACOS,
+	JIT_IH_MATH_ATAN,
+	/* Fully inlined: */
+	JIT_IH_MATH_SIN,
+	JIT_IH_MATH_COS,
+	JIT_IH_MATH_TAN,
+	JIT_IH_MATH_CEIL,
+	JIT_IH_MATH_FLOOR,
+	JIT_IH_MATH_ABS,
+	JIT_IH_MATH_SQRT,
+	/* 2 args, 1 result. */
+	JIT_IH_MATH_FMOD,
+	JIT_IH_MATH_ATAN2,
+	JIT_IH_MATH__LAST
 };
 
 #define JIT_IH_MATH__21	JIT_IH_MATH_FMOD

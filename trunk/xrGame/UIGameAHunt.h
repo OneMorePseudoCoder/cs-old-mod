@@ -16,32 +16,32 @@ class game_cl_ArtefactHunt;
 class CUIProgressShape;
 class CUIMessageBoxEx;
 
-class CUIGameAHunt: public CUIGameTDM
+class CUIGameAHunt : public CUIGameTDM
 {
 private:
-	game_cl_ArtefactHunt * m_game;
+	game_cl_ArtefactHunt* m_game;
 	typedef CUIGameTDM inherited;
 
 
 public:
-	CUIProgressShape*	m_pReinforcementInidcator;
-	CUIMessageBoxEx*	m_pBuySpawnMsgBox;
+	CUIProgressShape* m_pReinforcementInidcator;
+	CUIMessageBoxEx* m_pBuySpawnMsgBox;
 
 public:
-	virtual void		SetClGame				(game_cl_GameState* g);
-	CUIGameAHunt								();
-	virtual 			~CUIGameAHunt			();
+	virtual void		SetClGame(game_cl_GameState* g);
+	CUIGameAHunt();
+	virtual 			~CUIGameAHunt();
 
-	virtual	void		Init					();
-			void		SetTodoCaption			(LPCSTR str);
-			void		SetBuyMsgCaption		(LPCSTR str);
+	virtual	void		Init();
+	void		SetTodoCaption(LPCSTR str);
+	void		SetBuyMsgCaption(LPCSTR str);
 
-	virtual void		Render					();
-	virtual void		OnFrame					();
-	virtual	void		reset_ui				();
+	virtual void		Render();
+	virtual void		OnFrame();
+	virtual	void		reset_ui();
 
 protected:
-	shared_str				m_todo_caption;			
-	shared_str				m_buy_msg_caption;		
+	shared_str				m_todo_caption;
+	shared_str				m_buy_msg_caption;
 
 };

@@ -15,10 +15,10 @@ private:
 	bool					m_use_movement_controller;
 
 public:
-	IC						CStalkerAnimationScript	(const MotionID &animation, bool hand_usage, bool use_movement_controller);
-	IC	const MotionID		&animation				() const;
-	IC	const bool			&hand_usage				() const;
-	IC	const bool			&use_movement_controller() const;
+	IC						CStalkerAnimationScript(const MotionID& animation, bool hand_usage, bool use_movement_controller);
+	IC	const MotionID& animation() const;
+	IC	const bool& hand_usage() const;
+	IC	const bool& use_movement_controller() const;
 };
 
 #include "stalker_animation_script_inline.h"

@@ -8,7 +8,7 @@ class CStateManagerBoar : public CMonsterStateManager<CAI_Boar> {
 
 public:
 
-					CStateManagerBoar	(CAI_Boar *monster); 
+	CStateManagerBoar(CAI_Boar* monster);
 
-	virtual void	execute				();
+	virtual void	execute();
 };

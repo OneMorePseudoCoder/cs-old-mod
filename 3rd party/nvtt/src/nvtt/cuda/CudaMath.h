@@ -31,55 +31,55 @@
 
 inline __device__ __host__ float3 operator *(float3 a, float3 b)
 {
-    return make_float3(a.x*b.x, a.y*b.y, a.z*b.z);
+	return make_float3(a.x * b.x, a.y * b.y, a.z * b.z);
 }
 
 inline __device__ __host__ float3 operator *(float f, float3 v)
 {
-    return make_float3(v.x*f, v.y*f, v.z*f);
+	return make_float3(v.x * f, v.y * f, v.z * f);
 }
 
 inline __device__ __host__ float3 operator *(float3 v, float f)
 {
-    return make_float3(v.x*f, v.y*f, v.z*f);
+	return make_float3(v.x * f, v.y * f, v.z * f);
 }
 
 inline __device__ __host__ float3 operator +(float3 a, float3 b)
 {
-    return make_float3(a.x+b.x, a.y+b.y, a.z+b.z);
+	return make_float3(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-inline __device__ __host__ void operator +=(float3 & b, float3 a)
+inline __device__ __host__ void operator +=(float3& b, float3 a)
 {
-    b.x += a.x;
-    b.y += a.y;
-    b.z += a.z;
+	b.x += a.x;
+	b.y += a.y;
+	b.z += a.z;
 }
 
 inline __device__ __host__ float3 operator -(float3 a, float3 b)
 {
-    return make_float3(a.x-b.x, a.y-b.y, a.z-b.z);
+	return make_float3(a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
-inline __device__ __host__ void operator -=(float3 & b, float3 a)
+inline __device__ __host__ void operator -=(float3& b, float3 a)
 {
-    b.x -= a.x;
-    b.y -= a.y;
-    b.z -= a.z;
+	b.x -= a.x;
+	b.y -= a.y;
+	b.z -= a.z;
 }
 
 inline __device__ __host__ float3 operator /(float3 v, float f)
 {
-    float inv = 1.0f / f;
-    return v * inv;
+	float inv = 1.0f / f;
+	return v * inv;
 }
 
-inline __device__ __host__ void operator /=(float3 & b, float f)
+inline __device__ __host__ void operator /=(float3& b, float f)
 {
-    float inv = 1.0f / f;
-    b.x *= inv;
-    b.y *= inv;
-    b.z *= inv;
+	float inv = 1.0f / f;
+	b.x *= inv;
+	b.y *= inv;
+	b.z *= inv;
 }
 
 inline __device__ __host__ bool operator ==(float3 a, float3 b)
@@ -89,34 +89,34 @@ inline __device__ __host__ bool operator ==(float3 a, float3 b)
 
 inline __device__ __host__ float dot(float3 a, float3 b)
 {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 inline __device__ __host__ float dot(float4 a, float4 b)
 {
-    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 inline __device__ __host__ float clamp(float f, float a, float b)
 {
-    return max(a, min(f, b));
+	return max(a, min(f, b));
 }
 
 inline __device__ __host__ float3 clamp(float3 v, float a, float b)
 {
-    return make_float3(clamp(v.x, a, b), clamp(v.y, a, b), clamp(v.z, a, b));
+	return make_float3(clamp(v.x, a, b), clamp(v.y, a, b), clamp(v.z, a, b));
 }
 
 inline __device__ __host__ float3 clamp(float3 v, float3 a, float3 b)
 {
-    return make_float3(clamp(v.x, a.x, b.x), clamp(v.y, a.y, b.y), clamp(v.z, a.z, b.z));
+	return make_float3(clamp(v.x, a.x, b.x), clamp(v.y, a.y, b.y), clamp(v.z, a.z, b.z));
 }
 
 
 inline __device__ __host__ float3 normalize(float3 v)
 {
-    float len = 1.0f / sqrtf(dot(v, v));
-    return make_float3(v.x * len, v.y * len, v.z * len);
+	float len = 1.0f / sqrtf(dot(v, v));
+	return make_float3(v.x * len, v.y * len, v.z * len);
 }
 
 
@@ -124,7 +124,7 @@ inline __device__ __host__ float3 normalize(float3 v)
 
 // Use power method to find the first eigenvector.
 // http://www.miislita.com/information-retrieval-tutorial/matrix-tutorial-3-eigenvalues-eigenvectors.html
-inline __device__ __host__ float3 firstEigenVector( float matrix[6] )
+inline __device__ __host__ float3 firstEigenVector(float matrix[6])
 {
 	// 8 iterations seems to be more than enough.
 
@@ -142,20 +142,20 @@ inline __device__ __host__ float3 firstEigenVector( float matrix[6] )
 	else v = row2;
 
 	//float3 v = make_float3(1.0f, 1.0f, 1.0f);
-	for(int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) {
 		float x = v.x * matrix[0] + v.y * matrix[1] + v.z * matrix[2];
 		float y = v.x * matrix[1] + v.y * matrix[3] + v.z * matrix[4];
 		float z = v.x * matrix[2] + v.y * matrix[4] + v.z * matrix[5];
-		float m = max(max(x, y), z);        
+		float m = max(max(x, y), z);
 		float iv = 1.0f / m;
 		if (m == 0.0f) iv = 0.0f;
-		v = make_float3(x*iv, y*iv, z*iv);
+		v = make_float3(x * iv, y * iv, z * iv);
 	}
 
 	return v;
 }
 
-inline __device__ bool singleColor(const float3 * colors)
+inline __device__ bool singleColor(const float3* colors)
 {
 #if __DEVICE_EMULATION__
 	bool sameColor = false;
@@ -166,20 +166,20 @@ inline __device__ bool singleColor(const float3 * colors)
 	return sameColor;
 #else
 	__shared__ int sameColor[16];
-	
+
 	const int idx = threadIdx.x;
-	
+
 	sameColor[idx] = (colors[idx] == colors[0]);
-	sameColor[idx] &= sameColor[idx^8];
-	sameColor[idx] &= sameColor[idx^4];
-	sameColor[idx] &= sameColor[idx^2];
-	sameColor[idx] &= sameColor[idx^1];
-	
+	sameColor[idx] &= sameColor[idx ^ 8];
+	sameColor[idx] &= sameColor[idx ^ 4];
+	sameColor[idx] &= sameColor[idx ^ 2];
+	sameColor[idx] &= sameColor[idx ^ 1];
+
 	return sameColor[0];
 #endif
 }
 
-inline __device__ void colorSums(const float3 * colors, float3 * sums)
+inline __device__ void colorSums(const float3* colors, float3* sums)
 {
 #if __DEVICE_EMULATION__
 	float3 color_sum = make_float3(0.0f, 0.0f, 0.0f);
@@ -197,19 +197,19 @@ inline __device__ void colorSums(const float3 * colors, float3 * sums)
 	const int idx = threadIdx.x;
 
 	sums[idx] = colors[idx];
-	sums[idx] += sums[idx^8];
-	sums[idx] += sums[idx^4];
-	sums[idx] += sums[idx^2];
-	sums[idx] += sums[idx^1];
+	sums[idx] += sums[idx ^ 8];
+	sums[idx] += sums[idx ^ 4];
+	sums[idx] += sums[idx ^ 2];
+	sums[idx] += sums[idx ^ 1];
 
 #endif
 }
 
-inline __device__ float3 bestFitLine(const float3 * colors, float3 color_sum, float3 colorMetric)
+inline __device__ float3 bestFitLine(const float3* colors, float3 color_sum, float3 colorMetric)
 {
 	// Compute covariance matrix of the given colors.
 #if __DEVICE_EMULATION__
-	float covariance[6] = {0, 0, 0, 0, 0, 0};
+	float covariance[6] = { 0, 0, 0, 0, 0, 0 };
 	for (int i = 0; i < 16; i++)
 	{
 		float3 a = (colors[i] - color_sum * (1.0f / 16.0f)) * colorMetric;
@@ -228,7 +228,7 @@ inline __device__ float3 bestFitLine(const float3 * colors, float3 color_sum, fl
 
 	// @@ Eliminate two-way bank conflicts here.
 	// @@ It seems that doing that and unrolling the reduction doesn't help...
-	__shared__ float covariance[16*6];
+	__shared__ float covariance[16 * 6];
 
 	covariance[6 * idx + 0] = diff.x * diff.x;    // 0, 6, 12, 2, 8, 14, 4, 10, 0
 	covariance[6 * idx + 1] = diff.x * diff.y;
@@ -237,16 +237,16 @@ inline __device__ float3 bestFitLine(const float3 * colors, float3 color_sum, fl
 	covariance[6 * idx + 4] = diff.y * diff.z;
 	covariance[6 * idx + 5] = diff.z * diff.z;
 
-	for(int d = 8; d > 0; d >>= 1)
+	for (int d = 8; d > 0; d >>= 1)
 	{
 		if (idx < d)
 		{
-			covariance[6 * idx + 0] += covariance[6 * (idx+d) + 0];
-			covariance[6 * idx + 1] += covariance[6 * (idx+d) + 1];
-			covariance[6 * idx + 2] += covariance[6 * (idx+d) + 2];
-			covariance[6 * idx + 3] += covariance[6 * (idx+d) + 3];
-			covariance[6 * idx + 4] += covariance[6 * (idx+d) + 4];
-			covariance[6 * idx + 5] += covariance[6 * (idx+d) + 5];
+			covariance[6 * idx + 0] += covariance[6 * (idx + d) + 0];
+			covariance[6 * idx + 1] += covariance[6 * (idx + d) + 1];
+			covariance[6 * idx + 2] += covariance[6 * (idx + d) + 2];
+			covariance[6 * idx + 3] += covariance[6 * (idx + d) + 3];
+			covariance[6 * idx + 4] += covariance[6 * (idx + d) + 4];
+			covariance[6 * idx + 5] += covariance[6 * (idx + d) + 5];
 		}
 	}
 

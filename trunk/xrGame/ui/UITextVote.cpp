@@ -14,7 +14,7 @@
 
 
 
-CUITextVote::CUITextVote(){
+CUITextVote::CUITextVote() {
 	bkgrnd = xr_new<CUIStatic>(); bkgrnd->SetAutoDelete(true);
 	AttachChild(bkgrnd);
 
@@ -31,16 +31,16 @@ CUITextVote::CUITextVote(){
 	AttachChild(btn_cancel);
 }
 
-void CUITextVote::Init(CUIXml& xml_doc){
-	CUIXmlInit::InitWindow(xml_doc,			"text_vote", 0, this);
-	CUIXmlInit::InitStatic(xml_doc,			"text_vote:header", 0, header);
-	CUIXmlInit::InitStatic(xml_doc,			"text_vote:background", 0, bkgrnd);
-	CUIXmlInit::InitEditBoxEx(xml_doc,		"text_vote:edit_box", 0, edit);
-	CUIXmlInit::Init3tButton(xml_doc,		"text_vote:btn_ok", 0, btn_ok);
-	CUIXmlInit::Init3tButton(xml_doc,		"text_vote:btn_cancel", 0, btn_cancel);
+void CUITextVote::Init(CUIXml& xml_doc) {
+	CUIXmlInit::InitWindow(xml_doc, "text_vote", 0, this);
+	CUIXmlInit::InitStatic(xml_doc, "text_vote:header", 0, header);
+	CUIXmlInit::InitStatic(xml_doc, "text_vote:background", 0, bkgrnd);
+	CUIXmlInit::InitEditBoxEx(xml_doc, "text_vote:edit_box", 0, edit);
+	CUIXmlInit::Init3tButton(xml_doc, "text_vote:btn_ok", 0, btn_ok);
+	CUIXmlInit::Init3tButton(xml_doc, "text_vote:btn_cancel", 0, btn_cancel);
 }
 
-void CUITextVote::SendMessage(CUIWindow* pWnd, s16 msg, void* pData){
+void CUITextVote::SendMessage(CUIWindow* pWnd, s16 msg, void* pData) {
 	if (BUTTON_CLICKED == msg)
 	{
 		if (pWnd == btn_ok)
@@ -50,12 +50,12 @@ void CUITextVote::SendMessage(CUIWindow* pWnd, s16 msg, void* pData){
 	}
 }
 
-void CUITextVote::OnBtnOk(){
+void CUITextVote::OnBtnOk() {
 	LPCSTR name = edit->GetText();
 	if (name && name[0])
 	{
 		string512 command;
-		sprintf_s(command, "cl_votestart $%s", name);		
+		sprintf_s(command, "cl_votestart $%s", name);
 		Console->Execute(command);
 		game_cl_mp* game = smart_cast<game_cl_mp*>(&Game());
 		game->StartStopMenu(this, true);
@@ -64,7 +64,7 @@ void CUITextVote::OnBtnOk(){
 		return;
 }
 
-void CUITextVote::OnBtnCancel(){
+void CUITextVote::OnBtnCancel() {
 	game_cl_mp* game = smart_cast<game_cl_mp*>(&Game());
 	game->StartStopMenu(this, false);
 }

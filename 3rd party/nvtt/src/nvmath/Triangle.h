@@ -36,7 +36,7 @@ namespace nv
 
 		Vector4 plane() const
 		{
-			Vector3 n = cross(v[1]-v[0], v[2]-v[0]);
+			Vector3 n = cross(v[1] - v[0], v[2] - v[0]);
 			return Vector4(n, dot(n, v[0]));
 		}
 
@@ -45,31 +45,31 @@ namespace nv
 
 
 	// Tomas Akenine-Moller box-triangle test.
-	NVMATH_API bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle & triangle);
-	NVMATH_API bool triBoxOverlapNoBounds(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle & triangle);
+	NVMATH_API bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle& triangle);
+	NVMATH_API bool triBoxOverlapNoBounds(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle& triangle);
 
 
 	// Moller ray triangle test.
-	NVMATH_API bool rayTest_Moller(const Triangle & t, Vector3::Arg orig, Vector3::Arg dir, float * out_t, float * out_u, float * out_v);
+	NVMATH_API bool rayTest_Moller(const Triangle& t, Vector3::Arg orig, Vector3::Arg dir, float* out_t, float* out_u, float* out_v);
 
-	inline bool rayTest(const Triangle & t, Vector3::Arg orig, Vector3::Arg dir, float * out_t, float * out_u, float * out_v)
+	inline bool rayTest(const Triangle& t, Vector3::Arg orig, Vector3::Arg dir, float* out_t, float* out_u, float* out_v)
 	{
 		return rayTest_Moller(t, orig, dir, out_t, out_u, out_v);
 	}
-	
-	inline bool overlap(const Triangle & t, const Box & b)
+
+	inline bool overlap(const Triangle& t, const Box& b)
 	{
 		Vector3 center = b.center();
 		Vector3 extents = b.extents();
 		return triBoxOverlap(center, extents, t);
 	}
 
-	inline bool overlap(const Box & b, const Triangle & t)
+	inline bool overlap(const Box& b, const Triangle& t)
 	{
 		return overlap(t, b);
 	}
 
-	inline bool overlapNoBounds(const Triangle & t, const Box & b)
+	inline bool overlapNoBounds(const Triangle& t, const Box& b)
 	{
 		Vector3 center = b.center();
 		Vector3 extents = b.extents();

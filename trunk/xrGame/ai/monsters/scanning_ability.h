@@ -2,7 +2,7 @@
 
 template<typename _Object>
 class CScanningAbility {
-	_Object		*object;
+	_Object* object;
 
 	// external members
 	float		critical_value;
@@ -32,27 +32,27 @@ class CScanningAbility {
 	bool		m_this_scan;
 
 public:
-			void	init_external			(_Object *obj) {object = obj;}
-			void	on_destroy				();
+	void	init_external(_Object* obj) { object = obj; }
+	void	on_destroy();
 
-			void	load					(LPCSTR section);
-	virtual	void	reinit					();
-		
-			void	schedule_update			();
-			void	frame_update			(u32 dt);
+	void	load(LPCSTR section);
+	virtual	void	reinit();
 
-			void	enable					();
-			void	disable					();
+	void	schedule_update();
+	void	frame_update(u32 dt);
 
-	virtual void	on_scan_success			() {}
-	virtual void	on_scanning				() {}
+	void	enable();
+	void	disable();
+
+	virtual void	on_scan_success() {}
+	virtual void	on_scanning() {}
 
 private:
-			float	get_velocity			(CObject *obj);
+	float	get_velocity(CObject* obj);
 
 #ifdef DEBUG
 public:
-			float	get_scan_value			(){return scan_value;}
+	float	get_scan_value() { return scan_value; }
 #endif
 
 };

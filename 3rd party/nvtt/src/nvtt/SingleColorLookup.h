@@ -59,7 +59,7 @@ void initTables()
 #if __CUDACC__
 __constant__ unsigned short
 #else
-const static uint8 
+const static uint8
 #endif
 OMatch5[256][2] =
 {

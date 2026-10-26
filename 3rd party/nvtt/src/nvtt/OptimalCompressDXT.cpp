@@ -39,7 +39,7 @@ using namespace OptimalCompress;
 
 namespace
 {
-	static int computeGreenError(const ColorBlock & rgba, const BlockDXT1 * block)
+	static int computeGreenError(const ColorBlock& rgba, const BlockDXT1* block)
 	{
 		nvDebugCheck(block != NULL);
 
@@ -54,45 +54,45 @@ namespace
 		for (int i = 0; i < 16; i++)
 		{
 			const int green = rgba.color(i).g;
-			
+
 			int error = abs(green - palette[0]);
 			error = min(error, abs(green - palette[1]));
 			error = min(error, abs(green - palette[2]));
 			error = min(error, abs(green - palette[3]));
-			
+
 			totalError += error;
 		}
 
 		return totalError;
 	}
 
-	static uint computeGreenIndices(const ColorBlock & rgba, const Color32 palette[4])
+	static uint computeGreenIndices(const ColorBlock& rgba, const Color32 palette[4])
 	{
 		const int color0 = palette[0].g;
 		const int color1 = palette[1].g;
 		const int color2 = palette[2].g;
 		const int color3 = palette[3].g;
-		
+
 		uint indices = 0;
 		for (int i = 0; i < 16; i++)
 		{
 			const int color = rgba.color(i).g;
-			
+
 			uint d0 = abs(color0 - color);
 			uint d1 = abs(color1 - color);
 			uint d2 = abs(color2 - color);
 			uint d3 = abs(color3 - color);
-			
+
 			uint b0 = d0 > d3;
 			uint b1 = d1 > d2;
 			uint b2 = d0 > d2;
 			uint b3 = d1 > d3;
 			uint b4 = d2 > d3;
-			
+
 			uint x0 = b1 & b2;
 			uint x1 = b0 & b3;
 			uint x2 = b0 & b4;
-			
+
 			indices |= (x2 | ((x0 | x1) << 1)) << (2 * i);
 		}
 
@@ -105,11 +105,11 @@ namespace
 		int q0 = (a >> 4) - 1;
 		int q1 = (a >> 4);
 		int q2 = (a >> 4) + 1;
-		
+
 		q0 = (q0 << 4) | q0;
 		q1 = (q1 << 4) | q1;
 		q2 = (q2 << 4) | q2;
-		
+
 		int d0 = abs(q0 - a);
 		int d1 = abs(q1 - a);
 		int d2 = abs(q2 - a);
@@ -118,8 +118,8 @@ namespace
 		if (d1 < d2) return q1 >> 4;
 		return q2 >> 4;
 	}
-	
-	static uint computeAlphaError(const ColorBlock & rgba, const AlphaBlockDXT5 * block)
+
+	static uint computeAlphaError(const ColorBlock& rgba, const AlphaBlockDXT5* block)
 	{
 		uint8 alphas[8];
 		block->evaluatePalette(alphas);
@@ -130,7 +130,7 @@ namespace
 		{
 			uint8 alpha = rgba.color(i).a;
 
-			uint besterror = 256*256;
+			uint besterror = 256 * 256;
 			uint best;
 			for (uint p = 0; p < 8; p++)
 			{
@@ -149,8 +149,8 @@ namespace
 
 		return totalError;
 	}
-	
-	static void computeAlphaIndices(const ColorBlock & rgba, AlphaBlockDXT5 * block)
+
+	static void computeAlphaIndices(const ColorBlock& rgba, AlphaBlockDXT5* block)
 	{
 		uint8 alphas[8];
 		block->evaluatePalette(alphas);
@@ -159,9 +159,9 @@ namespace
 		{
 			uint8 alpha = rgba.color(i).a;
 
-			uint besterror = 256*256;
+			uint besterror = 256 * 256;
 			uint best = 8;
-			for(uint p = 0; p < 8; p++)
+			for (uint p = 0; p < 8; p++)
 			{
 				int d = alphas[p] - alpha;
 				uint error = d * d;
@@ -186,7 +186,7 @@ namespace
 
 // Single color compressor, based on:
 // https://mollyrocket.com/forums/viewtopic.php?t=392
-void OptimalCompress::compressDXT1(Color32 c, BlockDXT1 * dxtBlock)
+void OptimalCompress::compressDXT1(Color32 c, BlockDXT1* dxtBlock)
 {
 	dxtBlock->col0.r = OMatch5[c.r][0];
 	dxtBlock->col0.g = OMatch6[c.g][0];
@@ -203,7 +203,7 @@ void OptimalCompress::compressDXT1(Color32 c, BlockDXT1 * dxtBlock)
 	}
 }
 
-void OptimalCompress::compressDXT1a(Color32 rgba, BlockDXT1 * dxtBlock)
+void OptimalCompress::compressDXT1a(Color32 rgba, BlockDXT1* dxtBlock)
 {
 	if (rgba.a < 128)
 	{
@@ -219,13 +219,13 @@ void OptimalCompress::compressDXT1a(Color32 rgba, BlockDXT1 * dxtBlock)
 
 
 // Brute force green channel compressor
-void OptimalCompress::compressDXT1G(const ColorBlock & rgba, BlockDXT1 * block)
+void OptimalCompress::compressDXT1G(const ColorBlock& rgba, BlockDXT1* block)
 {
 	nvDebugCheck(block != NULL);
-	
+
 	uint8 ming = 63;
 	uint8 maxg = 0;
-	
+
 	// Get min/max green.
 	for (uint i = 0; i < 16; i++)
 	{
@@ -246,18 +246,18 @@ void OptimalCompress::compressDXT1G(const ColorBlock & rgba, BlockDXT1 * block)
 		int besterror = computeGreenError(rgba, block);
 		int bestg0 = maxg;
 		int bestg1 = ming;
-		
-		for (int g0 = ming+5; g0 < maxg; g0++)
+
+		for (int g0 = ming + 5; g0 < maxg; g0++)
 		{
-			for (int g1 = ming; g1 < g0-4; g1++)
+			for (int g1 = ming; g1 < g0 - 4; g1++)
 			{
-				if ((maxg-g0) + (g1-ming) > besterror)
+				if ((maxg - g0) + (g1 - ming) > besterror)
 					continue;
-				
+
 				block->col0.g = g0;
 				block->col1.g = g1;
 				int error = computeGreenError(rgba, block);
-				
+
 				if (error < besterror)
 				{
 					besterror = error;
@@ -266,17 +266,17 @@ void OptimalCompress::compressDXT1G(const ColorBlock & rgba, BlockDXT1 * block)
 				}
 			}
 		}
-		
+
 		block->col0.g = bestg0;
 		block->col1.g = bestg1;
 	}
-	
+
 	Color32 palette[4];
 	block->evaluatePalette(palette);
 	block->indices = computeGreenIndices(rgba, palette);
 }
 
-void OptimalCompress::compressDXT3A(const ColorBlock & rgba, AlphaBlockDXT3 * dxtBlock)
+void OptimalCompress::compressDXT3A(const ColorBlock& rgba, AlphaBlockDXT3* dxtBlock)
 {
 	dxtBlock->alpha0 = quantize4(rgba.color(0).a);
 	dxtBlock->alpha1 = quantize4(rgba.color(1).a);
@@ -297,7 +297,7 @@ void OptimalCompress::compressDXT3A(const ColorBlock & rgba, AlphaBlockDXT3 * dx
 }
 
 
-void OptimalCompress::compressDXT5A(const ColorBlock & rgba, AlphaBlockDXT5 * dxtBlock)
+void OptimalCompress::compressDXT5A(const ColorBlock& rgba, AlphaBlockDXT5* dxtBlock)
 {
 	uint8 mina = 255;
 	uint8 maxa = 0;
@@ -334,16 +334,16 @@ void OptimalCompress::compressDXT5A(const ColorBlock & rgba, AlphaBlockDXT5 * dx
 		int besta0 = maxa;
 		int besta1 = mina;
 
-		for (int a0 = mina+9; a0 < maxa; a0++)
+		for (int a0 = mina + 9; a0 < maxa; a0++)
 		{
-			for (int a1 = mina; a1 < a0-8; a1++)
-			//for (int a1 = mina; a1 < maxa; a1++)
+			for (int a1 = mina; a1 < a0 - 8; a1++)
+				//for (int a1 = mina; a1 < maxa; a1++)
 			{
 				//nvCheck(abs(a1-a0) > 8);
 
 				//if (abs(a0 - a1) < 8) continue;
 				//if ((maxa-a0) + (a1-mina) + min(abs(centroid-a0), abs(centroid-a1)) > besterror)
-				if ((maxa-a0) + (a1-mina) > besterror)
+				if ((maxa - a0) + (a1 - mina) > besterror)
 					continue;
 
 				dxtBlock->alpha0 = a0;

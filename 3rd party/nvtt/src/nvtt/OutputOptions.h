@@ -33,43 +33,43 @@ namespace nvtt
 
 	struct DefaultOutputHandler : public nvtt::OutputHandler
 	{
-		DefaultOutputHandler(const char * fileName) : stream(fileName) {}
-		
+		DefaultOutputHandler(const char* fileName) : stream(fileName) {}
+
 		virtual ~DefaultOutputHandler()
 		{
 		}
-		
+
 		virtual void beginImage(int size, int width, int height, int depth, int face, int miplevel)
 		{
 			// ignore.
 		}
-		
+
 		// Output data.
-		virtual bool writeData(const void * data, int size)
+		virtual bool writeData(const void* data, int size)
 		{
-			stream.serialize(const_cast<void *>(data), size);
+			stream.serialize(const_cast<void*>(data), size);
 
 			//return !stream.isError();
 			return true;
 		}
-		
+
 		nv::StdOutputStream stream;
 	};
-	
-	
+
+
 	struct OutputOptions::Private
 	{
 		nv::Path fileName;
-		
-		mutable OutputHandler * outputHandler;
-		ErrorHandler * errorHandler;
+
+		mutable OutputHandler* outputHandler;
+		ErrorHandler* errorHandler;
 		bool outputHeader;
-		
+
 		bool openFile() const;
 		void closeFile() const;
 	};
 
-	
+
 } // nvtt namespace
 
 

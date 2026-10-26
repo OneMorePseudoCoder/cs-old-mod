@@ -27,36 +27,38 @@
 #include <luabind/config.hpp>
 #include <luabind/detail/policy.hpp>
 
-namespace luabind { namespace detail 
-{
-	struct discard_converter
+namespace luabind {
+	namespace detail
 	{
-		template<class T>
-		void apply(lua_State*, T) {}
-	};
-
-	struct discard_result_policy : conversion_policy<0>
-	{
-		static void precall(lua_State*, const index_map&) {}
-		static void postcall(lua_State*, const index_map&) {}
-
-		struct can_only_convert_from_cpp_to_lua {};
-
-		template<class T, class Direction>
-		struct generate_converter
+		struct discard_converter
 		{
-			typedef typename boost::mpl::if_<boost::is_same<Direction, cpp_to_lua>
-				, discard_converter
-				, can_only_convert_from_cpp_to_lua
-			>::type type;
+			template<class T>
+			void apply(lua_State*, T) {}
 		};
-	};
 
-}}
+		struct discard_result_policy : conversion_policy<0>
+		{
+			static void precall(lua_State*, const index_map&) {}
+			static void postcall(lua_State*, const index_map&) {}
+
+			struct can_only_convert_from_cpp_to_lua {};
+
+			template<class T, class Direction>
+			struct generate_converter
+			{
+				typedef typename boost::mpl::if_<boost::is_same<Direction, cpp_to_lua>
+					, discard_converter
+					, can_only_convert_from_cpp_to_lua
+				>::type type;
+			};
+		};
+
+	}
+}
 
 namespace luabind
 {
-	namespace 
+	namespace
 	{
 		LUABIND_ANONYMOUS_FIX detail::policy_cons<detail::discard_result_policy, detail::null_type> discard_result;
 	}

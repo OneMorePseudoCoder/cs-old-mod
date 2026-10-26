@@ -27,7 +27,7 @@ class					CWeapon;
 class					CMissile;
 class					CInventoryItem;
 
-class CUIMainIngameWnd: public CUIWindow  
+class CUIMainIngameWnd : public CUIWindow
 {
 public:
 	CUIMainIngameWnd();
@@ -40,7 +40,7 @@ public:
 	bool OnKeyboardPress(int dik);
 
 protected:
-	
+
 	CUIStatic			UIStaticDiskIO;
 	CUIStatic			UIStaticHealth;
 	CUIStatic			UIStaticArmor;
@@ -48,19 +48,19 @@ protected:
 	CUIProgressBar		UIHealthBar;
 	CUIProgressBar		UIArmorBar;
 	CUICarPanel			UICarPanel;
-	CUIMotionIcon		UIMotionIcon;	
-	CUIZoneMap*			UIZoneMap;
+	CUIMotionIcon		UIMotionIcon;
+	CUIZoneMap* UIZoneMap;
 
 	//иконка, показывающая количество активных PDA
 	CUIStatic			UIPdaOnline;
-	
+
 	//изображение оружия
 	CUIStatic			UIWeaponBack;
 	CUIStatic			UIWeaponSignAmmo;
 	CUIStatic			UIWeaponIcon;
 	Frect				UIWeaponIcon_rect;
 public:
-	CUIStatic*			GetPDAOnline					() { return &UIPdaOnline; };
+	CUIStatic* GetPDAOnline() { return &UIPdaOnline; };
 protected:
 
 
@@ -76,36 +76,36 @@ protected:
 	CUIStatic			UIStarvationIcon;
 	CUIStatic			UIPsyHealthIcon;
 	CUIStatic			UIInvincibleIcon;
-//	CUIStatic			UISleepIcon;
+	//	CUIStatic			UISleepIcon;
 	CUIStatic			UIArtefactIcon;
 
-	CUIScrollView*		m_UIIcons;
-	CUIWindow*			m_pMPChatWnd;
-	CUIWindow*			m_pMPLogWnd;
-public:	
-	CUIArtefactPanel*    m_artefactPanel;
-	
+	CUIScrollView* m_UIIcons;
+	CUIWindow* m_pMPChatWnd;
+	CUIWindow* m_pMPLogWnd;
 public:
-	
+	CUIArtefactPanel* m_artefactPanel;
+
+public:
+
 	// Енумы соответсвующие предупреждающим иконкам 
 	enum EWarningIcons
 	{
-		ewiAll				= 0,
+		ewiAll = 0,
 		ewiWeaponJammed,
 		ewiRadiation,
 		ewiWound,
 		ewiStarvation,
 		ewiPsyHealth,
 		ewiInvincible,
-//		ewiSleep,
+		//		ewiSleep,
 		ewiArtefact,
 	};
 
-	void				SetMPChatLog					(CUIWindow* pChat, CUIWindow* pLog);
+	void				SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog);
 
 	// Задаем цвет соответствующей иконке
-	void				SetWarningIconColor				(EWarningIcons icon, const u32 cl);
-	void				TurnOffWarningIcon				(EWarningIcons icon);
+	void				SetWarningIconColor(EWarningIcons icon, const u32 cl);
+	void				TurnOffWarningIcon(EWarningIcons icon);
 
 	// Пороги изменения цвета индикаторов, загружаемые из system.ltx
 	typedef				xr_map<EWarningIcons, xr_vector<float> >	Thresholds;
@@ -115,46 +115,46 @@ public:
 	// Енум перечисления возможных мигающих иконок
 	enum EFlashingIcons
 	{
-		efiPdaTask	= 0,
+		efiPdaTask = 0,
 		efiMail
 	};
-	
-	void				SetFlashIconState_				(EFlashingIcons type, bool enable);
 
-	void				AnimateContacts					(bool b_snd);
+	void				SetFlashIconState_(EFlashingIcons type, bool enable);
+
+	void				AnimateContacts(bool b_snd);
 	HUD_SOUND			m_contactSnd;
 
-	void				ReceiveNews						(GAME_NEWS_DATA* news);
-	
-protected:
-	void				SetWarningIconColor				(CUIStatic* s, const u32 cl);
-	void				InitFlashingIcons				(CUIXml* node);
-	void				DestroyFlashingIcons			();
-	void				UpdateFlashingIcons				();
-	void				UpdateActiveItemInfo			();
+	void				ReceiveNews(GAME_NEWS_DATA* news);
 
-	void				SetAmmoIcon						(const shared_str& sect_name);
+protected:
+	void				SetWarningIconColor(CUIStatic* s, const u32 cl);
+	void				InitFlashingIcons(CUIXml* node);
+	void				DestroyFlashingIcons();
+	void				UpdateFlashingIcons();
+	void				UpdateActiveItemInfo();
+
+	void				SetAmmoIcon(const shared_str& sect_name);
 
 	// first - иконка, second - анимация
-	DEF_MAP				(FlashingIcons, EFlashingIcons, CUIStatic*);
+	DEF_MAP(FlashingIcons, EFlashingIcons, CUIStatic*);
 	FlashingIcons		m_FlashingIcons;
 
 	//для текущего активного актера и оружия
-	CActor*				m_pActor;	
-	CWeapon*			m_pWeapon;
-	CMissile*			m_pGrenade;
-	CInventoryItem*		m_pItem;
+	CActor* m_pActor;
+	CWeapon* m_pWeapon;
+	CMissile* m_pGrenade;
+	CInventoryItem* m_pItem;
 
 	// Отображение подсказок при наведении прицела на объект
 	void				RenderQuickInfos();
 
 public:
-	CUICarPanel&		CarPanel							(){return UICarPanel;};
-	CUIMotionIcon&		MotionIcon							(){return UIMotionIcon;}
-	void				OnConnected							();
-	void				reset_ui							();
+	CUICarPanel& CarPanel() { return UICarPanel; };
+	CUIMotionIcon& MotionIcon() { return UIMotionIcon; }
+	void				OnConnected();
+	void				reset_ui();
 protected:
-	CInventoryItem*		m_pPickUpItem;
+	CInventoryItem* m_pPickUpItem;
 	CUIStatic			UIPickUpItemIcon;
 
 	float				m_iPickUpItemIconX;
@@ -164,8 +164,8 @@ protected:
 
 	void				UpdatePickUpItem();
 public:
-	void				SetPickUpItem	(CInventoryItem* PickUpItem);
+	void				SetPickUpItem(CInventoryItem* PickUpItem);
 #ifdef DEBUG
-	void				draw_adjust_mode					();
+	void				draw_adjust_mode();
 #endif
 };

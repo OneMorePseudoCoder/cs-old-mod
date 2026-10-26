@@ -30,12 +30,12 @@ namespace nv
 		uint32 width;
 		uint16 depth;
 		uint16 color_mode;
-		
+
 		bool isValid() const
 		{
 			return signature == 0x38425053;	// '8BPS'
 		}
-		
+
 		bool isSupported() const
 		{
 			if (version != 1) {
@@ -56,7 +56,7 @@ namespace nv
 	};
 
 
-	inline Stream & operator<< (Stream & s, PsdHeader & head)
+	inline Stream& operator<< (Stream& s, PsdHeader& head)
 	{
 		s << head.signature << head.version;
 		for (int i = 0; i < 6; i++) {

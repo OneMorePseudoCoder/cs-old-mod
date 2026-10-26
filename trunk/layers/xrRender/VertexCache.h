@@ -5,17 +5,17 @@ class VertexCache
 {
 
 public:
-	VertexCache		(int size);
-	VertexCache		();
-	~VertexCache	();
+	VertexCache(int size);
+	VertexCache();
+	~VertexCache();
 
-	bool			InCache	(int entry);
+	bool			InCache(int entry);
 	int				AddEntry(int entry);
-	void			Clear	();
+	void			Clear();
 
-	void			Copy	(VertexCache* inVcache);
-	int				At		(int index);
-	void			Set		(int index, int value);
+	void			Copy(VertexCache* inVcache);
+	int				At(int index);
+	void			Set(int index, int value);
 
 private:
 	xr_vector<int>	entries;
@@ -25,9 +25,9 @@ IC bool VertexCache::InCache(int entry)
 {
 	bool returnVal = false;
 
-	for(u32 i = 0; i < entries.size(); i++)
+	for (u32 i = 0; i < entries.size(); i++)
 	{
-		if(entries[i] == entry)
+		if (entries[i] == entry)
 		{
 			returnVal = true;
 			break;
@@ -45,7 +45,7 @@ IC int VertexCache::AddEntry(int entry)
 	removed = entries[entries.size() - 1];
 
 	//push everything right one
-	for(int i = (u32)entries.size() - 2; i >= 0; i--)
+	for (int i = (u32)entries.size() - 2; i >= 0; i--)
 	{
 		entries[i + 1] = entries[i];
 	}

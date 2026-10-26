@@ -23,10 +23,10 @@ protected:
 	typedef CStalkerActionBase inherited;
 
 public:
-						CStalkerActionGetOutOfAnomaly	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize						();
-	virtual void		execute							();
-	virtual void		finalize						();
+	CStalkerActionGetOutOfAnomaly(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,9 +38,9 @@ protected:
 	typedef CStalkerActionBase inherited;
 
 public:
-						CStalkerActionDetectAnomaly	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	CStalkerActionDetectAnomaly(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
 };
 

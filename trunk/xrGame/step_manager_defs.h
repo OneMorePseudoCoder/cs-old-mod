@@ -8,7 +8,7 @@
 struct MotionID;
 
 struct SStepParam {
-	struct{
+	struct {
 		float	time;
 		float	power;
 	} step[MAX_LEGS_COUNT];
@@ -31,7 +31,7 @@ struct SStepInfo {
 
 	u8				cur_cycle;
 
-	SStepInfo()		{disable = true;}
+	SStepInfo() { disable = true; }
 };
 
 enum ELegType {

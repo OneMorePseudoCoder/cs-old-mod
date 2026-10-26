@@ -5,22 +5,22 @@
 
 struct SAnimationPart {
 	MotionID		motion;
-	CBlend			*blend;
+	CBlend* blend;
 	bool			actual;
 	u32				time_started;
-	
-	void	init	() {
-		motion.invalidate	();
-		blend				= 0;
-		actual				= true;
-		time_started		= 0;
+
+	void	init() {
+		motion.invalidate();
+		blend = 0;
+		actual = true;
+		time_started = 0;
 	}
 };
 
 struct SControlAnimationData : public ControlCom::IComData {
 	float				_speed;
-	IC void				set_speed	(float v)		{_speed=v; VERIFY2(_abs(_speed)<1000,"SControlAnimationData::set_speed too big");};
-	IC float			get_speed	()				{return _speed;};
+	IC void				set_speed(float v) { _speed = v; VERIFY2(_abs(_speed) < 1000, "SControlAnimationData::set_speed too big"); };
+	IC float			get_speed() { return _speed; };
 	SAnimationPart		global;
 	SAnimationPart		legs;
 	SAnimationPart		torso;
@@ -37,17 +37,17 @@ struct SAnimationSignalEventData : public ControlCom::IEventData {
 class CControlAnimation : public CControl_ComPure<SControlAnimationData> {
 	typedef CControl_ComPure<SControlAnimationData> inherited;
 
-	CKinematicsAnimated		*m_skeleton_animated;
-	
+	CKinematicsAnimated* m_skeleton_animated;
+
 	// animation events
-	struct SAnimationEvent{
+	struct SAnimationEvent {
 		float	time_perc;
 		u32		event_id;
 		bool	handled;
 	};
 
-	DEFINE_VECTOR			(SAnimationEvent, ANIMATION_EVENT_VEC, ANIMATION_EVENT_VEC_IT);
-	DEFINE_MAP				(MotionID, ANIMATION_EVENT_VEC, ANIMATION_EVENT_MAP, ANIMATION_EVENT_MAP_IT);
+	DEFINE_VECTOR(SAnimationEvent, ANIMATION_EVENT_VEC, ANIMATION_EVENT_VEC_IT);
+	DEFINE_MAP(MotionID, ANIMATION_EVENT_VEC, ANIMATION_EVENT_MAP, ANIMATION_EVENT_MAP_IT);
 	ANIMATION_EVENT_MAP		m_anim_events;
 
 	bool					m_freeze;
@@ -56,53 +56,53 @@ class CControlAnimation : public CControl_ComPure<SControlAnimationData> {
 	float					m_saved_torso_speed;
 
 public:
-	
+
 	bool					m_global_animation_end;
 	bool					m_legs_animation_end;
 	bool					m_torso_animation_end;
 
 public:
-	virtual void	reinit					();
-	virtual void	update_frame			();
-	virtual	void	reset_data				();
-				
-			void	add_anim_event			(MotionID, float, u32);
+	virtual void	reinit();
+	virtual void	update_frame();
+	virtual	void	reset_data();
 
-			CBlend	*current_blend			() {return m_data.global.blend;}
+	void	add_anim_event(MotionID, float, u32);
 
-			void	restart					();
-			
-			void	freeze					();
-			void	unfreeze				();
+	CBlend* current_blend() { return m_data.global.blend; }
 
-		// Services
-		IC	float	motion_time				(MotionID motion_id, IRender_Visual *visual);
+	void	restart();
+
+	void	freeze();
+	void	unfreeze();
+
+	// Services
+	IC	float	motion_time(MotionID motion_id, IRender_Visual* visual);
 
 
 private:
-	void	play				();
-	void	play_part			(SAnimationPart &part, PlayCallback callback);
-	void	check_events		(SAnimationPart &part);
-	void	check_callbacks		();
+	void	play();
+	void	play_part(SAnimationPart& part, PlayCallback callback);
+	void	check_events(SAnimationPart& part);
+	void	check_callbacks();
 
-	void	restart				(SAnimationPart &part, PlayCallback callback);
+	void	restart(SAnimationPart& part, PlayCallback callback);
 
 public:
 	enum EAnimationEventType {
-		eAnimationHit		= u32(0),
+		eAnimationHit = u32(0),
 		eAnimationCustom
 	};
 };
 
 // get motion time, when just MotionID available
-IC float CControlAnimation::motion_time(MotionID motion_id, IRender_Visual *visual)
+IC float CControlAnimation::motion_time(MotionID motion_id, IRender_Visual* visual)
 {
-	CKinematicsAnimated	*skeleton_animated	= smart_cast<CKinematicsAnimated*>(visual);
-	VERIFY				(skeleton_animated);
-	CMotionDef			*motion_def			= skeleton_animated->LL_GetMotionDef(motion_id);
-	VERIFY				(motion_def);
-	CMotion*			motion				= skeleton_animated->LL_GetRootMotion(motion_id);
-	VERIFY				(motion);
+	CKinematicsAnimated* skeleton_animated = smart_cast<CKinematicsAnimated*>(visual);
+	VERIFY(skeleton_animated);
+	CMotionDef* motion_def = skeleton_animated->LL_GetMotionDef(motion_id);
+	VERIFY(motion_def);
+	CMotion* motion = skeleton_animated->LL_GetRootMotion(motion_id);
+	VERIFY(motion);
 	return				(motion->GetLength() / motion_def->Speed());
 }
 

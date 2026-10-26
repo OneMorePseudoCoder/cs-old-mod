@@ -31,164 +31,164 @@
 namespace luabind {
 
 #if !(defined(BOOST_MSVC) && BOOST_MSVC <= 1300)
-    template<class T>
-    T* get_pointer(T& ref)
-    {
-        return &ref;
-    }
+	template<class T>
+	T* get_pointer(T& ref)
+	{
+		return &ref;
+	}
 
-    namespace detail {
+	namespace detail {
 #else
-    namespace detail {
+	namespace detail {
 
-        struct no_overload_tag {};
+		struct no_overload_tag {};
 
-    } // namespace detail
+	} // namespace detail
 
-    detail::no_overload_tag get_pointer(...);
+	detail::no_overload_tag get_pointer(...);
 
-    namespace detail {
+	namespace detail {
 
-    typedef char(&yes_overload)[1];
-    typedef char(&no_overload)[2];
+		typedef char(&yes_overload)[1];
+		typedef char(&no_overload)[2];
 
-    no_overload check_overload(no_overload_tag);
-    template<class T>
-    yes_overload check_overload(T const&);
+		no_overload check_overload(no_overload_tag);
+		template<class T>
+		yes_overload check_overload(T const&);
 
 #endif
 
-    template<class T>
-    struct extract_wrap_base
-    {
+		template<class T>
+		struct extract_wrap_base
+		{
 # if defined(BOOST_MSVC) && BOOST_MSVC <= 1300
-        BOOST_STATIC_CONSTANT(bool,
-            value = sizeof(check_overload(get_pointer(*(T*)0)))
-                 == sizeof(yes_overload)
-        );
+			BOOST_STATIC_CONSTANT(bool,
+				value = sizeof(check_overload(get_pointer(*(T*)0)))
+				== sizeof(yes_overload)
+			);
 
-        static wrap_base const* extract(T const* ptr)
-        {
-            return extract_impl(ptr, boost::mpl::bool_<value>());
-        }
+			static wrap_base const* extract(T const* ptr)
+			{
+				return extract_impl(ptr, boost::mpl::bool_<value>());
+			}
 
-        static wrap_base const* extract_impl(T const* ptr, boost::mpl::true_)
-        {
-            return dynamic_cast<wrap_base const*>(
-                get_pointer(*ptr));
-        }
+			static wrap_base const* extract_impl(T const* ptr, boost::mpl::true_)
+			{
+				return dynamic_cast<wrap_base const*>(
+					get_pointer(*ptr));
+			}
 
-        static wrap_base const* extract_impl(T const* ptr, boost::mpl::false_)
-        {
-            return dynamic_cast<wrap_base const*>(ptr);
-        }
+			static wrap_base const* extract_impl(T const* ptr, boost::mpl::false_)
+			{
+				return dynamic_cast<wrap_base const*>(ptr);
+			}
 
-        static wrap_base* extract(T* ptr)
-        {
-            return extract_impl(ptr, boost::mpl::bool_<value>());
-        }
+			static wrap_base* extract(T* ptr)
+			{
+				return extract_impl(ptr, boost::mpl::bool_<value>());
+			}
 
-        static wrap_base* extract_impl(T* ptr, boost::mpl::true_)
-        {
-            return dynamic_cast<wrap_base*>(
-                get_pointer(*ptr));
-        }
+			static wrap_base* extract_impl(T* ptr, boost::mpl::true_)
+			{
+				return dynamic_cast<wrap_base*>(
+					get_pointer(*ptr));
+			}
 
-        static wrap_base* extract_impl(T* ptr, boost::mpl::false_)
-        {
-            return dynamic_cast<wrap_base*>(ptr);
-        }
+			static wrap_base* extract_impl(T* ptr, boost::mpl::false_)
+			{
+				return dynamic_cast<wrap_base*>(ptr);
+			}
 # else       
-       static wrap_base const* extract(T const* ptr)
-        {
-            return dynamic_cast<wrap_base const*>(get_pointer(*ptr));
-        }
+			static wrap_base const* extract(T const* ptr)
+			{
+				return dynamic_cast<wrap_base const*>(get_pointer(*ptr));
+			}
 
-        static wrap_base* extract(T* ptr)
-        {
-            return dynamic_cast<wrap_base*>(get_pointer(*ptr));
-        }
+			static wrap_base* extract(T* ptr)
+			{
+				return dynamic_cast<wrap_base*>(get_pointer(*ptr));
+			}
 # endif
-    };
+		};
 
-    struct default_back_reference {};
+		struct default_back_reference {};
 
-    template<class T>
-    struct back_reference_impl : default_back_reference
-    {
-        static bool extract(lua_State* L, T const* ptr)
-        {
-            if (!has_wrapper) return false;
+		template<class T>
+		struct back_reference_impl : default_back_reference
+		{
+			static bool extract(lua_State* L, T const* ptr)
+			{
+				if (!has_wrapper) return false;
 
-            if (wrap_base const* p = extract_wrap_base<T>::extract(ptr))
-            {
-                wrap_access::ref(*p).get(L);
-                return true;
-            }
+				if (wrap_base const* p = extract_wrap_base<T>::extract(ptr))
+				{
+					wrap_access::ref(*p).get(L);
+					return true;
+				}
 
-            return false;
-        }
+				return false;
+			}
 
-        static bool move(lua_State* L, T* ptr)
-        {
-            if (!has_wrapper) return false;
+			static bool move(lua_State* L, T* ptr)
+			{
+				if (!has_wrapper) return false;
 
-            if (wrap_base* p = extract_wrap_base<T>::extract(ptr))
-            {
-                assert(wrap_access::ref(*p).m_strong_ref.is_valid());
-                wrap_access::ref(*p).get(L);
-                wrap_access::ref(*p).m_strong_ref.reset();
-                return true;
-            }
+				if (wrap_base* p = extract_wrap_base<T>::extract(ptr))
+				{
+					assert(wrap_access::ref(*p).m_strong_ref.is_valid());
+					wrap_access::ref(*p).get(L);
+					wrap_access::ref(*p).m_strong_ref.reset();
+					return true;
+				}
 
-            return false;
-        }
+				return false;
+			}
 
-        static bool has_wrapper;
-    };
+			static bool has_wrapper;
+		};
 
-    template<class T>
-    bool back_reference_impl<T>::has_wrapper = false;
+		template<class T>
+		bool back_reference_impl<T>::has_wrapper = false;
 
-    template<class T>
-    struct back_reference_do_nothing
-    {
-        static bool extract(lua_State*, T const*)
-        {
-            return false;
-        }
+		template<class T>
+		struct back_reference_do_nothing
+		{
+			static bool extract(lua_State*, T const*)
+			{
+				return false;
+			}
 
-        static bool move(lua_State*, T*)
-        {
-            return false;
-        }
-    };
+			static bool move(lua_State*, T*)
+			{
+				return false;
+			}
+		};
 
-    } // namespace detail
+	} // namespace detail
 
 #ifndef LUABIND_NO_RTTI
 
-    template<class T>
-    struct back_reference
-        : boost::mpl::if_<
-              boost::is_polymorphic<T>
-            , detail::back_reference_impl<T>
-            , detail::back_reference_do_nothing<T>
-          >::type
-    {
-    };
+	template<class T>
+	struct back_reference
+		: boost::mpl::if_<
+		boost::is_polymorphic<T>
+		, detail::back_reference_impl<T>
+		, detail::back_reference_do_nothing<T>
+		>::type
+	{
+	};
 
 #else
 
-    template<class T>
-    struct back_reference
-        : detail::back_reference_do_nothing<T>
-    {
-    };
+	template<class T>
+	struct back_reference
+		: detail::back_reference_do_nothing<T>
+	{
+	};
 
 #endif
 
-} // namespace luabind
+	} // namespace luabind
 
 #endif // BACK_REFERENCE_040510_HPP
 

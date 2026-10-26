@@ -11,7 +11,7 @@
  ********************************************************************
 
   function:
-    last mod: $Id: huffman.h 16503 2009-08-22 18:14:02Z giles $
+	last mod: $Id: huffman.h 16503 2009-08-22 18:14:02Z giles $
 
  ********************************************************************/
 
@@ -20,8 +20,8 @@
 # include "theora/codec.h"
 # include "ocintrin.h"
 
-/*The range of valid quantized DCT coefficient values.
-  VP3 used 511 in the encoder, but the bitstream is capable of 580.*/
+ /*The range of valid quantized DCT coefficient values.
+   VP3 used 511 in the encoder, but the bitstream is capable of 580.*/
 #define OC_DCT_VAL_RANGE         (580)
 
 #define OC_NDCT_TOKEN_BITS       (5)

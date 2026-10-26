@@ -5,10 +5,10 @@
  *	\author		Pierre Terdiman
  *	\date		April, 4, 2000
  */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Include Guard
+ ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ // Include Guard
 #ifndef NV_CORE_RADIXSORT_H
 #define NV_CORE_RADIXSORT_H
 
@@ -26,34 +26,34 @@ public:
 	~RadixSort();
 
 	// Sorting methods
-	RadixSort & sort(const uint32* input, uint32 nb, bool signedvalues=true);
-	RadixSort & sort(const float* input, uint32 nb);
+	RadixSort& sort(const uint32* input, uint32 nb, bool signedvalues = true);
+	RadixSort& sort(const float* input, uint32 nb);
 
 	//! Access to results. mIndices is a list of indices in sorted order, i.e. in the order you may further process your data
-	inline uint32 * indices() const { return mIndices; }
+	inline uint32* indices() const { return mIndices; }
 
 	//! mIndices2 gets trashed on calling the sort routine, but otherwise you can recycle it the way you want.
-	inline uint32 * recyclable() const { return mIndices2; }
+	inline uint32* recyclable() const { return mIndices2; }
 
 	// Stats
 	uint32 usedRam() const;
 
 	//! Returns the total number of calls to the radix sorter.
-	inline uint32 totalCalls()	const { return mTotalCalls;	}
+	inline uint32 totalCalls()	const { return mTotalCalls; }
 
 	//! Returns the number of premature exits due to temporal coherence.
 	inline uint32 hits() const { return mNbHits; }
 
 
-	private:
+private:
 #ifndef RADIX_LOCAL_RAM
-	uint32*			mHistogram;					//!< Counters for each byte
-	uint32*			mOffset;					//!< Offsets (nearly a cumulative distribution function)
+	uint32* mHistogram;					//!< Counters for each byte
+	uint32* mOffset;					//!< Offsets (nearly a cumulative distribution function)
 #endif
 	uint32			mCurrentSize;				//!< Current size of the indices list
 	uint32			mPreviousSize;				//!< Size involved in previous call
-	uint32*			mIndices;					//!< Two lists, swapped each pass
-	uint32*			mIndices2;
+	uint32* mIndices;					//!< Two lists, swapped each pass
+	uint32* mIndices2;
 
 	// Stats
 	uint32			mTotalCalls;

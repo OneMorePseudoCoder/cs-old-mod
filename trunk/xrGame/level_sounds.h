@@ -15,8 +15,8 @@ struct SStaticSound
 	float			m_Volume;
 	float			m_Freq;
 public:
-	void 			Load			(IReader& F);
-	void 			Update			(u32 gt, u32 rt);
+	void 			Load(IReader& F);
+	void 			Update(u32 gt, u32 rt);
 };
 
 // music interface
@@ -31,26 +31,26 @@ struct	SMusicTrack
 	Ivector2		m_PauseTime;
 	float			m_Volume;
 public:
-	void			Load			(LPCSTR fn, LPCSTR params);
-	BOOL			IsPlaying		(){return m_SourceLeft._feedback() || m_SourceRight._feedback();}
-	void			Play			();
-	void			Stop			();
-	void			SetVolume		(float volume);
+	void			Load(LPCSTR fn, LPCSTR params);
+	BOOL			IsPlaying() { return m_SourceLeft._feedback() || m_SourceRight._feedback(); }
+	void			Play();
+	void			Stop();
+	void			SetVolume(float volume);
 };
 
 class CLevelSoundManager
 {
-	DEFINE_VECTOR(SStaticSound,StaticSoundsVec,StaticSoundsVecIt);
+	DEFINE_VECTOR(SStaticSound, StaticSoundsVec, StaticSoundsVecIt);
 	StaticSoundsVec	m_StaticSounds;
-	DEFINE_VECTOR(SMusicTrack,MusicTrackVec,MusicTrackVecIt);
+	DEFINE_VECTOR(SMusicTrack, MusicTrackVec, MusicTrackVecIt);
 	MusicTrackVec	m_MusicTracks;
 	u32				m_NextTrackTime;
 	int				m_CurrentTrack;
 public:
-					CLevelSoundManager();
-	void			Load			();
-	void			Unload			();
-	void __stdcall	Update			();
+	CLevelSoundManager();
+	void			Load();
+	void			Unload();
+	void __stdcall	Update();
 };
 
 #endif

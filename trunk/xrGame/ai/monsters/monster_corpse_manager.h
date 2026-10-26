@@ -4,9 +4,9 @@
 class CBaseMonster;
 
 class CMonsterCorpseManager {
-	CBaseMonster			*monster;
-	
-	const CEntityAlive	*corpse;
+	CBaseMonster* monster;
+
+	const CEntityAlive* corpse;
 	Fvector				position;
 	u32					vertex;
 	TTime				time_last_seen;
@@ -14,19 +14,19 @@ class CMonsterCorpseManager {
 	bool				forced;
 
 public:
-						CMonsterCorpseManager	(); 
-						~CMonsterCorpseManager	();
-	void				init_external			(CBaseMonster *M);
+	CMonsterCorpseManager();
+	~CMonsterCorpseManager();
+	void				init_external(CBaseMonster* M);
 
-	void				update					();
+	void				update();
 
-	void				force_corpse			(const CEntityAlive *_corpse);
-	void				unforce_corpse			();
+	void				force_corpse(const CEntityAlive* _corpse);
+	void				unforce_corpse();
 
-	const CEntityAlive *get_corpse				() {return corpse;}
-	const Fvector		&get_corpse_position	() {return position;}
-	u32					get_corpse_vertex		() {return vertex;}
-	TTime				get_corpse_time_last_seen() {return time_last_seen;}
+	const CEntityAlive* get_corpse() { return corpse; }
+	const Fvector& get_corpse_position() { return position; }
+	u32					get_corpse_vertex() { return vertex; }
+	TTime				get_corpse_time_last_seen() { return time_last_seen; }
 
-	void				reinit					();
+	void				reinit();
 };

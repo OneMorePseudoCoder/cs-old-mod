@@ -12,15 +12,15 @@
 class NET_Packet;
 
 #ifndef AI_COMPILER
-	#include "specific_character.h"
+#include "specific_character.h"
 #endif
 
 #ifdef XRGAME_EXPORTS
-	#include "PhraseDialogDefs.h"
-	#include "character_community.h"
-	#include "character_rank.h"
-	#include "character_reputation.h"
-	class CSE_ALifeTraderAbstract;
+#include "PhraseDialogDefs.h"
+#include "character_community.h"
+#include "character_rank.h"
+#include "character_reputation.h"
+class CSE_ALifeTraderAbstract;
 #endif
 
 
@@ -29,12 +29,12 @@ class NET_Packet;
 //////////////////////////////////////////////////////////////////////////
 struct SCharacterProfile : CSharedResource
 {
-	SCharacterProfile ();
-	virtual ~SCharacterProfile ();
+	SCharacterProfile();
+	virtual ~SCharacterProfile();
 
-    //если задано, то выбирается именно такой профиль,
+	//если задано, то выбирается именно такой профиль,
 	//иначе ищется случайно,удовлетворяющее шаблону
-	SPECIFIC_CHARACTER_ID		m_CharacterId;	
+	SPECIFIC_CHARACTER_ID		m_CharacterId;
 
 	//требуемые параметры персонажа
 	CHARACTER_CLASS					m_Class;
@@ -46,8 +46,8 @@ struct SCharacterProfile : CSharedResource
 class CInventoryOwner;
 class CSE_ALifeTraderAbstract;
 
-class CCharacterInfo: public CSharedClass<SCharacterProfile, PROFILE_ID, false>,
-					  public CXML_IdToIndex<PROFILE_ID, int, CCharacterInfo>
+class CCharacterInfo : public CSharedClass<SCharacterProfile, PROFILE_ID, false>,
+	public CXML_IdToIndex<PROFILE_ID, int, CCharacterInfo>
 {
 private:
 	typedef CSharedClass	<SCharacterProfile, PROFILE_ID, false>	inherited_shared;
@@ -63,32 +63,32 @@ public:
 	CCharacterInfo();
 	~CCharacterInfo();
 
-	virtual void Load	(PROFILE_ID id);
+	virtual void Load(PROFILE_ID id);
 
 #ifdef XRGAME_EXPORTS
-	void load	(IReader&);
-	void save	(NET_Packet&);
+	void load(IReader&);
+	void save(NET_Packet&);
 
 	//инициализация профиля подразумевает
 	//загрузку соответствующего CSpecificCharacter, по 
 	//указанному индексу
-	void	Init				(CSE_ALifeTraderAbstract* trader);
-	void InitSpecificCharacter	(SPECIFIC_CHARACTER_ID new_id);
+	void	Init(CSE_ALifeTraderAbstract* trader);
+	void InitSpecificCharacter(SPECIFIC_CHARACTER_ID new_id);
 #endif
 
 protected:
-	const SCharacterProfile* data() const	{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
-	SCharacterProfile* data()				{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
+	const SCharacterProfile* data() const { VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd(); }
+	SCharacterProfile* data() { VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd(); }
 
-	static void	 InitXmlIdToIndex	();
+	static void	 InitXmlIdToIndex();
 
 
 	//загрузка из XML файла
-	virtual void load_shared		(LPCSTR);
+	virtual void load_shared(LPCSTR);
 
 	//индекс загруженного профиля
 	PROFILE_ID m_ProfileId;
-	
+
 	//индекс данных о конкретном персонаже, который
 	//используется в данном экземпляре класса
 	SPECIFIC_CHARACTER_ID m_SpecificCharacterId;
@@ -109,24 +109,24 @@ public:
 	shared_str					Bio()				const;
 
 
-	const CHARACTER_COMMUNITY&	Community()			const	{return m_CurrentCommunity;};
-	const CHARACTER_RANK&		Rank()				const	{ return m_CurrentRank;};
-	const CHARACTER_REPUTATION&	Reputation()		const	{ return m_CurrentReputation;};
+	const CHARACTER_COMMUNITY& Community()			const { return m_CurrentCommunity; };
+	const CHARACTER_RANK& Rank()				const { return m_CurrentRank; };
+	const CHARACTER_REPUTATION& Reputation()		const { return m_CurrentReputation; };
 
 	//доступут только у InventoryOwner
 protected:
-	void	SetRank			(CHARACTER_RANK_VALUE			rank);
-	void	SetReputation	(CHARACTER_REPUTATION_VALUE		reputation);
-	void	SetCommunity	(const CHARACTER_COMMUNITY&		community)		{m_CurrentCommunity = community;};
+	void	SetRank(CHARACTER_RANK_VALUE			rank);
+	void	SetReputation(CHARACTER_REPUTATION_VALUE		reputation);
+	void	SetCommunity(const CHARACTER_COMMUNITY& community) { m_CurrentCommunity = community; };
 
 public:
-	int		TradeIconX	()	const;
-	int		TradeIconY	()	const;
-//	int		MapIconX	()	const;
-//	int		MapIconY	()	const;
+	int		TradeIconX()	const;
+	int		TradeIconY()	const;
+	//	int		MapIconX	()	const;
+	//	int		MapIconY	()	const;
 
-	shared_str			StartDialog	()	const;
-	const DIALOG_ID_VECTOR&		ActorDialogs()	const;
+	shared_str			StartDialog()	const;
+	const DIALOG_ID_VECTOR& ActorDialogs()	const;
 #endif
 
 protected:

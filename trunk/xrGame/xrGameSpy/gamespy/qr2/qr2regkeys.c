@@ -5,11 +5,11 @@
 #include "../common/gsDebug.h"
 
 #ifdef __MWERKS__ // CodeWarrior requires prototypes
-void qr2_register_keyW(int keyid, const unsigned short *key);
-void qr2_register_keyA(int keyid, const char *key);
+void qr2_register_keyW(int keyid, const unsigned short* key);
+void qr2_register_keyA(int keyid, const char* key);
 #endif
 
-const char *qr2_registered_key_list[MAX_REGISTERED_KEYS] =
+const char* qr2_registered_key_list[MAX_REGISTERED_KEYS] =
 {
 	"",				//0 is reserved
 	"hostname",		//1
@@ -52,7 +52,7 @@ const char *qr2_registered_key_list[MAX_REGISTERED_KEYS] =
 typedef struct QR2KeyListNodeS
 {
 	char* mKeyData;
-	struct QR2KeyListNodeS*	mNextKey;
+	struct QR2KeyListNodeS* mNextKey;
 } QR2KeyListNode;
 
 typedef struct QR2KeyListS
@@ -80,7 +80,7 @@ void qr2_internal_key_list_append(char* theKey)
 	{
 		// Find the end of the list and append this node
 		QR2KeyListNode* aInsertPlace = qr2_internal_key_list.mHead;
-		while(aInsertPlace->mNextKey != NULL)
+		while (aInsertPlace->mNextKey != NULL)
 			aInsertPlace = aInsertPlace->mNextKey;
 
 		aInsertPlace->mNextKey = aNewNode;
@@ -101,7 +101,7 @@ void qr2_internal_key_list_free()
 		gsifree(aNodeToFree);				// free the current node
 		aNodeToFree = aNextNode;			// set the current node to the next node
 	}
-	
+
 	// Initialize the list back to NULL
 	qr2_internal_key_list.mHead = NULL;
 }
@@ -109,7 +109,7 @@ void qr2_internal_key_list_free()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-void qr2_register_keyA(int keyid, const char *key)
+void qr2_register_keyA(int keyid, const char* key)
 {
 	gsDebugFormat(GSIDebugCat_QR2, GSIDebugType_Misc, GSIDebugLevel_StackTrace,
 		"qr2_register_keyA()\r\n");
@@ -127,7 +127,7 @@ void qr2_register_keyA(int keyid, const char *key)
 
 	qr2_registered_key_list[keyid] = key;
 }
-void qr2_register_keyW(int keyid, const unsigned short *key)
+void qr2_register_keyW(int keyid, const unsigned short* key)
 {
 	char* key_A = NULL;
 

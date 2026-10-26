@@ -54,7 +54,7 @@ struct TipString
 	}
 };
 
-class ENGINE_API CConsole  :
+class ENGINE_API CConsole :
 	public IInputReceiver,
 	public pureRender,
 	public pureFrame,
@@ -62,11 +62,13 @@ class ENGINE_API CConsole  :
 {
 public:
 	//t-defs
-	struct str_pred : public std::binary_function<char*, char*, bool> {	
+	struct str_pred : public std::binary_function<char*, char*, bool> {
 		IC bool operator()(const char* x, const char* y) const
-		{	return xr_strcmp(x,y)<0;	}
+		{
+			return xr_strcmp(x, y) < 0;
+		}
 	};
-	typedef xr_map<LPCSTR,IConsole_Command*,str_pred>	vecCMD;
+	typedef xr_map<LPCSTR, IConsole_Command*, str_pred>	vecCMD;
 	typedef  vecCMD::iterator							vecCMD_IT;
 	typedef  vecCMD::const_iterator						vecCMD_CIT;
 	typedef  fastdelegate::FastDelegate0<void>			Callback;
@@ -74,30 +76,30 @@ public:
 	typedef  xr_vector<shared_str>						vecTips;
 	typedef  xr_vector<TipString>						vecTipsEx;
 
-	enum			{ CONSOLE_BUF_SIZE = 1024 };
-	enum			{ VIEW_TIPS_COUNT = 14, MAX_TIPS_COUNT = 220 };
+	enum { CONSOLE_BUF_SIZE = 1024 };
+	enum { VIEW_TIPS_COUNT = 14, MAX_TIPS_COUNT = 220 };
 private:
 	u32				last_mm_timer;
 	float			cur_time;
 	float			rep_time;
 	float			fAccel;
-	
+
 	int				cmd_delta;
 	int				old_cmd_delta;
-	
-	char			*editor_last;
+
+	char* editor_last;
 	int				n_char;
 	BOOL			bShift;
-	
+
 	BOOL			bRepeat;
 	BOOL			RecordCommands;
 protected:
 	int				scroll_delta;
 	BOOL			bCursor;
-	
-	CGameFont*		pFont;
-	CGameFont*		pFont2;
-	CGameFont*		pFontHelp;
+
+	CGameFont* pFont;
+	CGameFont* pFont2;
+	CGameFont* pFontHelp;
 	ref_shader		ConsoleShader;
 	ref_geom		ConsoleShaderG;
 
@@ -119,91 +121,91 @@ private:
 	int				m_start_tip;
 	u32				m_prev_length_str;
 public:
-					CConsole			();
-	virtual			~CConsole			();
+	CConsole();
+	virtual			~CConsole();
 	string64		ConfigFile;
 	BOOL			bVisible;
 	vecCMD			Commands;
 
-	void			AddCommand			(IConsole_Command* cc);
-	void			RemoveCommand		(IConsole_Command* cc);
+	void			AddCommand(IConsole_Command* cc);
+	void			RemoveCommand(IConsole_Command* cc);
 
-	void			Show				();
-	void			Hide				();
+	void			Show();
+	void			Hide();
 
-	void			Execute				(LPCSTR cmd);
-	void			ExecuteScript		(LPCSTR name);
-	void			ExecuteCommand		( LPCSTR cmd, bool record_cmd = true );
+	void			Execute(LPCSTR cmd);
+	void			ExecuteScript(LPCSTR name);
+	void			ExecuteCommand(LPCSTR cmd, bool record_cmd = true);
 
 	// get
 
-	bool			GetBool				( LPCSTR cmd ) const;
-	float			GetFloat			( LPCSTR cmd, float& min, float& max) const;
-	int				GetInteger			( LPCSTR cmd, int& min, int& max) const;
-	LPCSTR			GetString			( LPCSTR cmd ) const;
-	LPCSTR			GetToken			( LPCSTR cmd ) const;
-	xr_token*		GetXRToken			( LPCSTR cmd ) const;
-	Fvector			GetFVector			( LPCSTR cmd ) const;
-	Fvector*		GetFVectorPtr		( LPCSTR cmd ) const;
-	IConsole_Command* GetCommand		( LPCSTR cmd ) const;
+	bool			GetBool(LPCSTR cmd) const;
+	float			GetFloat(LPCSTR cmd, float& min, float& max) const;
+	int				GetInteger(LPCSTR cmd, int& min, int& max) const;
+	LPCSTR			GetString(LPCSTR cmd) const;
+	LPCSTR			GetToken(LPCSTR cmd) const;
+	xr_token* GetXRToken(LPCSTR cmd) const;
+	Fvector			GetFVector(LPCSTR cmd) const;
+	Fvector* GetFVectorPtr(LPCSTR cmd) const;
+	IConsole_Command* GetCommand(LPCSTR cmd) const;
 
-	void			SelectCommand		();
+	void			SelectCommand();
 
 	// render & onmove
-	virtual void	OnRender					();
-	virtual void	OnFrame						();
-	virtual void	OnScreenResolutionChanged	();
+	virtual void	OnRender();
+	virtual void	OnFrame();
+	virtual void	OnScreenResolutionChanged();
 
-	virtual	void	Initialize	();
-	virtual void	Destroy		();
+	virtual	void	Initialize();
+	virtual void	Destroy();
 protected:
-	text_editor::line_editor*			m_editor;
-	text_editor::line_edit_control&		ec();
-			void	add_cmd_history			(shared_str const& str);
-			void	next_cmd_history_idx	();
-			void	prev_cmd_history_idx	();
-			void	reset_cmd_history_idx	();
+	text_editor::line_editor* m_editor;
+	text_editor::line_edit_control& ec();
+	void	add_cmd_history(shared_str const& str);
+	void	next_cmd_history_idx();
+	void	prev_cmd_history_idx();
+	void	reset_cmd_history_idx();
 
-			void	next_selected_tip		();
-			void	check_next_selected_tip	();
-			void	prev_selected_tip		();
-			void	check_prev_selected_tip	();
-			void	reset_selected_tip		();
+	void	next_selected_tip();
+	void	check_next_selected_tip();
+	void	prev_selected_tip();
+	void	check_prev_selected_tip();
+	void	reset_selected_tip();
 
-	IConsole_Command* find_next_cmd			(LPCSTR in_str, shared_str& out_str);
-			bool	add_next_cmds			(LPCSTR in_str, vecTipsEx& out_v);
-			bool	add_internal_cmds		(LPCSTR in_str, vecTipsEx& out_v);
-			
-			void	update_tips			();
-			void	select_for_filter	(LPCSTR filter_str, vecTips& in_v, vecTipsEx& out_v );
+	IConsole_Command* find_next_cmd(LPCSTR in_str, shared_str& out_str);
+	bool	add_next_cmds(LPCSTR in_str, vecTipsEx& out_v);
+	bool	add_internal_cmds(LPCSTR in_str, vecTipsEx& out_v);
+
+	void	update_tips();
+	void	select_for_filter(LPCSTR filter_str, vecTips& in_v, vecTipsEx& out_v);
 
 	//BENCH_SEC_SCRAMBLEMEMBER2
 
 	enum Console_mark // (int)=char
 	{
 		no_mark = ' ',
-		mark0  = '~',
-		mark1  = '!', // error
-		mark2  = '@', // console cmd
-		mark3  = '#',
-		mark4  = '$',
-		mark5  = '%',
-		mark6  = '^',
-		mark7  = '&',
-		mark8  = '*',
-		mark9  = '-', // green = ok
+		mark0 = '~',
+		mark1 = '!', // error
+		mark2 = '@', // console cmd
+		mark3 = '#',
+		mark4 = '$',
+		mark5 = '%',
+		mark6 = '^',
+		mark7 = '&',
+		mark8 = '*',
+		mark9 = '-', // green = ok
 		mark10 = '+',
 		mark11 = '=',
 		mark12 = '/'
 	};
 
-	bool	is_mark				(Console_mark type);
-	u32		get_mark_color		(Console_mark type);
+	bool	is_mark(Console_mark type);
+	u32		get_mark_color(Console_mark type);
 
-	void	DrawBackgrounds		(bool bGame);
-	void	DrawRect			(Frect const& r, u32 color, FVF::TL*& pv);
-	void	OutFont				(LPCSTR text, float& pos_y);
-	void	Register_callbacks	();
+	void	DrawBackgrounds(bool bGame);
+	void	DrawRect(Frect const& r, u32 color, FVF::TL*& pv);
+	void	OutFont(LPCSTR text, float& pos_y);
+	void	Register_callbacks();
 
 protected:
 	void xr_stdcall Prev_log();

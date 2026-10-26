@@ -65,26 +65,26 @@ nv::FastCompressor::~FastCompressor()
 {
 }
 
-void nv::FastCompressor::setImage(const Image * image, nvtt::AlphaMode alphaMode)
+void nv::FastCompressor::setImage(const Image* image, nvtt::AlphaMode alphaMode)
 {
 	m_image = image;
 	m_alphaMode = alphaMode;
 }
 
-void nv::FastCompressor::compressDXT1(const OutputOptions::Private & outputOptions)
+void nv::FastCompressor::compressDXT1(const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT1 block;
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
 			rgba.init(m_image, x, y);
-			
+
 			QuickCompress::compressDXT1(rgba, &block);
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -93,20 +93,20 @@ void nv::FastCompressor::compressDXT1(const OutputOptions::Private & outputOptio
 }
 
 
-void nv::FastCompressor::compressDXT1a(const OutputOptions::Private & outputOptions)
+void nv::FastCompressor::compressDXT1a(const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT1 block;
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
 			rgba.init(m_image, x, y);
-			
+
 			QuickCompress::compressDXT1a(rgba, &block);
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -115,11 +115,11 @@ void nv::FastCompressor::compressDXT1a(const OutputOptions::Private & outputOpti
 }
 
 
-void nv::FastCompressor::compressDXT3(const nvtt::OutputOptions::Private & outputOptions)
+void nv::FastCompressor::compressDXT3(const nvtt::OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT3 block;
 
@@ -128,7 +128,7 @@ void nv::FastCompressor::compressDXT3(const nvtt::OutputOptions::Private & outpu
 			rgba.init(m_image, x, y);
 
 			QuickCompress::compressDXT3(rgba, &block);
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -137,20 +137,20 @@ void nv::FastCompressor::compressDXT3(const nvtt::OutputOptions::Private & outpu
 }
 
 
-void nv::FastCompressor::compressDXT5(const nvtt::OutputOptions::Private & outputOptions)
+void nv::FastCompressor::compressDXT5(const nvtt::OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT5 block;
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
 			rgba.init(m_image, x, y);
-			
+
 			QuickCompress::compressDXT5(rgba, &block, 0);
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -159,22 +159,22 @@ void nv::FastCompressor::compressDXT5(const nvtt::OutputOptions::Private & outpu
 }
 
 
-void nv::FastCompressor::compressDXT5n(const nvtt::OutputOptions::Private & outputOptions)
+void nv::FastCompressor::compressDXT5n(const nvtt::OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT5 block;
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
 			rgba.init(m_image, x, y);
-			
+
 			rgba.swizzleDXT5n();
 
 			QuickCompress::compressDXT5(rgba, &block, 0);
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -191,17 +191,17 @@ nv::SlowCompressor::~SlowCompressor()
 {
 }
 
-void nv::SlowCompressor::setImage(const Image * image, nvtt::AlphaMode alphaMode)
+void nv::SlowCompressor::setImage(const Image* image, nvtt::AlphaMode alphaMode)
 {
 	m_image = image;
 	m_alphaMode = alphaMode;
 }
 
-void nv::SlowCompressor::compressDXT1(const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressDXT1(const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT1 block;
 
@@ -212,20 +212,20 @@ void nv::SlowCompressor::compressDXT1(const CompressionOptions::Private & compre
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			rgba.init(m_image, x, y);
-			
+
 			if (rgba.isSingleColor())
 			{
 				OptimalCompress::compressDXT1(rgba.color(0), &block);
 			}
 			else
 			{
-				squish::ColourSet colours((uint8 *)rgba.colors(), 0, true);
+				squish::ColourSet colours((uint8*)rgba.colors(), 0, true);
 				fit.SetColourSet(&colours, squish::kDxt1);
 				fit.Compress(&block);
 			}
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -234,11 +234,11 @@ void nv::SlowCompressor::compressDXT1(const CompressionOptions::Private & compre
 }
 
 
-void nv::SlowCompressor::compressDXT1a(const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressDXT1a(const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT1 block;
 
@@ -247,29 +247,29 @@ void nv::SlowCompressor::compressDXT1a(const CompressionOptions::Private & compr
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			rgba.init(m_image, x, y);
-			
+
 			bool anyAlpha = false;
 			bool allAlpha = true;
-			
+
 			for (uint i = 0; i < 16; i++)
 			{
 				if (rgba.color(i).a < 128) anyAlpha = true;
 				else allAlpha = false;
 			}
-			
+
 			if ((!anyAlpha && rgba.isSingleColor() || allAlpha))
 			{
 				OptimalCompress::compressDXT1a(rgba.color(0), &block);
 			}
 			else
 			{
-				squish::ColourSet colours((uint8 *)rgba.colors(), squish::kDxt1|squish::kWeightColourByAlpha);
+				squish::ColourSet colours((uint8*)rgba.colors(), squish::kDxt1 | squish::kWeightColourByAlpha);
 				fit.SetColourSet(&colours, squish::kDxt1);
 				fit.Compress(&block);
 			}
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -278,23 +278,23 @@ void nv::SlowCompressor::compressDXT1a(const CompressionOptions::Private & compr
 }
 
 
-void nv::SlowCompressor::compressDXT3(const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressDXT3(const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT3 block;
-	
+
 	squish::WeightedClusterFit fit;
 	//squish::FastClusterFit fit;
 	fit.SetMetric(compressionOptions.colorWeight.x(), compressionOptions.colorWeight.y(), compressionOptions.colorWeight.z());
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			rgba.init(m_image, x, y);
-			
+
 			// Compress explicit alpha.
 			OptimalCompress::compressDXT3A(rgba, &block.alpha);
 
@@ -305,11 +305,11 @@ void nv::SlowCompressor::compressDXT3(const CompressionOptions::Private & compre
 			}
 			else
 			{
-				squish::ColourSet colours((uint8 *)rgba.colors(), squish::kWeightColourByAlpha);
+				squish::ColourSet colours((uint8*)rgba.colors(), squish::kWeightColourByAlpha);
 				fit.SetColourSet(&colours, 0);
 				fit.Compress(&block.color);
 			}
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -317,11 +317,11 @@ void nv::SlowCompressor::compressDXT3(const CompressionOptions::Private & compre
 	}
 }
 
-void nv::SlowCompressor::compressDXT5(const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressDXT5(const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT5 block;
 
@@ -330,7 +330,7 @@ void nv::SlowCompressor::compressDXT5(const CompressionOptions::Private & compre
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			rgba.init(m_image, x, y);
 
 			// Compress alpha.
@@ -342,7 +342,7 @@ void nv::SlowCompressor::compressDXT5(const CompressionOptions::Private & compre
 			{
 				QuickCompress::compressDXT5A(rgba, &block.alpha);
 			}
-		
+
 			// Compress color.
 			if (rgba.isSingleColor())
 			{
@@ -350,11 +350,11 @@ void nv::SlowCompressor::compressDXT5(const CompressionOptions::Private & compre
 			}
 			else
 			{
-				squish::ColourSet colours((uint8 *)rgba.colors(), squish::kWeightColourByAlpha);
+				squish::ColourSet colours((uint8*)rgba.colors(), squish::kWeightColourByAlpha);
 				fit.SetColourSet(&colours, 0);
 				fit.Compress(&block.color);
 			}
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -363,21 +363,21 @@ void nv::SlowCompressor::compressDXT5(const CompressionOptions::Private & compre
 }
 
 
-void nv::SlowCompressor::compressDXT5n(const CompressionOptions::Private & compressionOptions, const OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressDXT5n(const CompressionOptions::Private& compressionOptions, const OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	BlockDXT5 block;
-	
+
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			rgba.init(m_image, x, y);
-			
-			rgba.swizzleDXT5n();			
-			
+
+			rgba.swizzleDXT5n();
+
 			// Compress X.
 			if (compressionOptions.quality == Quality_Highest)
 			{
@@ -387,10 +387,10 @@ void nv::SlowCompressor::compressDXT5n(const CompressionOptions::Private & compr
 			{
 				QuickCompress::compressDXT5A(rgba, &block.alpha);
 			}
-			
+
 			// Compress Y.
 			OptimalCompress::compressDXT1G(rgba, &block.color);
-			
+
 			if (outputOptions.outputHandler != NULL) {
 				outputOptions.outputHandler->writeData(&block, sizeof(block));
 			}
@@ -399,17 +399,17 @@ void nv::SlowCompressor::compressDXT5n(const CompressionOptions::Private & compr
 }
 
 
-void nv::SlowCompressor::compressBC4(const CompressionOptions::Private & compressionOptions, const nvtt::OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressBC4(const CompressionOptions::Private& compressionOptions, const nvtt::OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
-	
+
 	ColorBlock rgba;
 	AlphaBlockDXT5 block;
-	
+
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			rgba.init(m_image, x, y);
 
 			if (compressionOptions.quality == Quality_Highest)
@@ -429,7 +429,7 @@ void nv::SlowCompressor::compressBC4(const CompressionOptions::Private & compres
 }
 
 
-void nv::SlowCompressor::compressBC5(const CompressionOptions::Private & compressionOptions, const nvtt::OutputOptions::Private & outputOptions)
+void nv::SlowCompressor::compressBC5(const CompressionOptions::Private& compressionOptions, const nvtt::OutputOptions::Private& outputOptions)
 {
 	const uint w = m_image->width();
 	const uint h = m_image->height();
@@ -441,10 +441,10 @@ void nv::SlowCompressor::compressBC5(const CompressionOptions::Private & compres
 
 	for (uint y = 0; y < h; y += 4) {
 		for (uint x = 0; x < w; x += 4) {
-			
+
 			xcolor.init(m_image, x, y);
 			xcolor.splatX();
-			
+
 			ycolor.init(m_image, x, y);
 			ycolor.splatY();
 
@@ -469,11 +469,11 @@ void nv::SlowCompressor::compressBC5(const CompressionOptions::Private & compres
 
 #if defined(HAVE_S3QUANT)
 
-void nv::s3CompressDXT1(const Image * image, const nvtt::OutputOptions::Private & outputOptions)
+void nv::s3CompressDXT1(const Image* image, const nvtt::OutputOptions::Private& outputOptions)
 {
 	const uint w = image->width();
 	const uint h = image->height();
-	
+
 	float error = 0.0f;
 
 	BlockDXT1 dxtBlock3;
@@ -534,7 +534,7 @@ void nv::s3CompressDXT1(const Image * image, const nvtt::OutputOptions::Private 
 
 			if (dxtBlock3.col0.u > dxtBlock3.col1.u) {
 				swap(dxtBlock3.col0.u, dxtBlock3.col1.u);
-				dxtBlock3.indices ^= (~dxtBlock3.indices  >> 1) & 0x55555555;
+				dxtBlock3.indices ^= (~dxtBlock3.indices >> 1) & 0x55555555;
 			}
 
 			uint error3 = blockError(block, dxtBlock3);
@@ -556,7 +556,7 @@ void nv::s3CompressDXT1(const Image * image, const nvtt::OutputOptions::Private 
 		}
 	}
 
-	printf("error = %f\n", error/((w+3)/4 * (h+3)/4));
+	printf("error = %f\n", error / ((w + 3) / 4 * (h + 3) / 4));
 }
 
 #endif // defined(HAVE_S3QUANT)
@@ -564,7 +564,7 @@ void nv::s3CompressDXT1(const Image * image, const nvtt::OutputOptions::Private 
 
 #if defined(HAVE_ATITC)
 
-void nv::atiCompressDXT1(const Image * image, const OutputOptions::Private & outputOptions)
+void nv::atiCompressDXT1(const Image* image, const OutputOptions::Private& outputOptions)
 {
 	// Init source texture
 	ATI_TC_Texture srcTexture;
@@ -574,7 +574,7 @@ void nv::atiCompressDXT1(const Image * image, const OutputOptions::Private & out
 	srcTexture.dwPitch = image->width() * 4;
 	srcTexture.format = ATI_TC_FORMAT_ARGB_8888;
 	srcTexture.dwDataSize = ATI_TC_CalculateBufferSize(&srcTexture);
-	srcTexture.pData = (ATI_TC_BYTE*) image->pixels();
+	srcTexture.pData = (ATI_TC_BYTE*)image->pixels();
 
 	// Init dest texture
 	ATI_TC_Texture destTexture;
@@ -584,7 +584,7 @@ void nv::atiCompressDXT1(const Image * image, const OutputOptions::Private & out
 	destTexture.dwPitch = 0;
 	destTexture.format = ATI_TC_FORMAT_DXT1;
 	destTexture.dwDataSize = ATI_TC_CalculateBufferSize(&destTexture);
-	destTexture.pData = (ATI_TC_BYTE*) mem::malloc(destTexture.dwDataSize);
+	destTexture.pData = (ATI_TC_BYTE*)mem::malloc(destTexture.dwDataSize);
 
 	// Compress
 	ATI_TC_ConvertTexture(&srcTexture, &destTexture, NULL, NULL, NULL, NULL);

@@ -24,44 +24,44 @@ public:
 	typedef CALifeMonsterMovementManager					movement_manager_type;
 
 private:
-	object_type							*m_object;
-	movement_manager_type				*m_movement_manager;
+	object_type* m_object;
+	movement_manager_type* m_movement_manager;
 
 public:
-	CSE_ALifeSmartZone					*m_smart_terrain;
+	CSE_ALifeSmartZone* m_smart_terrain;
 	ALife::_TIME_ID						m_last_search_time;
 	ALife::_TIME_ID						m_time_interval;
 
-// sad, but true
+	// sad, but true
 public:
-			void						select_task			();
+	void						select_task();
 
 private:
-			void						process_task		();
-			void						default_behaviour	();
+	void						process_task();
+	void						default_behaviour();
 
 public:
-										CALifeMonsterBrain	(object_type *object);
-	virtual								~CALifeMonsterBrain	();
+	CALifeMonsterBrain(object_type* object);
+	virtual								~CALifeMonsterBrain();
 
 public:
-			void						on_state_write		(NET_Packet &packet);
-			void						on_state_read		(NET_Packet &packet);
-			void						on_register			();
-			void						on_unregister		();
-			void						on_location_change	();
-			void						on_switch_online	();
-			void						on_switch_offline	();
+	void						on_state_write(NET_Packet& packet);
+	void						on_state_read(NET_Packet& packet);
+	void						on_register();
+	void						on_unregister();
+	void						on_location_change();
+	void						on_switch_online();
+	void						on_switch_offline();
 
 public:
-			void						update				();
-			bool						perform_attack		();
-			ALife::EMeetActionType		action_type			(CSE_ALifeSchedulable *tpALifeSchedulable, const int &iGroupIndex, const bool &bMutualDetection);
+	void						update();
+	bool						perform_attack();
+	ALife::EMeetActionType		action_type(CSE_ALifeSchedulable* tpALifeSchedulable, const int& iGroupIndex, const bool& bMutualDetection);
 
 public:
-	IC		object_type					&object				() const;
-	IC		movement_manager_type		&movement			() const;
-	IC		CSE_ALifeSmartZone			&smart_terrain		();
+	IC		object_type& object() const;
+	IC		movement_manager_type& movement() const;
+	IC		CSE_ALifeSmartZone& smart_terrain();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

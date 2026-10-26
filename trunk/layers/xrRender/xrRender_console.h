@@ -16,17 +16,17 @@ extern ECORE_API	float		ps_r__Tree_w_amp;
 extern ECORE_API	float		ps_r__Tree_SBC;		// scale bias correct
 extern ECORE_API	Fvector		ps_r__Tree_Wave;
 
-extern ECORE_API	float		ps_r__WallmarkTTL		;
-extern ECORE_API	float		ps_r__WallmarkSHIFT		;
-extern ECORE_API	float		ps_r__WallmarkSHIFT_V	;
+extern ECORE_API	float		ps_r__WallmarkTTL;
+extern ECORE_API	float		ps_r__WallmarkSHIFT;
+extern ECORE_API	float		ps_r__WallmarkSHIFT_V;
 
 extern ECORE_API	float		ps_r__GLOD_ssa_start;
-extern ECORE_API	float		ps_r__GLOD_ssa_end	;
-extern ECORE_API	float		ps_r__LOD			;
+extern ECORE_API	float		ps_r__GLOD_ssa_end;
+extern ECORE_API	float		ps_r__LOD;
 //.extern ECORE_API	float		ps_r__LOD_Power		;
-extern ECORE_API	float		ps_r__ssaDISCARD	;
-extern ECORE_API	float		ps_r__ssaDONTSORT	;
-extern ECORE_API	float		ps_r__ssaHZBvsTEX	;
+extern ECORE_API	float		ps_r__ssaDISCARD;
+extern ECORE_API	float		ps_r__ssaDONTSORT;
+extern ECORE_API	float		ps_r__ssaHZBvsTEX;
 extern ECORE_API	int			ps_r__tf_Anisotropic;
 
 // R1
@@ -43,7 +43,7 @@ extern ECORE_API	int			ps_r1_GlowsPerFrame;	// r1-only
 extern ECORE_API	Flags32		ps_r1_flags;			// r1-only
 enum
 {
-	R1FLAG_DLIGHTS				= (1<<0),
+	R1FLAG_DLIGHTS = (1 << 0),
 };
 
 // R2
@@ -98,33 +98,33 @@ extern ECORE_API int			ps_r2_wait_sleep;
 
 enum
 {
-	R2FLAG_SUN					= (1<<0),
-	R2FLAG_SUN_FOCUS			= (1<<1),
-	R2FLAG_SUN_TSM				= (1<<2),
-	R2FLAG_SUN_DETAILS			= (1<<3),
-	R2FLAG_TONEMAP				= (1<<4),
-	R2FLAG_AA					= (1<<5),
-	R2FLAG_GI					= (1<<6),
-	R2FLAG_FASTBLOOM			= (1<<7),
-	R2FLAG_GLOBALMATERIAL		= (1<<8),
-	R2FLAG_ZFILL				= (1<<9),
-	R2FLAG_R1LIGHTS				= (1<<10),
-	R2FLAG_SUN_IGNORE_PORTALS	= (1<<11),
+	R2FLAG_SUN = (1 << 0),
+	R2FLAG_SUN_FOCUS = (1 << 1),
+	R2FLAG_SUN_TSM = (1 << 2),
+	R2FLAG_SUN_DETAILS = (1 << 3),
+	R2FLAG_TONEMAP = (1 << 4),
+	R2FLAG_AA = (1 << 5),
+	R2FLAG_GI = (1 << 6),
+	R2FLAG_FASTBLOOM = (1 << 7),
+	R2FLAG_GLOBALMATERIAL = (1 << 8),
+	R2FLAG_ZFILL = (1 << 9),
+	R2FLAG_R1LIGHTS = (1 << 10),
+	R2FLAG_SUN_IGNORE_PORTALS = (1 << 11),
 
-//	R2FLAG_SUN_STATIC			= (1<<12),
-	
-	R2FLAG_EXP_SPLIT_SCENE					= (1<<13),
-	R2FLAG_EXP_DONT_TEST_UNSHADOWED			= (1<<14),
+	//	R2FLAG_SUN_STATIC			= (1<<12),
 
-	R2FLAG_USE_NVDBT			= (1<<15),
-	R2FLAG_USE_NVSTENCIL		= (1<<16),
+	R2FLAG_EXP_SPLIT_SCENE = (1 << 13),
+	R2FLAG_EXP_DONT_TEST_UNSHADOWED = (1 << 14),
 
-	R2FLAG_EXP_MT_CALC			= (1<<17),
+	R2FLAG_USE_NVDBT = (1 << 15),
+	R2FLAG_USE_NVSTENCIL = (1 << 16),
+
+	R2FLAG_EXP_MT_CALC = (1 << 17),
 };
 
-extern void						xrRender_initconsole	();
-extern BOOL						xrRender_test_hw		();
-extern void						xrRender_apply_tf		();
+extern void						xrRender_initconsole();
+extern BOOL						xrRender_test_hw();
+extern void						xrRender_apply_tf();
 
 extern ECORE_API Flags32		ps_common_flags;				// r1+r2
 enum

@@ -6,10 +6,10 @@
 #include <dinput.h>
 
 CUIMessageBoxEx::CUIMessageBoxEx(
-){
+) {
 	m_pMessageBox = xr_new<CUIMessageBox>();
 	m_pMessageBox->SetWindowName("msg_box");
-//	m_pMessageBox->SetAutoDelete(true);
+	//	m_pMessageBox->SetAutoDelete(true);
 	AttachChild(m_pMessageBox);
 }
 
@@ -42,21 +42,21 @@ void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = nul
 	{
 		switch (msg)
 		{
-			case MESSAGE_BOX_OK_CLICKED:
-			case MESSAGE_BOX_YES_CLICKED:
-			case MESSAGE_BOX_NO_CLICKED:
-			case MESSAGE_BOX_CANCEL_CLICKED:
-			case MESSAGE_BOX_QUIT_WIN_CLICKED:
-			case MESSAGE_BOX_QUIT_GAME_CLICKED:
-				GetHolder()->StartStopMenu(this, true);
-			default:
-				break;
+		case MESSAGE_BOX_OK_CLICKED:
+		case MESSAGE_BOX_YES_CLICKED:
+		case MESSAGE_BOX_NO_CLICKED:
+		case MESSAGE_BOX_CANCEL_CLICKED:
+		case MESSAGE_BOX_QUIT_WIN_CLICKED:
+		case MESSAGE_BOX_QUIT_GAME_CLICKED:
+			GetHolder()->StartStopMenu(this, true);
+		default:
+			break;
 		}
 
 		if (GetMessageTarget())
-			GetMessageTarget()->SendMessage(this,msg,pData);
+			GetMessageTarget()->SendMessage(this, msg, pData);
 	}
-	
+
 }
 
 LPCSTR CUIMessageBoxEx::GetHost()
@@ -71,12 +71,12 @@ LPCSTR CUIMessageBoxEx::GetPassword()
 
 bool CUIMessageBoxEx::IR_OnKeyboardPress(int dik)
 {
-	if ( dik == DIK_NUMPADENTER || dik == DIK_RETURN || dik == DIK_SPACE)
+	if (dik == DIK_NUMPADENTER || dik == DIK_RETURN || dik == DIK_SPACE)
 	{
 		m_pMessageBox->OnYesOk();
 		return true;
 	}
-	else if ( dik == DIK_ESCAPE)
+	else if (dik == DIK_ESCAPE)
 	{
 		GetHolder()->StartStopMenu(this, true);
 		return true;

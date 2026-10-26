@@ -8,19 +8,19 @@
 
 #pragma once
 
-IC	CCoverManager::CPointQuadTree &CCoverManager::covers		() const
+IC	CCoverManager::CPointQuadTree& CCoverManager::covers() const
 {
-	VERIFY					(m_covers);
+	VERIFY(m_covers);
 	return					(*m_covers);
 }
 
-IC	CCoverManager::CPointQuadTree *CCoverManager::get_covers	()
+IC	CCoverManager::CPointQuadTree* CCoverManager::get_covers()
 {
 	return					(m_covers);
 }
 
 template <typename _evaluator_type, typename _restrictor_type>
-IC	bool CCoverManager::inertia									(float radius, _evaluator_type &evaluator, const _restrictor_type &restrictor) const
+IC	bool CCoverManager::inertia(float radius, _evaluator_type& evaluator, const _restrictor_type& restrictor) const
 {
 	// check if evaluator has no inertion or it's time to reevaluate
 	if (!evaluator.inertia(radius))
@@ -53,32 +53,32 @@ IC	bool CCoverManager::inertia									(float radius, _evaluator_type &evaluator
 }
 
 template <typename _evaluator_type, typename _restrictor_type>
-IC	const CCoverPoint *CCoverManager::best_cover				(const Fvector &position, float radius, _evaluator_type &evaluator, const _restrictor_type &restrictor) const
+IC	const CCoverPoint* CCoverManager::best_cover(const Fvector& position, float radius, _evaluator_type& evaluator, const _restrictor_type& restrictor) const
 {
 	START_PROFILE("Covers/best_cover")
 
-	if (inertia(radius,evaluator,restrictor))
-		return				(evaluator.selected());
+		if (inertia(radius, evaluator, restrictor))
+			return				(evaluator.selected());
 
-	const CCoverPoint		*last = evaluator.selected();
+	const CCoverPoint* last = evaluator.selected();
 
-	evaluator.initialize	(position);
+	evaluator.initialize(position);
 
 	if (last) {
-		if (position.distance_to_sqr(last->position()) < _sqr(3*radius)) {
+		if (position.distance_to_sqr(last->position()) < _sqr(3 * radius)) {
 			if (evaluator.accessible(last->position()))
 				if (restrictor(last))
-					evaluator.evaluate	(last,restrictor.weight(last));
+					evaluator.evaluate(last, restrictor.weight(last));
 		}
 	}
 
-	covers().nearest		(position,radius,m_nearest);
+	covers().nearest(position, radius, m_nearest);
 
 	float					radius_sqr = _sqr(radius);
 
 	xr_vector<CCoverPoint*>::const_iterator	I = m_nearest.begin();
 	xr_vector<CCoverPoint*>::const_iterator	E = m_nearest.end();
-	for ( ; I != E; ++I) {
+	for (; I != E; ++I) {
 		if (radius_sqr < position.distance_to_sqr((*I)->position()))
 			continue;
 
@@ -91,34 +91,34 @@ IC	const CCoverPoint *CCoverManager::best_cover				(const Fvector &position, flo
 		if (!restrictor(*I))
 			continue;
 
-		evaluator.evaluate	(*I,restrictor.weight(*I));
+		evaluator.evaluate(*I, restrictor.weight(*I));
 	}
 
-	evaluator.finalize		();
+	evaluator.finalize();
 
-	restrictor.finalize		(evaluator.selected());
+	restrictor.finalize(evaluator.selected());
 
 	return					(evaluator.selected());
-	
+
 	STOP_PROFILE
 }
 
 template <typename _evaluator_type>
-IC	const CCoverPoint *CCoverManager::best_cover				(const Fvector &position, float radius, _evaluator_type &evaluator) const
+IC	const CCoverPoint* CCoverManager::best_cover(const Fvector& position, float radius, _evaluator_type& evaluator) const
 {
-	return					(best_cover<_evaluator_type,CCoverManager>(position,radius,evaluator,*this));
+	return					(best_cover<_evaluator_type, CCoverManager>(position, radius, evaluator, *this));
 }
 
-IC	bool CCoverManager::operator()								(const CCoverPoint *) const
+IC	bool CCoverManager::operator()								(const CCoverPoint*) const
 {
 	return					(true);
 }
 
-IC	float CCoverManager::weight									(const CCoverPoint *) const
+IC	float CCoverManager::weight(const CCoverPoint*) const
 {
 	return					(1.f);
 }
 
-IC	void CCoverManager::finalize								(const CCoverPoint *) const
+IC	void CCoverManager::finalize(const CCoverPoint*) const
 {
 }

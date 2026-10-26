@@ -10,12 +10,12 @@ class CStateMonsterFindEnemyRun : public CState<_Object> {
 	u32					target_vertex;
 
 public:
-						CStateMonsterFindEnemyRun	(_Object *obj);
-	virtual				~CStateMonsterFindEnemyRun	();
+	CStateMonsterFindEnemyRun(_Object* obj);
+	virtual				~CStateMonsterFindEnemyRun();
 
-	virtual void		initialize					();
-	virtual	void		execute						();
-	virtual bool		check_completion			();
+	virtual void		initialize();
+	virtual	void		execute();
+	virtual bool		check_completion();
 };
 
 #include "monster_state_find_enemy_run_inline.h"

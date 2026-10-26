@@ -1,6 +1,6 @@
 #pragma once
 class CCar;
-DEFINE_VECTOR(u16,BIDS,BIDS_I);
+DEFINE_VECTOR(u16, BIDS, BIDS_I);
 struct CCarDamageParticles
 {
 	BIDS bones1;
@@ -12,10 +12,10 @@ struct CCarDamageParticles
 
 public:
 
-void			Init			(CCar* car);
-void			Clear			();
-void			Play1			(CCar* car);
-void			Play2			(CCar* car);
-void			PlayWheel1		(CCar*car,u16 bone_id);
-void			PlayWheel2		(CCar*car,u16 bone_id);
+	void			Init(CCar* car);
+	void			Clear();
+	void			Play1(CCar* car);
+	void			Play2(CCar* car);
+	void			PlayWheel1(CCar* car, u16 bone_id);
+	void			PlayWheel2(CCar* car, u16 bone_id);
 };

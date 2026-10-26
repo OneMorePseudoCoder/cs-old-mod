@@ -17,7 +17,7 @@
 
 
 #ifdef GS_PEER
-	#define	UNIQUEID			// enable unique id support
+#define	UNIQUEID			// enable unique id support
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

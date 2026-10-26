@@ -27,20 +27,20 @@ namespace std {
 */
 
 extern "C" {
-	DLL_API DLL_Pure*	__cdecl xrFactory_Create		(CLASS_ID clsid)
+	DLL_API DLL_Pure* __cdecl xrFactory_Create(CLASS_ID clsid)
 	{
-		DLL_Pure			*object = object_factory().client_object(clsid);
+		DLL_Pure* object = object_factory().client_object(clsid);
 #ifdef DEBUG
 		if (!object)
 			return			(0);
 #endif
-		object->CLS_ID		= clsid;
+		object->CLS_ID = clsid;
 		return				(object);
 	}
 
-	DLL_API void		__cdecl	xrFactory_Destroy		(DLL_Pure* O)
+	DLL_API void		__cdecl	xrFactory_Destroy(DLL_Pure* O)
 	{
-		xr_delete			(O);
+		xr_delete(O);
 	}
 };
 
@@ -49,20 +49,20 @@ extern void CCC_RegisterCommands();
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
 	switch (ul_reason_for_call) {
-		case DLL_PROCESS_ATTACH: {
-			// register console commands
-			CCC_RegisterCommands();
-			// keyboard binding
-			CCC_RegisterInput			();
+	case DLL_PROCESS_ATTACH: {
+		// register console commands
+		CCC_RegisterCommands();
+		// keyboard binding
+		CCC_RegisterInput();
 #ifdef DEBUG
-			g_profiler			= xr_new<CProfiler>();
+		g_profiler = xr_new<CProfiler>();
 #endif
-			break;
-		}
-
-		case DLL_PROCESS_DETACH: {
-			break;
-		}
+		break;
 	}
-    return								(TRUE);
+
+	case DLL_PROCESS_DETACH: {
+		break;
+	}
+	}
+	return								(TRUE);
 }

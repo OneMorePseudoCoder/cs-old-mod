@@ -16,22 +16,22 @@ class CStateControlAttack : public CState<_Object> {
 
 public:
 
-					CStateControlAttack		(_Object *p);
-	virtual			~CStateControlAttack	();
+	CStateControlAttack(_Object* p);
+	virtual			~CStateControlAttack();
 
-	virtual void	initialize				();	
-	virtual void	execute					();
-	virtual void	finalize				();
-	virtual void	critical_finalize		();
+	virtual void	initialize();
+	virtual void	execute();
+	virtual void	finalize();
+	virtual void	critical_finalize();
 
-	virtual bool 	check_completion		();
-	virtual bool 	check_start_conditions	();
+	virtual bool 	check_completion();
+	virtual bool 	check_start_conditions();
 
 private:
 
-			void	execute_hit_fire		();
-			void	execute_hit_continue	();
-			void	execute_hit_prepare		();
+	void	execute_hit_fire();
+	void	execute_hit_continue();
+	void	execute_hit_prepare();
 };
 
 #include "controller_state_control_hit_inline.h"

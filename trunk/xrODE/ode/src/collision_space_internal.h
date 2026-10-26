@@ -20,11 +20,11 @@
  *                                                                       *
  *************************************************************************/
 
-/*
+ /*
 
-stuff common to all spaces
+ stuff common to all spaces
 
-*/
+ */
 
 #ifndef _ODE_COLLISION_SPACE_INTERNAL_H_
 #define _ODE_COLLISION_SPACE_INTERNAL_H_
@@ -36,49 +36,49 @@ stuff common to all spaces
 	    "invalid operation for locked space");
 
 
-// collide two geoms together. for the hash table space, this is
-// called if the two AABBs inhabit the same hash table cells.
-// this only calls the callback function if the AABBs actually
-// intersect. if a geom has an AABB test function, that is called to
-// provide a further refinement of the intersection.
-//
-// NOTE: this assumes that the geom AABBs are valid on entry
-// and that both geoms are enabled.
+ // collide two geoms together. for the hash table space, this is
+ // called if the two AABBs inhabit the same hash table cells.
+ // this only calls the callback function if the AABBs actually
+ // intersect. if a geom has an AABB test function, that is called to
+ // provide a further refinement of the intersection.
+ //
+ // NOTE: this assumes that the geom AABBs are valid on entry
+ // and that both geoms are enabled.
 
-static void collideAABBs (dxGeom *g1, dxGeom *g2,
-			  void *data, dNearCallback *callback)
+static void collideAABBs(dxGeom* g1, dxGeom* g2,
+	void* data, dNearCallback* callback)
 {
-  dIASSERT((g1->gflags & GEOM_AABB_BAD)==0);
-  dIASSERT((g2->gflags & GEOM_AABB_BAD)==0);
+	dIASSERT((g1->gflags & GEOM_AABB_BAD) == 0);
+	dIASSERT((g2->gflags & GEOM_AABB_BAD) == 0);
 
-  // no contacts if both geoms on the same body, and the body is not 0
-  if (g1->body == g2->body && g1->body) return;
+	// no contacts if both geoms on the same body, and the body is not 0
+	if (g1->body == g2->body && g1->body) return;
 
-  // test if the category and collide bitfields match
-  if ( ((g1->category_bits & g2->collide_bits) ||
-	(g2->category_bits & g1->collide_bits)) == 0) {
-    return;
-  }
+	// test if the category and collide bitfields match
+	if (((g1->category_bits & g2->collide_bits) ||
+		(g2->category_bits & g1->collide_bits)) == 0) {
+		return;
+	}
 
-  // if the bounding boxes are disjoint then don't do anything
-  dReal *bounds1 = g1->aabb;
-  dReal *bounds2 = g2->aabb;
-  if (bounds1[0] > bounds2[1] ||
-      bounds1[1] < bounds2[0] ||
-      bounds1[2] > bounds2[3] ||
-      bounds1[3] < bounds2[2] ||
-      bounds1[4] > bounds2[5] ||
-      bounds1[5] < bounds2[4]) {
-    return;
-  }
+	// if the bounding boxes are disjoint then don't do anything
+	dReal* bounds1 = g1->aabb;
+	dReal* bounds2 = g2->aabb;
+	if (bounds1[0] > bounds2[1] ||
+		bounds1[1] < bounds2[0] ||
+		bounds1[2] > bounds2[3] ||
+		bounds1[3] < bounds2[2] ||
+		bounds1[4] > bounds2[5] ||
+		bounds1[5] < bounds2[4]) {
+		return;
+	}
 
-  // check if either object is able to prove that it doesn't intersect the
-  // AABB of the other
-  if (g1->AABBTest (g2,bounds2) == 0) return;
-  if (g2->AABBTest (g1,bounds1) == 0) return;
+	// check if either object is able to prove that it doesn't intersect the
+	// AABB of the other
+	if (g1->AABBTest(g2, bounds2) == 0) return;
+	if (g2->AABBTest(g1, bounds1) == 0) return;
 
-  // the objects might actually intersect - call the space callback function
-  callback (data,g1,g2);
+	// the objects might actually intersect - call the space callback function
+	callback(data, g1, g2);
 }
 
 #endif

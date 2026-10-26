@@ -10,7 +10,7 @@ extern int dTriListClass;
 
 /* Single precision, no padding vector3 used for storage */
 
-struct dcVector3{
+struct dcVector3 {
 
 	float x, y, z;
 

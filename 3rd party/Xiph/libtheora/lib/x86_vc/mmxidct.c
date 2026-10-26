@@ -11,19 +11,19 @@
  ********************************************************************
 
   function:
-    last mod: $Id: mmxidct.c 16503 2009-08-22 18:14:02Z giles $
+	last mod: $Id: mmxidct.c 16503 2009-08-22 18:14:02Z giles $
 
  ********************************************************************/
 
-/*MMX acceleration of Theora's iDCT.
-  Originally written by Rudolf Marek, based on code from On2's VP3.*/
+ /*MMX acceleration of Theora's iDCT.
+   Originally written by Rudolf Marek, based on code from On2's VP3.*/
 #include "x86int.h"
 #include "../dct.h"
 
 #if defined(OC_X86_ASM)
 
-/*These are offsets into the table of constants below.*/
-/*7 rows of cosines, in order: pi/16 * (1 ... 7).*/
+   /*These are offsets into the table of constants below.*/
+   /*7 rows of cosines, in order: pi/16 * (1 ... 7).*/
 #define OC_COSINE_OFFSET (0)
 /*A row of 8's.*/
 #define OC_EIGHT_OFFSET  (56)
@@ -32,22 +32,22 @@
 
 /*A table of constants used by the MMX routines.*/
 static const __declspec(align(16))ogg_uint16_t
- OC_IDCT_CONSTS[(7+1)*4]={
-  (ogg_uint16_t)OC_C1S7,(ogg_uint16_t)OC_C1S7,
-  (ogg_uint16_t)OC_C1S7,(ogg_uint16_t)OC_C1S7,
-  (ogg_uint16_t)OC_C2S6,(ogg_uint16_t)OC_C2S6,
-  (ogg_uint16_t)OC_C2S6,(ogg_uint16_t)OC_C2S6,
-  (ogg_uint16_t)OC_C3S5,(ogg_uint16_t)OC_C3S5,
-  (ogg_uint16_t)OC_C3S5,(ogg_uint16_t)OC_C3S5,
-  (ogg_uint16_t)OC_C4S4,(ogg_uint16_t)OC_C4S4,
-  (ogg_uint16_t)OC_C4S4,(ogg_uint16_t)OC_C4S4,
-  (ogg_uint16_t)OC_C5S3,(ogg_uint16_t)OC_C5S3,
-  (ogg_uint16_t)OC_C5S3,(ogg_uint16_t)OC_C5S3,
-  (ogg_uint16_t)OC_C6S2,(ogg_uint16_t)OC_C6S2,
-  (ogg_uint16_t)OC_C6S2,(ogg_uint16_t)OC_C6S2,
-  (ogg_uint16_t)OC_C7S1,(ogg_uint16_t)OC_C7S1,
-  (ogg_uint16_t)OC_C7S1,(ogg_uint16_t)OC_C7S1,
-      8,    8,    8,    8
+OC_IDCT_CONSTS[(7 + 1) * 4] = {
+ (ogg_uint16_t)OC_C1S7,(ogg_uint16_t)OC_C1S7,
+ (ogg_uint16_t)OC_C1S7,(ogg_uint16_t)OC_C1S7,
+ (ogg_uint16_t)OC_C2S6,(ogg_uint16_t)OC_C2S6,
+ (ogg_uint16_t)OC_C2S6,(ogg_uint16_t)OC_C2S6,
+ (ogg_uint16_t)OC_C3S5,(ogg_uint16_t)OC_C3S5,
+ (ogg_uint16_t)OC_C3S5,(ogg_uint16_t)OC_C3S5,
+ (ogg_uint16_t)OC_C4S4,(ogg_uint16_t)OC_C4S4,
+ (ogg_uint16_t)OC_C4S4,(ogg_uint16_t)OC_C4S4,
+ (ogg_uint16_t)OC_C5S3,(ogg_uint16_t)OC_C5S3,
+ (ogg_uint16_t)OC_C5S3,(ogg_uint16_t)OC_C5S3,
+ (ogg_uint16_t)OC_C6S2,(ogg_uint16_t)OC_C6S2,
+ (ogg_uint16_t)OC_C6S2,(ogg_uint16_t)OC_C6S2,
+ (ogg_uint16_t)OC_C7S1,(ogg_uint16_t)OC_C7S1,
+ (ogg_uint16_t)OC_C7S1,(ogg_uint16_t)OC_C7S1,
+	 8,    8,    8,    8
 };
 
 /*38 cycles*/
@@ -164,15 +164,15 @@ static const __declspec(align(16))ogg_uint16_t
 
 /*The following macro does two 4x4 transposes in place.
   At entry, we assume:
-    r0 = a3 a2 a1 a0
+	r0 = a3 a2 a1 a0
   I(1) = b3 b2 b1 b0
-    r2 = c3 c2 c1 c0
-    r3 = d3 d2 d1 d0
+	r2 = c3 c2 c1 c0
+	r3 = d3 d2 d1 d0
 
-    r4 = e3 e2 e1 e0
-    r5 = f3 f2 f1 f0
-    r6 = g3 g2 g1 g0
-    r7 = h3 h2 h1 h0
+	r4 = e3 e2 e1 e0
+	r5 = f3 f2 f1 f0
+	r6 = g3 g2 g1 g0
+	r7 = h3 h2 h1 h0
 
   At exit, we have:
   I(0) = d0 c0 b0 a0
@@ -189,7 +189,7 @@ static const __declspec(align(16))ogg_uint16_t
   J(4) J(5) J(6) J(7) is the transpose of r4  r5  r6 r7.
 
   Since r1 is free at entry, we calculate the Js first.*/
-/*19 cycles.*/
+  /*19 cycles.*/
 #define OC_TRANSPOSE __asm{ \
   __asm movq mm1,mm4 \
   __asm punpcklwd mm4,mm5 \
@@ -303,39 +303,39 @@ static const __declspec(align(16))ogg_uint16_t
 #define OC_C(_i)      OC_MID(OC_COSINE_OFFSET,_i-1)
 #define OC_8          OC_MID(OC_EIGHT_OFFSET,0)
 
-static void oc_idct8x8_slow(ogg_int16_t _y[64]){
-  /*This routine accepts an 8x8 matrix, but in partially transposed form.
-    Every 4x4 block is transposed.*/
-  __asm{
+static void oc_idct8x8_slow(ogg_int16_t _y[64]) {
+	/*This routine accepts an 8x8 matrix, but in partially transposed form.
+	  Every 4x4 block is transposed.*/
+	__asm {
 #define CONSTS eax
 #define Y edx
-    mov CONSTS,offset OC_IDCT_CONSTS
-    mov Y,_y
+		mov CONSTS, offset OC_IDCT_CONSTS
+		mov Y, _y
 #define OC_I(_k)      [Y+_k*16]
 #define OC_J(_k)      [Y+(_k-4)*16+8]
-    OC_ROW_IDCT
-    OC_TRANSPOSE
+		OC_ROW_IDCT
+		OC_TRANSPOSE
 #undef  OC_I
 #undef  OC_J
 #define OC_I(_k)      [Y+(_k*16)+64]
 #define OC_J(_k)      [Y+(_k-4)*16+72]
-    OC_ROW_IDCT
-    OC_TRANSPOSE
+		OC_ROW_IDCT
+		OC_TRANSPOSE
 #undef  OC_I
 #undef  OC_J
 #define OC_I(_k)      [Y+_k*16]
 #define OC_J(_k)      OC_I(_k)
-    OC_COLUMN_IDCT
+		OC_COLUMN_IDCT
 #undef  OC_I
 #undef  OC_J
 #define OC_I(_k)      [Y+_k*16+8]
 #define OC_J(_k)      OC_I(_k)
-    OC_COLUMN_IDCT
+		OC_COLUMN_IDCT
 #undef  OC_I
 #undef  OC_J
 #undef  CONSTS
 #undef  Y
-  }
+	}
 }
 
 /*25 cycles.*/
@@ -497,66 +497,66 @@ static void oc_idct8x8_slow(ogg_int16_t _y[64]){
   __asm movq OC_I(0),mm0 \
 }
 
-static void oc_idct8x8_10(ogg_int16_t _y[64]){
-  __asm{
+static void oc_idct8x8_10(ogg_int16_t _y[64]) {
+	__asm {
 #define CONSTS eax
 #define Y edx
-    mov CONSTS,offset OC_IDCT_CONSTS
-    mov Y,_y
+		mov CONSTS, offset OC_IDCT_CONSTS
+		mov Y, _y
 #define OC_I(_k) [Y+_k*16]
 #define OC_J(_k) [Y+(_k-4)*16+8]
-    /*Done with dequant, descramble, and partial transpose.
-      Now do the iDCT itself.*/
-    OC_ROW_IDCT_10
-    OC_TRANSPOSE
+		/*Done with dequant, descramble, and partial transpose.
+		  Now do the iDCT itself.*/
+		  OC_ROW_IDCT_10
+		  OC_TRANSPOSE
 #undef  OC_I
 #undef  OC_J
 #define OC_I(_k) [Y+_k*16]
 #define OC_J(_k) OC_I(_k)
-    OC_COLUMN_IDCT_10
+		  OC_COLUMN_IDCT_10
 #undef  OC_I
 #undef  OC_J
 #define OC_I(_k) [Y+_k*16+8]
 #define OC_J(_k) OC_I(_k)
-    OC_COLUMN_IDCT_10
+		  OC_COLUMN_IDCT_10
 #undef  OC_I
 #undef  OC_J
 #undef  CONSTS
 #undef  Y
-  }
+	}
 }
 
 /*Performs an inverse 8x8 Type-II DCT transform.
   The input is assumed to be scaled by a factor of 4 relative to orthonormal
    version of the transform.*/
-void oc_idct8x8_mmx(ogg_int16_t _y[64],int _last_zzi){
-  /*_last_zzi is subtly different from an actual count of the number of
-     coefficients we decoded for this block.
-    It contains the value of zzi BEFORE the final token in the block was
-     decoded.
-    In most cases this is an EOB token (the continuation of an EOB run from a
-     previous block counts), and so this is the same as the coefficient count.
-    However, in the case that the last token was NOT an EOB token, but filled
-     the block up with exactly 64 coefficients, _last_zzi will be less than 64.
-    Provided the last token was not a pure zero run, the minimum value it can
-     be is 46, and so that doesn't affect any of the cases in this routine.
-    However, if the last token WAS a pure zero run of length 63, then _last_zzi
-     will be 1 while the number of coefficients decoded is 64.
-    Thus, we will trigger the following special case, where the real
-     coefficient count would not.
-    Note also that a zero run of length 64 will give _last_zzi a value of 0,
-     but we still process the DC coefficient, which might have a non-zero value
-     due to DC prediction.
-    Although convoluted, this is arguably the correct behavior: it allows us to
-     use a smaller transform when the block ends with a long zero run instead
-     of a normal EOB token.
-    It could be smarter... multiple separate zero runs at the end of a block
-     will fool it, but an encoder that generates these really deserves what it
-     gets.
-    Needless to say we inherited this approach from VP3.*/
-  /*Perform the iDCT.*/
-  if(_last_zzi<10)oc_idct8x8_10(_y);
-  else oc_idct8x8_slow(_y);
+void oc_idct8x8_mmx(ogg_int16_t _y[64], int _last_zzi) {
+	/*_last_zzi is subtly different from an actual count of the number of
+	   coefficients we decoded for this block.
+	  It contains the value of zzi BEFORE the final token in the block was
+	   decoded.
+	  In most cases this is an EOB token (the continuation of an EOB run from a
+	   previous block counts), and so this is the same as the coefficient count.
+	  However, in the case that the last token was NOT an EOB token, but filled
+	   the block up with exactly 64 coefficients, _last_zzi will be less than 64.
+	  Provided the last token was not a pure zero run, the minimum value it can
+	   be is 46, and so that doesn't affect any of the cases in this routine.
+	  However, if the last token WAS a pure zero run of length 63, then _last_zzi
+	   will be 1 while the number of coefficients decoded is 64.
+	  Thus, we will trigger the following special case, where the real
+	   coefficient count would not.
+	  Note also that a zero run of length 64 will give _last_zzi a value of 0,
+	   but we still process the DC coefficient, which might have a non-zero value
+	   due to DC prediction.
+	  Although convoluted, this is arguably the correct behavior: it allows us to
+	   use a smaller transform when the block ends with a long zero run instead
+	   of a normal EOB token.
+	  It could be smarter... multiple separate zero runs at the end of a block
+	   will fool it, but an encoder that generates these really deserves what it
+	   gets.
+	  Needless to say we inherited this approach from VP3.*/
+	  /*Perform the iDCT.*/
+	if (_last_zzi < 10)oc_idct8x8_10(_y);
+	else oc_idct8x8_slow(_y);
 }
 
 #endif

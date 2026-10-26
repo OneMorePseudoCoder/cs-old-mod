@@ -17,9 +17,9 @@ public:
 	Fvector			m_tParticleVelocity;
 
 public:
-	IC				CParticleParams		(const Fvector &tPositionOffset = Fvector().set(0,0,0), const Fvector &tAnglesOffset = Fvector().set(0,0,0), const Fvector &tVelocity = Fvector().set(0,0,0));
-	virtual			~CParticleParams	();
-	IC		void	initialize			();
+	IC				CParticleParams(const Fvector& tPositionOffset = Fvector().set(0, 0, 0), const Fvector& tAnglesOffset = Fvector().set(0, 0, 0), const Fvector& tVelocity = Fvector().set(0, 0, 0));
+	virtual			~CParticleParams();
+	IC		void	initialize();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

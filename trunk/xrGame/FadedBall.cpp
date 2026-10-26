@@ -8,15 +8,15 @@
 #include "PhysicsShell.h"
 
 
-CFadedBall::CFadedBall(void) 
+CFadedBall::CFadedBall(void)
 {
 }
 
-CFadedBall::~CFadedBall(void) 
+CFadedBall::~CFadedBall(void)
 {
 }
 
-void CFadedBall::Load(LPCSTR section) 
+void CFadedBall::Load(LPCSTR section)
 {
 	inherited::Load(section);
 }

@@ -5,16 +5,16 @@
 #include "UIXmlInit.h"
 #include "UIStatic.h"
 
-CUIFrags2::CUIFrags2(){	
+CUIFrags2::CUIFrags2() {
 	m_pStats2 = xr_new<CUIStats>();  AttachChild(m_pStats2);
 }
 
-CUIFrags2::~CUIFrags2(){
+CUIFrags2::~CUIFrags2() {
 	xr_delete(m_pStats2);
 }
 
 
-void CUIFrags2::Init(CUIXml& xml_doc, LPCSTR path, LPCSTR backgrnd_path){
+void CUIFrags2::Init(CUIXml& xml_doc, LPCSTR path, LPCSTR backgrnd_path) {
 	InitBackground(xml_doc, backgrnd_path);
 
 	CUIWindow* pTeam1 = NULL;
@@ -31,7 +31,7 @@ void CUIFrags2::Init(CUIXml& xml_doc, LPCSTR path, LPCSTR backgrnd_path){
 	R_ASSERT(x);
 	pos = m_pStats2->GetWndPos();
 	pos.x = x;				// 
-	pos.y += 3;	
+	pos.y += 3;
 	m_pStats2->SetWndPos(pos);
 	// team2 statas
 	pos = pTeam2->GetWndPos();
@@ -46,6 +46,6 @@ void CUIFrags2::Init(CUIXml& xml_doc, LPCSTR path, LPCSTR backgrnd_path){
 	pos = pTeam1->GetWndPos();
 	pos.x += m_pStats->GetWndPos().x;
 	pTeam1->SetWndPos(pos);
-	
+
 
 }

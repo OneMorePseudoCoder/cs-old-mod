@@ -25,11 +25,11 @@ private:
 	CHUDCrosshair	HUDCrosshair;
 
 private:
-			void	net_Relcase		(CObject* O);
+	void	net_Relcase(CObject* O);
 
 public:
-					CHUDTarget		();
-			void	CursorOnFrame	();
-			void	Render			();
-			void	Load			();
+	CHUDTarget();
+	void	CursorOnFrame();
+	void	Render();
+	void	Load();
 };

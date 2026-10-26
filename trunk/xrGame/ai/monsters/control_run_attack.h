@@ -11,12 +11,12 @@ class CControlRunAttack : public CControl_ComCustom<> {
 	u32				m_time_next_attack;
 
 public:
-	virtual void	load					(LPCSTR section);
-	virtual void	reinit					();
+	virtual void	load(LPCSTR section);
+	virtual void	reinit();
 
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
-	virtual void	activate				();
-	virtual void	on_release				();
-	virtual bool	check_start_conditions	();
+	virtual void	on_event(ControlCom::EEventType, ControlCom::IEventData*);
+	virtual void	activate();
+	virtual void	on_release();
+	virtual bool	check_start_conditions();
 };
 

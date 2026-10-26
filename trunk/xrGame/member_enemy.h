@@ -18,7 +18,7 @@ public:
 	typedef _flags<squad_mask_type>			mask_type;
 
 public:
-	const CEntityAlive	*m_object;
+	const CEntityAlive* m_object;
 	mask_type			m_mask;
 	mask_type			m_distribute_mask;
 	float				m_probability;
@@ -26,9 +26,9 @@ public:
 	u32					m_level_time;
 
 public:
-	IC					CMemberEnemy		(const CEntityAlive *object, squad_mask_type mask);
-	IC		bool		operator==			(const CEntityAlive *object) const;
-	IC		bool		operator<			(const CMemberEnemy &enemy) const;
+	IC					CMemberEnemy(const CEntityAlive* object, squad_mask_type mask);
+	IC		bool		operator==			(const CEntityAlive* object) const;
+	IC		bool		operator<			(const CMemberEnemy& enemy) const;
 };
 
 #include "member_enemy_inline.h"

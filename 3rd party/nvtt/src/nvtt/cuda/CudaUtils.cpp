@@ -90,7 +90,7 @@ static bool isCudaDriverAvailable(int version)
 
 	if (version >= 2000)
 	{
-		void * address = nvcuda.bindSymbol("cuStreamCreate");
+		void* address = nvcuda.bindSymbol("cuStreamCreate");
 		if (address == NULL) {
 			nvDebug("*** CUDA driver version < 2.0.\n");
 			return false;
@@ -99,7 +99,7 @@ static bool isCudaDriverAvailable(int version)
 
 	if (version >= 2010)
 	{
-		void * address = nvcuda.bindSymbol("cuModuleLoadDataEx");
+		void* address = nvcuda.bindSymbol("cuModuleLoadDataEx");
 		if (address == NULL) {
 			nvDebug("*** CUDA driver version < 2.1.\n");
 			return false;
@@ -108,7 +108,7 @@ static bool isCudaDriverAvailable(int version)
 
 	if (version >= 2020)
 	{
-		typedef CUresult (CUDAAPI * PFCU_DRIVERGETVERSION)(int * version);
+		typedef CUresult(CUDAAPI* PFCU_DRIVERGETVERSION)(int* version);
 
 		PFCU_DRIVERGETVERSION driverGetVersion = (PFCU_DRIVERGETVERSION)nvcuda.bindSymbol("cuDriverGetVersion");
 		if (driverGetVersion == NULL) {
@@ -242,7 +242,7 @@ int nv::cuda::getFastestDevice()
 
 
 /// Activate the given devices.
-bool nv::cuda::initDevice(int * device_ptr)
+bool nv::cuda::initDevice(int* device_ptr)
 {
 	nvDebugCheck(device_ptr != NULL);
 #if defined HAVE_CUDA

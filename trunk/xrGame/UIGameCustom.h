@@ -15,18 +15,18 @@ class CUIStatic;
 class CUIWindow;
 class CUIXml;
 
-struct SDrawStaticStruct :public IPureDestroyableObject{
-	CUIStatic*		m_static;
+struct SDrawStaticStruct :public IPureDestroyableObject {
+	CUIStatic* m_static;
 	float			m_endTime;
 	shared_str		m_name;
-					SDrawStaticStruct	();
-	virtual	void	destroy				();
-	void			Draw				();
-	void			Update				();
-	CUIStatic*		wnd					()		{return m_static;}
-	bool			IsActual			();
-	void			SetWndPos			(float x, float y);
-	bool operator ==(LPCSTR str){
+	SDrawStaticStruct();
+	virtual	void	destroy();
+	void			Draw();
+	void			Update();
+	CUIStatic* wnd() { return m_static; }
+	bool			IsActual();
+	void			SetWndPos(float x, float y);
+	bool operator ==(LPCSTR str) {
 		return (m_name == str);
 	}
 };
@@ -58,12 +58,12 @@ class CMapListHelper
 	TSTORAGE							m_storage;
 	GAME_WEATHERS						m_weathers;
 
-	void						Load			();
-	SGameTypeMaps*				GetMapListInt	(const shared_str& game_type);
+	void						Load();
+	SGameTypeMaps* GetMapListInt(const shared_str& game_type);
 public:
-	const SGameTypeMaps&		GetMapListFor	(const shared_str& game_type);
-	const SGameTypeMaps&		GetMapListFor	(const EGameTypes game_id);
-	const GAME_WEATHERS&		GetGameWeathers	();
+	const SGameTypeMaps& GetMapListFor(const shared_str& game_type);
+	const SGameTypeMaps& GetMapListFor(const EGameTypes game_id);
+	const GAME_WEATHERS& GetGameWeathers();
 };
 
 extern CMapListHelper	gMapListHelper;
@@ -74,53 +74,53 @@ class CUIGameCustom :public DLL_Pure, public ISheduled
 protected:
 	u32					uFlags;
 
-	void				SetFlag					(u32 mask, BOOL flag){if (flag) uFlags|=mask; else uFlags&=~mask; }
-	void				InvertFlag				(u32 mask){if (uFlags&mask) uFlags&=~mask; else uFlags|=mask; }
-	BOOL				GetFlag					(u32 mask){return uFlags&mask;}
-	CUICaption*			GameCaptions			() {return m_pgameCaptions;}
-	CUICaption*			m_pgameCaptions;
-	CUIXml*				m_msgs_xml;
+	void				SetFlag(u32 mask, BOOL flag) { if (flag) uFlags |= mask; else uFlags &= ~mask; }
+	void				InvertFlag(u32 mask) { if (uFlags & mask) uFlags &= ~mask; else uFlags |= mask; }
+	BOOL				GetFlag(u32 mask) { return uFlags & mask; }
+	CUICaption* GameCaptions() { return m_pgameCaptions; }
+	CUICaption* m_pgameCaptions;
+	CUIXml* m_msgs_xml;
 	st_vec										m_custom_statics;
 public:
-	virtual void		SetClGame				(game_cl_GameState* g){};
+	virtual void		SetClGame(game_cl_GameState* g) {};
 
-	virtual				float					shedule_Scale		();
-	virtual				void					shedule_Update		(u32 dt);
-	
-						CUIGameCustom			();
-	virtual				~CUIGameCustom			();
+	virtual				float					shedule_Scale();
+	virtual				void					shedule_Update(u32 dt);
 
-	virtual	void		Init					()	{};
-	
-	virtual void		Render					();
-	virtual void		OnFrame					();
-	virtual	void		reset_ui				();
+	CUIGameCustom();
+	virtual				~CUIGameCustom();
 
-	virtual bool		IR_OnKeyboardPress		(int dik);
-	virtual bool		IR_OnKeyboardRelease	(int dik);
-	virtual bool		IR_OnMouseMove			(int dx, int dy);
-	virtual bool		IR_OnMouseWheel			(int direction);
+	virtual	void		Init() {};
+
+	virtual void		Render();
+	virtual void		OnFrame();
+	virtual	void		reset_ui();
+
+	virtual bool		IR_OnKeyboardPress(int dik);
+	virtual bool		IR_OnKeyboardRelease(int dik);
+	virtual bool		IR_OnMouseMove(int dx, int dy);
+	virtual bool		IR_OnMouseWheel(int direction);
 
 
-	void				AddDialogToRender		(CUIWindow* pDialog);
-	void				RemoveDialogToRender	(CUIWindow* pDialog);
-	
-	CUIDialogWnd*		MainInputReceiver		();
-	virtual void		ReInitShownUI			() = 0;
-	virtual void		HideShownDialogs		(){};
-	virtual void		ReinitDialogs			(){};
+	void				AddDialogToRender(CUIWindow* pDialog);
+	void				RemoveDialogToRender(CUIWindow* pDialog);
 
-			void		AddCustomMessage		(LPCSTR id, float x, float y, float font_size, CGameFont *pFont, u16 alignment, u32 color);
-			void		AddCustomMessage		(LPCSTR id, float x, float y, float font_size, CGameFont *pFont, u16 alignment, u32 color/*, LPCSTR def_text*/, float flicker );
-			void		CustomMessageOut		(LPCSTR id, LPCSTR msg, u32 color);
-			void		RemoveCustomMessage		(LPCSTR id);
+	CUIDialogWnd* MainInputReceiver();
+	virtual void		ReInitShownUI() = 0;
+	virtual void		HideShownDialogs() {};
+	virtual void		ReinitDialogs() {};
 
-			SDrawStaticStruct*	AddCustomStatic		(LPCSTR id, bool bSingleInstance);
-			SDrawStaticStruct*	GetCustomStatic		(LPCSTR id);
-			void				RemoveCustomStatic	(LPCSTR id);
+	void		AddCustomMessage(LPCSTR id, float x, float y, float font_size, CGameFont* pFont, u16 alignment, u32 color);
+	void		AddCustomMessage(LPCSTR id, float x, float y, float font_size, CGameFont* pFont, u16 alignment, u32 color/*, LPCSTR def_text*/, float flicker);
+	void		CustomMessageOut(LPCSTR id, LPCSTR msg, u32 color);
+	void		RemoveCustomMessage(LPCSTR id);
 
-	virtual	shared_str	shedule_Name				() const		{ return shared_str("CUIGameCustom"); };
-	virtual bool		shedule_Needed			()					{return true;};
+	SDrawStaticStruct* AddCustomStatic(LPCSTR id, bool bSingleInstance);
+	SDrawStaticStruct* GetCustomStatic(LPCSTR id);
+	void				RemoveCustomStatic(LPCSTR id);
+
+	virtual	shared_str	shedule_Name() const { return shared_str("CUIGameCustom"); };
+	virtual bool		shedule_Needed() { return true; };
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -15,41 +15,41 @@
  */
 
 #include <malloc.h> // alloca
-//#include <string.h>
+ //#include <string.h>
 
-static int vsscanf(const char * buffer, const char * format, va_list argPtr)
+static int vsscanf(const char* buffer, const char* format, va_list argPtr)
 {
 	// Get an upper bound for the # of args
 	size_t count = 0;
-	const char *p = format;
-	while(1) {
+	const char* p = format;
+	while (1) {
 		char c = *(p++);
-		if(c==0) break;
-		if(c=='%' && (p[0]!='*' && p[0]!='%')) ++count;
+		if (c == 0) break;
+		if (c == '%' && (p[0] != '*' && p[0] != '%')) ++count;
 	}
 
 	// Make a local stack
-	size_t stackSize = (2+count)*sizeof(void*);
-	void **newStack = (void**)alloca(stackSize);
+	size_t stackSize = (2 + count) * sizeof(void*);
+	void** newStack = (void**)alloca(stackSize);
 
 	// Fill local stack the way sscanf likes it
 	newStack[0] = (void*)buffer;
 	newStack[1] = (void*)format;
-	memcpy(newStack+2, argPtr, count*sizeof(void*));
+	memcpy(newStack + 2, argPtr, count * sizeof(void*));
 
 	// @@ Use: CALL DWORD PTR [sscanf]
-	
+
 	// Warp into system sscanf with new stack
 	int result;
-	void *savedESP;
+	void* savedESP;
 	__asm
 	{
 		mov     savedESP, esp
 		mov     esp, newStack
 #if _MSC_VER >= 1400
-		call	DWORD PTR [sscanf_s]
+		call	DWORD PTR[sscanf_s]
 #else
-		call	DWORD PTR [sscanf]
+		call	DWORD PTR[sscanf]
 #endif
 		mov     esp, savedESP
 		mov     result, eax
@@ -66,21 +66,21 @@ Token::Token() :
 {
 }
 
-Token::Token(const Token & token) : 
+Token::Token(const Token& token) :
 	m_str(token.m_str), m_len(token.m_len)
 {
 }
 
-Token::Token(const char * str, int len) : 
+Token::Token(const char* str, int len) :
 	m_str(str), m_len(len)
 {
 }
 
-bool Token::operator==(const char * str) const
+bool Token::operator==(const char* str) const
 {
 	return strncmp(m_str, str, m_len) == 0;
 }
-bool Token::operator!=(const char * str) const
+bool Token::operator!=(const char* str) const
 {
 	return strncmp(m_str, str, m_len) != 0;
 }
@@ -111,12 +111,12 @@ String Token::toString() const
 	return String(m_str, m_len);
 }
 
-bool Token::parse(const char * format, int count, ...) const
+bool Token::parse(const char* format, int count, ...) const
 {
 	va_list arg;
 	va_start(arg, count);
 
-    int readCount = vsscanf(m_str, format, arg);
+	int readCount = vsscanf(m_str, format, arg);
 
 	va_end(arg);
 
@@ -124,7 +124,7 @@ bool Token::parse(const char * format, int count, ...) const
 }
 
 
-Tokenizer::Tokenizer(Stream * stream) : 
+Tokenizer::Tokenizer(Stream* stream) :
 	m_reader(stream), m_lineNumber(0), m_columnNumber(0), m_delimiters("{}()="), m_spaces(" \t")
 {
 }
@@ -135,9 +135,8 @@ bool Tokenizer::nextLine(bool skipEmptyLines /*= true*/)
 		if (!readLine()) {
 			return false;
 		}
-	}
-	while (!readToken() && skipEmptyLines);
-	
+	} while (!readToken() && skipEmptyLines);
+
 	return true;
 }
 
@@ -153,34 +152,34 @@ bool Tokenizer::nextToken(bool skipEndOfLine /*= false*/)
 	}
 	return true;
 }
-	
+
 bool Tokenizer::readToken()
 {
 	skipSpaces();
-	
-	const char * begin = m_line + m_columnNumber;
-	
+
+	const char* begin = m_line + m_columnNumber;
+
 	if (*begin == '\0') {
 		return false;
 	}
-	
+
 	char c = readChar();
 	if (isDelimiter(c)) {
 		m_token = Token(begin, 1);
 		return true;
 	}
-	
+
 	// @@ Add support for quoted tokens "", ''
-	
+
 	int len = 0;
 	while (!isDelimiter(c) && !isSpace(c) && c != '\0') {
 		c = readChar();
 		len++;
 	}
 	m_columnNumber--;
-	
+
 	m_token = Token(begin, len);
-	
+
 	return true;
 }
 

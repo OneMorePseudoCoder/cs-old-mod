@@ -14,8 +14,8 @@ class CExtraContentFilter
 
 	bool	CheckPackKey(LPCSTR KeyName);
 public:
-				CExtraContentFilter				();
-	virtual		~CExtraContentFilter			();
+	CExtraContentFilter();
+	virtual		~CExtraContentFilter();
 
-		bool	IsDataEnabled(LPCSTR pData);		
+	bool	IsDataEnabled(LPCSTR pData);
 };

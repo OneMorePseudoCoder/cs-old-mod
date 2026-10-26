@@ -67,7 +67,7 @@
 #define	G_SHIELDED_BASES_KEY					122
 #define	G_RETURN_PLAYERS_KEY					123
 #define	G_BEARER_CANT_SPRINT_KEY				124
-												
+
 //---- Player keys								
 //#define P_NAME__KEY							125
 //#define P_FRAGS__KEY							126

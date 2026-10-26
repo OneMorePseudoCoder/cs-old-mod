@@ -6,7 +6,7 @@ class CUIXml;
 class CUIStats;
 class CUIStatic;
 
-class CUIFrags : public CUIWindow{
+class CUIFrags : public CUIWindow {
 public:
 	CUIFrags();
 	~CUIFrags();
@@ -14,8 +14,8 @@ public:
 
 protected:
 	void InitBackground(CUIXml& xml_doc, LPCSTR path);
-	CUIStatic*	m_pBackT;
-	CUIStatic*	m_pBackC;
-	CUIStatic*	m_pBackB;
-	CUIStats*	m_pStats;
+	CUIStatic* m_pBackT;
+	CUIStatic* m_pBackC;
+	CUIStatic* m_pBackB;
+	CUIStats* m_pStats;
 };

@@ -13,11 +13,11 @@
 #elif NV_CC_MSVC 
 
 #if NV_CPU_X86
-__forceinline void nvPrefetch(const void * mem)
+__forceinline void nvPrefetch(const void* mem)
 {
 	__asm mov ecx, mem
-	__asm prefetcht0 [ecx];
-//	__asm prefetchnta [ecx];
+	__asm prefetcht0[ecx];
+	//	__asm prefetchnta [ecx];
 }
 #endif // NV_CPU_X86
 

@@ -7,8 +7,8 @@ enum {
 	ID_READY,
 	ID_MATCH_STARTED,
 
-	
 
-	ID_forcedword		= u32(-1)
+
+	ID_forcedword = u32(-1)
 };
 

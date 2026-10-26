@@ -14,7 +14,7 @@
 using namespace luabind;
 
 #pragma optimize("s",on)
-void CSE_ALifeCreatureCrow::script_register(lua_State *L)
+void CSE_ALifeCreatureCrow::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_creature1(
@@ -25,7 +25,7 @@ void CSE_ALifeCreatureCrow::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeMonsterZombie::script_register(lua_State *L)
+void CSE_ALifeMonsterZombie::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_monster1(
@@ -36,7 +36,7 @@ void CSE_ALifeMonsterZombie::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeMonsterBase::script_register(lua_State *L)
+void CSE_ALifeMonsterBase::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_monster2(
@@ -48,7 +48,7 @@ void CSE_ALifeMonsterBase::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeHumanStalker::script_register(lua_State *L)
+void CSE_ALifeHumanStalker::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_monster2(

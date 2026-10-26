@@ -14,8 +14,8 @@
 class CStalkerAnimationData {
 public:
 	typedef CStalkerAnimationState::WEAPON_ACTIONS				WEAPON_ACTIONS;
-	typedef CAniCollection<WEAPON_ACTIONS,weapon_names>			GLOBAL_ANIMATIONS;
-	typedef CAniCollection<CStalkerAnimationState,state_names>	PART_ANIMATIONS;
+	typedef CAniCollection<WEAPON_ACTIONS, weapon_names>			GLOBAL_ANIMATIONS;
+	typedef CAniCollection<CStalkerAnimationState, state_names>	PART_ANIMATIONS;
 	typedef CAniFVector<head_names>								HEAD_ANIMATIONS;
 
 public:
@@ -24,5 +24,5 @@ public:
 	GLOBAL_ANIMATIONS	m_global_animations;
 
 public:
-						CStalkerAnimationData	(CKinematicsAnimated *skeleton_animated);
+	CStalkerAnimationData(CKinematicsAnimated* skeleton_animated);
 };

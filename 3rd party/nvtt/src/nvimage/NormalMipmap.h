@@ -10,7 +10,7 @@ namespace nv
 {
 	class FloatImage;
 
-	FloatImage * createNormalMipmapMap(const FloatImage * img);
+	FloatImage* createNormalMipmapMap(const FloatImage* img);
 
 } // nv namespace
 

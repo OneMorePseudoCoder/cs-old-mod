@@ -16,27 +16,27 @@
 
 CUILines::CUILines()
 {
-	m_pFont							= nullptr;
-	m_oldWidth						= 0.0f;
-	m_interval						= 0.0f;
-	m_eTextAlign					= CGameFont::alLeft;
-	m_eVTextAlign					= valTop;
-	m_dwTextColor					= 0xffffffff;
-	m_dwBaseTextColor				= 0xffffffff;
-	m_dwCursorColor					= 0xAAFFFF00;
-	m_fTextRotation					= 0.f;
+	m_pFont = nullptr;
+	m_oldWidth = 0.0f;
+	m_interval = 0.0f;
+	m_eTextAlign = CGameFont::alLeft;
+	m_eVTextAlign = valTop;
+	m_dwTextColor = 0xffffffff;
+	m_dwBaseTextColor = 0xffffffff;
+	m_dwCursorColor = 0xAAFFFF00;
+	m_fTextRotation = 0.f;
 
-	m_bShowMe						= true;
+	m_bShowMe = true;
 	uFlags.zero();
-	uFlags.set(flNeedReparse,		FALSE);
-	uFlags.set(flComplexMode,		FALSE);
-	uFlags.set(flPasswordMode,		FALSE);
-	uFlags.set(flColoringMode,		TRUE);
-	uFlags.set(flCutWordsMode,		FALSE);
-	uFlags.set(flRecognizeNewLine,	FALSE);
-	m_pFont							= UI()->Font()->pFontLetterica16Russian;
-	m_cursor_pos.set				(0, 0);
-	m_iCursorPos					= 0;
+	uFlags.set(flNeedReparse, FALSE);
+	uFlags.set(flComplexMode, FALSE);
+	uFlags.set(flPasswordMode, FALSE);
+	uFlags.set(flColoringMode, TRUE);
+	uFlags.set(flCutWordsMode, FALSE);
+	uFlags.set(flRecognizeNewLine, FALSE);
+	m_pFont = UI()->Font()->pFontLetterica16Russian;
+	m_cursor_pos.set(0, 0);
+	m_iCursorPos = 0;
 }
 
 CUILines::~CUILines()
@@ -54,7 +54,7 @@ void CUILines::SetTextComplexMode(bool mode)
 
 bool CUILines::GetTextComplexMode() const
 {
-	return uFlags.test(flComplexMode)? true : false;
+	return uFlags.test(flComplexMode) ? true : false;
 }
 
 void CUILines::SetTextColoringMode(bool mode)
@@ -96,16 +96,16 @@ void CUILines::Init(float x, float y, float width, float heigt)
 
 void CUILines::SetText(const char* text)
 {
-	
+
 	if (!m_pFont)
 		m_pFont = UI()->Font()->pFontLetterica16Russian;
 
 	if (text && text[0] != 0)
 	{
-		if(m_text==text) 
+		if (m_text == text)
 			return;
 
-		m_text		= text;
+		m_text = text;
 
 		uFlags.set(flNeedReparse, TRUE);
 	}
@@ -119,9 +119,9 @@ void CUILines::SetText(const char* text)
 
 void CUILines::AddCharAtCursor(const char ch)
 {
-	uFlags.set			(flNeedReparse, TRUE);
-	m_text.insert		(m_text.begin() + m_iCursorPos, ch);
-	IncCursorPos		();
+	uFlags.set(flNeedReparse, TRUE);
+	m_text.insert(m_text.begin() + m_iCursorPos, ch);
+	IncCursorPos();
 }
 
 void CUILines::MoveCursorToEnd()
@@ -141,11 +141,11 @@ void CUILines::DelChar()
 
 void CUILines::DelLeftChar()
 {
-	if (m_iCursorPos>0)
+	if (m_iCursorPos > 0)
 	{
 		DecCursorPos();
 		DelChar();
-	}	
+	}
 }
 
 const char* CUILines::GetText()
@@ -158,7 +158,7 @@ void CUILines::Reset()
 	m_lines.clear();
 }
 
-float get_str_width(CGameFont*pFont, char ch)
+float get_str_width(CGameFont* pFont, char ch)
 {
 	float ll = pFont->SizeOf_(ch);
 	UI()->ClientToScreenScaledWidth(ll);
@@ -665,9 +665,9 @@ float CUILines::GetVisibleHeight()
 
 	if (uFlags.test(flComplexMode))
 	{
-		if(uFlags.test(flNeedReparse))
+		if (uFlags.test(flNeedReparse))
 			ParseText();
-		return (_curr_h + m_interval)*m_lines.size() - m_interval;
+		return (_curr_h + m_interval) * m_lines.size() - m_interval;
 	}
 	else
 		return _curr_h;
@@ -678,7 +678,7 @@ void CUILines::SetTextColor(u32 color)
 	if (color == m_dwTextColor)
 		return;
 	uFlags.set(flNeedReparse, true);
-	m_dwTextColor = color; 
+	m_dwTextColor = color;
 }
 
 void CUILines::SetBaseTextColor(u32 color)
@@ -778,22 +778,22 @@ float CUILines::GetIndentByAlign()const
 	switch (m_eTextAlign)
 	{
 	case CGameFont::alCenter:
-		{
-//			GetFont()->SetAligment(CGameFont::alCenter);
-			return (m_wndSize.x /*- length*/) / 2;
-		}break;
+	{
+		//			GetFont()->SetAligment(CGameFont::alCenter);
+		return (m_wndSize.x /*- length*/) / 2;
+	}break;
 	case CGameFont::alLeft:
-		{
-//			GetFont()->SetAligment(CGameFont::alLeft);
-			return 0;
-		}break;
+	{
+		//			GetFont()->SetAligment(CGameFont::alLeft);
+		return 0;
+	}break;
 	case CGameFont::alRight:
-		{
-//			GetFont()->SetAligment(CGameFont::alRight);
-			return (m_wndSize.x /*- length*/);
-		}break;
+	{
+		//			GetFont()->SetAligment(CGameFont::alRight);
+		return (m_wndSize.x /*- length*/);
+	}break;
 	default:
-			NODEFAULT;
+		NODEFAULT;
 	}
 #ifdef DEBUG
 	return 0;
@@ -802,9 +802,9 @@ float CUILines::GetIndentByAlign()const
 
 float CUILines::GetVIndentByAlign()
 {
-	switch(m_eVTextAlign)
+	switch (m_eVTextAlign)
 	{
-	case valTop: 
+	case valTop:
 		return 0;
 	case valCenter:
 		return (m_wndSize.y - GetVisibleHeight()) / 2;
@@ -821,7 +821,7 @@ float CUILines::GetVIndentByAlign()
 // %c[255,255,255,255]
 u32 CUILines::GetColorFromText(const xr_string& str)const
 {
-//	typedef xr_string::size_type size;
+	//	typedef xr_string::size_type size;
 
 	StrSize begin, end, comma1_pos, comma2_pos, comma3_pos;
 
@@ -829,7 +829,7 @@ u32 CUILines::GetColorFromText(const xr_string& str)const
 	end = str.find(END, begin);
 	R_ASSERT2(npos != begin, "CUISubLine::GetColorFromText -- can't find beginning tag %c[");
 	R_ASSERT2(npos != end, "CUISubLine::GetColorFromText -- can't find ending tag ]");
-	
+
 	// try default color
 	if (npos != str.find("%c[default]", begin, end - begin))
 		return m_dwTextColor;
@@ -851,7 +851,7 @@ u32 CUILines::GetColorFromText(const xr_string& str)const
 	R_ASSERT2(npos != comma1_pos, "CUISubLine::GetColorFromText -- can't find first comma");
 	R_ASSERT2(npos != comma2_pos, "CUISubLine::GetColorFromText -- can't find second comma");
 	R_ASSERT2(npos != comma3_pos, "CUISubLine::GetColorFromText -- can't find third comma");
-	
+
 
 	u32 a, r, g, b;
 	xr_string single_color;
@@ -877,12 +877,11 @@ CUILine* CUILines::ParseTextToColoredLine(const xr_string& str)
 	xr_string entry;
 	u32 color;
 
-	do 
+	do
 	{
 		CutFirstColoredTextEntry(entry, color, tmp);
 		line->AddSubLine(entry, subst_alpha(color, color_get_A(GetTextColor())));
-	} 
-	while (tmp.size()>0);
+	} while (tmp.size() > 0);
 
 	return line;
 }

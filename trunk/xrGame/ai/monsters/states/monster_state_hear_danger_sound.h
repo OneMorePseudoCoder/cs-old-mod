@@ -6,14 +6,14 @@ template<typename _Object>
 class	CStateMonsterHearDangerousSound : public CState<_Object> {
 protected:
 	typedef CState<_Object>		inherited;
-	typedef CState<_Object>*	state_ptr;
+	typedef CState<_Object>* state_ptr;
 
 public:
-					CStateMonsterHearDangerousSound		(_Object *obj);
-	virtual			~CStateMonsterHearDangerousSound	() {}
+	CStateMonsterHearDangerousSound(_Object* obj);
+	virtual			~CStateMonsterHearDangerousSound() {}
 
-	virtual void	reselect_state						();
-	virtual void	setup_substates						();
+	virtual void	reselect_state();
+	virtual void	setup_substates();
 
 };
 

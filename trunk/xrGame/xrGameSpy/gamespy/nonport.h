@@ -1,7 +1,7 @@
 /******
 nonport.h
 GameSpy Common Code
-  
+
 Copyright 1999-2002 GameSpy Industries, Inc
 
 18002 Skypark Circle

@@ -18,26 +18,26 @@
 static float const LDIST = 0.05f;
 static u32   const cmd_history_max = 64;
 
-static u32 const prompt_font_color			= color_rgba(228,	228,	255,	255);
-static u32 const tips_font_color			= color_rgba(230,	250,	230,	255);
-static u32 const cmd_font_color				= color_rgba(138,	138,	245,	255);
-static u32 const cursor_font_color			= color_rgba(255,	255,	255,	255);
-static u32 const total_font_color			= color_rgba(250,	250,	15,		180);
-static u32 const default_font_color			= color_rgba(250,	250,	250,	250);
+static u32 const prompt_font_color = color_rgba(228, 228, 255, 255);
+static u32 const tips_font_color = color_rgba(230, 250, 230, 255);
+static u32 const cmd_font_color = color_rgba(138, 138, 245, 255);
+static u32 const cursor_font_color = color_rgba(255, 255, 255, 255);
+static u32 const total_font_color = color_rgba(250, 250, 15, 180);
+static u32 const default_font_color = color_rgba(250, 250, 250, 250);
 
-static u32 const back_color					= color_rgba(20,	 20,	 20,	200);
-static u32 const tips_back_color			= color_rgba(20,	 20,	 20,	200);
-static u32 const tips_select_color			= color_rgba(90,	 90,	 140,	230);
-static u32 const tips_word_color			= color_rgba(5,		100,	 56,	200);
-static u32 const tips_scroll_back_color		= color_rgba(15,	 15,	 15,	230);
-static u32 const tips_scroll_pos_color		= color_rgba(70,	 70,	 70,	240);
+static u32 const back_color = color_rgba(20, 20, 20, 200);
+static u32 const tips_back_color = color_rgba(20, 20, 20, 200);
+static u32 const tips_select_color = color_rgba(90, 90, 140, 230);
+static u32 const tips_word_color = color_rgba(5, 100, 56, 200);
+static u32 const tips_scroll_back_color = color_rgba(15, 15, 15, 230);
+static u32 const tips_scroll_pos_color = color_rgba(70, 70, 70, 240);
 
-ENGINE_API CConsole*	Console		=	NULL;
+ENGINE_API CConsole* Console = NULL;
 extern  char const* const	ioc_prompt;
-		char const* const	ioc_prompt = ">>> ";
+char const* const	ioc_prompt = ">>> ";
 
 extern  char const* const	ch_cursor;
-		char const* const	ch_cursor = "_";
+char const* const	ch_cursor = "_";
 
 text_editor::line_edit_control& CConsole::ec()
 {
@@ -84,7 +84,7 @@ bool CConsole::is_mark(Console_mark type)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CConsole::CConsole()
-:ConsoleShader(NULL),ConsoleShaderG(NULL)
+	:ConsoleShader(NULL), ConsoleShaderG(NULL)
 {
 	m_editor = xr_new<text_editor::line_editor>((u32)CONSOLE_BUF_SIZE);
 	m_cmd_history_max = cmd_history_max;
@@ -96,27 +96,27 @@ CConsole::CConsole()
 
 void CConsole::Initialize()
 {
-	scroll_delta		= 0;
-	bVisible			= false;
-	pFont				= NULL;
-	pFont2				= NULL;
-	pFontHelp			= NULL;
-	m_mouse_pos.x		= 0;
-	m_mouse_pos.y		= 0;
-	m_last_cmd			= NULL;
+	scroll_delta = 0;
+	bVisible = false;
+	pFont = NULL;
+	pFont2 = NULL;
+	pFontHelp = NULL;
+	m_mouse_pos.x = 0;
+	m_mouse_pos.y = 0;
+	m_last_cmd = NULL;
 
-	m_cmd_history.reserve( m_cmd_history_max + 2 );
+	m_cmd_history.reserve(m_cmd_history_max + 2);
 	m_cmd_history.clear_not_free();
 	reset_cmd_history_idx();
 
-	m_tips.reserve( MAX_TIPS_COUNT + 1 );
+	m_tips.reserve(MAX_TIPS_COUNT + 1);
 	m_tips.clear_not_free();
-	m_temp_tips.reserve( MAX_TIPS_COUNT + 1 );
+	m_temp_tips.reserve(MAX_TIPS_COUNT + 1);
 	m_temp_tips.clear_not_free();
 
-	m_tips_mode		= 0;
+	m_tips_mode = 0;
 	m_prev_length_str = 0;
-	m_cur_cmd		= NULL;
+	m_cur_cmd = NULL;
 	reset_selected_tip();
 
 	// Commands
@@ -152,11 +152,11 @@ void CConsole::AddCommand(IConsole_Command* cc)
 void CConsole::RemoveCommand(IConsole_Command* cc)
 {
 	vecCMD_IT it = Commands.find(cc->Name());
-	if(Commands.end()!=it)
+	if (Commands.end() != it)
 		Commands.erase(it);
 }
 
-void CConsole::OnFrame	()
+void CConsole::OnFrame()
 {
 	m_editor->on_frame();
 
@@ -166,30 +166,30 @@ void CConsole::OnFrame	()
 	}
 }
 
-void CConsole::OutFont( LPCSTR text, float& pos_y )
+void CConsole::OutFont(LPCSTR text, float& pos_y)
 {
-	float str_length = pFont->SizeOf_( text );
-	float scr_width  = 1.98f * Device.fWidth_2;
-	if( str_length > scr_width ) //1024.0f
+	float str_length = pFont->SizeOf_(text);
+	float scr_width = 1.98f * Device.fWidth_2;
+	if (str_length > scr_width) //1024.0f
 	{
-		float f	= 0.0f;
-		int sz	= 0;
-		int ln	= 0;
-		PSTR one_line = (PSTR)_alloca( (CONSOLE_BUF_SIZE + 1) * sizeof(char) );
-		
-		while( text[sz] && (ln + sz < CONSOLE_BUF_SIZE-5) )// перенос строк
+		float f = 0.0f;
+		int sz = 0;
+		int ln = 0;
+		PSTR one_line = (PSTR)_alloca((CONSOLE_BUF_SIZE + 1) * sizeof(char));
+
+		while (text[sz] && (ln + sz < CONSOLE_BUF_SIZE - 5))// перенос строк
 		{
-			one_line[ln+sz]   = text[sz];
-			one_line[ln+sz+1] = 0;
-			
-			float t	= pFont->SizeOf_( one_line + ln );
-			if ( t > scr_width )
+			one_line[ln + sz] = text[sz];
+			one_line[ln + sz + 1] = 0;
+
+			float t = pFont->SizeOf_(one_line + ln);
+			if (t > scr_width)
 			{
-				OutFont		( text + sz + 1, pos_y );
-				pos_y		-= LDIST;
-				pFont->OutI	( -1.0f, pos_y, "%s", one_line + ln );
-				ln			= sz + 1;
-				f			= 0.0f;
+				OutFont(text + sz + 1, pos_y);
+				pos_y -= LDIST;
+				pFont->OutI(-1.0f, pos_y, "%s", one_line + ln);
+				ln = sz + 1;
+				f = 0.0f;
 			}
 			else
 			{
@@ -201,7 +201,7 @@ void CConsole::OutFont( LPCSTR text, float& pos_y )
 	}
 	else
 	{
-		pFont->OutI( -1.0f, pos_y, "%s", text );
+		pFont->OutI(-1.0f, pos_y, "%s", text);
 	}
 }
 
@@ -212,7 +212,7 @@ void CConsole::OnScreenResolutionChanged()
 	xr_delete(pFontHelp);
 }
 
-void CConsole::OnRender	()
+void CConsole::OnRender()
 {
 	float			fMaxY;
 
@@ -235,7 +235,7 @@ void CConsole::OnRender	()
 		pFontHelp->SetColor(color_rgba(255, 255, 255, 255));
 		pFontHelp->SetAligment(CGameFont::alRight);
 	}
-	if(!ConsoleShader)
+	if (!ConsoleShader)
 	{
 		ConsoleShader.create("hud\\default", "ui\\ui_console");
 	}
@@ -254,11 +254,11 @@ void CConsole::OnRender	()
 		bGame = false;
 	}
 
-	VERIFY	(HW.pDevice);
+	VERIFY(HW.pDevice);
 
 	DrawBackgrounds(bGame);
 
-	float dwMaxY=float(Device.dwHeight);
+	float dwMaxY = float(Device.dwHeight);
 	// float dwMaxX=float(Device.dwWidth/2);
 	if (bGame)
 	{
@@ -292,80 +292,80 @@ void CConsole::OnRender	()
 		str_length = scr_width;
 	}
 
-	pFont->SetColor( color_rgba(128  ,128  ,255, 255) );
+	pFont->SetColor(color_rgba(128, 128, 255, 255));
 	pFont->OutI(-1.0f + out_pos * scr_x, ypos, "%s", ioc_prompt);
 	out_pos += ioc_d;
 
-	if ( !m_disable_tips && m_tips.size() )
+	if (!m_disable_tips && m_tips.size())
 	{
-		pFont->SetColor( tips_font_color );
+		pFont->SetColor(tips_font_color);
 
 		float shift_x = 0.0f;
-		switch ( m_tips_mode )
+		switch (m_tips_mode)
 		{
 		case 0: shift_x = scr_x * 1.0f;			break;
 		case 1: shift_x = scr_x * out_pos;		break;
-		case 2: shift_x = scr_x * ( ioc_d + pFont->SizeOf_(m_cur_cmd.c_str()) + d1 );	break;
+		case 2: shift_x = scr_x * (ioc_d + pFont->SizeOf_(m_cur_cmd.c_str()) + d1);	break;
 		case 3: shift_x = scr_x * str_length;	break;
 		}
 
 		vecTipsEx::iterator itb = m_tips.begin() + m_start_tip;
 		vecTipsEx::iterator ite = m_tips.end();
-		for ( u32 i = 0; itb != ite ; ++itb, ++i ) // tips
+		for (u32 i = 0; itb != ite; ++itb, ++i) // tips
 		{
-			pFont->OutI( -1.0f + shift_x, fMaxY + i*LDIST, "%s", (*itb).text.c_str() );
-			if ( i >= VIEW_TIPS_COUNT-1 )
+			pFont->OutI(-1.0f + shift_x, fMaxY + i * LDIST, "%s", (*itb).text.c_str());
+			if (i >= VIEW_TIPS_COUNT - 1)
 			{
 				break; //for
 			}
-		}	
+		}
 	}
 
 	// ===== ==============================================
-	pFont->SetColor ( cmd_font_color );
-	pFont2->SetColor( cmd_font_color );
+	pFont->SetColor(cmd_font_color);
+	pFont2->SetColor(cmd_font_color);
 
-	pFont->OutI(  -1.0f + out_pos * scr_x, ypos, "%s", s_b_mark );		out_pos += pFont->SizeOf_(s_b_mark);
-	pFont2->OutI( -1.0f + out_pos * scr_x, ypos, "%s", s_mark );		out_pos += pFont2->SizeOf_(s_mark);
-	pFont->OutI(  -1.0f + out_pos * scr_x, ypos, "%s", s_mark_a );
+	pFont->OutI(-1.0f + out_pos * scr_x, ypos, "%s", s_b_mark);		out_pos += pFont->SizeOf_(s_b_mark);
+	pFont2->OutI(-1.0f + out_pos * scr_x, ypos, "%s", s_mark);		out_pos += pFont2->SizeOf_(s_mark);
+	pFont->OutI(-1.0f + out_pos * scr_x, ypos, "%s", s_mark_a);
 
 	//pFont2->OutI( -1.0f + ioc_d * scr_x, ypos, "%s", editor=all );
-	
-	if( ec().cursor_view() )
+
+	if (ec().cursor_view())
 	{
-		pFont->SetColor( cursor_font_color );
-		pFont->OutI( -1.0f + str_length * scr_x, ypos, "%s", ch_cursor );
+		pFont->SetColor(cursor_font_color);
+		pFont->OutI(-1.0f + str_length * scr_x, ypos, "%s", ch_cursor);
 	}
-	
+
 	// ---------------------
-	u32 log_line = LogFile->size()-1;
+	u32 log_line = LogFile->size() - 1;
 	ypos -= LDIST;
-	for( int i = log_line - scroll_delta; i >= 0; --i ) 
+	for (int i = log_line - scroll_delta; i >= 0; --i)
 	{
 		ypos -= LDIST;
-		if ( ypos < -1.0f )
+		if (ypos < -1.0f)
 		{
 			break;
 		}
 		LPCSTR ls = ((*LogFile)[i]).c_str();
-		
-		if ( !ls )
+
+		if (!ls)
 		{
 			continue;
 		}
 		Console_mark cm = (Console_mark)ls[0];
-		pFont->SetColor( get_mark_color( cm ) );
+		pFont->SetColor(get_mark_color(cm));
 		//u8 b = (is_mark( cm ))? 2 : 0;
 		//OutFont( ls + b, ypos );
-		OutFont( ls, ypos );
+		OutFont(ls, ypos);
 	}
-	
+
 	string16 q;
-	itoa( log_line, q, 10 );
-	u32 qn = xr_strlen( q );
-	pFont->SetColor( total_font_color );
-	pFont->OutI( 0.95f - 0.03f * qn, fMaxY - 2.0f * LDIST, "[%d]", log_line );
-		
+	itoa(log_line, q, 10);
+	u32 qn = xr_strlen(q);
+	pFont->SetColor(total_font_color);
+	pFont->OutI(0.95f - 0.03f * qn, fMaxY - 2.0f * LDIST, "[%d]", log_line);
+
 	pFont->OnRender();
 	pFont2->OnRender();
 	if (!m_bShownHelp)
@@ -384,12 +384,12 @@ void CConsole::OnRender	()
 	pFontHelp->OnRender();
 }
 
-void CConsole::DrawBackgrounds( bool bGame )
+void CConsole::DrawBackgrounds(bool bGame)
 {
-	float ky = (bGame)? 0.5f : 1.0f;
+	float ky = (bGame) ? 0.5f : 1.0f;
 
 	Frect r;
-	r.set( 0.0f, 0.0f, float(Device.dwWidth), ky * float(Device.dwHeight) );
+	r.set(0.0f, 0.0f, float(Device.dwWidth), ky * float(Device.dwHeight));
 
 	//UIRender->SetShader( **m_hShader_back );
 	//// 6 = back, 12 = tips, (VIEW_TIPS_COUNT+1)*6 = highlight_words, 12 = scroll
@@ -398,10 +398,10 @@ void CConsole::DrawBackgrounds( bool bGame )
 	u32			dwOffset = 0, dwCount = 0;
 	FVF::TL* pv_start = (FVF::TL*)(RCache.Vertex.Lock(6 + 12 + (VIEW_TIPS_COUNT + 1) * 6 + 12, ConsoleShaderG.stride(), dwOffset));
 	FVF::TL* pv = pv_start;
-	DrawRect( r, back_color, pv );
+	DrawRect(r, back_color, pv);
 	std::ptrdiff_t p_cnt = 0;
 
-	if ( m_tips.size() == 0 || m_disable_tips )
+	if (m_tips.size() == 0 || m_disable_tips)
 	{
 		//UIRender->FlushPrimitive();
 		p_cnt = pv - pv_start;
@@ -417,125 +417,125 @@ void CConsole::DrawBackgrounds( bool bGame )
 	LPCSTR max_str = "xxxxx";
 	vecTipsEx::iterator itb = m_tips.begin();
 	vecTipsEx::iterator ite = m_tips.end();
-	for ( ; itb != ite; ++itb )
+	for (; itb != ite; ++itb)
 	{
-		if ( pFont->SizeOf_( (*itb).text.c_str() ) > pFont->SizeOf_( max_str ) )
+		if (pFont->SizeOf_((*itb).text.c_str()) > pFont->SizeOf_(max_str))
 		{
 			max_str = (*itb).text.c_str();
 		}
 	}
-	
-	float w1        = pFont->SizeOf_( "_" );
-	float ioc_w     = pFont->SizeOf_( ioc_prompt ) - w1;
-	float cur_cmd_w = pFont->SizeOf_( m_cur_cmd.c_str() );
-	cur_cmd_w		+= (cur_cmd_w > 0.01f) ? w1 : 0.0f;
-	
-	float list_w    = pFont->SizeOf_( max_str ) + 2.0f * w1;
-	
-	float font_h    = pFont->CurrentHeight_();
-	float tips_h    = _min( m_tips.size(), (u32)VIEW_TIPS_COUNT ) * font_h;
-	tips_h			+= ( m_tips.size() > 0 )? 5.0f : 0.0f;
-	
+
+	float w1 = pFont->SizeOf_("_");
+	float ioc_w = pFont->SizeOf_(ioc_prompt) - w1;
+	float cur_cmd_w = pFont->SizeOf_(m_cur_cmd.c_str());
+	cur_cmd_w += (cur_cmd_w > 0.01f) ? w1 : 0.0f;
+
+	float list_w = pFont->SizeOf_(max_str) + 2.0f * w1;
+
+	float font_h = pFont->CurrentHeight_();
+	float tips_h = _min(m_tips.size(), (u32)VIEW_TIPS_COUNT) * font_h;
+	tips_h += (m_tips.size() > 0) ? 5.0f : 0.0f;
+
 	Frect pr, sr;
 	pr.x1 = ioc_w + cur_cmd_w;
 	pr.x2 = pr.x1 + list_w;
-	
+
 	pr.y1 = UI_BASE_HEIGHT * 0.5f;
-	pr.y1 *= float(Device.dwHeight)/ UI_BASE_HEIGHT;
-	
+	pr.y1 *= float(Device.dwHeight) / UI_BASE_HEIGHT;
+
 	pr.y2 = pr.y1 + tips_h;
-	
+
 	float select_y = 0.0f;
 	float select_h = 0.0f;
-	
-	if ( m_select_tip >= 0 && m_select_tip < (int)m_tips.size() )
+
+	if (m_select_tip >= 0 && m_select_tip < (int)m_tips.size())
 	{
 		int sel_pos = m_select_tip - m_start_tip;
-	
+
 		select_y = sel_pos * font_h;
 		select_h = font_h; //1 string
 	}
 
 	sr.x1 = pr.x1;
 	sr.y1 = pr.y1 + select_y;
-	
+
 	sr.x2 = pr.x2;
 	sr.y2 = sr.y1 + select_h;
 
-	DrawRect( pr, tips_back_color, pv );
-	DrawRect( sr, tips_select_color,pv );
+	DrawRect(pr, tips_back_color, pv);
+	DrawRect(sr, tips_select_color, pv);
 
 	// --------------------------- highlight words --------------------
-	
-	if ( m_select_tip < (int)m_tips.size() )
+
+	if (m_select_tip < (int)m_tips.size())
 	{
 		Frect r1;
-	
+
 		vecTipsEx::iterator itb1 = m_tips.begin() + m_start_tip;
 		vecTipsEx::iterator ite1 = m_tips.end();
-		for ( u32 i = 0; itb1 != ite1; ++itb1, ++i ) // tips
+		for (u32 i = 0; itb1 != ite1; ++itb1, ++i) // tips
 		{
 			TipString const& ts = (*itb1);
-			if ( (ts.HL_start < 0) || (ts.HL_finish < 0) || (ts.HL_start > ts.HL_finish) )
+			if ((ts.HL_start < 0) || (ts.HL_finish < 0) || (ts.HL_start > ts.HL_finish))
 			{
 				continue;
 			}
 			int    str_size = (int)ts.text.size();
-			if ( (ts.HL_start >= str_size) || (ts.HL_finish > str_size) )
+			if ((ts.HL_start >= str_size) || (ts.HL_finish > str_size))
 			{
 				continue;
 			}
-	
+
 			r1.null();
-			LPSTR  tmp      = (PSTR)_alloca( (str_size + 1) * sizeof(char) );
-	
-			strncpy_s( tmp, str_size+1, ts.text.c_str(), ts.HL_start );
-			r1.x1 = pr.x1 + w1 + pFont->SizeOf_( tmp );
+			LPSTR  tmp = (PSTR)_alloca((str_size + 1) * sizeof(char));
+
+			strncpy_s(tmp, str_size + 1, ts.text.c_str(), ts.HL_start);
+			r1.x1 = pr.x1 + w1 + pFont->SizeOf_(tmp);
 			r1.y1 = pr.y1 + i * font_h;
-	
-			strncpy_s( tmp, str_size+1, ts.text.c_str(), ts.HL_finish );
-			r1.x2 = pr.x1 + w1 + pFont->SizeOf_( tmp );
+
+			strncpy_s(tmp, str_size + 1, ts.text.c_str(), ts.HL_finish);
+			r1.x2 = pr.x1 + w1 + pFont->SizeOf_(tmp);
 			r1.y2 = r1.y1 + font_h;
-	
-			DrawRect( r1, tips_word_color, pv );
-	
-			if ( i >= VIEW_TIPS_COUNT-1 )
+
+			DrawRect(r1, tips_word_color, pv);
+
+			if (i >= VIEW_TIPS_COUNT - 1)
 			{
 				break; // for itb
 			}
 		}// for itb
 	} // if
-	
+
 	// --------------------------- scroll bar --------------------
-	
+
 	u32 tips_sz = m_tips.size();
-	if ( tips_sz > VIEW_TIPS_COUNT )
+	if (tips_sz > VIEW_TIPS_COUNT)
 	{
 		Frect rb, rs;
-		
+
 		rb.x1 = pr.x2;
 		rb.y1 = pr.y1;
 		rb.x2 = rb.x1 + 2 * w1;
 		rb.y2 = pr.y2;
-		DrawRect( rb, tips_scroll_back_color, pv );
-	
-		VERIFY( rb.y2 - rb.y1 >= 1.0f );
+		DrawRect(rb, tips_scroll_back_color, pv);
+
+		VERIFY(rb.y2 - rb.y1 >= 1.0f);
 		float back_height = rb.y2 - rb.y1;
-		float u_height = (back_height * VIEW_TIPS_COUNT)/ float(tips_sz);
-		if ( u_height < 0.5f * font_h )
+		float u_height = (back_height * VIEW_TIPS_COUNT) / float(tips_sz);
+		if (u_height < 0.5f * font_h)
 		{
 			u_height = 0.5f * font_h;
 		}
-	
+
 		//float u_pos = (back_height - u_height) * float(m_start_tip) / float(tips_sz);
 		float u_pos = back_height * float(m_start_tip) / float(tips_sz);
-		
+
 		//clamp( u_pos, 0.0f, back_height - u_height );
-		
+
 		rs = rb;
 		rs.y1 = pr.y1 + u_pos;
 		rs.y2 = rs.y1 + u_height;
-		DrawRect( rs, tips_scroll_pos_color, pv );
+		DrawRect(rs, tips_scroll_pos_color, pv);
 	}
 	//UIRender->FlushPrimitive();
 	p_cnt = pv - pv_start;
@@ -548,7 +548,7 @@ void CConsole::DrawBackgrounds( bool bGame )
 	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ALPHAREF, 0));
 }
 
-void CConsole::DrawRect( Frect const& r, u32 color, FVF::TL*& pv)
+void CConsole::DrawRect(Frect const& r, u32 color, FVF::TL*& pv)
 {
 	pv->set(r.x1, r.y1, color, 0.f, 0.f); pv++;
 	pv->set(r.x2, r.y1, color, 1.f, 0.f); pv++;
@@ -650,28 +650,28 @@ void CConsole::ExecuteCommand(LPCSTR cmd_str, bool record_cmd)
 	}
 }
 
-void CConsole::Show			()
+void CConsole::Show()
 {
 	if (bVisible)			return;
-	bVisible				= true;
-	
-	GetCursorPos( &m_mouse_pos );
+	bVisible = true;
+
+	GetCursorPos(&m_mouse_pos);
 
 	ec().clear_states();
-	scroll_delta	= 0;
+	scroll_delta = 0;
 	reset_cmd_history_idx();
 	reset_selected_tip();
 	update_tips();
 
 	m_editor->IR_Capture();
-	Device.seqRender.Add	(this, 1);
-	Device.seqFrame.Add		(this);
+	Device.seqRender.Add(this, 1);
+	Device.seqFrame.Add(this);
 }
 
 void CConsole::Hide()
 {
-	if	(!bVisible)													return;
-	if	(g_pGamePersistent && g_dedicated_server)	return;
+	if (!bVisible)													return;
+	if (g_pGamePersistent && g_dedicated_server)	return;
 
 	bVisible = false;
 
@@ -701,15 +701,15 @@ void CConsole::SelectCommand()
 	reset_selected_tip();
 }
 
-void CConsole::Execute		(LPCSTR cmd)
+void CConsole::Execute(LPCSTR cmd)
 {
 	ExecuteCommand(cmd, false);
 }
 void CConsole::ExecuteScript(LPCSTR N)
 {
 	string128		cmd;
-	strconcat		(sizeof(cmd),cmd,"cfg_load ",N);
-	Execute			(cmd);
+	strconcat(sizeof(cmd), cmd, "cfg_load ", N);
+	Execute(cmd);
 }
 
 // -------------------------------------------------------------------------------------------------

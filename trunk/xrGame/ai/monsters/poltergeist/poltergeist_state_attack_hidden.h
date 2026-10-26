@@ -6,7 +6,7 @@ template<typename _Object>
 class	CStatePoltergeistAttackHidden : public CState<_Object> {
 protected:
 	typedef CState<_Object>		inherited;
-	typedef CState<_Object>*	state_ptr;
+	typedef CState<_Object>* state_ptr;
 
 	struct {
 		Fvector point;
@@ -15,16 +15,16 @@ protected:
 
 
 public:
-					CStatePoltergeistAttackHidden	(_Object *obj) : inherited(obj) {}
-	virtual			~CStatePoltergeistAttackHidden	() {}
+	CStatePoltergeistAttackHidden(_Object* obj) : inherited(obj) {}
+	virtual			~CStatePoltergeistAttackHidden() {}
 
 
-	virtual void	initialize				();
-	virtual void	execute					();
+	virtual void	initialize();
+	virtual void	execute();
 
 private:
 
-			void	select_target_point		();
+	void	select_target_point();
 };
 
 #include "poltergeist_state_attack_hidden_inline.h"

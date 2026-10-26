@@ -17,10 +17,10 @@
 //#pragma warning(disable:4267)
 
 extern "C" {
-	#include <lua.h>
-	#include <lualib.h>
-	#include <lauxlib.h>
-	#include <luajit.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+#include <luajit.h>
 };
 
 #pragma warning(push)

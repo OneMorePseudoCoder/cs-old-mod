@@ -33,7 +33,7 @@ OutputOptions::OutputOptions() : m(*new OutputOptions::Private())
 
 OutputOptions::~OutputOptions()
 {
-	delete &m;
+	delete& m;
 }
 
 /// Set default output options.
@@ -47,21 +47,21 @@ void OutputOptions::reset()
 
 
 /// Set output file name.
-void OutputOptions::setFileName(const char * fileName)
+void OutputOptions::setFileName(const char* fileName)
 {
 	m.fileName = fileName;
 	m.outputHandler = NULL;
 }
 
 /// Set output handler.
-void OutputOptions::setOutputHandler(OutputHandler * outputHandler)
+void OutputOptions::setOutputHandler(OutputHandler* outputHandler)
 {
 	m.fileName.reset();
 	m.outputHandler = outputHandler;
 }
 
 /// Set error handler.
-void OutputOptions::setErrorHandler(ErrorHandler * errorHandler)
+void OutputOptions::setErrorHandler(ErrorHandler* errorHandler)
 {
 	m.errorHandler = errorHandler;
 }
@@ -78,16 +78,16 @@ bool OutputOptions::Private::openFile() const
 	if (!fileName.isNull())
 	{
 		nvCheck(outputHandler == NULL);
-		
-		DefaultOutputHandler * oh = new DefaultOutputHandler(fileName.str());
+
+		DefaultOutputHandler* oh = new DefaultOutputHandler(fileName.str());
 		if (oh->stream.isError())
 		{
 			return false;
 		}
-		
+
 		outputHandler = oh;
 	}
-	
+
 	return true;
 }
 

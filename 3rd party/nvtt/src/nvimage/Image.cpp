@@ -15,7 +15,7 @@ Image::Image() : m_width(0), m_height(0), m_format(Format_RGB), m_data(NULL)
 {
 }
 
-Image::Image(const Image & img) : m_data(NULL)
+Image::Image(const Image& img) : m_data(NULL)
 {
 	allocate(img.m_width, img.m_height);
 	m_format = img.m_format;
@@ -27,7 +27,7 @@ Image::~Image()
 	free();
 }
 
-const Image & Image::operator=(const Image & img)
+const Image& Image::operator=(const Image& img)
 {
 	allocate(img.m_width, img.m_height);
 	m_format = img.m_format;
@@ -40,30 +40,30 @@ void Image::allocate(uint w, uint h)
 {
 	m_width = w;
 	m_height = h;
-	m_data = (Color32 *)realloc(m_data, w * h * sizeof(Color32));
+	m_data = (Color32*)realloc(m_data, w * h * sizeof(Color32));
 }
 
-bool Image::load(const char * name)
+bool Image::load(const char* name)
 {
 	free();
-	
+
 	AutoPtr<Image> img(ImageIO::load(name));
 	if (img == NULL) {
 		return false;
 	}
-	
+
 	swap(m_width, img->m_width);
 	swap(m_height, img->m_height);
 	swap(m_format, img->m_format);
 	swap(m_data, img->m_data);
-	
+
 	return true;
 }
 
-void Image::wrap(void * data, uint w, uint h)
+void Image::wrap(void* data, uint w, uint h)
 {
 	free();
-	m_data = (Color32 *)data;
+	m_data = (Color32*)data;
 	m_width = w;
 	m_height = h;
 }
@@ -93,35 +93,35 @@ uint Image::height() const
 	return m_height;
 }
 
-const Color32 * Image::scanline(uint h) const
+const Color32* Image::scanline(uint h) const
 {
 	nvDebugCheck(h < m_height);
 	return m_data + h * m_width;
 }
 
-Color32 * Image::scanline(uint h)
+Color32* Image::scanline(uint h)
 {
 	nvDebugCheck(h < m_height);
 	return m_data + h * m_width;
 }
 
-const Color32 * Image::pixels() const
+const Color32* Image::pixels() const
 {
 	return m_data;
 }
 
-Color32 * Image::pixels()
+Color32* Image::pixels()
 {
 	return m_data;
 }
 
-const Color32 & Image::pixel(uint idx) const
+const Color32& Image::pixel(uint idx) const
 {
 	nvDebugCheck(idx < m_width * m_height);
 	return m_data[idx];
 }
 
-Color32 & Image::pixel(uint idx)
+Color32& Image::pixel(uint idx)
 {
 	nvDebugCheck(idx < m_width * m_height);
 	return m_data[idx];

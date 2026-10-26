@@ -8,6 +8,6 @@ class CStateManagerFlesh : public CMonsterStateManager<CAI_Flesh> {
 
 public:
 
-					CStateManagerFlesh	(CAI_Flesh *monster); 
-	virtual void	execute				();
+	CStateManagerFlesh(CAI_Flesh* monster);
+	virtual void	execute();
 };

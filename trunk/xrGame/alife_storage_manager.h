@@ -22,15 +22,15 @@ protected:
 	LPCSTR			m_section;
 
 private:
-			void	prepare_objects_for_save();
-			void	load					(void *buffer, const u32 &buffer_size, LPCSTR file_name);
+	void	prepare_objects_for_save();
+	void	load(void* buffer, const u32& buffer_size, LPCSTR file_name);
 
 public:
-	IC				CALifeStorageManager	(xrServer *server, LPCSTR section);
-	virtual			~CALifeStorageManager	();
-			bool	load					(LPCSTR	save_name = 0);
-			void	save					(LPCSTR	save_name = 0, bool update_name = true);
-			void	save					(NET_Packet &net_packet);
+	IC				CALifeStorageManager(xrServer* server, LPCSTR section);
+	virtual			~CALifeStorageManager();
+	bool	load(LPCSTR	save_name = 0);
+	void	save(LPCSTR	save_name = 0, bool update_name = true);
+	void	save(NET_Packet& net_packet);
 };
 
 #include "alife_storage_manager_inline.h"

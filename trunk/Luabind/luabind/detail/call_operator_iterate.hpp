@@ -27,33 +27,33 @@
         BOOST_PP_CAT(_, n)
 
 template<class Self BOOST_PP_ENUM_TRAILING_PARAMS(N, class A)>
-struct BOOST_PP_CAT(call_operator, N) 
-    : detail::operator_<
-          BOOST_PP_CAT(call_operator, N)<
-              Self BOOST_PP_ENUM_TRAILING_PARAMS(N, A)
-          >
-      >
+struct BOOST_PP_CAT(call_operator, N)
+	: detail::operator_<
+	BOOST_PP_CAT(call_operator, N) <
+	Self BOOST_PP_ENUM_TRAILING_PARAMS(N, A)
+	>
+	>
 {
-    BOOST_PP_CAT(call_operator, N)(int) {}
+	BOOST_PP_CAT(call_operator, N)(int) {}
 
-    template<class T, class Policies>
-    struct apply
-    {
-        static void execute(
-            lua_State* L
-          , typename detail::unwrap_parameter_type<T, Self>::type self
-            BOOST_PP_ENUM_TRAILING(N, LUABIND_UNWRAP_PARAMETER, _)
-        )
-        {
-            detail::operator_result(
-                L
-              , (self(BOOST_PP_ENUM_PARAMS(N, _)), detail::operator_void_return())
-              , (Policies*)0
-            );
-        } 
-    };
+	template<class T, class Policies>
+	struct apply
+	{
+		static void execute(
+			lua_State* L
+			, typename detail::unwrap_parameter_type<T, Self>::type self
+			BOOST_PP_ENUM_TRAILING(N, LUABIND_UNWRAP_PARAMETER, _)
+		)
+		{
+			detail::operator_result(
+				L
+				, (self(BOOST_PP_ENUM_PARAMS(N, _)), detail::operator_void_return())
+				, (Policies*)0
+			);
+		}
+	};
 
-    static char const* name() { return "__call"; }
+	static char const* name() { return "__call"; }
 };
 
 #undef LUABIND_UNWRAP_PARAMETER

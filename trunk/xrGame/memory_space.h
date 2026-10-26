@@ -43,7 +43,7 @@ namespace MemorySpace {
 	typedef u32 squad_mask_type;
 
 	struct CNotYetVisibleObject {
-		const CGameObject			*m_object;
+		const CGameObject* m_object;
 		float						m_value;
 		u32							m_update_time;
 		u32							m_prev_time;
@@ -56,11 +56,11 @@ namespace MemorySpace {
 		SRotation					m_orientation;
 #endif
 	};
-	
+
 	template <typename T>
 	struct CObjectParams : public SObjectParams {
-		IC		SRotation orientation	(const T *object) const;
-		IC		void	fill			(const T *game_object);
+		IC		SRotation orientation(const T* object) const;
+		IC		void	fill(const T* game_object);
 	};
 
 	struct SMemoryObject {
@@ -87,48 +87,48 @@ namespace MemorySpace {
 #endif
 		bool						m_enabled;
 
-						SMemoryObject				() : 
+		SMemoryObject() :
 #ifdef USE_GAME_TIME
-							m_game_time(0),
+			m_game_time(0),
 #endif
 #ifdef USE_LEVEL_TIME
-							m_level_time(0),
+			m_level_time(0),
 #endif
 #ifdef USE_LAST_GAME_TIME
-							m_last_game_time(0),
+			m_last_game_time(0),
 #endif
 #ifdef USE_LAST_LEVEL_TIME
-							m_last_level_time(0),
+			m_last_level_time(0),
 #endif
 #ifdef USE_FIRST_GAME_TIME
-							m_first_game_time(0),
+			m_first_game_time(0),
 #endif
 #ifdef USE_FIRST_LEVEL_TIME
-							m_first_level_time(0),
+			m_first_level_time(0),
 #endif
 #ifdef USE_UPDATE_COUNT
-							m_update_count(0),
+			m_update_count(0),
 #endif
-							m_enabled(true)
+			m_enabled(true)
 		{
 		}
 
-		IC		void	fill						()
+		IC		void	fill()
 		{
-			m_enabled				= true;
+			m_enabled = true;
 		}
 	};
 
 	template <typename T>
 	struct CMemoryObject : public SMemoryObject {
-		const T						*m_object;
+		const T* m_object;
 		CObjectParams<T>			m_object_params;
 		CObjectParams<T>			m_self_params;
 		_flags<squad_mask_type>		m_squad_mask;
 
-		IC			CMemoryObject	();
+		IC			CMemoryObject();
 		IC	bool	operator==		(u16 id) const;
-		IC	void	fill			(const T *game_object, const T *self, const squad_mask_type &mask);
+		IC	void	fill(const T* game_object, const T* self, const squad_mask_type& mask);
 	};
 
 	struct CVisibleObject : CMemoryObject<CGameObject> {
@@ -136,25 +136,25 @@ namespace MemorySpace {
 		_flags<squad_mask_type>		m_visible;
 
 	public:
-		IC			CVisibleObject	()
+		IC			CVisibleObject()
 		{
-			m_visible.zero			();
+			m_visible.zero();
 		}
 
-		IC	bool	visible			(const squad_mask_type &mask) const 
+		IC	bool	visible(const squad_mask_type& mask) const
 		{
 			return					(!!m_visible.test(mask));
 		}
 
-		IC	void	visible			(const squad_mask_type &mask, bool value)
+		IC	void	visible(const squad_mask_type& mask, bool value)
 		{
-			m_visible.set			(mask,value ? TRUE : FALSE);
+			m_visible.set(mask, value ? TRUE : FALSE);
 		}
 
-		IC	void	fill							(const CGameObject *game_object, const CGameObject *self, const squad_mask_type &mask, const squad_mask_type &visibility_mask)
+		IC	void	fill(const CGameObject* game_object, const CGameObject* self, const squad_mask_type& mask, const squad_mask_type& visibility_mask)
 		{
-			inherited::fill			(game_object,self,mask);
-			m_visible.set			(visibility_mask,TRUE);
+			inherited::fill(game_object, self, mask);
+			m_visible.set(visibility_mask, TRUE);
 		}
 	};
 
@@ -163,19 +163,19 @@ namespace MemorySpace {
 		u16							m_bone_index;
 		float						m_amount;
 	};
-	
+
 	struct CSoundObject : public CMemoryObject<CGameObject> {
 		ESoundTypes					m_sound_type;
 		float						m_power;
 
-		IC	void	fill							(const CGameObject *game_object, const CGameObject *self, const ESoundTypes sound_type, const float sound_power, const squad_mask_type &mask)
+		IC	void	fill(const CGameObject* game_object, const CGameObject* self, const ESoundTypes sound_type, const float sound_power, const squad_mask_type& mask)
 		{
-			CMemoryObject<CGameObject>::fill	(game_object,self,mask);
-			m_sound_type			= sound_type;
-			m_power					= sound_power;
+			CMemoryObject<CGameObject>::fill(game_object, self, mask);
+			m_sound_type = sound_type;
+			m_power = sound_power;
 		}
 
-		IC	int		sound_type		() const
+		IC	int		sound_type() const
 		{
 			return					(int(m_sound_type));
 		}
@@ -185,22 +185,22 @@ namespace MemorySpace {
 		bool						m_visual_info;
 		bool						m_sound_info;
 		bool						m_hit_info;
-					
-					CMemoryInfo		()
+
+		CMemoryInfo()
 		{
-			m_visual_info			= false;
-			m_sound_info			= false;
-			m_hit_info				= false;
+			m_visual_info = false;
+			m_sound_info = false;
+			m_hit_info = false;
 		}
 		DECLARE_SCRIPT_REGISTER_FUNCTION
 	};
 	add_to_type_list(CMemoryInfo)
-	#undef script_type_list
-	#define script_type_list save_type_list(CMemoryInfo)
+#undef script_type_list
+#define script_type_list save_type_list(CMemoryInfo)
 
-	template <typename T>
+		template <typename T>
 	struct SLevelTimePredicate {
-		bool		operator()						(const CMemoryObject<T> &object1, const CMemoryObject<T> &object2) const
+		bool		operator()						(const CMemoryObject<T>& object1, const CMemoryObject<T>& object2) const
 		{
 			return					(object1.m_level_time < object2.m_level_time);
 		}

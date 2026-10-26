@@ -3,7 +3,7 @@
 #include "WeaponCustomPistol.h"
 #include "script_export_space.h"
 
-class CWeaponKnife: public CWeapon {
+class CWeaponKnife : public CWeapon {
 private:
 	typedef CWeapon inherited;
 protected:
@@ -22,25 +22,25 @@ protected:
 
 protected:
 
-	virtual void		switch2_Idle				();
-	virtual void		switch2_Hiding				();
-	virtual void		switch2_Hidden				();
-	virtual void		switch2_Showing				();
-			void		switch2_Attacking			(u32 state);
+	virtual void		switch2_Idle();
+	virtual void		switch2_Hiding();
+	virtual void		switch2_Hidden();
+	virtual void		switch2_Showing();
+	void		switch2_Attacking(u32 state);
 
-	virtual void		OnAnimationEnd				(u32 state);
-	virtual void		UpdateCL					();
-	virtual void		PlayAnimIdle				();
-	virtual void		OnStateSwitch				(u32 S);
+	virtual void		OnAnimationEnd(u32 state);
+	virtual void		UpdateCL();
+	virtual void		PlayAnimIdle();
+	virtual void		OnStateSwitch(u32 S);
 
-	void				state_Attacking				(float dt);
+	void				state_Attacking(float dt);
 
-	virtual void		KnifeStrike					(const Fvector& pos, const Fvector& dir);
+	virtual void		KnifeStrike(const Fvector& pos, const Fvector& dir);
 
 	float				fWallmarkSize;
 	u16					knife_material_idx;
 
-protected:	
+protected:
 	ALife::EHitType		m_eHitType;
 
 	ALife::EHitType		m_eHitType_1;
@@ -54,25 +54,25 @@ protected:
 	float				fCurrentHit;
 	float				fHitImpulse_2;
 protected:
-	virtual void		LoadFireParams					(LPCSTR section, LPCSTR prefix);
+	virtual void		LoadFireParams(LPCSTR section, LPCSTR prefix);
 public:
-						CWeaponKnife(); 
-	virtual				~CWeaponKnife(); 
+	CWeaponKnife();
+	virtual				~CWeaponKnife();
 
-	void				Load							(LPCSTR section);
+	void				Load(LPCSTR section);
 
-	virtual bool		TryPlayAnimIdle					();
+	virtual bool		TryPlayAnimIdle();
 
-	virtual void		onMovementChanged				(ACTOR_DEFS::EMoveCommand cmd);
+	virtual void		onMovementChanged(ACTOR_DEFS::EMoveCommand cmd);
 
-	virtual void		Fire2Start						();
-	virtual void		FireStart						();
+	virtual void		Fire2Start();
+	virtual void		FireStart();
 
 
-	virtual bool		Action							(s32 cmd, u32 flags);
+	virtual bool		Action(s32 cmd, u32 flags);
 
-	virtual void		StartIdleAnim					();
-	virtual bool		GetBriefInfo					(II_BriefInfo& info);
+	virtual void		StartIdleAnim();
+	virtual bool		GetBriefInfo(II_BriefInfo& info);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

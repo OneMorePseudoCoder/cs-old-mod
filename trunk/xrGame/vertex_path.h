@@ -19,21 +19,21 @@ struct CVertexPath {
 	};
 #pragma pack(pop)
 
-	template <template <typename _T> class _vertex> 
+	template <template <typename _T> class _vertex>
 	class CDataStorage {
 	public:
 		typedef typename DataStoragePath<_vertex>::_vertex	CGraphVertex;
 		typedef	typename CGraphVertex::_index_type			_index_type;
-	
+
 	public:
-		IC					CDataStorage		(const u32 vertex_count);
-		virtual				~CDataStorage		();
-		IC		void		init				();
-		IC		void		assign_parent		(CGraphVertex &neighbour, CGraphVertex *parent);
+		IC					CDataStorage(const u32 vertex_count);
+		virtual				~CDataStorage();
+		IC		void		init();
+		IC		void		assign_parent(CGraphVertex& neighbour, CGraphVertex* parent);
 		template <typename T>
-		IC		void		assign_parent		(CGraphVertex &neighbour, CGraphVertex *parent, const T&);
-		IC		void		update_successors	(CGraphVertex &neighbour);
-		IC		void		get_node_path		(xr_vector<_index_type> &path, CGraphVertex *best);
+		IC		void		assign_parent(CGraphVertex& neighbour, CGraphVertex* parent, const T&);
+		IC		void		update_successors(CGraphVertex& neighbour);
+		IC		void		get_node_path(xr_vector<_index_type>& path, CGraphVertex* best);
 	};
 };
 

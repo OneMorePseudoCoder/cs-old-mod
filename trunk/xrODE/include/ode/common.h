@@ -31,25 +31,25 @@ extern "C" {
 #endif
 
 
-/* configuration stuff */
+	/* configuration stuff */
 
-/* the efficient alignment. most platforms align data structures to some
- * number of bytes, but this is not always the most efficient alignment.
- * for example, many x86 compilers align to 4 bytes, but on a pentium it
- * is important to align doubles to 8 byte boundaries (for speed), and
- * the 4 floats in a SIMD register to 16 byte boundaries. many other
- * platforms have similar behavior. setting a larger alignment can waste
- * a (very) small amount of memory. NOTE: this number must be a power of
- * two. this is set to 16 by default.
- */
+	/* the efficient alignment. most platforms align data structures to some
+	 * number of bytes, but this is not always the most efficient alignment.
+	 * for example, many x86 compilers align to 4 bytes, but on a pentium it
+	 * is important to align doubles to 8 byte boundaries (for speed), and
+	 * the 4 floats in a SIMD register to 16 byte boundaries. many other
+	 * platforms have similar behavior. setting a larger alignment can waste
+	 * a (very) small amount of memory. NOTE: this number must be a power of
+	 * two. this is set to 16 by default.
+	 */
 #define EFFICIENT_ALIGNMENT 16
 
 
-/* constants */
+	 /* constants */
 
-/* pi and 1/sqrt(2) are defined here if necessary because they don't get
- * defined in <math.h> on some platforms (like MS-Windows)
- */
+	 /* pi and 1/sqrt(2) are defined here if necessary because they don't get
+	  * defined in <math.h> on some platforms (like MS-Windows)
+	  */
 
 #ifndef M_PI
 #define M_PI REAL(3.1415926535897932384626433832795029)
@@ -59,15 +59,15 @@ extern "C" {
 #endif
 
 
-/* debugging:
- *   IASSERT  is an internal assertion, i.e. a consistency check. if it fails
- *            we want to know where.
- *   UASSERT  is a user assertion, i.e. if it fails a nice error message
- *            should be printed for the user.
- *   AASSERT  is an arguments assertion, i.e. if it fails "bad argument(s)"
- *            is printed.
- *   DEBUGMSG just prints out a message
- */
+	  /* debugging:
+	   *   IASSERT  is an internal assertion, i.e. a consistency check. if it fails
+	   *            we want to know where.
+	   *   UASSERT  is a user assertion, i.e. if it fails a nice error message
+	   *            should be printed for the user.
+	   *   AASSERT  is an arguments assertion, i.e. if it fails "bad argument(s)"
+	   *            is printed.
+	   *   DEBUGMSG just prints out a message
+	   */
 
 #ifndef dNODEBUG
 #ifdef __GNUC__
@@ -92,12 +92,12 @@ extern "C" {
 #endif
 #define dAASSERT(a) dUASSERT(a,"Bad argument(s)")
 
-/* floating point data type, vector, matrix and quaternion types */
+	   /* floating point data type, vector, matrix and quaternion types */
 
 #if defined(dSINGLE)
-typedef float dReal;
+	typedef float dReal;
 #elif defined(dDOUBLE)
-typedef double dReal;
+	typedef double dReal;
 #else
 #error You must #define dSINGLE or dDOUBLE
 #endif
@@ -108,16 +108,16 @@ typedef double dReal;
  */
 #define dPAD(a) (((a) > 1) ? ((((a)-1)|3)+1) : (a))
 
-/* these types are mainly just used in headers */
-typedef dReal dVector3[4];
-typedef dReal dVector4[4];
-typedef dReal dMatrix3[4*3];
-typedef dReal dMatrix4[4*4];
-typedef dReal dMatrix6[8*6];
-typedef dReal dQuaternion[4];
+ /* these types are mainly just used in headers */
+	typedef dReal dVector3[4];
+	typedef dReal dVector4[4];
+	typedef dReal dMatrix3[4 * 3];
+	typedef dReal dMatrix4[4 * 4];
+	typedef dReal dMatrix6[8 * 6];
+	typedef dReal dQuaternion[4];
 
 
-/* precision dependent scalar math functions */
+	/* precision dependent scalar math functions */
 
 #if defined(dSINGLE)
 
@@ -166,82 +166,82 @@ typedef dReal dQuaternion[4];
   ((char*)dEFFICIENT_SIZE(((size_t)(alloca((n)+(EFFICIENT_ALIGNMENT-1))))))
 
 
-/* internal object types (all prefixed with `dx') */
+ /* internal object types (all prefixed with `dx') */
 
-struct dxWorld;		/* dynamics world */
-struct dxSpace;		/* collision space */
-struct dxBody;		/* rigid body (dynamics object) */
-struct dxGeom;		/* geometry (collision object) */
-struct dxJoint;
-struct dxJointNode;
-struct dxJointGroup;
+	struct dxWorld;		/* dynamics world */
+	struct dxSpace;		/* collision space */
+	struct dxBody;		/* rigid body (dynamics object) */
+	struct dxGeom;		/* geometry (collision object) */
+	struct dxJoint;
+	struct dxJointNode;
+	struct dxJointGroup;
 
-typedef struct dxWorld *dWorldID;
-typedef struct dxSpace *dSpaceID;
-typedef struct dxBody *dBodyID;
-typedef struct dxGeom *dGeomID;
-typedef struct dxJoint *dJointID;
-typedef struct dxJointGroup *dJointGroupID;
-
-
-/* error numbers */
-
-enum {
-  d_ERR_UNKNOWN = 0,		/* unknown error */
-  d_ERR_IASSERT,		/* internal assertion failed */
-  d_ERR_UASSERT,		/* user assertion failed */
-  d_ERR_LCP			/* user assertion failed */
-};
+	typedef struct dxWorld* dWorldID;
+	typedef struct dxSpace* dSpaceID;
+	typedef struct dxBody* dBodyID;
+	typedef struct dxGeom* dGeomID;
+	typedef struct dxJoint* dJointID;
+	typedef struct dxJointGroup* dJointGroupID;
 
 
-/* joint type numbers */
+	/* error numbers */
 
-enum {
-  dJointTypeNone = 0,		/* or "unknown" */
-  dJointTypeBall,
-  dJointTypeHinge,
-  dJointTypeSlider,
-  dJointTypeContact,
-  dJointTypeUniversal,
-  dJointTypeHinge2,
-  dJointTypeFixed,
-  dJointTypeNull,
-  dJointTypeAMotor
-};
+	enum {
+		d_ERR_UNKNOWN = 0,		/* unknown error */
+		d_ERR_IASSERT,		/* internal assertion failed */
+		d_ERR_UASSERT,		/* user assertion failed */
+		d_ERR_LCP			/* user assertion failed */
+	};
 
 
-/* an alternative way of setting joint parameters, using joint parameter
- * structures and member constants. we don't actually do this yet.
- */
+	/* joint type numbers */
 
-/*
-typedef struct dLimot {
-  int mode;
-  dReal lostop, histop;
-  dReal vel, fmax;
-  dReal fudge_factor;
-  dReal bounce, soft;
-  dReal suspension_erp, suspension_cfm;
-} dLimot;
-
-enum {
-  dLimotLoStop		= 0x0001,
-  dLimotHiStop		= 0x0002,
-  dLimotVel		= 0x0004,
-  dLimotFMax		= 0x0008,
-  dLimotFudgeFactor	= 0x0010,
-  dLimotBounce		= 0x0020,
-  dLimotSoft		= 0x0040
-};
-*/
+	enum {
+		dJointTypeNone = 0,		/* or "unknown" */
+		dJointTypeBall,
+		dJointTypeHinge,
+		dJointTypeSlider,
+		dJointTypeContact,
+		dJointTypeUniversal,
+		dJointTypeHinge2,
+		dJointTypeFixed,
+		dJointTypeNull,
+		dJointTypeAMotor
+	};
 
 
-/* standard joint parameter names. why are these here? - because we don't want
- * to include all the joint function definitions in joint.cpp. hmmmm.
- * MSVC complains if we call D_ALL_PARAM_NAMES_X with a blank second argument,
- * which is why we have the D_ALL_PARAM_NAMES macro as well. please copy and
- * paste between these two.
- */
+	/* an alternative way of setting joint parameters, using joint parameter
+	 * structures and member constants. we don't actually do this yet.
+	 */
+
+	 /*
+	 typedef struct dLimot {
+	   int mode;
+	   dReal lostop, histop;
+	   dReal vel, fmax;
+	   dReal fudge_factor;
+	   dReal bounce, soft;
+	   dReal suspension_erp, suspension_cfm;
+	 } dLimot;
+
+	 enum {
+	   dLimotLoStop		= 0x0001,
+	   dLimotHiStop		= 0x0002,
+	   dLimotVel		= 0x0004,
+	   dLimotFMax		= 0x0008,
+	   dLimotFudgeFactor	= 0x0010,
+	   dLimotBounce		= 0x0020,
+	   dLimotSoft		= 0x0040
+	 };
+	 */
+
+
+	 /* standard joint parameter names. why are these here? - because we don't want
+	  * to include all the joint function definitions in joint.cpp. hmmmm.
+	  * MSVC complains if we call D_ALL_PARAM_NAMES_X with a blank second argument,
+	  * which is why we have the D_ALL_PARAM_NAMES macro as well. please copy and
+	  * paste between these two.
+	  */
 
 #define D_ALL_PARAM_NAMES(start) \
   /* parameters for limits and motors */ \
@@ -273,45 +273,45 @@ enum {
   dParamSuspensionERP ## x, \
   dParamSuspensionCFM ## x,
 
-enum {
-  D_ALL_PARAM_NAMES(0)
-  D_ALL_PARAM_NAMES_X(0x100,2)
-  D_ALL_PARAM_NAMES_X(0x200,3)
+	enum {
+		D_ALL_PARAM_NAMES(0)
+		D_ALL_PARAM_NAMES_X(0x100, 2)
+		D_ALL_PARAM_NAMES_X(0x200, 3)
 
-  /* add a multiple of this constant to the basic parameter numbers to get
-   * the parameters for the second, third etc axes.
-   */
-  dParamGroup=0x100
-};
-
-
-/* angular motor mode numbers */
-
-enum{
-  dAMotorUser = 0,
-  dAMotorEuler = 1
-};
+		/* add a multiple of this constant to the basic parameter numbers to get
+		 * the parameters for the second, third etc axes.
+		 */
+		dParamGroup = 0x100
+	};
 
 
-/* joint force feedback information */
+	/* angular motor mode numbers */
 
-typedef struct dJointFeedback {
-  dVector3 f1;		/* force applied to body 1 */
-  dVector3 t1;		/* torque applied to body 1 */
-  dVector3 f2;		/* force applied to body 2 */
-  dVector3 t2;		/* torque applied to body 2 */
-} dJointFeedback;
+	enum {
+		dAMotorUser = 0,
+		dAMotorEuler = 1
+	};
 
 
-/* private functions that must be implemented by the collision library:
- * (1) indicate that a geom has moved, (2) get the next geom in a body list.
- * these functions are called whenever the position of geoms connected to a
- * body have changed, e.g. with dBodySetPosition(), dBodySetRotation(), or
- * when the ODE step function updates the body state.
- */
+	/* joint force feedback information */
 
-void dGeomMoved (dGeomID);
-dGeomID dGeomGetBodyNext (dGeomID);
+	typedef struct dJointFeedback {
+		dVector3 f1;		/* force applied to body 1 */
+		dVector3 t1;		/* torque applied to body 1 */
+		dVector3 f2;		/* force applied to body 2 */
+		dVector3 t2;		/* torque applied to body 2 */
+	} dJointFeedback;
+
+
+	/* private functions that must be implemented by the collision library:
+	 * (1) indicate that a geom has moved, (2) get the next geom in a body list.
+	 * these functions are called whenever the position of geoms connected to a
+	 * body have changed, e.g. with dBodySetPosition(), dBodySetRotation(), or
+	 * when the ODE step function updates the body state.
+	 */
+
+	void dGeomMoved(dGeomID);
+	dGeomID dGeomGetBodyNext(dGeomID);
 
 
 #ifdef __cplusplus

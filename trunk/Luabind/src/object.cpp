@@ -49,14 +49,14 @@ namespace luabind
 			return *this; \
 		}
 
-LUABIND_PROXY_ASSIGNMENT_OPERATOR(object)
-LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_object)
-LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_raw_object)
-LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
+		LUABIND_PROXY_ASSIGNMENT_OPERATOR(object)
+			LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_object)
+			LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_raw_object)
+			LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 
 #undef LUABIND_PROXY_ASSIGNMENT_OPERATOR
 
-		void proxy_object::pushvalue() const
+			void proxy_object::pushvalue() const
 		{
 			assert((m_key.is_valid()) && "you cannot call pushvalue() on an uninitialized object");
 
@@ -98,14 +98,14 @@ LUABIND_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 			return *this; \
 		}
 
-LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(object)
-LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_object)
-LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_raw_object)
-LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
+		LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(object)
+			LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_object)
+			LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_raw_object)
+			LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 
 #undef LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR
 
-		void proxy_array_object::pushvalue() const
+			void proxy_array_object::pushvalue() const
 		{
 			// you are trying to dereference an invalid object
 			assert((m_key != -1) && "you cannot call pushvalue() on an uninitialized object");
@@ -144,14 +144,14 @@ LUABIND_ARRAY_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 			return *this; \
 		}
 
-LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(object)
-LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_object)
-LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_raw_object)
-LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
+		LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(object)
+			LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_object)
+			LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_raw_object)
+			LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 
 #undef LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR
 
-		void proxy_raw_object::pushvalue() const
+			void proxy_raw_object::pushvalue() const
 		{
 			assert((m_key.is_valid()) && "you cannot call pushvalue() on an uninitiallized object");
 
@@ -219,8 +219,8 @@ LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 #undef LUABIND_EQUALITY_OPERATOR
 
 
-	// *****************************
-	// OPERATOR =
+		// *****************************
+		// OPERATOR =
 
 #define LUABIND_ASSIGNMENT_OPERATOR(rhs)\
 	object& object::operator=(const rhs& o) const \
@@ -231,13 +231,13 @@ LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 		return const_cast<luabind::object&>(*this); \
 	}
 
-	LUABIND_ASSIGNMENT_OPERATOR(object)
-	LUABIND_ASSIGNMENT_OPERATOR(proxy_object)
-	LUABIND_ASSIGNMENT_OPERATOR(proxy_array_object)
-	LUABIND_ASSIGNMENT_OPERATOR(proxy_raw_object)
+		LUABIND_ASSIGNMENT_OPERATOR(object)
+		LUABIND_ASSIGNMENT_OPERATOR(proxy_object)
+		LUABIND_ASSIGNMENT_OPERATOR(proxy_array_object)
+		LUABIND_ASSIGNMENT_OPERATOR(proxy_raw_object)
 
 
-	
+
 		// *****************************
 		// OPERATOR ==
 
@@ -257,7 +257,7 @@ LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 		return result; \
 	}
 
-	LUABIND_DECLARE_OPERATOR(LUABIND_LESSTHAN_OPERATOR)
+		LUABIND_DECLARE_OPERATOR(LUABIND_LESSTHAN_OPERATOR)
 
 #undef LUABIND_LESSTHAN_OPERATOR
 
@@ -276,7 +276,7 @@ LUABIND_RAW_PROXY_ASSIGNMENT_OPERATOR(proxy_array_object)
 		return result1 || result2; \
 	}
 
-	LUABIND_DECLARE_OPERATOR(LUABIND_LESSOREQUAL_OPERATOR)
+		LUABIND_DECLARE_OPERATOR(LUABIND_LESSOREQUAL_OPERATOR)
 
 #undef LUABIND_LESSOREQUAL_OPERATOR
 

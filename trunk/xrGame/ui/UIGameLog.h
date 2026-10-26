@@ -25,19 +25,19 @@ class CUIStatic;
 
 //////////////////////////////////////////////////////////////////////////
 
-class CUIGameLog: public CUIScrollView
+class CUIGameLog : public CUIScrollView
 {
 public:
 	CUIGameLog();
 	virtual ~CUIGameLog();
-	CUIStatic*				AddLogMessage	(LPCSTR msg);
-	CUIPdaKillMessage*		AddLogMessage	(KillMessageStruct& msg);
-	CUIPdaMsgListItem*		AddPdaMessage	(LPCSTR msg, float delay);
-	void					AddChatMessage	(LPCSTR msg, LPCSTR author);
-	virtual void			Update			();
+	CUIStatic* AddLogMessage(LPCSTR msg);
+	CUIPdaKillMessage* AddLogMessage(KillMessageStruct& msg);
+	CUIPdaMsgListItem* AddPdaMessage(LPCSTR msg, float delay);
+	void					AddChatMessage(LPCSTR msg, LPCSTR author);
+	virtual void			Update();
 
-	void					SetTextAtrib	(CGameFont* pFont, u32 color);
-	u32						GetTextColor	();
+	void					SetTextAtrib(CGameFont* pFont, u32 color);
+	u32						GetTextColor();
 
 private:
 

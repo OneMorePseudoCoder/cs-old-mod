@@ -8,6 +8,6 @@ class CStateManagerDog : public CMonsterStateManager<CAI_Dog> {
 
 public:
 
-					CStateManagerDog	(CAI_Dog *monster); 
-	virtual void	execute				();
+	CStateManagerDog(CAI_Dog* monster);
+	virtual void	execute();
 };

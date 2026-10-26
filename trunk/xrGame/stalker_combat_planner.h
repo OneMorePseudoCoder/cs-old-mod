@@ -27,20 +27,20 @@ private:
 	bool				m_last_wounded;
 
 protected:
-			void		add_evaluators				();
-			void		add_actions					();
+	void		add_evaluators();
+	void		add_actions();
 
 public:
-			void xr_stdcall	on_best_cover_changed	(const CCoverPoint *new_cover, const CCoverPoint *old_cover);
+	void xr_stdcall	on_best_cover_changed(const CCoverPoint* new_cover, const CCoverPoint* old_cover);
 
 public:
-						CStalkerCombatPlanner		(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual				~CStalkerCombatPlanner		();
-	virtual	void		setup						(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void		update						();
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
-	virtual	void		save						(NET_Packet &packet);
-	virtual	void		load						(IReader &packet);
+	CStalkerCombatPlanner(CAI_Stalker* object = 0, LPCSTR action_name = "");
+	virtual				~CStalkerCombatPlanner();
+	virtual	void		setup(CAI_Stalker* object, CPropertyStorage* storage);
+	virtual void		update();
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
+	virtual	void		save(NET_Packet& packet);
+	virtual	void		load(IReader& packet);
 };

@@ -13,14 +13,14 @@
 #define NV_LIBRARY_NAME(name)	"lib" #name ".so"
 #endif
 
-NVCORE_API void * nvLoadLibrary(const char * name);
-NVCORE_API void nvUnloadLibrary(void * lib);
-NVCORE_API void * nvBindSymbol(void * lib, const char * symbol);
+NVCORE_API void* nvLoadLibrary(const char* name);
+NVCORE_API void nvUnloadLibrary(void* lib);
+NVCORE_API void* nvBindSymbol(void* lib, const char* symbol);
 
 class NVCORE_CLASS Library
 {
 public:
-	Library(const char * name)
+	Library(const char* name)
 	{
 		handle = nvLoadLibrary(name);
 	}
@@ -31,19 +31,19 @@ public:
 			nvUnloadLibrary(handle);
 		}
 	}
-	
+
 	bool isValid() const
 	{
 		return handle != NULL;
 	}
-	
-	void * bindSymbol(const char * symbol)
+
+	void* bindSymbol(const char* symbol)
 	{
 		return nvBindSymbol(handle, symbol);
 	}
-	
+
 private:
-	void * handle;
+	void* handle;
 };
 
 

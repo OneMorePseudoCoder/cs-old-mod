@@ -55,7 +55,7 @@ namespace
 	static const uint FOURCC_ATI2 = MAKEFOURCC('A', 'T', 'I', '2');
 
 	static const uint FOURCC_A2XY = MAKEFOURCC('A', '2', 'X', 'Y');
-	
+
 	static const uint FOURCC_DX10 = MAKEFOURCC('D', 'X', '1', '0');
 
 	// 32 bit RGB formats.
@@ -135,71 +135,71 @@ namespace
 	enum DXGI_FORMAT
 	{
 		DXGI_FORMAT_UNKNOWN = 0,
-		
+
 		DXGI_FORMAT_R32G32B32A32_TYPELESS = 1,
 		DXGI_FORMAT_R32G32B32A32_FLOAT = 2,
 		DXGI_FORMAT_R32G32B32A32_UINT = 3,
 		DXGI_FORMAT_R32G32B32A32_SINT = 4,
-		
+
 		DXGI_FORMAT_R32G32B32_TYPELESS = 5,
 		DXGI_FORMAT_R32G32B32_FLOAT = 6,
 		DXGI_FORMAT_R32G32B32_UINT = 7,
 		DXGI_FORMAT_R32G32B32_SINT = 8,
-		
+
 		DXGI_FORMAT_R16G16B16A16_TYPELESS = 9,
 		DXGI_FORMAT_R16G16B16A16_FLOAT = 10,
 		DXGI_FORMAT_R16G16B16A16_UNORM = 11,
 		DXGI_FORMAT_R16G16B16A16_UINT = 12,
 		DXGI_FORMAT_R16G16B16A16_SNORM = 13,
 		DXGI_FORMAT_R16G16B16A16_SINT = 14,
-		
+
 		DXGI_FORMAT_R32G32_TYPELESS = 15,
 		DXGI_FORMAT_R32G32_FLOAT = 16,
 		DXGI_FORMAT_R32G32_UINT = 17,
 		DXGI_FORMAT_R32G32_SINT = 18,
-		
+
 		DXGI_FORMAT_R32G8X24_TYPELESS = 19,
 		DXGI_FORMAT_D32_FLOAT_S8X24_UINT = 20,
 		DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS = 21,
 		DXGI_FORMAT_X32_TYPELESS_G8X24_UINT = 22,
-		
+
 		DXGI_FORMAT_R10G10B10A2_TYPELESS = 23,
 		DXGI_FORMAT_R10G10B10A2_UNORM = 24,
 		DXGI_FORMAT_R10G10B10A2_UINT = 25,
-		
+
 		DXGI_FORMAT_R11G11B10_FLOAT = 26,
-		
+
 		DXGI_FORMAT_R8G8B8A8_TYPELESS = 27,
 		DXGI_FORMAT_R8G8B8A8_UNORM = 28,
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 29,
 		DXGI_FORMAT_R8G8B8A8_UINT = 30,
 		DXGI_FORMAT_R8G8B8A8_SNORM = 31,
 		DXGI_FORMAT_R8G8B8A8_SINT = 32,
-		
+
 		DXGI_FORMAT_R16G16_TYPELESS = 33,
 		DXGI_FORMAT_R16G16_FLOAT = 34,
 		DXGI_FORMAT_R16G16_UNORM = 35,
 		DXGI_FORMAT_R16G16_UINT = 36,
 		DXGI_FORMAT_R16G16_SNORM = 37,
 		DXGI_FORMAT_R16G16_SINT = 38,
-		
+
 		DXGI_FORMAT_R32_TYPELESS = 39,
 		DXGI_FORMAT_D32_FLOAT = 40,
 		DXGI_FORMAT_R32_FLOAT = 41,
 		DXGI_FORMAT_R32_UINT = 42,
 		DXGI_FORMAT_R32_SINT = 43,
-		
+
 		DXGI_FORMAT_R24G8_TYPELESS = 44,
 		DXGI_FORMAT_D24_UNORM_S8_UINT = 45,
 		DXGI_FORMAT_R24_UNORM_X8_TYPELESS = 46,
 		DXGI_FORMAT_X24_TYPELESS_G8_UINT = 47,
-		
+
 		DXGI_FORMAT_R8G8_TYPELESS = 48,
 		DXGI_FORMAT_R8G8_UNORM = 49,
 		DXGI_FORMAT_R8G8_UINT = 50,
 		DXGI_FORMAT_R8G8_SNORM = 51,
 		DXGI_FORMAT_R8G8_SINT = 52,
-		
+
 		DXGI_FORMAT_R16_TYPELESS = 53,
 		DXGI_FORMAT_R16_FLOAT = 54,
 		DXGI_FORMAT_D16_UNORM = 55,
@@ -207,41 +207,41 @@ namespace
 		DXGI_FORMAT_R16_UINT = 57,
 		DXGI_FORMAT_R16_SNORM = 58,
 		DXGI_FORMAT_R16_SINT = 59,
-		
+
 		DXGI_FORMAT_R8_TYPELESS = 60,
 		DXGI_FORMAT_R8_UNORM = 61,
 		DXGI_FORMAT_R8_UINT = 62,
 		DXGI_FORMAT_R8_SNORM = 63,
 		DXGI_FORMAT_R8_SINT = 64,
 		DXGI_FORMAT_A8_UNORM = 65,
-		
+
 		DXGI_FORMAT_R1_UNORM = 66,
-		
+
 		DXGI_FORMAT_R9G9B9E5_SHAREDEXP = 67,
-		
+
 		DXGI_FORMAT_R8G8_B8G8_UNORM = 68,
 		DXGI_FORMAT_G8R8_G8B8_UNORM = 69,
-		
+
 		DXGI_FORMAT_BC1_TYPELESS = 70,
 		DXGI_FORMAT_BC1_UNORM = 71,
 		DXGI_FORMAT_BC1_UNORM_SRGB = 72,
-		
+
 		DXGI_FORMAT_BC2_TYPELESS = 73,
 		DXGI_FORMAT_BC2_UNORM = 74,
 		DXGI_FORMAT_BC2_UNORM_SRGB = 75,
-		
+
 		DXGI_FORMAT_BC3_TYPELESS = 76,
 		DXGI_FORMAT_BC3_UNORM = 77,
 		DXGI_FORMAT_BC3_UNORM_SRGB = 78,
-		
+
 		DXGI_FORMAT_BC4_TYPELESS = 79,
 		DXGI_FORMAT_BC4_UNORM = 80,
 		DXGI_FORMAT_BC4_SNORM = 81,
-		
+
 		DXGI_FORMAT_BC5_TYPELESS = 82,
 		DXGI_FORMAT_BC5_UNORM = 83,
 		DXGI_FORMAT_BC5_SNORM = 84,
-		
+
 		DXGI_FORMAT_B5G6R5_UNORM = 85,
 		DXGI_FORMAT_B5G5R5A1_UNORM = 86,
 		DXGI_FORMAT_B8G8R8A8_UNORM = 87,
@@ -258,77 +258,77 @@ namespace
 	};
 
 
-	const char * getDxgiFormatString(DXGI_FORMAT dxgiFormat)
+	const char* getDxgiFormatString(DXGI_FORMAT dxgiFormat)
 	{
 #define CASE(format) case DXGI_FORMAT_##format: return #format
-		switch(dxgiFormat)
+		switch (dxgiFormat)
 		{
 			CASE(UNKNOWN);
-			
+
 			CASE(R32G32B32A32_TYPELESS);
 			CASE(R32G32B32A32_FLOAT);
 			CASE(R32G32B32A32_UINT);
 			CASE(R32G32B32A32_SINT);
-			
+
 			CASE(R32G32B32_TYPELESS);
 			CASE(R32G32B32_FLOAT);
 			CASE(R32G32B32_UINT);
 			CASE(R32G32B32_SINT);
-			
+
 			CASE(R16G16B16A16_TYPELESS);
 			CASE(R16G16B16A16_FLOAT);
 			CASE(R16G16B16A16_UNORM);
 			CASE(R16G16B16A16_UINT);
 			CASE(R16G16B16A16_SNORM);
 			CASE(R16G16B16A16_SINT);
-			
+
 			CASE(R32G32_TYPELESS);
 			CASE(R32G32_FLOAT);
 			CASE(R32G32_UINT);
 			CASE(R32G32_SINT);
-			
+
 			CASE(R32G8X24_TYPELESS);
 			CASE(D32_FLOAT_S8X24_UINT);
 			CASE(R32_FLOAT_X8X24_TYPELESS);
 			CASE(X32_TYPELESS_G8X24_UINT);
-			
+
 			CASE(R10G10B10A2_TYPELESS);
 			CASE(R10G10B10A2_UNORM);
 			CASE(R10G10B10A2_UINT);
-			
+
 			CASE(R11G11B10_FLOAT);
-			
+
 			CASE(R8G8B8A8_TYPELESS);
 			CASE(R8G8B8A8_UNORM);
 			CASE(R8G8B8A8_UNORM_SRGB);
 			CASE(R8G8B8A8_UINT);
 			CASE(R8G8B8A8_SNORM);
 			CASE(R8G8B8A8_SINT);
-			
+
 			CASE(R16G16_TYPELESS);
 			CASE(R16G16_FLOAT);
 			CASE(R16G16_UNORM);
 			CASE(R16G16_UINT);
 			CASE(R16G16_SNORM);
 			CASE(R16G16_SINT);
-			
+
 			CASE(R32_TYPELESS);
 			CASE(D32_FLOAT);
 			CASE(R32_FLOAT);
 			CASE(R32_UINT);
 			CASE(R32_SINT);
-			
+
 			CASE(R24G8_TYPELESS);
 			CASE(D24_UNORM_S8_UINT);
 			CASE(R24_UNORM_X8_TYPELESS);
 			CASE(X24_TYPELESS_G8_UINT);
-			
+
 			CASE(R8G8_TYPELESS);
 			CASE(R8G8_UNORM);
 			CASE(R8G8_UINT);
 			CASE(R8G8_SNORM);
 			CASE(R8G8_SINT);
-			
+
 			CASE(R16_TYPELESS);
 			CASE(R16_FLOAT);
 			CASE(D16_UNORM);
@@ -336,7 +336,7 @@ namespace
 			CASE(R16_UINT);
 			CASE(R16_SNORM);
 			CASE(R16_SINT);
-			
+
 			CASE(R8_TYPELESS);
 			CASE(R8_UNORM);
 			CASE(R8_UINT);
@@ -345,28 +345,28 @@ namespace
 			CASE(A8_UNORM);
 
 			CASE(R1_UNORM);
-		
+
 			CASE(R9G9B9E5_SHAREDEXP);
-			
+
 			CASE(R8G8_B8G8_UNORM);
 			CASE(G8R8_G8B8_UNORM);
 
 			CASE(BC1_TYPELESS);
 			CASE(BC1_UNORM);
 			CASE(BC1_UNORM_SRGB);
-		
+
 			CASE(BC2_TYPELESS);
 			CASE(BC2_UNORM);
 			CASE(BC2_UNORM_SRGB);
-		
+
 			CASE(BC3_TYPELESS);
 			CASE(BC3_UNORM);
 			CASE(BC3_UNORM_SRGB);
-		
+
 			CASE(BC4_TYPELESS);
 			CASE(BC4_UNORM);
 			CASE(BC4_SNORM);
-		
+
 			CASE(BC5_TYPELESS);
 			CASE(BC5_UNORM);
 			CASE(BC5_SNORM);
@@ -376,22 +376,22 @@ namespace
 			CASE(B8G8R8A8_UNORM);
 			CASE(B8G8R8X8_UNORM);
 
-			default: 
-				return "UNKNOWN";
+		default:
+			return "UNKNOWN";
 		}
 #undef CASE
 	}
-	
-	const char * getD3d10ResourceDimensionString(D3D10_RESOURCE_DIMENSION resourceDimension)
+
+	const char* getD3d10ResourceDimensionString(D3D10_RESOURCE_DIMENSION resourceDimension)
 	{
-		switch(resourceDimension)
+		switch (resourceDimension)
 		{
-			default:
-			case D3D10_RESOURCE_DIMENSION_UNKNOWN: return "UNKNOWN";
-			case D3D10_RESOURCE_DIMENSION_BUFFER: return "BUFFER";
-			case D3D10_RESOURCE_DIMENSION_TEXTURE1D: return "TEXTURE1D";
-			case D3D10_RESOURCE_DIMENSION_TEXTURE2D: return "TEXTURE2D";
-			case D3D10_RESOURCE_DIMENSION_TEXTURE3D: return "TEXTURE3D";
+		default:
+		case D3D10_RESOURCE_DIMENSION_UNKNOWN: return "UNKNOWN";
+		case D3D10_RESOURCE_DIMENSION_BUFFER: return "BUFFER";
+		case D3D10_RESOURCE_DIMENSION_TEXTURE1D: return "TEXTURE1D";
+		case D3D10_RESOURCE_DIMENSION_TEXTURE2D: return "TEXTURE2D";
+		case D3D10_RESOURCE_DIMENSION_TEXTURE3D: return "TEXTURE3D";
 		}
 	}
 
@@ -399,7 +399,7 @@ namespace
 
 namespace nv
 {
-	static Stream & operator<< (Stream & s, DDSPixelFormat & pf)
+	static Stream& operator<< (Stream& s, DDSPixelFormat& pf)
 	{
 		nvStaticCheck(sizeof(DDSPixelFormat) == 32);
 		s << pf.size;
@@ -413,7 +413,7 @@ namespace nv
 		return s;
 	}
 
-	static Stream & operator<< (Stream & s, DDSCaps & caps)
+	static Stream& operator<< (Stream& s, DDSCaps& caps)
 	{
 		nvStaticCheck(sizeof(DDSCaps) == 16);
 		s << caps.caps1;
@@ -423,7 +423,7 @@ namespace nv
 		return s;
 	}
 
-	static Stream & operator<< (Stream & s, DDSHeader10 & header)
+	static Stream& operator<< (Stream& s, DDSHeader10& header)
 	{
 		nvStaticCheck(sizeof(DDSHeader10) == 20);
 		s << header.dxgiFormat;
@@ -434,7 +434,7 @@ namespace nv
 		return s;
 	}
 
-	Stream & operator<< (Stream & s, DDSHeader & header)
+	Stream& operator<< (Stream& s, DDSHeader& header)
 	{
 		nvStaticCheck(sizeof(DDSHeader) == 148);
 		s << header.fourcc;
@@ -449,12 +449,12 @@ namespace nv
 		s << header.pf;
 		s << header.caps;
 		s << header.notused;
-		
+
 		if (header.hasDX10Header())
 		{
 			s << header.header10;
 		}
-		
+
 		return s;
 	}
 
@@ -492,12 +492,12 @@ namespace
 		{ D3DFMT_G16R16,		32, 0xFFFF,     0xFFFF0000, 0,          0 },           // DXGI_FORMAT_R16G16_UNORM
 		{ D3DFMT_A2R10G10B10,	32, 0x3FF00000, 0xFFC00,    0x3FF,      0xC0000000 },
 
-		{ D3DFMT_L8,			8,  8,          0,          0,          0 },           // DXGI_FORMAT_R8_UNORM 
+		{ D3DFMT_L8,			8,  8,          0,          0,          0 },           // DXGI_FORMAT_R8_UNORM
 		{ D3DFMT_L16,			16, 16,         0,          0,          0 },           // DXGI_FORMAT_R16_UNORM
 	};
 
 	static const uint s_d3dFormatCount = sizeof(s_d3dFormats) / sizeof(s_d3dFormats[0]);
-	
+
 	static uint findD3D9Format(uint bitcount, uint rmask, uint gmask, uint bmask, uint amask)
 	{
 		for (int i = 0; i < s_d3dFormatCount; i++)
@@ -522,7 +522,7 @@ DDSHeader::DDSHeader()
 {
 	this->fourcc = FOURCC_DDS;
 	this->size = 124;
-	this->flags  = (DDSD_CAPS|DDSD_PIXELFORMAT);
+	this->flags = (DDSD_CAPS | DDSD_PIXELFORMAT);
 	this->height = 0;
 	this->width = 0;
 	this->pitch = 0;
@@ -547,7 +547,7 @@ DDSHeader::DDSHeader()
 	this->caps.caps3 = 0;
 	this->caps.caps4 = 0;
 	this->notused = 0;
-	
+
 	this->header10.dxgiFormat = DXGI_FORMAT_UNKNOWN;
 	this->header10.resourceDimension = D3D10_RESOURCE_DIMENSION_UNKNOWN;
 	this->header10.miscFlag = 0;
@@ -579,7 +579,7 @@ void DDSHeader::setMipmapCount(uint count)
 	{
 		this->flags &= ~DDSD_MIPMAPCOUNT;
 		this->mipmapcount = 0;
-		
+
 		if (this->caps.caps2 == 0) {
 			this->caps.caps1 = DDSCAPS_TEXTURE;
 		}
@@ -604,7 +604,7 @@ void DDSHeader::setTexture2D()
 void DDSHeader::setTexture3D()
 {
 	this->caps.caps2 = DDSCAPS2_VOLUME;
-	
+
 	this->header10.resourceDimension = D3D10_RESOURCE_DIMENSION_TEXTURE3D;
 }
 
@@ -612,7 +612,7 @@ void DDSHeader::setTextureCube()
 {
 	this->caps.caps1 |= DDSCAPS_COMPLEX;
 	this->caps.caps2 = DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_ALL_FACES;
-	
+
 	this->header10.resourceDimension = D3D10_RESOURCE_DIMENSION_TEXTURE2D;
 	this->header10.arraySize = 6;
 }
@@ -636,7 +636,7 @@ void DDSHeader::setFourCC(uint8 c0, uint8 c1, uint8 c2, uint8 c3)
 	// set fourcc pixel format.
 	this->pf.flags = DDPF_FOURCC;
 	this->pf.fourcc = MAKEFOURCC(c0, c1, c2, c3);
-	
+
 	if (this->pf.fourcc == FOURCC_ATI2)
 	{
 		this->pf.bitcount = FOURCC_A2XY;
@@ -645,7 +645,7 @@ void DDSHeader::setFourCC(uint8 c0, uint8 c1, uint8 c2, uint8 c3)
 	{
 		this->pf.bitcount = 0;
 	}
-	
+
 	this->pf.rmask = 0;
 	this->pf.gmask = 0;
 	this->pf.bmask = 0;
@@ -672,7 +672,7 @@ void DDSHeader::setPixelFormat(uint bitcount, uint rmask, uint gmask, uint bmask
 	{
 		// Compute bit count from the masks.
 		uint total = rmask | gmask | bmask | amask;
-		while(total != 0) {
+		while (total != 0) {
 			bitcount++;
 			total >>= 1;
 		}
@@ -717,8 +717,8 @@ void DDSHeader::swapBytes()
 	this->pitch = POSH_LittleU32(this->pitch);
 	this->depth = POSH_LittleU32(this->depth);
 	this->mipmapcount = POSH_LittleU32(this->mipmapcount);
-	
-	for(int i = 0; i < 11; i++) {
+
+	for (int i = 0; i < 11; i++) {
 		this->reserved[i] = POSH_LittleU32(this->reserved[i]);
 	}
 
@@ -751,7 +751,7 @@ bool DDSHeader::hasDX10Header() const
 
 
 
-DirectDrawSurface::DirectDrawSurface(const char * name) : stream(new StdInputStream(name))
+DirectDrawSurface::DirectDrawSurface(const char* name) : stream(new StdInputStream(name))
 {
 	if (!stream->isError())
 	{
@@ -770,32 +770,32 @@ bool DirectDrawSurface::isValid() const
 	{
 		return false;
 	}
-	
+
 	if (header.fourcc != FOURCC_DDS || header.size != 124)
 	{
 		return false;
 	}
-	
-	const uint required = (DDSD_WIDTH|DDSD_HEIGHT/*|DDSD_CAPS|DDSD_PIXELFORMAT*/);
-	if( (header.flags & required) != required ) {
+
+	const uint required = (DDSD_WIDTH | DDSD_HEIGHT/*|DDSD_CAPS|DDSD_PIXELFORMAT*/);
+	if ((header.flags & required) != required) {
 		return false;
 	}
-	
+
 	if (header.pf.size != 32) {
 		return false;
 	}
-	
-	if( !(header.caps.caps1 & DDSCAPS_TEXTURE) ) {
+
+	if (!(header.caps.caps1 & DDSCAPS_TEXTURE)) {
 		return false;
 	}
-	
+
 	return true;
 }
 
 bool DirectDrawSurface::isSupported() const
 {
 	nvDebugCheck(isValid());
-	
+
 	if (header.hasDX10Header())
 	{
 	}
@@ -824,20 +824,20 @@ bool DirectDrawSurface::isSupported() const
 		{
 			return false;
 		}
-		
+
 		if (isTextureCube() && (header.caps.caps2 & DDSCAPS2_CUBEMAP_ALL_FACES) != DDSCAPS2_CUBEMAP_ALL_FACES)
 		{
 			// Cubemaps must contain all faces.
 			return false;
 		}
-		
+
 		if (isTexture3D())
 		{
 			// @@ 3D textures not supported yet.
 			return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -919,25 +919,25 @@ void DirectDrawSurface::setNormalFlag(bool b)
 	header.setNormalFlag(b);
 }
 
-void DirectDrawSurface::mipmap(Image * img, uint face, uint mipmap)
+void DirectDrawSurface::mipmap(Image* img, uint face, uint mipmap)
 {
 	nvDebugCheck(isValid());
-	
+
 	stream->seek(offset(face, mipmap));
-	
+
 	uint w = width();
 	uint h = height();
-	
+
 	// Compute width and height.
 	for (uint m = 0; m < mipmap; m++)
 	{
 		w = max(1U, w / 2);
 		h = max(1U, h / 2);
 	}
-	
+
 	img->allocate(w, h);
-	
-	if (header.pf.flags & DDPF_RGB) 
+
+	if (header.pf.flags & DDPF_RGB)
 	{
 		readLinearImage(img);
 	}
@@ -947,23 +947,23 @@ void DirectDrawSurface::mipmap(Image * img, uint face, uint mipmap)
 	}
 }
 
-void DirectDrawSurface::readLinearImage(Image * img)
+void DirectDrawSurface::readLinearImage(Image* img)
 {
 	nvDebugCheck(stream != NULL);
 	nvDebugCheck(img != NULL);
-	
+
 	const uint w = img->width();
 	const uint h = img->height();
 
 	uint rshift, rsize;
 	PixelFormat::maskShiftAndSize(header.pf.rmask, &rshift, &rsize);
-	
+
 	uint gshift, gsize;
 	PixelFormat::maskShiftAndSize(header.pf.gmask, &gshift, &gsize);
-	
+
 	uint bshift, bsize;
 	PixelFormat::maskShiftAndSize(header.pf.bmask, &bshift, &bsize);
-	
+
 	uint ashift, asize;
 	PixelFormat::maskShiftAndSize(header.pf.amask, &ashift, &asize);
 
@@ -972,7 +972,7 @@ void DirectDrawSurface::readLinearImage(Image * img)
 	// set image format: RGB or ARGB
 	// alpha channel exists if and only if the alpha mask is non-zero
 	if (header.pf.amask == 0)
- 	{
+	{
 		img->setFormat(Image::Format_RGB);
 	}
 	else
@@ -999,7 +999,7 @@ void DirectDrawSurface::readLinearImage(Image * img)
 	}
 }
 
-void DirectDrawSurface::readBlockImage(Image * img)
+void DirectDrawSurface::readBlockImage(Image* img)
 {
 	nvDebugCheck(stream != NULL);
 	nvDebugCheck(img != NULL);
@@ -1019,25 +1019,25 @@ void DirectDrawSurface::readBlockImage(Image * img)
 
 	const uint w = img->width();
 	const uint h = img->height();
-	
+
 	const uint bw = (w + 3) / 4;
 	const uint bh = (h + 3) / 4;
-	
+
 	for (uint by = 0; by < bh; by++)
 	{
 		for (uint bx = 0; bx < bw; bx++)
 		{
 			ColorBlock block;
-			
+
 			// Read color block.
 			readBlock(&block);
-			
+
 			// Write color block.
-			for (uint y = 0; y < min(4U, h-4*by); y++)
+			for (uint y = 0; y < min(4U, h - 4 * by); y++)
 			{
-				for (uint x = 0; x < min(4U, w-4*bx); x++)
+				for (uint x = 0; x < min(4U, w - 4 * bx); x++)
 				{
-					img->pixel(4*bx+x, 4*by+y) = block.color(x, y);
+					img->pixel(4 * bx + x, 4 * by + y) = block.color(x, y);
 				}
 			}
 		}
@@ -1049,18 +1049,18 @@ static Color32 buildNormal(uint8 x, uint8 y)
 	float nx = 2 * (x / 255.0f) - 1;
 	float ny = 2 * (y / 255.0f) - 1;
 	float nz = 0.0f;
-	if (1 - nx*nx - ny*ny > 0) nz = sqrtf(1 - nx*nx - ny*ny);
+	if (1 - nx * nx - ny * ny > 0) nz = sqrtf(1 - nx * nx - ny * ny);
 	uint8 z = clamp(int(255.0f * (nz + 1) / 2.0f), 0, 255);
-	
+
 	return Color32(x, y, z);
 }
 
 
-void DirectDrawSurface::readBlock(ColorBlock * rgba)
+void DirectDrawSurface::readBlock(ColorBlock* rgba)
 {
 	nvDebugCheck(stream != NULL);
 	nvDebugCheck(rgba != NULL);
-	
+
 	if (header.pf.fourcc == FOURCC_DXT1)
 	{
 		BlockDXT1 block;
@@ -1068,26 +1068,26 @@ void DirectDrawSurface::readBlock(ColorBlock * rgba)
 		block.decodeBlock(rgba);
 	}
 	else if (header.pf.fourcc == FOURCC_DXT2 ||
-	    header.pf.fourcc == FOURCC_DXT3)
+		header.pf.fourcc == FOURCC_DXT3)
 	{
 		BlockDXT3 block;
 		*stream << block;
 		block.decodeBlock(rgba);
 	}
 	else if (header.pf.fourcc == FOURCC_DXT4 ||
-	    header.pf.fourcc == FOURCC_DXT5 ||
-	    header.pf.fourcc == FOURCC_RXGB)
+		header.pf.fourcc == FOURCC_DXT5 ||
+		header.pf.fourcc == FOURCC_RXGB)
 	{
 		BlockDXT5 block;
 		*stream << block;
 		block.decodeBlock(rgba);
-		
+
 		if (header.pf.fourcc == FOURCC_RXGB)
 		{
 			// Swap R & A.
 			for (int i = 0; i < 16; i++)
 			{
-				Color32 & c = rgba->color(i);
+				Color32& c = rgba->color(i);
 				uint tmp = c.r;
 				c.r = c.a;
 				c.a = tmp;
@@ -1106,7 +1106,7 @@ void DirectDrawSurface::readBlock(ColorBlock * rgba)
 		*stream << block;
 		block.decodeBlock(rgba);
 	}
-	
+
 	// If normal flag set, convert to normal.
 	if (header.pf.flags & DDPF_NORMAL)
 	{
@@ -1114,7 +1114,7 @@ void DirectDrawSurface::readBlock(ColorBlock * rgba)
 		{
 			for (int i = 0; i < 16; i++)
 			{
-				Color32 & c = rgba->color(i);
+				Color32& c = rgba->color(i);
 				c = buildNormal(c.r, c.g);
 			}
 		}
@@ -1122,7 +1122,7 @@ void DirectDrawSurface::readBlock(ColorBlock * rgba)
 		{
 			for (int i = 0; i < 16; i++)
 			{
-				Color32 & c = rgba->color(i);
+				Color32& c = rgba->color(i);
 				c = buildNormal(c.a, c.g);
 			}
 		}
@@ -1132,18 +1132,18 @@ void DirectDrawSurface::readBlock(ColorBlock * rgba)
 
 uint DirectDrawSurface::blockSize() const
 {
-	switch(header.pf.fourcc)
+	switch (header.pf.fourcc)
 	{
-		case FOURCC_DXT1:
-		case FOURCC_ATI1:
-			return 8;
-		case FOURCC_DXT2:
-		case FOURCC_DXT3:
-		case FOURCC_DXT4:
-		case FOURCC_DXT5:
-		case FOURCC_RXGB:
-		case FOURCC_ATI2:
-			return 16;
+	case FOURCC_DXT1:
+	case FOURCC_ATI1:
+		return 8;
+	case FOURCC_DXT2:
+	case FOURCC_DXT3:
+	case FOURCC_DXT4:
+	case FOURCC_DXT5:
+	case FOURCC_RXGB:
+	case FOURCC_ATI2:
+		return 16;
 	};
 
 	// Not a block image.
@@ -1155,7 +1155,7 @@ uint DirectDrawSurface::mipmapSize(uint mipmap) const
 	uint w = width();
 	uint h = height();
 	uint d = depth();
-	
+
 	for (uint m = 0; m < mipmap; m++)
 	{
 		w = max(1U, w / 2);
@@ -1173,13 +1173,13 @@ uint DirectDrawSurface::mipmapSize(uint mipmap) const
 	else
 	{
 		nvDebugCheck(header.pf.flags & DDPF_RGB);
-		
+
 		// Align pixels to bytes.
 		uint byteCount = (header.pf.bitcount + 7) / 8;
-		
+
 		// Align pitch to 4 bytes.
 		uint pitch = 4 * ((w * byteCount + 3) / 4);
-		
+
 		return pitch * h * d;
 	}
 }
@@ -1188,19 +1188,19 @@ uint DirectDrawSurface::faceSize() const
 {
 	const uint count = mipmapCount();
 	uint size = 0;
-	
+
 	for (uint m = 0; m < count; m++)
 	{
 		size += mipmapSize(m);
 	}
-	
+
 	return size;
 }
 
 uint DirectDrawSurface::offset(const uint face, const uint mipmap)
 {
 	uint size = 128; // sizeof(DDSHeader);
-	
+
 	if (header.hasDX10Header())
 	{
 		size += 20; // sizeof(DDSHeader10);
@@ -1210,12 +1210,12 @@ uint DirectDrawSurface::offset(const uint face, const uint mipmap)
 	{
 		size += face * faceSize();
 	}
-	
+
 	for (uint m = 0; m < mipmap; m++)
 	{
 		size += mipmapSize(m);
 	}
-	
+
 	return size;
 }
 
@@ -1238,7 +1238,7 @@ void DirectDrawSurface::printInfo() const
 	if (header.flags & DDSD_PITCH) printf("Pitch: %d\n", header.pitch);
 	else if (header.flags & DDSD_LINEARSIZE) printf("Linear size: %d\n", header.pitch);
 	printf("Mipmap count: %d\n", header.mipmapcount);
-	
+
 	printf("Pixel Format:\n");
 	printf("\tFlags: 0x%.8X\n", header.pf.flags);
 	if (header.pf.flags & DDPF_RGB) printf("\t\tDDPF_RGB\n");
@@ -1251,7 +1251,7 @@ void DirectDrawSurface::printInfo() const
 	if (header.pf.flags & DDPF_PALETTEINDEXED8) printf("\t\tDDPF_PALETTEINDEXED8\n");
 	if (header.pf.flags & DDPF_ALPHAPREMULT) printf("\t\tDDPF_ALPHAPREMULT\n");
 	if (header.pf.flags & DDPF_NORMAL) printf("\t\tDDPF_NORMAL\n");
-	
+
 	printf("\tFourCC: '%c%c%c%c'\n",
 		((header.pf.fourcc >> 0) & 0xFF),
 		((header.pf.fourcc >> 8) & 0xFF),
@@ -1259,7 +1259,7 @@ void DirectDrawSurface::printInfo() const
 		((header.pf.fourcc >> 24) & 0xFF));
 	if ((header.pf.fourcc & DDPF_FOURCC) && (header.pf.bitcount != 0))
 	{
-		printf("\tSwizzle: '%c%c%c%c'\n", 
+		printf("\tSwizzle: '%c%c%c%c'\n",
 			(header.pf.bitcount >> 0) & 0xFF,
 			(header.pf.bitcount >> 8) & 0xFF,
 			(header.pf.bitcount >> 16) & 0xFF,
@@ -1307,13 +1307,13 @@ void DirectDrawSurface::printInfo() const
 		printf("\tMisc flag: %u\n", header.header10.miscFlag);
 		printf("\tArray size: %u\n", header.header10.arraySize);
 	}
-	
+
 	if (header.reserved[9] == MAKEFOURCC('N', 'V', 'T', 'T'))
 	{
 		int major = (header.reserved[10] >> 16) & 0xFF;
 		int minor = (header.reserved[10] >> 8) & 0xFF;
-		int revision= header.reserved[10] & 0xFF;
-		
+		int revision = header.reserved[10] & 0xFF;
+
 		printf("Version:\n");
 		printf("\tNVIDIA Texture Tools %d.%d.%d\n", major, minor, revision);
 	}

@@ -30,15 +30,15 @@
 
 
 
-/**
- * oc_ilog32 - Integer binary logarithm of a 32-bit value.
- * @_v: A 32-bit value.
- * Returns floor(log2(_v))+1, or 0 if _v==0.
- * This is the number of bits that would be required to represent _v in two's
- *  complement notation with all of the leading zeros stripped.
- * The OC_ILOG_32() or OC_ILOGNZ_32() macros may be able to use a builtin
- *  function instead, which should be faster.
- */
+   /**
+	* oc_ilog32 - Integer binary logarithm of a 32-bit value.
+	* @_v: A 32-bit value.
+	* Returns floor(log2(_v))+1, or 0 if _v==0.
+	* This is the number of bits that would be required to represent _v in two's
+	*  complement notation with all of the leading zeros stripped.
+	* The OC_ILOG_32() or OC_ILOGNZ_32() macros may be able to use a builtin
+	*  function instead, which should be faster.
+	*/
 int oc_ilog32(ogg_uint32_t _v);
 /**
  * oc_ilog64 - Integer binary logarithm of a 64-bit value.
@@ -62,13 +62,13 @@ int oc_ilog64(ogg_int64_t _v);
  * If _v is zero, the return value is undefined; use OC_ILOG_32() instead.
  */
 #  define OC_ILOGNZ_32(_v) (OC_CLZ32_OFFS-OC_CLZ32(_v))
-/**
- * OC_ILOG_32 - Integer binary logarithm of a 32-bit value.
- * @_v: A 32-bit value.
- * Returns floor(log2(_v))+1, or 0 if _v==0.
- * This is the number of bits that would be required to represent _v in two's
- *  complement notation with all of the leading zeros stripped.
- */
+ /**
+  * OC_ILOG_32 - Integer binary logarithm of a 32-bit value.
+  * @_v: A 32-bit value.
+  * Returns floor(log2(_v))+1, or 0 if _v==0.
+  * This is the number of bits that would be required to represent _v in two's
+  *  complement notation with all of the leading zeros stripped.
+  */
 #  define OC_ILOG_32(_v)   (OC_ILOGNZ_32(_v)&-!!(_v))
 # else
 #  define OC_ILOGNZ_32(_v) (oc_ilog32(_v))
@@ -85,13 +85,13 @@ int oc_ilog64(ogg_int64_t _v);
  * If _v is zero, the return value is undefined; use OC_ILOG_64() instead.
  */
 #  define OC_ILOGNZ_64(_v) (CLZ64_OFFS-CLZ64(_v))
-/**
- * OC_ILOG_64 - Integer binary logarithm of a 64-bit value.
- * @_v: A 64-bit value.
- * Returns floor(log2(_v))+1, or 0 if _v==0.
- * This is the number of bits that would be required to represent _v in two's
- *  complement notation with all of the leading zeros stripped.
- */
+ /**
+  * OC_ILOG_64 - Integer binary logarithm of a 64-bit value.
+  * @_v: A 64-bit value.
+  * Returns floor(log2(_v))+1, or 0 if _v==0.
+  * This is the number of bits that would be required to represent _v in two's
+  *  complement notation with all of the leading zeros stripped.
+  */
 #  define OC_ILOG_64(_v)   (OC_ILOGNZ_64(_v)&-!!(_v))
 # else
 #  define OC_ILOGNZ_64(_v) (oc_ilog64(_v))
@@ -121,16 +121,16 @@ int oc_ilog64(ogg_int64_t _v);
  *  search.
  */
 # define OC_STATIC_ILOG_32(_v) (OC_STATIC_ILOG5((ogg_uint32_t)(_v)))
-/**
- * OC_STATIC_ILOG_64 - The integer logarithm of an (unsigned, 64-bit) constant.
- * @_v: A non-negative 64-bit constant.
- * Returns floor(log2(_v))+1, or 0 if _v==0.
- * This is the number of bits that would be required to represent _v in two's
- *  complement notation with all of the leading zeros stripped.
- * This macro is suitable for evaluation at compile time, but it should not be
- *  used on values that can change at runtime, as it operates via exhaustive
- *  search.
- */
+ /**
+  * OC_STATIC_ILOG_64 - The integer logarithm of an (unsigned, 64-bit) constant.
+  * @_v: A non-negative 64-bit constant.
+  * Returns floor(log2(_v))+1, or 0 if _v==0.
+  * This is the number of bits that would be required to represent _v in two's
+  *  complement notation with all of the leading zeros stripped.
+  * This macro is suitable for evaluation at compile time, but it should not be
+  *  used on values that can change at runtime, as it operates via exhaustive
+  *  search.
+  */
 # define OC_STATIC_ILOG_64(_v) (OC_STATIC_ILOG6((ogg_int64_t)(_v)))
 
 #define OC_Q57(_v) ((ogg_int64_t)(_v)<<57)

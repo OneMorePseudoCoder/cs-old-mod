@@ -6,11 +6,11 @@ class CStateMonsterAttackCampStealOut : public CStateMove<_Object> {
 	typedef CStateMove<_Object> inherited;
 
 public:
-						CStateMonsterAttackCampStealOut	(_Object *obj);
+	CStateMonsterAttackCampStealOut(_Object* obj);
 
-	virtual	void		execute					();
-	virtual bool 		check_completion		();
-	virtual bool 		check_start_conditions	();
+	virtual	void		execute();
+	virtual bool 		check_completion();
+	virtual bool 		check_start_conditions();
 
 };
 

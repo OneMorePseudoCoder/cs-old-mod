@@ -26,28 +26,28 @@ public:
 	typedef MovementManager::EPathType						EPathType;
 
 private:
-	object_type					*m_object;
-	detail_path_type			*m_detail;
-	patrol_path_type			*m_patrol;
+	object_type* m_object;
+	detail_path_type* m_detail;
+	patrol_path_type* m_patrol;
 	EPathType					m_path_type;
 
 public:
-								CALifeMonsterMovementManager	(object_type *object);
-								~CALifeMonsterMovementManager	();
-	IC		object_type			&object						() const;
-	IC		detail_path_type	&detail						() const;
-	IC		patrol_path_type	&patrol						() const;
-	IC		const EPathType		&path_type					() const;
+	CALifeMonsterMovementManager(object_type* object);
+	~CALifeMonsterMovementManager();
+	IC		object_type& object() const;
+	IC		detail_path_type& detail() const;
+	IC		patrol_path_type& patrol() const;
+	IC		const EPathType& path_type() const;
 
 public:
-			void				update						();
-			void				on_switch_online			();
-			void				on_switch_offline			();
-	IC		void				path_type					(const EPathType &path_type);
+	void				update();
+	void				on_switch_online();
+	void				on_switch_offline();
+	IC		void				path_type(const EPathType& path_type);
 
 public:
-			bool				completed					() const;
-			bool				actual						() const;
+	bool				completed() const;
+	bool				actual() const;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

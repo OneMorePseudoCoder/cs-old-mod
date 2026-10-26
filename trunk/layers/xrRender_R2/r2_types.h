@@ -40,20 +40,20 @@
 
 #define		JITTER(a) r2_jitter #a
 
-const		float				SMAP_near_plane		= .1f	;
+const		float				SMAP_near_plane = .1f;
 
-const		u32					SMAP_adapt_min		= 32	;
-const		u32					SMAP_adapt_optimal	= 768	;
-const		u32					SMAP_adapt_max		= 1536	;
+const		u32					SMAP_adapt_min = 32;
+const		u32					SMAP_adapt_optimal = 768;
+const		u32					SMAP_adapt_max = 1536;
 
-const		u32					TEX_material_LdotN	= 128	;	// diffuse,		X, almost linear = small res
-const		u32					TEX_material_LdotH	= 256	;	// specular,	Y
-const		u32					TEX_jitter			= 64	;
-const		u32					TEX_jitter_count	= 4		;
+const		u32					TEX_material_LdotN = 128;	// diffuse,		X, almost linear = small res
+const		u32					TEX_material_LdotH = 256;	// specular,	Y
+const		u32					TEX_jitter = 64;
+const		u32					TEX_jitter_count = 4;
 
-const		u32					BLOOM_size_X		= 256	;
-const		u32					BLOOM_size_Y		= 256	;
-const		u32					LUMINANCE_size		= 16	;
+const		u32					BLOOM_size_X = 256;
+const		u32					BLOOM_size_Y = 256;
+const		u32					LUMINANCE_size = 16;
 
 // deffer
 #define		SE_R2_NORMAL_HQ		0	// high quality/detail
@@ -81,6 +81,6 @@ const		u32					LUMINANCE_size		= 16	;
 #define		SE_SUN_LUMINANCE	2
 
 extern		float	ps_r2_gloss_factor;
-IC	float	u_diffuse2s	(float x, float y, float z)	{ float	v = (x+y+z)/3.f;	return ps_r2_gloss_factor * ((v<1)?powf(v,2.f/3.f):v); }
-IC	float	u_diffuse2s	(Fvector3& c)				{ return u_diffuse2s(c.x,c.y,c.z);					}
+IC	float	u_diffuse2s(float x, float y, float z) { float	v = (x + y + z) / 3.f;	return ps_r2_gloss_factor * ((v < 1) ? powf(v, 2.f / 3.f) : v); }
+IC	float	u_diffuse2s(Fvector3& c) { return u_diffuse2s(c.x, c.y, c.z); }
 

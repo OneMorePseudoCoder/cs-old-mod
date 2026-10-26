@@ -5,19 +5,19 @@
 //. #define _ANONYMOUS_BUILD
 
 #ifndef __BORLANDC__
-	#ifndef _ANONYMOUS_BUILD
-		#	define DEBUG_INFO					__FILE__,__LINE__,__FUNCTION__
-	#else
-		#	define DEBUG_INFO					"",__LINE__,""
-	#endif
+#ifndef _ANONYMOUS_BUILD
+#	define DEBUG_INFO					__FILE__,__LINE__,__FUNCTION__
+#else
+#	define DEBUG_INFO					"",__LINE__,""
+#endif
 #else // __BORLANDC__
 #	define DEBUG_INFO					__FILE__,__LINE__,__FILE__
 #endif // __BORLANDC__
 
 #ifdef _ANONYMOUS_BUILD
-	#define _TRE(arg)	""
+#define _TRE(arg)	""
 #else
-	#define _TRE(arg)	arg
+#define _TRE(arg)	arg
 #endif
 
 
@@ -77,7 +77,7 @@
 
 //--------- static assertion
 template<bool>	struct CompileTimeError;
-template<>		struct CompileTimeError<true>	{};
+template<>		struct CompileTimeError<true> {};
 #define STATIC_CHECK(expr, msg) \
 { \
 	CompileTimeError<((expr) != 0)> ERROR_##msg; \

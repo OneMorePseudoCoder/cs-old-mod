@@ -10,12 +10,12 @@
 #define LUACOCO_VERSION_NUM	10106
 
 /* Exported C API to add a C stack to a coroutine. */
-LUA_API lua_State *lua_newcthread(lua_State *L, int cstacksize);
+LUA_API lua_State* lua_newcthread(lua_State* L, int cstacksize);
 
 /* Internal support routines. */
-LUAI_FUNC void luaCOCO_free(lua_State *L);
-LUAI_FUNC int luaCOCO_resume(lua_State *L, int nargs);
-LUAI_FUNC int luaCOCO_yield(lua_State *L);
+LUAI_FUNC void luaCOCO_free(lua_State* L);
+LUAI_FUNC int luaCOCO_resume(lua_State* L, int nargs);
+LUAI_FUNC int luaCOCO_yield(lua_State* L);
 LUAI_FUNC int luaCOCO_cstacksize(int cstacksize);
 
 /* Forward declaration. */
@@ -35,10 +35,10 @@ typedef struct coco_State coco_State;
 
 /* Fibers allocate their own stack. The whole Coco state is in front of L. */
 struct coco_State {
-  void *fib;			/* Own fiber (if any). */
-  void *back;			/* Fiber to switch back to. */
-  int nargs;			/* Number of arguments to pass. */
-  int dummy_align;
+	void* fib;			/* Own fiber (if any). */
+	void* back;			/* Fiber to switch back to. */
+	int nargs;			/* Number of arguments to pass. */
+	int dummy_align;
 };
 
 #define L2COCO(L)		(&((coco_State *)(L))[-1])

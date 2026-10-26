@@ -34,18 +34,18 @@ namespace nvtt
 	struct CompressionOptions::Private
 	{
 		Format format;
-		
+
 		Quality quality;
-		
+
 		nv::Vector4 colorWeight;
-		
+
 		// Pixel format description.
 		uint bitcount;
 		uint rmask;
 		uint gmask;
 		uint bmask;
 		uint amask;
-		
+
 		nv::String externalCompressor;
 
 		// Quantization.

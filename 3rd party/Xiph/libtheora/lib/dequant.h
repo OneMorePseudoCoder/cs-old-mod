@@ -11,7 +11,7 @@
  ********************************************************************
 
   function:
-    last mod: $Id: dequant.h 16503 2009-08-22 18:14:02Z giles $
+	last mod: $Id: dequant.h 16503 2009-08-22 18:14:02Z giles $
 
  ********************************************************************/
 
@@ -20,8 +20,8 @@
 # include "quant.h"
 # include "bitpack.h"
 
-int oc_quant_params_unpack(oc_pack_buf *_opb,
- th_quant_info *_qinfo);
-void oc_quant_params_clear(th_quant_info *_qinfo);
+int oc_quant_params_unpack(oc_pack_buf* _opb,
+	th_quant_info* _qinfo);
+void oc_quant_params_clear(th_quant_info* _qinfo);
 
 #endif

@@ -10,7 +10,7 @@
   interface which all simplification classes conform to.
 
   Copyright (C) 1998 Michael Garland.  See "COPYING.txt" for details.
-  
+
   $Id: MxStdSlim.h,v 1.4 1998/11/19 01:57:34 garland Exp $
 
  ************************************************************************/
@@ -35,31 +35,31 @@
 class MxStdSlim
 {
 protected:
-    MxStdModel *m;
-    MxHeap heap;
+	MxStdModel* m;
+	MxHeap heap;
 
 public:
-    unsigned int valid_verts;
-    unsigned int valid_faces;
-    bool is_initialized;
+	unsigned int valid_verts;
+	unsigned int valid_faces;
+	bool is_initialized;
 
-    int placement_policy;
-    int weighting_policy;
-    bool will_join_only;
+	int placement_policy;
+	int weighting_policy;
+	bool will_join_only;
 
-    double boundary_weight;
-    double compactness_ratio;
-    double meshing_penalty;
-    double local_validity_threshold;
-    unsigned int vertex_degree_limit;
+	double boundary_weight;
+	double compactness_ratio;
+	double meshing_penalty;
+	double local_validity_threshold;
+	unsigned int vertex_degree_limit;
 
 public:
-    MxStdSlim(MxStdModel *m0);
+	MxStdSlim(MxStdModel* m0);
 
-    virtual void initialize() = 0;
-    virtual bool decimate(unsigned int, float max_error, void* cb_params=0) = 0;
+	virtual void initialize() = 0;
+	virtual bool decimate(unsigned int, float max_error, void* cb_params = 0) = 0;
 
-    MxStdModel& model() { return *m; }
+	MxStdModel& model() { return *m; }
 public:
 	void (*contraction_callback)(const MxPairContraction&, float, void*);
 };

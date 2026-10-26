@@ -19,46 +19,46 @@ class CUIListBoxItem;
 
 class CUIComboBox : public CUIWindow, public CUIOptionsItem, public pureRender {
 	friend class CUIXmlInit;
-	typedef enum{
-		LIST_EXPANDED, 
-		LIST_FONDED    
+	typedef enum {
+		LIST_EXPANDED,
+		LIST_FONDED
 	} E_COMBO_STATE;
 
 public:
-						CUIComboBox				();
-	virtual				~CUIComboBox			();
+	CUIComboBox();
+	virtual				~CUIComboBox();
 	// CUIOptionsItem
-	virtual void		SetCurrentValue			();
-	virtual void		SaveValue				();
-	virtual bool		IsChanged				();
-	virtual void 		SaveBackUpValue			();
-	virtual void 		Undo					();
-	virtual void		OnRender				(); // only for list-box
+	virtual void		SetCurrentValue();
+	virtual void		SaveValue();
+	virtual bool		IsChanged();
+	virtual void 		SaveBackUpValue();
+	virtual void 		Undo();
+	virtual void		OnRender(); // only for list-box
 
-			LPCSTR		GetText					();
+	LPCSTR		GetText();
 
 	// methods
-	CUIListBox*			GetListWnd				();
-			void		SetListLength			(int length);
-			void		SetVertScroll			(bool bVScroll = true){m_list.SetFixedScrollBar(bVScroll);};
-//.	virtual void		AddItem					(LPCSTR str, bool bSelected);
-	CUIListBoxItem*		AddItem_				(LPCSTR str, int _data);
-	virtual void		Init					(float x, float y, float width);
-			void		SetItem					(int i);
+	CUIListBox* GetListWnd();
+	void		SetListLength(int length);
+	void		SetVertScroll(bool bVScroll = true) { m_list.SetFixedScrollBar(bVScroll); };
+	//.	virtual void		AddItem					(LPCSTR str, bool bSelected);
+	CUIListBoxItem* AddItem_(LPCSTR str, int _data);
+	virtual void		Init(float x, float y, float width);
+	void		SetItem(int i);
 
-	virtual void		Init					(float x, float y, float width, float height);	
-	virtual void		SendMessage				(CUIWindow *pWnd, s16 msg, void* pData = 0);
-	virtual void		OnFocusLost				();
-	virtual void		OnFocusReceive			();
-			int			CurrentID				()	{return m_itoken_id;}
+	virtual void		Init(float x, float y, float width, float height);
+	virtual void		SendMessage(CUIWindow* pWnd, s16 msg, void* pData = 0);
+	virtual void		OnFocusLost();
+	virtual void		OnFocusReceive();
+	int			CurrentID() { return m_itoken_id; }
 protected:
-	virtual void		SetState				(UIState state);	
-	virtual bool		OnMouseAction			(float x, float y, EUIMessages mouse_action);
-	virtual void		OnBtnClicked			();
-			void		ShowList				(bool bShow);
-			void		OnListItemSelect		();
+	virtual void		SetState(UIState state);
+	virtual bool		OnMouseAction(float x, float y, EUIMessages mouse_action);
+	virtual void		OnBtnClicked();
+	void		ShowList(bool bShow);
+	void		OnListItemSelect();
 	virtual void		Update();
-	virtual void		Draw					();
+	virtual void		Draw();
 
 protected:
 	bool				m_bInited;
@@ -74,10 +74,10 @@ protected:
 	u32					m_textColor[2];
 public:
 	CUIListBox			m_list;
-	void				SetTextColor			(u32 color)			{m_textColor[0] = color;}
-	void				SetTextColorD			(u32 color)			{m_textColor[1] = color;}
+	void				SetTextColor(u32 color) { m_textColor[0] = color; }
+	void				SetTextColorD(u32 color) { m_textColor[1] = color; }
 
-protected:	
+protected:
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 

@@ -11,9 +11,9 @@
 #include <stdio.h>
 
 #define _WIN32_ENVIRONMENT_
-//#define _DOS32_ENVIRONMENT_
-//#define _POSIX_ENVIRONMENT_
-//#define _UNKNOWN_ENVIRONMENT_
+ //#define _DOS32_ENVIRONMENT_
+ //#define _POSIX_ENVIRONMENT_
+ //#define _UNKNOWN_ENVIRONMENT_
 #if defined(_WIN32_ENVIRONMENT_)+defined(_DOS32_ENVIRONMENT_)+defined(_POSIX_ENVIRONMENT_)+defined(_UNKNOWN_ENVIRONMENT_) != 1
 #error Only one environment must be defined
 #endif /* defined(_WIN32_ENVIRONMENT_)+defined(_DOS32_ENVIRONMENT_)+defined(_POSIX_ENVIRONMENT_)+defined(_UNKNOWN_ENVIRONMENT_) != 1 */
@@ -30,8 +30,8 @@ typedef unsigned long  DWORD;
 typedef unsigned int   UINT;
 #endif /* defined(_WIN32_ENVIRONMENT_)  */
 
-const DWORD PPMdSignature=0x84ACAF8F, Variant='I';
-const int MAX_O=16;                         /* maximum allowed model order  */
+const DWORD PPMdSignature = 0x84ACAF8F, Variant = 'I';
+const int MAX_O = 16;                         /* maximum allowed model order  */
 
 #define _USE_PREFETCHING                    /* for puzzling mainly          */
 
@@ -55,8 +55,8 @@ const int MAX_O=16;                         /* maximum allowed model order  */
 #	define VERIFY2(a,b)
 #	define VERIFY_is_defined_in_ppmdtype_h
 #endif // VERIFY
-	typedef unsigned char	u8;
-	typedef unsigned int	u32;
+typedef unsigned char	u8;
+typedef unsigned int	u32;
 #	include "compression_ppmd_stream.h"
 
 #ifdef VERIFY_is_defined_in_ppmdtype_h
@@ -75,17 +75,17 @@ typedef compression::ppmd::stream _PPMD_FILE;
 class PRIME_STREAM {
 public:
 enum { BUF_SIZE=64*1024 };
-    PRIME_STREAM(): Error(0), StrPos(0), Count(0), p(Buf) {}
-    int  get(     ) { return (--Count >= 0)?(*p++    ):( fill( )); }
-    int  put(int c) { return (--Count >= 0)?(*p++ = c):(flush(c)); }
-    int  getErr() const { return Error; }
-    int    tell() const { return StrPos+(p-Buf); }
-    BOOL  atEOS() const { return (Count < 0); }
+	PRIME_STREAM(): Error(0), StrPos(0), Count(0), p(Buf) {}
+	int  get(     ) { return (--Count >= 0)?(*p++    ):( fill( )); }
+	int  put(int c) { return (--Count >= 0)?(*p++ = c):(flush(c)); }
+	int  getErr() const { return Error; }
+	int    tell() const { return StrPos+(p-Buf); }
+	BOOL  atEOS() const { return (Count < 0); }
 protected:
-    int Error, StrPos, Count;
-    BYTE* p, Buf[BUF_SIZE];
-    virtual int  fill(     ) = 0;           // it must fill Buf[]
-    virtual int flush(int c) = 0;           // it must remove (p-Buf) bytes
+	int Error, StrPos, Count;
+	BYTE* p, Buf[BUF_SIZE];
+	virtual int  fill(     ) = 0;           // it must fill Buf[]
+	virtual int flush(int c) = 0;           // it must remove (p-Buf) bytes
 };
 typedef PRIME_STREAM _PPMD_FILE;
 #define _PPMD_E_GETC(pps)   (pps)->get()

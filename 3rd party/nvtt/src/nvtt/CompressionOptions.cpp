@@ -38,7 +38,7 @@ CompressionOptions::CompressionOptions() : m(*new CompressionOptions::Private())
 /// Destructor.
 CompressionOptions::~CompressionOptions()
 {
-	delete &m;
+	delete& m;
 }
 
 
@@ -83,10 +83,10 @@ void CompressionOptions::setQuality(Quality quality)
 /// perception more than a 7%. A better choice in my opinion is (3, 4, 2).
 void CompressionOptions::setColorWeights(float red, float green, float blue, float alpha/*=1.0f*/)
 {
-//	float total = red + green + blue;
-//	float x = red / total;
-//	float y = green / total;
-//	m.colorWeight.set(x, y, 1.0f - x - y);
+	//	float total = red + green + blue;
+	//	float x = red / total;
+	//	float y = green / total;
+	//	m.colorWeight.set(x, y, 1.0f - x - y);
 	m.colorWeight.set(red, green, blue, alpha);
 }
 
@@ -120,7 +120,7 @@ void CompressionOptions::setPixelFormat(uint bitcount, uint rmask, uint gmask, u
 }
 
 /// Use external compressor.
-void CompressionOptions::setExternalCompressor(const char * name)
+void CompressionOptions::setExternalCompressor(const char* name)
 {
 	m.externalCompressor = name;
 }

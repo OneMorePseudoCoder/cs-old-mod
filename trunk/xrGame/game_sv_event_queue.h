@@ -19,8 +19,8 @@ public:
 	GameEventQueue();
 	~GameEventQueue();
 
-	GameEvent*			Create	();
-	GameEvent*			Create	(NET_Packet& P, u16 type, u32 time, ClientID clientID);
-	GameEvent*			Retreive();
-	void				Release	();
+	GameEvent* Create();
+	GameEvent* Create(NET_Packet& P, u16 type, u32 time, ClientID clientID);
+	GameEvent* Retreive();
+	void				Release();
 };

@@ -10,44 +10,44 @@
 
 CUICursor::CUICursor() : m_static(NULL), m_b_use_win_cursor(false)
 {
-	bVisible							= false;
-	vPrevPos.set						(0.0f, 0.0f);
-	vPos.set							(0.f, 0.f);
-	InitInternal						();
-	Device.seqRender.Add				(this,-3/*2*/);
-	Device.seqResolutionChanged.Add		(this);
+	bVisible = false;
+	vPrevPos.set(0.0f, 0.0f);
+	vPos.set(0.f, 0.f);
+	InitInternal();
+	Device.seqRender.Add(this, -3/*2*/);
+	Device.seqResolutionChanged.Add(this);
 }
 //--------------------------------------------------------------------
 CUICursor::~CUICursor()
 {
-	xr_delete							(m_static);
-	Device.seqRender.Remove				(this);
-	Device.seqResolutionChanged.Remove	(this);
+	xr_delete(m_static);
+	Device.seqRender.Remove(this);
+	Device.seqResolutionChanged.Remove(this);
 }
 
 void CUICursor::OnScreenResolutionChanged()
 {
-	xr_delete		(m_static);
-	InitInternal	();
+	xr_delete(m_static);
+	InitInternal();
 }
 
 void CUICursor::InitInternal()
 {
-	m_static					= xr_new<CUIStatic>();
-	m_static->InitTextureEx		("ui\\ui_ani_cursor", "hud\\cursor");
+	m_static = xr_new<CUIStatic>();
+	m_static->InitTextureEx("ui\\ui_ani_cursor", "hud\\cursor");
 	Frect						rect;
-	rect.set					(0.0f, 0.0f, 45.0f, 45.0f);
-	m_static->SetOriginalRect	(rect);
+	rect.set(0.0f, 0.0f, 45.0f, 45.0f);
+	m_static->SetOriginalRect(rect);
 	Fvector2					sz;
-	sz.set						(rect.rb);
-	sz.x						*= UI()->get_current_kx();
+	sz.set(rect.rb);
+	sz.x *= UI()->get_current_kx();
 
-	m_static->SetWndSize		(sz);
-	m_static->SetStretchTexture	(true);
+	m_static->SetWndSize(sz);
+	m_static->SetStretchTexture(true);
 
-	u32 screen_size_x	= GetSystemMetrics(SM_CXSCREEN);
-	u32 screen_size_y	= GetSystemMetrics(SM_CYSCREEN);
-	m_b_use_win_cursor	= (screen_size_y >= Device.dwHeight && screen_size_x >= Device.dwWidth) || pInput->get_exclusive_mode();
+	u32 screen_size_x = GetSystemMetrics(SM_CXSCREEN);
+	u32 screen_size_y = GetSystemMetrics(SM_CYSCREEN);
+	m_b_use_win_cursor = (screen_size_y >= Device.dwHeight && screen_size_x >= Device.dwWidth) || pInput->get_exclusive_mode();
 }
 
 //--------------------------------------------------------------------
@@ -62,19 +62,19 @@ void CUICursor::OnRender()
 
 	if (bDebug)
 	{
-		CGameFont* F	= UI()->Font()->pFontDI;
-		F->SetAligment	(CGameFont::alCenter);
-		F->SetHeightI	(0.02f);
-		F->OutSetI		(0.f, -0.9f);
-		F->SetColor		(0xffffffff);
+		CGameFont* F = UI()->Font()->pFontDI;
+		F->SetAligment(CGameFont::alCenter);
+		F->SetHeightI(0.02f);
+		F->OutSetI(0.f, -0.9f);
+		F->SetColor(0xffffffff);
 		Fvector2		pt = GetCursorPosition();
-		F->OutNext		("%f-%f", pt.x, pt.y);
+		F->OutNext("%f-%f", pt.x, pt.y);
 	}
 #endif
 
-	m_static->SetWndPos	(vPos);
-	m_static->Update	();
-	m_static->Draw		();
+	m_static->SetWndPos(vPos);
+	m_static->Update();
+	m_static->Draw();
 }
 
 Fvector2 CUICursor::GetCursorPosition()
@@ -126,12 +126,12 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 	}
 	else
 	{
-		float sens	= 1.0f;
-		vPos.x		+= _dx * sens;
-		vPos.y		+= _dy * sens;
+		float sens = 1.0f;
+		vPos.x += _dx * sens;
+		vPos.y += _dy * sens;
 	}
-	clamp			(vPos.x, 0.f, UI_BASE_WIDTH);
-	clamp			(vPos.y, 0.f, UI_BASE_HEIGHT);
+	clamp(vPos.x, 0.f, UI_BASE_WIDTH);
+	clamp(vPos.y, 0.f, UI_BASE_HEIGHT);
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)

@@ -13,80 +13,80 @@
 #include "uiabstract.h"
 
 class CUILines : public IUITextControl,
-				 public CUISimpleWindow,
-				 public CDeviceResetNotifier {
-	 friend class CUICustomEdit;
-	 friend class CUICDkey;
+	public CUISimpleWindow,
+	public CDeviceResetNotifier {
+	friend class CUICustomEdit;
+	friend class CUICDkey;
 public:
 	CUILines();
 	virtual ~CUILines();
 
 	// IUITextControl methods
-	virtual void			SetText										(const char* text);
-	virtual const char*		GetText										();
-	virtual void			SetTextColor								(u32 color);
-	virtual void			SetBaseTextColor							(u32 color);
-	virtual u32				GetTextColor								()						{return m_dwTextColor;}
-	virtual u32				GetBaseTextColor							()						{return m_dwBaseTextColor;}
-			u32&			GetTextColorRef								()						{return m_dwTextColor;}
-			u32&			GetBaseTextColorRef							()						{return m_dwBaseTextColor;}
-	virtual void			SetFont										(CGameFont* pFont);
-	virtual CGameFont*		GetFont										()									{return m_pFont;}
-	virtual void			SetTextAlignment							(ETextAlignment al)			{m_eTextAlign = al;}
-	virtual ETextAlignment	GetTextAlignment							()							{return m_eTextAlign;}
-			void			SetVTextAlignment							(EVTextAlignment al)		{m_eVTextAlign = al;}
-			EVTextAlignment GetVTextAlignment							()							{return m_eVTextAlign;}
+	virtual void			SetText(const char* text);
+	virtual const char* GetText();
+	virtual void			SetTextColor(u32 color);
+	virtual void			SetBaseTextColor(u32 color);
+	virtual u32				GetTextColor() { return m_dwTextColor; }
+	virtual u32				GetBaseTextColor() { return m_dwBaseTextColor; }
+	u32& GetTextColorRef() { return m_dwTextColor; }
+	u32& GetBaseTextColorRef() { return m_dwBaseTextColor; }
+	virtual void			SetFont(CGameFont* pFont);
+	virtual CGameFont* GetFont() { return m_pFont; }
+	virtual void			SetTextAlignment(ETextAlignment al) { m_eTextAlign = al; }
+	virtual ETextAlignment	GetTextAlignment() { return m_eTextAlign; }
+	void			SetVTextAlignment(EVTextAlignment al) { m_eVTextAlign = al; }
+	EVTextAlignment GetVTextAlignment() { return m_eVTextAlign; }
 
 	// additional
-			void			SetCursorColor								(u32 color)			{m_dwCursorColor = color;}
-			void			AddCharAtCursor								(const char ch);
-			void			DelChar										();
-			void			DelLeftChar									();
-			void			MoveCursorToEnd								();
+	void			SetCursorColor(u32 color) { m_dwCursorColor = color; }
+	void			AddCharAtCursor(const char ch);
+	void			DelChar();
+	void			DelLeftChar();
+	void			MoveCursorToEnd();
 
-			void			SetTextComplexMode							(bool mode = true);
-			bool			GetTextComplexMode							() const;
-			void			SetTextColoringMode							(bool mode = true);
-			bool			GetTextColoringMode							() const;
-			void			SetPasswordMode								(bool mode = true);
-			void			SetColoringMode								(bool mode);
-			bool			IsColoringMode								() const { return !!uFlags.test(flColoringMode); };
-			void			SetCutWordsMode								(bool mode);
-			bool			IsCutWordsMode								() const { return !!uFlags.test(flCutWordsMode); }
+	void			SetTextComplexMode(bool mode = true);
+	bool			GetTextComplexMode() const;
+	void			SetTextColoringMode(bool mode = true);
+	bool			GetTextColoringMode() const;
+	void			SetPasswordMode(bool mode = true);
+	void			SetColoringMode(bool mode);
+	bool			IsColoringMode() const { return !!uFlags.test(flColoringMode); };
+	void			SetCutWordsMode(bool mode);
+	bool			IsCutWordsMode() const { return !!uFlags.test(flCutWordsMode); }
 
-			void			SetUseNewLineMode							(bool mode);
+	void			SetUseNewLineMode(bool mode);
 
 	// IUISimpleWindow methods
-	virtual void			Init										(float x, float y, float width, float height);
-	virtual void			Draw										();
-	virtual void			Draw										(float x, float y);
-			void			SetTextRotation								(float angle) { m_fTextRotation = angle; }
-			float			GetTextRotation								()/* const*/ { return m_fTextRotation; }
-	virtual void			Update										();
-IC			void			SetWndSize_inline							(const Fvector2& wnd_size);
+	virtual void			Init(float x, float y, float width, float height);
+	virtual void			Draw();
+	virtual void			Draw(float x, float y);
+	void			SetTextRotation(float angle) { m_fTextRotation = angle; }
+	float			GetTextRotation()/* const*/ { return m_fTextRotation; }
+	virtual void			Update();
+	IC			void			SetWndSize_inline(const Fvector2& wnd_size);
 
 
 	// CDeviceResetNotifier methods
-	virtual void			OnDeviceReset								();
+	virtual void			OnDeviceReset();
 
 	// own methods
-			void			Reset										();
-			void			ParseText									();
-			float			GetVisibleHeight							();
+	void			Reset();
+	void			ParseText();
+	float			GetVisibleHeight();
 
 	// cursor control
-			int				m_iCursorPos;
-			void			IncCursorPos								();
-			void			DecCursorPos								();
+	int				m_iCursorPos;
+	void			IncCursorPos();
+	void			DecCursorPos();
 protected:
-			Ivector2		m_cursor_pos;
-			void			UpdateCursor								();
-				// %c[255,255,255,255]
-		u32					GetColorFromText							(const xr_string& str)							const;
-		float				GetIndentByAlign							()												const;
-		float				GetVIndentByAlign							();
-		void				CutFirstColoredTextEntry					(xr_string& entry, u32& color,xr_string& text)	const;
-	CUILine*				ParseTextToColoredLine						(const xr_string& str);
+	Ivector2		m_cursor_pos;
+	void			UpdateCursor();
+	// %c[255,255,255,255]
+	u32					GetColorFromText(const xr_string& str)							const;
+	float				GetIndentByAlign()												const;
+	float				GetVIndentByAlign();
+	void				CutFirstColoredTextEntry(xr_string& entry, u32& color, xr_string& text)	const;
+	CUILine* ParseTextToColoredLine(const xr_string& str);
 
 	// IUITextControl data
 	typedef xr_string						Text;
@@ -104,16 +104,16 @@ protected:
 	u32						m_dwCursorColor;
 	float					m_fTextRotation;
 
-	CGameFont*				m_pFont;
+	CGameFont* m_pFont;
 
 	enum {
-		flNeedReparse		= (1<<0),
-		flComplexMode		= (1<<1),
-		flPasswordMode		= (1<<2),
-		flColoringMode		= (1<<3),
-		flCutWordsMode		= (1<<4),
-		flRecognizeNewLine	= (1<<5)
-	};	
+		flNeedReparse = (1 << 0),
+		flComplexMode = (1 << 1),
+		flPasswordMode = (1 << 2),
+		flColoringMode = (1 << 3),
+		flCutWordsMode = (1 << 4),
+		flRecognizeNewLine = (1 << 5)
+	};
 private:
 	Flags8					uFlags;
 	float					m_oldWidth;
@@ -124,22 +124,22 @@ public:
 	virtual					~CUILinesOwner() {}
 
 	// IUIFontControl{
-	virtual void			SetTextColor					(u32 color)						{m_lines.SetTextColor(color);}
-	virtual u32				GetTextColor					()								{return m_lines.GetTextColor();}
-	virtual void			SetBaseTextColor				(u32 color)						{m_lines.SetBaseTextColor(color); m_lines.SetTextColor(color);}
-	virtual u32				GetBaseTextColor				()								{return m_lines.GetBaseTextColor();}
-	virtual void			SetFont							(CGameFont* pFont)				{m_lines.SetFont(pFont);}
-	virtual CGameFont*		GetFont							()								{return m_lines.GetFont();}
-	virtual void			SetTextAlignment				(ETextAlignment alignment)		{m_lines.SetTextAlignment(alignment);}
-	virtual ETextAlignment	GetTextAlignment				()								{return m_lines.GetTextAlignment();}
+	virtual void			SetTextColor(u32 color) { m_lines.SetTextColor(color); }
+	virtual u32				GetTextColor() { return m_lines.GetTextColor(); }
+	virtual void			SetBaseTextColor(u32 color) { m_lines.SetBaseTextColor(color); m_lines.SetTextColor(color); }
+	virtual u32				GetBaseTextColor() { return m_lines.GetBaseTextColor(); }
+	virtual void			SetFont(CGameFont* pFont) { m_lines.SetFont(pFont); }
+	virtual CGameFont* GetFont() { return m_lines.GetFont(); }
+	virtual void			SetTextAlignment(ETextAlignment alignment) { m_lines.SetTextAlignment(alignment); }
+	virtual ETextAlignment	GetTextAlignment() { return m_lines.GetTextAlignment(); }
 
 	// IUITextControl : public IUIFontControl{
-	virtual void			SetText							(const char* text)				{m_lines.SetText(text);}
-	virtual const char*		GetText							()								{return m_lines.GetText();}
+	virtual void			SetText(const char* text) { m_lines.SetText(text); }
+	virtual const char* GetText() { return m_lines.GetText(); }
 
 	// own
-	virtual void			SetTextPosX						(float x)						{m_textPos.x = x;}
-	virtual void			SetTextPosY						(float y)						{m_textPos.y = y;}
+	virtual void			SetTextPosX(float x) { m_textPos.x = x; }
+	virtual void			SetTextPosY(float y) { m_textPos.y = y; }
 
 protected:
 	Fvector2				m_textPos;

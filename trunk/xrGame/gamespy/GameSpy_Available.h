@@ -13,11 +13,11 @@ public:
 	CGameSpy_Available(HMODULE hGameSpyDLL);
 	~CGameSpy_Available();
 
-	bool	CheckAvailableServices	(shared_str& resultstr);
+	bool	CheckAvailableServices(shared_str& resultstr);
 private:
 	//------------------------------- GameSpy_Available ---------------------------
 //	GAMESPY_FN_VAR_DECL(void,	GSIStartAvailableCheck, (const char * gamename));
-	GAMESPY_FN_VAR_DECL(void,	GSIStartAvailableCheck, ());
+	GAMESPY_FN_VAR_DECL(void, GSIStartAvailableCheck, ());
 	GAMESPY_FN_VAR_DECL(GSIACResult, GSIAvailableCheckThink, ());
 	GAMESPY_FN_VAR_DECL(void, msleep, (unsigned long msec));
 public:

@@ -6,9 +6,9 @@ class CMPPlayersBag :
 	public	CInventoryItemObject
 {
 public:
-					CMPPlayersBag(void);
+	CMPPlayersBag(void);
 	virtual			~CMPPlayersBag(void);
-	virtual bool	NeedToDestroyObject	() const; 
+	virtual bool	NeedToDestroyObject() const;
 
 	virtual void OnEvent(NET_Packet& P, u16 type);
 protected:

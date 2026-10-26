@@ -9,11 +9,11 @@ class CDbgScriptThreads
 {
 	xr_vector<SScriptThread>				m_threads;
 public:
-	CScriptDebugger*						m_debugger;				
-	CDbgScriptThreads			(CScriptDebugger* d):m_debugger(d){};
-				~CDbgScriptThreads			(){};
-	u32			FillFrom					(CScriptProcess*);
-	u32			Fill						();
-	lua_State*	FindScript					(int nthreadID);
-	void		DrawThreads					();
+	CScriptDebugger* m_debugger;
+	CDbgScriptThreads(CScriptDebugger* d) :m_debugger(d) {};
+	~CDbgScriptThreads() {};
+	u32			FillFrom(CScriptProcess*);
+	u32			Fill();
+	lua_State* FindScript(int nthreadID);
+	void		DrawThreads();
 };

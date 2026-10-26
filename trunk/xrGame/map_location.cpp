@@ -27,24 +27,24 @@
 
 CMapLocation::CMapLocation(LPCSTR type, u16 object_id)
 {
-	m_flags.zero			();
-	m_level_spot			= nullptr;
-	m_level_spot_pointer	= nullptr;
-	m_minimap_spot			= nullptr;
-	m_minimap_spot_pointer	= nullptr;
+	m_flags.zero();
+	m_level_spot = nullptr;
+	m_level_spot_pointer = nullptr;
+	m_minimap_spot = nullptr;
+	m_minimap_spot_pointer = nullptr;
 
-	m_level_map_spot_border	= nullptr;
-	m_mini_map_spot_border	= nullptr;
+	m_level_map_spot_border = nullptr;
+	m_mini_map_spot_border = nullptr;
 
-	m_objectID				= object_id;
-	m_actual_time			= 0;
+	m_objectID = object_id;
+	m_actual_time = 0;
 
-	LoadSpot				(type, false);
-	m_refCount				= 1;
-	
-	DisablePointer			();
+	LoadSpot(type, false);
+	m_refCount = 1;
 
-	EnableSpot				();
+	DisablePointer();
+
+	EnableSpot();
 	m_cached.m_updatedFrame = u32(-1);
 }
 
@@ -62,24 +62,24 @@ void CMapLocation::destroy()
 	delete_data(m_mini_map_spot_border);
 }
 
-CUIXml*	g_uiSpotXml = nullptr;
+CUIXml* g_uiSpotXml = nullptr;
 void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 {
 	if (!g_uiSpotXml)
 	{
-		g_uiSpotXml				= xr_new<CUIXml>();
-		bool xml_result			= g_uiSpotXml->Init(CONFIG_PATH, UI_PATH, "map_spots.xml");
-		R_ASSERT3				(xml_result, "xml file not found", "map_spots.xml");
+		g_uiSpotXml = xr_new<CUIXml>();
+		bool xml_result = g_uiSpotXml->Init(CONFIG_PATH, UI_PATH, "map_spots.xml");
+		R_ASSERT3(xml_result, "xml file not found", "map_spots.xml");
 	}
 
 	XML_NODE* node = nullptr;
 	string512 path_base, path;
-//	strconcat(path_base,"map_spots:",type);
-	strcpy_s		(path_base, type);
-	R_ASSERT3		(g_uiSpotXml->NavigateToNode(path_base, 0), "XML node not found in file map_spots.xml", path_base);
-	LPCSTR s		= g_uiSpotXml->ReadAttrib(path_base, 0, "hint", "no hint");
-	SetHint			(s);
-	
+	//	strconcat(path_base,"map_spots:",type);
+	strcpy_s(path_base, type);
+	R_ASSERT3(g_uiSpotXml->NavigateToNode(path_base, 0), "XML node not found in file map_spots.xml", path_base);
+	LPCSTR s = g_uiSpotXml->ReadAttrib(path_base, 0, "hint", "no hint");
+	SetHint(s);
+
 	s = g_uiSpotXml->ReadAttrib(path_base, 0, "store", nullptr);
 	if (s)
 		m_flags.set(eSerailizable, TRUE);
@@ -100,8 +100,8 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		m_flags.set(ePosToActor, TRUE);
 
 
-	strconcat(sizeof(path),path,path_base,":level_map");
-	node = g_uiSpotXml->NavigateToNode(path,0);
+	strconcat(sizeof(path), path, path_base, ":level_map");
+	node = g_uiSpotXml->NavigateToNode(path, 0);
 	if (node)
 	{
 		LPCSTR str = g_uiSpotXml->ReadAttrib(path, 0, "spot", "");
@@ -109,11 +109,11 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		{
 			if (!bReload)
 				m_level_spot = xr_new<CMapSpot>(this);
-			m_level_spot->Load(g_uiSpotXml,str);
+			m_level_spot->Load(g_uiSpotXml, str);
 		}
 		else
 		{
-			VERIFY(!(bReload&&m_level_spot));
+			VERIFY(!(bReload && m_level_spot));
 		}
 
 		str = g_uiSpotXml->ReadAttrib(path, 0, "pointer", "");
@@ -121,7 +121,7 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		{
 			if (!bReload)
 				m_level_spot_pointer = xr_new<CMapSpotPointer>(this);
-			m_level_spot_pointer->Load(g_uiSpotXml,str);
+			m_level_spot_pointer->Load(g_uiSpotXml, str);
 		}
 		else
 		{
@@ -129,66 +129,66 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		}
 	}
 
-	strconcat(sizeof(path),path,path_base,":mini_map");
-	node = g_uiSpotXml->NavigateToNode(path,0);
+	strconcat(sizeof(path), path, path_base, ":mini_map");
+	node = g_uiSpotXml->NavigateToNode(path, 0);
 	if (node)
 	{
 		LPCSTR str = g_uiSpotXml->ReadAttrib(path, 0, "spot", "");
-		if (xr_strlen(str) )
-	{
+		if (xr_strlen(str))
+		{
 			if (!bReload)
 				m_minimap_spot = xr_new<CMiniMapSpot>(this);
-			m_minimap_spot->Load(g_uiSpotXml,str);
+			m_minimap_spot->Load(g_uiSpotXml, str);
 		}
-	else
-	{
-			VERIFY(!(bReload&&m_minimap_spot));
+		else
+		{
+			VERIFY(!(bReload && m_minimap_spot));
 		}
 
 		str = g_uiSpotXml->ReadAttrib(path, 0, "pointer", "");
-		if (xr_strlen(str) )
-	{
+		if (xr_strlen(str))
+		{
 			if (!bReload)
 				m_minimap_spot_pointer = xr_new<CMapSpotPointer>(this);
-			m_minimap_spot_pointer->Load(g_uiSpotXml,str);
+			m_minimap_spot_pointer->Load(g_uiSpotXml, str);
 		}
-	else
-	{
-			VERIFY(!(bReload&&m_minimap_spot_pointer));
+		else
+		{
+			VERIFY(!(bReload && m_minimap_spot_pointer));
 		}
 	};
 	if (nullptr == m_minimap_spot && nullptr == m_level_spot)
-		DisableSpot	();
+		DisableSpot();
 }
 
 Fvector2 CMapLocation::Position()
 {
-	if (m_cached.m_updatedFrame == Device.dwFrame) 
+	if (m_cached.m_updatedFrame == Device.dwFrame)
 		return m_cached.m_Position;
 
 	Fvector2 pos;
-	pos.set(0.0f,0.0f);
+	pos.set(0.0f, 0.0f);
 
-	if (m_flags.test(ePosToActor) && Level().CurrentEntity()){
+	if (m_flags.test(ePosToActor) && Level().CurrentEntity()) {
 		m_position_global = Level().CurrentEntity()->Position();
 		pos.set(m_position_global.x, m_position_global.z);
 		m_cached.m_Position = pos;
 		return pos;
 	}
 
-	CObject* pObject =  Level().Objects.net_Find(m_objectID);
+	CObject* pObject = Level().Objects.net_Find(m_objectID);
 	if (!pObject)
 	{
-		if (ai().get_alife())		
+		if (ai().get_alife())
 		{
-			CSE_ALifeDynamicObject* O = ai().alife().objects().object(m_objectID,true);
+			CSE_ALifeDynamicObject* O = ai().alife().objects().object(m_objectID, true);
 			if (O)
-	{
+			{
 				m_position_global = O->draw_level_position();
 				pos.set(m_position_global.x, m_position_global.z);
 			}
 		}
-	
+
 	}
 	else
 	{
@@ -203,19 +203,19 @@ Fvector2 CMapLocation::Position()
 
 Fvector2 CMapLocation::Direction()
 {
-	if (m_cached.m_updatedFrame == Device.dwFrame) 
+	if (m_cached.m_updatedFrame == Device.dwFrame)
 		return m_cached.m_Direction;
 
 	Fvector2 res;
-	res.set(0.0f,0.0f);
+	res.set(0.0f, 0.0f);
 
-	if (Level().CurrentViewEntity()&&Level().CurrentViewEntity()->ID() == m_objectID )
+	if (Level().CurrentViewEntity() && Level().CurrentViewEntity()->ID() == m_objectID)
 	{
-		res.set(Device.vCameraDirection.x,Device.vCameraDirection.z);
+		res.set(Device.vCameraDirection.x, Device.vCameraDirection.z);
 	}
 	else
 	{
-		CObject* pObject =  Level().Objects.net_Find(m_objectID);
+		CObject* pObject = Level().Objects.net_Find(m_objectID);
 		if (!pObject)
 			res.set(0.0f, 0.0f);
 		else
@@ -227,7 +227,7 @@ Fvector2 CMapLocation::Direction()
 
 	if (m_flags.test(ePosToActor))
 	{
-		CObject* pObject =  Level().Objects.net_Find(m_objectID);
+		CObject* pObject = Level().Objects.net_Find(m_objectID);
 		if (pObject)
 		{
 			Fvector2 dcp, obj_pos;
@@ -236,10 +236,10 @@ Fvector2 CMapLocation::Direction()
 			res.sub(obj_pos, dcp);
 			res.normalize_safe();
 		}
-		
+
 	}
-	
-	m_cached.m_Direction	= res;
+
+	m_cached.m_Direction = res;
 	return					res;
 }
 
@@ -256,10 +256,10 @@ shared_str CMapLocation::LevelName()
 			Msg("- Critical: SMapLocation binded to non-existent object id=%d", m_objectID);
 			return "ERROR";
 		}
-		
+
 		CSE_ALifeObject* AO = smart_cast<CSE_ALifeObject*>(E);
 		if (AO)
-		{	
+		{
 			m_cached.m_LevelName = ai().game_graph().header().level(ai().game_graph().vertex(AO->m_tGraphID)->level_id()).name();
 			return m_cached.m_LevelName;
 		}
@@ -278,58 +278,58 @@ shared_str CMapLocation::LevelName()
 
 bool CMapLocation::Update() //returns actual
 {
-	if (m_cached.m_updatedFrame == Device.dwFrame) 
+	if (m_cached.m_updatedFrame == Device.dwFrame)
 		return m_cached.m_Actuality;
-		
+
 	if (m_flags.test(eTTL))
 	{
 		if (m_actual_time < Device.dwTimeGlobal)
 		{
-			m_cached.m_Actuality		= false;
-			m_cached.m_updatedFrame		= Device.dwFrame;
+			m_cached.m_Actuality = false;
+			m_cached.m_updatedFrame = Device.dwFrame;
 			return						m_cached.m_Actuality;
 		}
 	}
 
-	CObject* pObject =  Level().Objects.net_Find(m_objectID);
-	
+	CObject* pObject = Level().Objects.net_Find(m_objectID);
+
 	//mp
 	if (GameID() != GAME_SINGLE && (pObject))
 	{
-		m_cached.m_Actuality		= true;
-		Position					();
-		Direction					();
-		LevelName					();
-		m_cached.m_updatedFrame		= Device.dwFrame;
+		m_cached.m_Actuality = true;
+		Position();
+		Direction();
+		LevelName();
+		m_cached.m_updatedFrame = Device.dwFrame;
 		return						m_cached.m_Actuality;
 	}
-	
+
 	//single
 	if (pObject)
 	{
-		m_cached.m_Actuality		= true;
-		Position					();
-		Direction					();
-		LevelName					();
-		m_cached.m_updatedFrame		= Device.dwFrame;
+		m_cached.m_Actuality = true;
+		Position();
+		Direction();
+		LevelName();
+		m_cached.m_updatedFrame = Device.dwFrame;
 		return						m_cached.m_Actuality;
 	}
 
 	if (ai().get_alife())
 	{
-		m_cached.m_Actuality = (nullptr != ai().alife().objects().object(m_objectID,true));
+		m_cached.m_Actuality = (nullptr != ai().alife().objects().object(m_objectID, true));
 		if (m_cached.m_Actuality)
 		{
-			Position					();
-			Direction					();
-			LevelName					();
+			Position();
+			Direction();
+			LevelName();
 		}
-		m_cached.m_updatedFrame			= Device.dwFrame;
+		m_cached.m_updatedFrame = Device.dwFrame;
 		return							m_cached.m_Actuality;
 	}
 
-	m_cached.m_Actuality				= false;
-	m_cached.m_updatedFrame				= Device.dwFrame;
+	m_cached.m_Actuality = false;
+	m_cached.m_updatedFrame = Device.dwFrame;
 	return								m_cached.m_Actuality;
 }
 
@@ -341,31 +341,31 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 	if (map->MapName() == LevelName())
 	{
 		CSE_ALifeDynamicObject* obj = nullptr;
-		
+
 		if (ai().get_alife() && !IsUserDefined())
 		{
-			obj = ai().alife().objects().object(m_objectID,true);
+			obj = ai().alife().objects().object(m_objectID, true);
 			if (!obj)
 			{
-				Msg("- Critical: CMapLocation::UpdateSpot binded to non-existent object id=%d",m_objectID);
+				Msg("- Critical: CMapLocation::UpdateSpot binded to non-existent object id=%d", m_objectID);
 				return;
 			}
 		}
-		
-		if (m_flags.test(eHideInOffline) && 
+
+		if (m_flags.test(eHideInOffline) &&
 			ai().get_alife() && !IsUserDefined() &&
-			!obj->m_bOnline )
+			!obj->m_bOnline)
 			return;
 
-		if (!IsUserDefined() && 
-			ai().get_alife() && 
+		if (!IsUserDefined() &&
+			ai().get_alife() &&
 			FALSE == obj->m_flags.test(CSE_ALifeObject::flVisibleForMap))
 			return;
 
 		//update spot position
 		Fvector2 position = Position();
 
-		m_position_on_map =	map->ConvertRealToLocal(position, (map->Heading()) ? false : true);
+		m_position_on_map = map->ConvertRealToLocal(position, (map->Heading()) ? false : true);
 
 		sp->SetWndPos(m_position_on_map);
 		Frect wnd_rect = sp->GetWndRect();
@@ -378,7 +378,7 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 			{
 				Fvector2 dir_global = Direction();
 				float h = dir_global.getH();
-				float h_ = map->GetHeading()+h;
+				float h_ = map->GetHeading() + h;
 				sp->SetHeading(h_);
 			}
 
@@ -417,18 +417,18 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 			VERIFY(ai().get_alife());
 			obj = ai().alife().objects().object(m_objectID);
 			R_ASSERT(obj);
-			dest_graph_id		= obj->m_tGraphID;
+			dest_graph_id = obj->m_tGraphID;
 		}
-	else
-	{
-			CUserDefinedMapLocation	*temp = smart_cast<CUserDefinedMapLocation*>(this);
-			VERIFY					(temp);
-			dest_graph_id			= temp->m_graph_id;
+		else
+		{
+			CUserDefinedMapLocation* temp = smart_cast<CUserDefinedMapLocation*>(this);
+			VERIFY(temp);
+			dest_graph_id = temp->m_graph_id;
 		}
 
 		map_point_path.clear();
 
-		VERIFY									(Actor());
+		VERIFY(Actor());
 		GraphEngineSpace::CGameVertexParams		params(Actor()->locations().vertex_types(), flt_max);
 		bool res = ai().graph_engine().search(
 			ai().game_graph(),
@@ -444,12 +444,12 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 
 			xr_vector<CLevelChanger*>::iterator lit = g_lchangers.begin();
 			xr_vector<CLevelChanger*>::iterator lit_e = g_lchangers.end();
-			bool bDone						= false;
-			for (; (it != it_e) && (!bDone) ;++it)
+			bool bDone = false;
+			for (; (it != it_e) && (!bDone); ++it)
 			{
-				for (lit = g_lchangers.begin();lit != lit_e; ++lit)
+				for (lit = g_lchangers.begin(); lit != lit_e; ++lit)
 				{
-					
+
 					if ((*it) == (*lit)->ai_location().game_vertex_id())
 					{
 						bDone = true;
@@ -463,15 +463,15 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 			{
 				Msg("Error. Path from actor to selected map spot does not contain level changer :(");
 				Msg("Path:");
-				xr_vector<u32>::iterator mit			= map_point_path.begin();
-				xr_vector<u32>::iterator mit_e		= map_point_path.end();
-				for (; mit!= mit_e;++mit)
-	{
-//					Msg("%d-%s", (*it), ai().game_graph().vertex(*it));
+				xr_vector<u32>::iterator mit = map_point_path.begin();
+				xr_vector<u32>::iterator mit_e = map_point_path.end();
+				for (; mit != mit_e; ++mit)
+				{
+					//					Msg("%d-%s", (*it), ai().game_graph().vertex(*it));
 					Msg("[%d] level[%s]", (*mit), *ai().game_graph().header().level(ai().game_graph().vertex(*mit)->level_id()).name());
 				}
 				Msg("Available LevelChangers:");
-				lit_e							= g_lchangers.end();
+				lit_e = g_lchangers.end();
 				for (lit = g_lchangers.begin(); lit != lit_e; ++lit)
 				{
 					GameGraph::_GRAPH_ID gid = (*lit)->ai_location().game_vertex_id();
@@ -483,9 +483,9 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 			if (bDone)
 			{
 				Fvector2 position;
-				position.set			((*lit)->Position().x, (*lit)->Position().z);
-				m_position_on_map		= map->ConvertRealToLocal(position, false);
-				UpdateSpotPointer		(map, GetSpotPointer(sp), position);
+				position.set((*lit)->Position().x, (*lit)->Position().z);
+				m_position_on_map = map->ConvertRealToLocal(position, false);
+				UpdateSpotPointer(map, GetSpotPointer(sp), position);
 			}
 		}
 	}
@@ -496,7 +496,7 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp)
 void CMapLocation::UpdateSpotPointer(CUICustomMap* map, CMapSpotPointer* sp, const Fvector2& real)
 {
 	if (sp->GetParent())
-		return ;// already is child
+		return;// already is child
 	float		heading;
 	Fvector2	pointer_pos;
 	Fvector2	tmp = map->Heading() ? map->ConvertRealToLocal(real, true) : m_position_on_map;
@@ -513,7 +513,7 @@ void CMapLocation::UpdateSpotPointer(CUICustomMap* map, CMapSpotPointer* sp, con
 		Fvector ttt;
 		ttt.set(tt.x, 0.0f, tt.y);
 		float dist_to_target = Level().CurrentEntity()->Position().distance_to(ttt);
-		map->SetPointerDistance	(dist_to_target);
+		map->SetPointerDistance(dist_to_target);
 	}
 }
 
@@ -536,32 +536,32 @@ void CMapLocation::UpdateLevelMap(CUICustomMap* map)
 		UpdateSpot(map, sp);
 }
 
-u16	CMapLocation::AddRef() 
+u16	CMapLocation::AddRef()
 {
 	++m_refCount;
 	if (m_flags.test(eTTL))
 	{
-		m_actual_time = Device.dwTimeGlobal+m_ttl*1000;
+		m_actual_time = Device.dwTimeGlobal + m_ttl * 1000;
 	}
 
 	return m_refCount;
 }
 
-void CMapLocation::save(IWriter &stream)
+void CMapLocation::save(IWriter& stream)
 {
-	stream.w_u16	(RefCount());
+	stream.w_u16(RefCount());
 	stream.w_stringZ(m_hint);
-	stream.w_u32	(m_flags.flags);
+	stream.w_u32(m_flags.flags);
 }
 
-void CMapLocation::load(IReader &stream)
+void CMapLocation::load(IReader& stream)
 {
-	u16 c =			stream.r_u16();
+	u16 c = stream.r_u16();
 	xr_string		hint;
 	stream.r_stringZ(hint);
-	SetHint			(hint.c_str());
-	SetRefCount		(c);
-	m_flags.flags	= stream.r_u32();
+	SetHint(hint.c_str());
+	SetRefCount(c);
+	m_flags.flags = stream.r_u32();
 }
 
 void CMapLocation::SetHint(const shared_str& hint)
@@ -598,7 +598,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 	{
 		if (nullptr == m_level_map_spot_border)
 		{
-			m_level_map_spot_border	= xr_new<CMapSpot>(this);
+			m_level_map_spot_border = xr_new<CMapSpot>(this);
 			m_level_map_spot_border->Load(g_uiSpotXml, "level_map_spot_border");
 		}
 		return m_level_map_spot_border;
@@ -607,7 +607,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 	{
 		if (nullptr == m_mini_map_spot_border)
 		{
-			m_mini_map_spot_border	= xr_new<CMapSpot>(this);
+			m_mini_map_spot_border = xr_new<CMapSpot>(this);
 			m_mini_map_spot_border->Load(g_uiSpotXml, "mini_map_spot_border");
 		}
 		return m_mini_map_spot_border;
@@ -617,50 +617,51 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 
 
 CRelationMapLocation::CRelationMapLocation(const shared_str& type, u16 object_id, u16 pInvOwnerActorID, u16 pInvOwnerEntityID)
-:CMapLocation(*type,object_id)
+	:CMapLocation(*type, object_id)
 {
-	m_curr_spot_name	= type;
-	m_pInvOwnerEntityID	= pInvOwnerEntityID;
-	m_pInvOwnerActorID	= pInvOwnerActorID;
+	m_curr_spot_name = type;
+	m_pInvOwnerEntityID = pInvOwnerEntityID;
+	m_pInvOwnerActorID = pInvOwnerActorID;
 	m_b_was_visible_last_frame = false;
 }
 
 CRelationMapLocation::~CRelationMapLocation()
-{}
+{
+}
 
 bool CRelationMapLocation::Update()
 {
 	if (false == inherited::Update())
 		return false;
-	
+
 	bool bAlive = true;
 
 	m_last_relation = ALife::eRelationTypeFriend;
 
 	if (ai().get_alife())
 	{
-		CSE_ALifeTraderAbstract*	pEnt = nullptr;
-		CSE_ALifeTraderAbstract*	pAct = nullptr;
-		CSE_ALifeDynamicObject*		temp = ai().alife().objects().object(m_pInvOwnerEntityID,true);
+		CSE_ALifeTraderAbstract* pEnt = nullptr;
+		CSE_ALifeTraderAbstract* pAct = nullptr;
+		CSE_ALifeDynamicObject* temp = ai().alife().objects().object(m_pInvOwnerEntityID, true);
 		pEnt = smart_cast<CSE_ALifeTraderAbstract*>(temp);
-		pAct = smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(m_pInvOwnerActorID,true));
+		pAct = smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(m_pInvOwnerActorID, true));
 		if (!pEnt || !pAct)
 			return false;
 		m_last_relation = RELATION_REGISTRY().GetRelationType(pEnt, pAct);
 		CSE_ALifeCreatureAbstract* pCreature = smart_cast<CSE_ALifeCreatureAbstract*>(temp);
 		if (pCreature) //maybe trader ?
-			bAlive = pCreature->g_Alive	();
+			bAlive = pCreature->g_Alive();
 	}
 	else
 	{
-		CInventoryOwner*			pEnt = nullptr;
-		CInventoryOwner*			pAct = nullptr;
+		CInventoryOwner* pEnt = nullptr;
+		CInventoryOwner* pAct = nullptr;
 
 		pEnt = smart_cast<CInventoryOwner*>(Level().Objects.net_Find(m_pInvOwnerEntityID));
 		pAct = smart_cast<CInventoryOwner*>(Level().Objects.net_Find(m_pInvOwnerActorID));
 		if (!pEnt || !pAct)
 			return false;
-		m_last_relation =  RELATION_REGISTRY().GetRelationType(pEnt, pAct);
+		m_last_relation = RELATION_REGISTRY().GetRelationType(pEnt, pAct);
 		CEntityAlive* pEntAlive = smart_cast<CEntityAlive*>(pEnt);
 		if (pEntAlive)
 			bAlive = !!pEntAlive->g_Alive();
@@ -688,11 +689,11 @@ bool CRelationMapLocation::IsVisible()
 
 		CObject* _object_ = Level().Objects.net_Find(m_pInvOwnerEntityID);
 		if (_object_)
-	{
+		{
 			CEntityAlive* ea = smart_cast<CEntityAlive*>(_object_);
-			if (ea&&!ea->g_Alive()) return true;
+			if (ea && !ea->g_Alive()) return true;
 
-			res =  Actor()->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_));
+			res = Actor()->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_));
 		}
 		else
 			res = false;
@@ -709,28 +710,28 @@ bool CRelationMapLocation::IsVisible()
 void CRelationMapLocation::UpdateMiniMap(CUICustomMap* map)
 {
 	if (IsVisible())
-		inherited::UpdateMiniMap		(map);
+		inherited::UpdateMiniMap(map);
 }
 
 void CRelationMapLocation::UpdateLevelMap(CUICustomMap* map)
 {
 	if (IsVisible())
-		inherited::UpdateLevelMap		(map);
+		inherited::UpdateLevelMap(map);
 }
 
 #ifdef DEBUG
 void CRelationMapLocation::Dump()
 {
 	inherited::Dump();
-	Msg("--CRelationMapLocation m_curr_spot_name=[%s]",*m_curr_spot_name);
+	Msg("--CRelationMapLocation m_curr_spot_name=[%s]", *m_curr_spot_name);
 }
 #endif
 
 CUserDefinedMapLocation::CUserDefinedMapLocation(LPCSTR type, u16 object_id)
-:inherited(type, object_id)
+	:inherited(type, object_id)
 {
-	m_flags.set			(eSerailizable, TRUE);
-	m_flags.set			(eUserDefined, TRUE);
+	m_flags.set(eSerailizable, TRUE);
+	m_flags.set(eUserDefined, TRUE);
 }
 
 CUserDefinedMapLocation::~CUserDefinedMapLocation()
@@ -739,17 +740,17 @@ CUserDefinedMapLocation::~CUserDefinedMapLocation()
 
 void CUserDefinedMapLocation::InitExternal(const shared_str& level_name, const Fvector& pos)
 {
-	m_level_name		= level_name;
-	m_position_global	= pos;
-	m_position			= pos;
-	m_graph_id			= GameGraph::_GRAPH_ID(-1);
+	m_level_name = level_name;
+	m_position_global = pos;
+	m_position = pos;
+	m_graph_id = GameGraph::_GRAPH_ID(-1);
 
 	if (ai().get_alife())
 	{
-		const CGameGraph::SLevel& level		= ai().game_graph().header().level(*level_name);
-		float min_dist						= flt_max;
+		const CGameGraph::SLevel& level = ai().game_graph().header().level(*level_name);
+		float min_dist = flt_max;
 
-		GameGraph::_GRAPH_ID n				= ai().game_graph().header().vertex_count();
+		GameGraph::_GRAPH_ID n = ai().game_graph().header().vertex_count();
 
 		for (GameGraph::_GRAPH_ID i = 0; i < n; ++i)
 		{
@@ -758,14 +759,14 @@ void CUserDefinedMapLocation::InitExternal(const shared_str& level_name, const F
 				float				distance = ai().game_graph().vertex(i)->game_point().distance_to_sqr(m_position);
 				if (distance < min_dist)
 				{
-					min_dist		= distance;
-					m_graph_id		= i;
+					min_dist = distance;
+					m_graph_id = i;
 				}
 			}
 		}
 		if (!ai().game_graph().vertex(m_graph_id))
 		{
-			Msg		("! Cannot assign game vertex for CUserDefinedMapLocation [map=%s]", *level_name);
+			Msg("! Cannot assign game vertex for CUserDefinedMapLocation [map=%s]", *level_name);
 			R_ASSERT(ai().game_graph().vertex(m_graph_id));
 		}
 	}
@@ -788,25 +789,25 @@ Fvector2 CUserDefinedMapLocation::Position()
 
 Fvector2 CUserDefinedMapLocation::Direction()
 {
-	return Fvector2().set(0.0f,0.0f);
+	return Fvector2().set(0.0f, 0.0f);
 }
 
-void CUserDefinedMapLocation::save(IWriter &stream)
+void CUserDefinedMapLocation::save(IWriter& stream)
 {
-	inherited::save		(stream);
-	save_data			(m_level_name,	stream);
-	save_data			(m_position,	stream);
-	save_data			(m_graph_id,	stream);
+	inherited::save(stream);
+	save_data(m_level_name, stream);
+	save_data(m_position, stream);
+	save_data(m_graph_id, stream);
 }
 
-void CUserDefinedMapLocation::load(IReader &stream)
+void CUserDefinedMapLocation::load(IReader& stream)
 {
-	inherited::load		(stream);
-	load_data			(m_level_name,	stream);
-	load_data			(m_position,	stream);
-	load_data			(m_graph_id,	stream);
+	inherited::load(stream);
+	load_data(m_level_name, stream);
+	load_data(m_position, stream);
+	load_data(m_graph_id, stream);
 
-	m_position_global	= m_position;
+	m_position_global = m_position;
 }
 
 #ifdef DEBUG

@@ -24,14 +24,14 @@
 #define SKU_SUB_KEYDISK 0x01	// Binding to key-disk
 #define SKU_SUB_ONLINE 0x02		// Binding to hardware with online activation
 
-int GetGameDistribution	()
+int GetGameDistribution()
 {
 	HKEY KeyCDKey = 0;
-	
-	long res = RegOpenKeyEx(REGISTRY_BASE, 
+
+	long res = RegOpenKeyEx(REGISTRY_BASE,
 		REGISTRY_PATH, 0, KEY_READ, &KeyCDKey);
 
-//	char	KeyValue[1024] = "";
+	//	char	KeyValue[1024] = "";
 	int		KeyValue;
 	DWORD KeyValueSize = 1024;
 	DWORD KeyValueType = REG_DWORD;
@@ -47,7 +47,7 @@ int GetGameDistribution	()
 	{
 		return int(0);
 	};
-	
+
 	return KeyValue;
 }
 

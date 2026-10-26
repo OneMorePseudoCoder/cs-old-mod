@@ -6,17 +6,17 @@ template<typename _Object>
 class	CStateMonsterHearHelpSound : public CState<_Object> {
 protected:
 	typedef CState<_Object>		inherited;
-	typedef CState<_Object>*	state_ptr;
+	typedef CState<_Object>* state_ptr;
 
 public:
-					CStateMonsterHearHelpSound	(_Object *obj);
-	virtual			~CStateMonsterHearHelpSound	(){}
+	CStateMonsterHearHelpSound(_Object* obj);
+	virtual			~CStateMonsterHearHelpSound() {}
 
-	virtual void	reselect_state				();
-	virtual void	setup_substates				();
+	virtual void	reselect_state();
+	virtual void	setup_substates();
 
-	virtual bool	check_start_conditions		();
-	virtual bool	check_completion			();
+	virtual bool	check_start_conditions();
+	virtual bool	check_completion();
 
 };
 

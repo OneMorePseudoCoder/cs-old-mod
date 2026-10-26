@@ -9,7 +9,7 @@
 #include "fooditem.h"
 
 
-class CBottleItem: public CFoodItem
+class CBottleItem : public CFoodItem
 {
 private:
 	typedef	CFoodItem inherited;
@@ -18,17 +18,17 @@ public:
 	virtual ~CBottleItem(void);
 
 
-	virtual void Load				(LPCSTR section);
-	
-
-	void	OnEvent					(NET_Packet& P, u16 type);
+	virtual void Load(LPCSTR section);
 
 
-	virtual	void	Hit				(SHit* pHDS);
-	
+	void	OnEvent(NET_Packet& P, u16 type);
 
-			void					BreakToPieces		();
-	virtual void					UseBy				(CEntityAlive* entity_alive);
+
+	virtual	void	Hit(SHit* pHDS);
+
+
+	void					BreakToPieces();
+	virtual void					UseBy(CEntityAlive* entity_alive);
 protected:
 	//партиклы разбивания бутылки
 	shared_str m_sBreakParticles;

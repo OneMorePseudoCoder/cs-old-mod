@@ -12,14 +12,14 @@ public:
 	ref_light				sun_adapted;
 	light_Package			package;
 public:
-	void					add_light			(light*		L	);
+	void					add_light(light* L);
 
-	void					Load				(IReader*	fs	);
-	void					Unload				();
+	void					Load(IReader* fs);
+	void					Unload();
 
-	light*					Create				();
-	void					Update				();
+	light* Create();
+	void					Update();
 
-	CLight_DB				();
-	~CLight_DB				();
+	CLight_DB();
+	~CLight_DB();
 };

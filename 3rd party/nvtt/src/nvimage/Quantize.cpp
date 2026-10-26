@@ -5,7 +5,7 @@ http://www.visgraf.impa.br/Courses/ip00/proj/Dithering1/floyd_steinberg_ditherin
 http://www.gamedev.net/reference/articles/article341.asp
 
 @@ Look at LPS: http://www.cs.rit.edu/~pga/pics2000/i.html
- 
+
 This is a really nice guide to dithering algorithms:
 http://www.efg2.com/Lab/Library/ImageProcessing/DHALF.TXT
 
@@ -25,22 +25,22 @@ using namespace nv;
 
 
 // Simple quantization.
-void nv::Quantize::BinaryAlpha( Image * image, int alpha_threshold /*= 127*/ )
+void nv::Quantize::BinaryAlpha(Image* image, int alpha_threshold /*= 127*/)
 {
 	nvCheck(image != NULL);
-	
+
 	const uint w = image->width();
 	const uint h = image->height();
-	
-	for(uint y = 0; y < h; y++) {
-		for(uint x = 0; x < w; x++) {
-			
+
+	for (uint y = 0; y < h; y++) {
+		for (uint x = 0; x < w; x++) {
+
 			Color32 pixel = image->pixel(x, y);
-			
+
 			// Convert color.
-			if( pixel.a > alpha_threshold ) pixel.a = 255;
+			if (pixel.a > alpha_threshold) pixel.a = 255;
 			else pixel.a = 0;
-			
+
 			// Store color.
 			image->pixel(x, y) = pixel;
 		}
@@ -49,90 +49,90 @@ void nv::Quantize::BinaryAlpha( Image * image, int alpha_threshold /*= 127*/ )
 
 
 // Simple quantization.
-void nv::Quantize::RGB16( Image * image )
+void nv::Quantize::RGB16(Image* image)
 {
 	Truncate(image, 5, 6, 5, 8);
 }
 
 // Alpha quantization.
-void nv::Quantize::Alpha4( Image * image )
+void nv::Quantize::Alpha4(Image* image)
 {
 	Truncate(image, 8, 8, 8, 4);
 }
 
 
 // Error diffusion. Floyd Steinberg.
-void nv::Quantize::FloydSteinberg_RGB16( Image * image )
+void nv::Quantize::FloydSteinberg_RGB16(Image* image)
 {
 	FloydSteinberg(image, 5, 6, 5, 8);
 }
 
 
 // Error diffusion. Floyd Steinberg.
-void nv::Quantize::FloydSteinberg_BinaryAlpha( Image * image, int alpha_threshold /*= 127*/ ) 
+void nv::Quantize::FloydSteinberg_BinaryAlpha(Image* image, int alpha_threshold /*= 127*/)
 {
 	nvCheck(image != NULL);
-	
+
 	const uint w = image->width();
 	const uint h = image->height();
-	
+
 	// @@ Use fixed point?
-	float * row0 = new float[(w+2)];
-	float * row1 = new float[(w+2)];
-	memset(row0, 0, sizeof(float)*(w+2));
-	memset(row1, 0, sizeof(float)*(w+2));
-	
-	for(uint y = 0; y < h; y++) {
-		for(uint x = 0; x < w; x++) {
-			
+	float* row0 = new float[(w + 2)];
+	float* row1 = new float[(w + 2)];
+	memset(row0, 0, sizeof(float) * (w + 2));
+	memset(row1, 0, sizeof(float) * (w + 2));
+
+	for (uint y = 0; y < h; y++) {
+		for (uint x = 0; x < w; x++) {
+
 			Color32 pixel = image->pixel(x, y);
-			
+
 			// Add error.
-			int alpha = int(pixel.a) + int(row0[1+x]);
-			
+			int alpha = int(pixel.a) + int(row0[1 + x]);
+
 			// Convert color.
-			if( alpha > alpha_threshold ) pixel.a = 255;
+			if (alpha > alpha_threshold) pixel.a = 255;
 			else pixel.a = 0;
-			
+
 			// Store color.
 			image->pixel(x, y) = pixel;
-			
+
 			// Compute new error.
 			float diff = float(alpha - pixel.a);
-			
+
 			// Propagate new error.
-			row0[1+x+1] += 7.0f / 16.0f * diff;
-			row1[1+x-1] += 3.0f / 16.0f * diff;
-			row1[1+x+0] += 5.0f / 16.0f * diff;
-			row1[1+x+1] += 1.0f / 16.0f * diff;
+			row0[1 + x + 1] += 7.0f / 16.0f * diff;
+			row1[1 + x - 1] += 3.0f / 16.0f * diff;
+			row1[1 + x + 0] += 5.0f / 16.0f * diff;
+			row1[1 + x + 1] += 1.0f / 16.0f * diff;
 		}
-		
+
 		swap(row0, row1);
-		memset(row1, 0, sizeof(float)*(w+2));
+		memset(row1, 0, sizeof(float) * (w + 2));
 	}
-	
-	delete [] row0;
-	delete [] row1;
+
+	delete[] row0;
+	delete[] row1;
 }
 
 
 // Error diffusion. Floyd Steinberg.
-void nv::Quantize::FloydSteinberg_Alpha4( Image * image )
+void nv::Quantize::FloydSteinberg_Alpha4(Image* image)
 {
 	FloydSteinberg(image, 8, 8, 8, 4);
 }
 
 
-void nv::Quantize::Truncate(Image * image, uint rsize, uint gsize, uint bsize, uint asize)
+void nv::Quantize::Truncate(Image* image, uint rsize, uint gsize, uint bsize, uint asize)
 {
 	nvCheck(image != NULL);
-	
+
 	const uint w = image->width();
 	const uint h = image->height();
-	
-	for(uint y = 0; y < h; y++) {
-		for(uint x = 0; x < w; x++) {
-			
+
+	for (uint y = 0; y < h; y++) {
+		for (uint x = 0; x < w; x++) {
+
 			Color32 pixel = image->pixel(x, y);
 
 			// Convert to our desired size, and reconstruct.
@@ -156,29 +156,29 @@ void nv::Quantize::Truncate(Image * image, uint rsize, uint gsize, uint bsize, u
 
 
 // Error diffusion. Floyd Steinberg.
-void nv::Quantize::FloydSteinberg(Image * image, uint rsize, uint gsize, uint bsize, uint asize)
+void nv::Quantize::FloydSteinberg(Image* image, uint rsize, uint gsize, uint bsize, uint asize)
 {
 	nvCheck(image != NULL);
-	
+
 	const uint w = image->width();
 	const uint h = image->height();
-	
-	Vector4 * row0 = new Vector4[w+2];
-	Vector4 * row1 = new Vector4[w+2];
-	memset(row0, 0, sizeof(Vector4)*(w+2));
-	memset(row1, 0, sizeof(Vector4)*(w+2));
-	
+
+	Vector4* row0 = new Vector4[w + 2];
+	Vector4* row1 = new Vector4[w + 2];
+	memset(row0, 0, sizeof(Vector4) * (w + 2));
+	memset(row1, 0, sizeof(Vector4) * (w + 2));
+
 	for (uint y = 0; y < h; y++) {
 		for (uint x = 0; x < w; x++) {
-			
+
 			Color32 pixel = image->pixel(x, y);
 
 			// Add error.
-			pixel.r = clamp(int(pixel.r) + int(row0[1+x].x()), 0, 255);
-			pixel.g = clamp(int(pixel.g) + int(row0[1+x].y()), 0, 255);
-			pixel.b = clamp(int(pixel.b) + int(row0[1+x].z()), 0, 255);
-			pixel.a = clamp(int(pixel.a) + int(row0[1+x].w()), 0, 255);
-			
+			pixel.r = clamp(int(pixel.r) + int(row0[1 + x].x()), 0, 255);
+			pixel.g = clamp(int(pixel.g) + int(row0[1 + x].y()), 0, 255);
+			pixel.b = clamp(int(pixel.b) + int(row0[1 + x].z()), 0, 255);
+			pixel.a = clamp(int(pixel.a) + int(row0[1 + x].w()), 0, 255);
+
 			int r = pixel.r;
 			int g = pixel.g;
 			int b = pixel.b;
@@ -199,21 +199,21 @@ void nv::Quantize::FloydSteinberg(Image * image, uint rsize, uint gsize, uint bs
 
 			// Store color.
 			image->pixel(x, y) = Color32(r, g, b, a);
-			
+
 			// Compute new error.
 			Vector4 diff(float(int(pixel.r) - r), float(int(pixel.g) - g), float(int(pixel.b) - b), float(int(pixel.a) - a));
-			
+
 			// Propagate new error.
-			row0[1+x+1] += 7.0f / 16.0f * diff;
-			row1[1+x-1] += 3.0f / 16.0f * diff;
-			row1[1+x+0] += 5.0f / 16.0f * diff;
-			row1[1+x+1] += 1.0f / 16.0f * diff;
+			row0[1 + x + 1] += 7.0f / 16.0f * diff;
+			row1[1 + x - 1] += 3.0f / 16.0f * diff;
+			row1[1 + x + 0] += 5.0f / 16.0f * diff;
+			row1[1 + x + 1] += 1.0f / 16.0f * diff;
 		}
-		
+
 		swap(row0, row1);
-		memset(row1, 0, sizeof(Vector4)*(w+2));
+		memset(row1, 0, sizeof(Vector4) * (w + 2));
 	}
-	
-	delete [] row0;
-	delete [] row1;
+
+	delete[] row0;
+	delete[] row1;
 }

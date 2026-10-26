@@ -15,12 +15,12 @@
 class CUIIBStatic : public CUIInteractiveBackground<CUIStatic>
 {
 public:
-	virtual void	SetTextureOffset			(float x, float y);
-	virtual void	SetBaseTextureOffset		(float x, float y);
-	virtual void	SetTextureOffset			(Fvector2 offset);
-	virtual void	SetBaseTextureOffset		(Fvector2 offset);
-	virtual void	SetStretchTexture			(bool stretch_texture);
-	void			SetScaleTexUsing			(bool status);
-	void			SetScaleTex					(float tex_scale);
-			void	SetMirrorMode				(EUIMirroring m);
+	virtual void	SetTextureOffset(float x, float y);
+	virtual void	SetBaseTextureOffset(float x, float y);
+	virtual void	SetTextureOffset(Fvector2 offset);
+	virtual void	SetBaseTextureOffset(Fvector2 offset);
+	virtual void	SetStretchTexture(bool stretch_texture);
+	void			SetScaleTexUsing(bool status);
+	void			SetScaleTex(float tex_scale);
+	void	SetMirrorMode(EUIMirroring m);
 };

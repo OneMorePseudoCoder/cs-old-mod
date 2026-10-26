@@ -35,38 +35,38 @@ struct GHIEncryptor; // forward declare for callbacks
 struct GHIConnection;
 
 // Called to start the encryption engine
-typedef GHIEncryptionResult (*GHTTPEncryptorInitFunc)   (struct GHIConnection * theConnection, 
-											   struct GHIEncryptor * theEncryptor);
+typedef GHIEncryptionResult(*GHTTPEncryptorInitFunc)   (struct GHIConnection* theConnection,
+	struct GHIEncryptor* theEncryptor);
 
 // Called to destroy the encryption engine
-typedef GHIEncryptionResult (*GHTTPEncryptorCleanupFunc)(struct GHIConnection * theConnection, 
-											   struct GHIEncryptor * theEncryptor);
+typedef GHIEncryptionResult(*GHTTPEncryptorCleanupFunc)(struct GHIConnection* theConnection,
+	struct GHIEncryptor* theEncryptor);
 
 // Called when data needs to be encrypted
 //    - entire plain text buffer will be encrypted
-typedef GHIEncryptionResult (*GHTTPEncryptorEncryptFunc)(struct GHIConnection * theConnection, 
-											   struct GHIEncryptor * theEncryptor,
-											   const char * thePlainTextBuffer,
-											   int          thePlainTextLength, // [in]
-											   char *       theEncryptedBuffer,
-											   int *        theEncryptedLength); // [in/out]
+typedef GHIEncryptionResult(*GHTTPEncryptorEncryptFunc)(struct GHIConnection* theConnection,
+	struct GHIEncryptor* theEncryptor,
+	const char* thePlainTextBuffer,
+	int          thePlainTextLength, // [in]
+	char* theEncryptedBuffer,
+	int* theEncryptedLength); // [in/out]
 
 // Called when data needs to be descrypted 
 //    - encrypted data may be left in the buffer
 //    - decrypted buffer is appended to, not overwritten
-typedef GHIEncryptionResult (*GHTTPEncryptorDecryptFunc)(struct GHIConnection * theConnection, 
-											   struct GHIEncryptor* theEncryptor,
-											   const char * theEncryptedBuffer,
-											   int *        theEncryptedLength, // [in/out]
-											   char *       theDecryptedBuffer,
-											   int *        theDecryptedLength);// [in/out]
+typedef GHIEncryptionResult(*GHTTPEncryptorDecryptFunc)(struct GHIConnection* theConnection,
+	struct GHIEncryptor* theEncryptor,
+	const char* theEncryptedBuffer,
+	int* theEncryptedLength, // [in/out]
+	char* theDecryptedBuffer,
+	int* theDecryptedLength);// [in/out]
 
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 typedef struct GHIEncryptor
 {
-	void*     mInterface;   // only SSL is currently supported
+	void* mInterface;   // only SSL is currently supported
 	GHTTPEncryptionEngine mEngine;
 	GHTTPBool mInitialized;
 	GHTTPBool mSessionEstablished;
@@ -82,22 +82,22 @@ typedef struct GHIEncryptor
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 // ssl encryption
-GHIEncryptionResult ghttpEncryptorSslInitFunc(struct GHIConnection * connection,
-									struct GHIEncryptor  * theEncryptor);
-GHIEncryptionResult ghttpEncryptorSslCleanupFunc(struct GHIConnection * connection,
-									   struct GHIEncryptor  * theEncryptor);
-GHIEncryptionResult ghttpEncryptorSslEncryptFunc(struct GHIConnection * connection,
-									   struct GHIEncryptor  * theEncryptor,
-									   const char * thePlainTextBuffer,
-									   int          thePlainTextLength,
-									   char *       theEncryptedBuffer,
-									   int *        theEncryptedLength);
-GHIEncryptionResult ghttpEncryptorSslDecryptFunc(struct GHIConnection * connection,
-									   struct GHIEncryptor  * theEncryptor,
-									   const char * theEncryptedBuffer,
-									   int *        theEncryptedLength,
-									   char *       theDecryptedBuffer,
-									   int *        theDecryptedLength);
+GHIEncryptionResult ghttpEncryptorSslInitFunc(struct GHIConnection* connection,
+	struct GHIEncryptor* theEncryptor);
+GHIEncryptionResult ghttpEncryptorSslCleanupFunc(struct GHIConnection* connection,
+	struct GHIEncryptor* theEncryptor);
+GHIEncryptionResult ghttpEncryptorSslEncryptFunc(struct GHIConnection* connection,
+	struct GHIEncryptor* theEncryptor,
+	const char* thePlainTextBuffer,
+	int          thePlainTextLength,
+	char* theEncryptedBuffer,
+	int* theEncryptedLength);
+GHIEncryptionResult ghttpEncryptorSslDecryptFunc(struct GHIConnection* connection,
+	struct GHIEncryptor* theEncryptor,
+	const char* theEncryptedBuffer,
+	int* theEncryptedLength,
+	char* theDecryptedBuffer,
+	int* theDecryptedLength);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

@@ -15,7 +15,7 @@
 
  ********************************************************************/
 
-/*Definitions shared by the forward and inverse DCT transforms.*/
+ /*Definitions shared by the forward and inverse DCT transforms.*/
 #if !defined(_dct_H)
 # define _dct_H (1)
 

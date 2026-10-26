@@ -27,26 +27,28 @@
 #include <luabind/config.hpp>
 #include <luabind/detail/policy.hpp>
 
-namespace luabind { namespace detail 
-{
-	// makes A dependent on B, meaning B will outlive A.
-	// internally A stores a reference to B
-	template<int A, int B>
-	struct dependency_policy
+namespace luabind {
+	namespace detail
 	{
-		static void postcall(lua_State* L, const index_map& indices)
+		// makes A dependent on B, meaning B will outlive A.
+		// internally A stores a reference to B
+		template<int A, int B>
+		struct dependency_policy
 		{
-			int nurse_index = indices[A];
-			int patient = indices[B];
+			static void postcall(lua_State* L, const index_map& indices)
+			{
+				int nurse_index = indices[A];
+				int patient = indices[B];
 
-			object_rep* nurse = static_cast<object_rep*>(lua_touserdata(L, nurse_index));
-			assert((nurse != 0) && "internal error, please report"); // internal error
+				object_rep* nurse = static_cast<object_rep*>(lua_touserdata(L, nurse_index));
+				assert((nurse != 0) && "internal error, please report"); // internal error
 
-			nurse->add_dependency(L, patient);
-		}
-	};
+				nurse->add_dependency(L, patient);
+			}
+		};
 
-}}
+	}
+}
 
 #if defined (BOOST_MSVC) && (BOOST_MSVC <= 1200)
 
@@ -73,12 +75,14 @@ namespace luabind
 	}
 
 	template<class A, class B>
-	detail::policy_cons<detail::dependency_policy<detail::get_index_workaround<A>::value, detail::get_index_workaround<B>::value>, detail::null_type> 	dependency(A,B) { return detail::policy_cons<detail::dependency_policy<detail::get_index_workaround<A>::value, detail::get_index_workaround<B>::value>, detail::null_type>(); }
+	detail::policy_cons<detail::dependency_policy<detail::get_index_workaround<A>::value, detail::get_index_workaround<B>::value>, detail::null_type> 	dependency(A, B) { return detail::policy_cons<detail::dependency_policy<detail::get_index_workaround<A>::value, detail::get_index_workaround<B>::value>, detail::null_type>(); }
 
 	template<class A>
 	detail::policy_cons<detail::dependency_policy<0, detail::get_index_workaround<A>::value>, detail::null_type>
-	return_internal_reference(A)
-	{ return detail::policy_cons<detail::dependency_policy<0, detail::get_index_workaround<A>::value>, detail::null_type>(); }
+		return_internal_reference(A)
+	{
+		return detail::policy_cons<detail::dependency_policy<0, detail::get_index_workaround<A>::value>, detail::null_type>();
+	}
 }
 
 #else
@@ -87,14 +91,14 @@ namespace luabind
 {
 	template<int A, int B>
 	detail::policy_cons<detail::dependency_policy<A, B>, detail::null_type>
-	dependency(boost::arg<A>, boost::arg<B>)
+		dependency(boost::arg<A>, boost::arg<B>)
 	{
 		return detail::policy_cons<detail::dependency_policy<A, B>, detail::null_type>();
 	}
 
 	template<int A>
 	detail::policy_cons<detail::dependency_policy<0, A>, detail::null_type>
-	return_internal_reference(boost::arg<A>)
+		return_internal_reference(boost::arg<A>)
 	{
 		return detail::policy_cons<detail::dependency_policy<0, A>, detail::null_type>();
 	}

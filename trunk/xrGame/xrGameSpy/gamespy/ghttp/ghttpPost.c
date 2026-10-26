@@ -1,5 +1,5 @@
 /*
-GameSpy GHTTP SDK 
+GameSpy GHTTP SDK
 Dan "Mr. Pants" Schoenblum
 dan@gamespy.com
 
@@ -34,12 +34,12 @@ devsupport@gamespy.com
 #define GHI_DIGITS                      "0123456789ABCDEF"
 
 // DIME header settings
-    // first byte is a combination of VERSION + first/last/chunked
+	// first byte is a combination of VERSION + first/last/chunked
 #define GHI_DIME_VERSION         (0x1<<3) // 5th bit (from the left)
 #define GHI_DIMEFLAG_FIRSTRECORD (1<<2)
 #define GHI_DIMEFLAG_LASTRECORD  (1<<1)
 #define GHI_DIMEFLAG_CHUNKED     (1<<0)
-    // second byte is combination of TYPE_T and reserved (4bits = 0)
+	// second byte is combination of TYPE_T and reserved (4bits = 0)
 #define GHI_DIMETYPE_T_UNCHANGED (0x0 << 4)
 #define GHI_DIMETYPE_T_MEDIA     (0x1 << 4)
 #define GHI_DIMETYPE_T_URI       (0x2 << 4)
@@ -80,7 +80,7 @@ typedef struct GHIPost
 {
 	DArray data;
 	ghttpPostCallback callback;
-	void * param;
+	void* param;
 	GHTTPBool hasFiles;
 	GHTTPBool hasSoap;
 	GHTTPBool useDIME;
@@ -91,7 +91,7 @@ typedef struct GHIPost
 /////////////
 typedef struct GHIPostStringData
 {
-	char * string;
+	char* string;
 	int len;
 	GHTTPBool invalidChars;
 	int extendedChars;
@@ -99,17 +99,17 @@ typedef struct GHIPostStringData
 
 typedef struct GHIPostFileDiskData
 {
-	char * filename;
-	char * reportFilename;
-	char * contentType;
+	char* filename;
+	char* reportFilename;
+	char* contentType;
 } GHIPostFileDiskData;
 
 typedef struct GHIPostFileMemoryData
 {
-	const char * buffer;
+	const char* buffer;
 	int len;
-	char * reportFilename;
-	char * contentType;
+	char* reportFilename;
+	char* contentType;
 } GHIPostFileMemoryData;
 
 typedef struct GHIPostXmlData
@@ -120,7 +120,7 @@ typedef struct GHIPostXmlData
 typedef struct GHIPostData
 {
 	GHIPostDataType type;
-	char * name;
+	char* name;
 	union
 	{
 		GHIPostStringData string;
@@ -138,7 +138,7 @@ typedef struct GHIPostData
 
 typedef struct GHIPostFileDiskState
 {
-	FILE * file;
+	FILE* file;
 	long len;
 } GHIPostFileDiskState;
 
@@ -153,7 +153,7 @@ typedef struct GHIPostFileDiskState
 
 typedef struct GHIPostState
 {
-	GHIPostData * data;
+	GHIPostData* data;
 	int pos;
 	union
 	{
@@ -168,10 +168,10 @@ typedef struct GHIPostState
 /////////////
 static void ghiPostDataFree
 (
-	void * elem
+	void* elem
 )
 {
-	GHIPostData * data = (GHIPostData *)elem;
+	GHIPostData* data = (GHIPostData*)elem;
 
 	// Free the name.
 	/////////////////
@@ -180,13 +180,13 @@ static void ghiPostDataFree
 
 	// Free based on type.
 	//////////////////////
-	if(data->type == GHIString)
+	if (data->type == GHIString)
 	{
 		// Free the string string.
 		/////////////////////////
 		gsifree(data->data.string.string);
 	}
-	else if(data->type == GHIFileDisk)
+	else if (data->type == GHIFileDisk)
 	{
 		// Free the strings.
 		////////////////////
@@ -194,14 +194,14 @@ static void ghiPostDataFree
 		gsifree(data->data.fileDisk.reportFilename);
 		gsifree(data->data.fileDisk.contentType);
 	}
-	else if(data->type == GHIFileMemory)
+	else if (data->type == GHIFileMemory)
 	{
 		// Free the strings.
 		////////////////////
 		gsifree(data->data.fileMemory.reportFilename);
 		gsifree(data->data.fileMemory.contentType);
 	}
-	else if(data->type == GHIXmlData)
+	else if (data->type == GHIXmlData)
 	{
 		gsXmlFreeWriter(data->data.xml.xml);
 	}
@@ -218,12 +218,12 @@ GHTTPPost ghiNewPost
 	void
 )
 {
-	GHIPost * post;
+	GHIPost* post;
 
 	// Allocate the post object.
 	////////////////////////////
-	post = (GHIPost *)gsimalloc(sizeof(GHIPost));
-	if(!post)
+	post = (GHIPost*)gsimalloc(sizeof(GHIPost));
+	if (!post)
 		return NULL;
 
 	// Initialize it.
@@ -234,7 +234,7 @@ GHTTPPost ghiNewPost
 	// Create the array of data objects.
 	////////////////////////////////////
 	post->data = ArrayNew(sizeof(GHIPostData), 0, ghiPostDataFree);
-	if(!post->data)
+	if (!post->data)
 	{
 		gsifree(post);
 		return NULL;
@@ -249,7 +249,7 @@ void ghiPostSetAutoFree
 	GHTTPBool autoFree
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 
 	post->autoFree = autoFree;
 }
@@ -259,7 +259,7 @@ GHTTPBool ghiIsPostAutoFree
 	GHTTPPost _post
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 
 	return post->autoFree;
 }
@@ -269,7 +269,7 @@ void ghiFreePost
 	GHTTPPost _post
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 
 	// Free the array of data objects.
 	//////////////////////////////////
@@ -283,11 +283,11 @@ void ghiFreePost
 GHTTPBool ghiPostAddString
 (
 	GHTTPPost _post,
-	const char * name,
-	const char * string
+	const char* name,
+	const char* string
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 	GHIPostData data;
 	int len;
 	int rcode;
@@ -296,10 +296,10 @@ GHTTPBool ghiPostAddString
 	////////////////////
 	name = strdup(name);
 	string = strdup(string);
-	if(!name || !string)
+	if (!name || !string)
 	{
-		gsifree((char *)name);
-		gsifree((char *)string);
+		gsifree((char*)name);
+		gsifree((char*)string);
 		return GHTTPFalse;
 	}
 
@@ -307,8 +307,8 @@ GHTTPBool ghiPostAddString
 	////////////////
 	memset(&data, 0, sizeof(GHIPostData));
 	data.type = GHIString;
-	data.name = (char *)name;
-	data.data.string.string = (char *)string;
+	data.name = (char*)name;
+	data.data.string.string = (char*)string;
 	len = (int)strlen(string);
 	data.data.string.len = len;
 	data.data.string.invalidChars = GHTTPFalse;
@@ -316,7 +316,7 @@ GHTTPBool ghiPostAddString
 	// Are there any invalid characters?
 	////////////////////////////////////
 	rcode = (int)strspn(string, GHI_LEGAL_URLENCODED_CHARS);
-	if(rcode != len)
+	if (rcode != len)
 	{
 		int i;
 		int count = 0;
@@ -325,8 +325,8 @@ GHTTPBool ghiPostAddString
 
 		// Count the number, not including spaces.
 		//////////////////////////////////////////
-		for(i = 0 ; string[i] ; i++)
-			if(!strchr(GHI_LEGAL_URLENCODED_CHARS, string[i]) && (string[i] != ' '))
+		for (i = 0; string[i]; i++)
+			if (!strchr(GHI_LEGAL_URLENCODED_CHARS, string[i]) && (string[i] != ' '))
 				count++;
 
 		data.data.string.extendedChars = count;
@@ -342,13 +342,13 @@ GHTTPBool ghiPostAddString
 GHTTPBool ghiPostAddFileFromDisk
 (
 	GHTTPPost _post,
-	const char * name,
-	const char * filename,
-	const char * reportFilename,
-	const char * contentType
+	const char* name,
+	const char* filename,
+	const char* reportFilename,
+	const char* contentType
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 	GHIPostData data;
 
 	// Copy the strings.
@@ -357,12 +357,12 @@ GHTTPBool ghiPostAddFileFromDisk
 	filename = strdup(filename);
 	reportFilename = strdup(reportFilename);
 	contentType = strdup(contentType);
-	if(!name || !filename || !reportFilename || !contentType)
+	if (!name || !filename || !reportFilename || !contentType)
 	{
-		gsifree((char *)name);
-		gsifree((char *)filename);
-		gsifree((char *)reportFilename);
-		gsifree((char *)contentType);
+		gsifree((char*)name);
+		gsifree((char*)filename);
+		gsifree((char*)reportFilename);
+		gsifree((char*)contentType);
 		return GHTTPFalse;
 	}
 
@@ -370,10 +370,10 @@ GHTTPBool ghiPostAddFileFromDisk
 	////////////////
 	memset(&data, 0, sizeof(GHIPostData));
 	data.type = GHIFileDisk;
-	data.name = (char *)name;
-	data.data.fileDisk.filename = (char *)filename;
-	data.data.fileDisk.reportFilename = (char *)reportFilename;
-	data.data.fileDisk.contentType = (char *)contentType;
+	data.name = (char*)name;
+	data.data.fileDisk.filename = (char*)filename;
+	data.data.fileDisk.reportFilename = (char*)reportFilename;
+	data.data.fileDisk.contentType = (char*)contentType;
 
 	// Add it.
 	//////////
@@ -393,14 +393,14 @@ GHTTPBool ghiPostAddFileFromDisk
 GHTTPBool ghiPostAddFileFromMemory
 (
 	GHTTPPost _post,
-	const char * name,
-	const char * buffer,
+	const char* name,
+	const char* buffer,
 	int bufferLen,
-	const char * reportFilename,
-	const char * contentType
+	const char* reportFilename,
+	const char* contentType
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 	GHIPostData data;
 
 	// Copy the strings.
@@ -408,11 +408,11 @@ GHTTPBool ghiPostAddFileFromMemory
 	name = strdup(name);
 	reportFilename = strdup(reportFilename);
 	contentType = strdup(contentType);
-	if(!name || !reportFilename || !contentType)
+	if (!name || !reportFilename || !contentType)
 	{
-		gsifree((char *)name);
-		gsifree((char *)reportFilename);
-		gsifree((char *)contentType);
+		gsifree((char*)name);
+		gsifree((char*)reportFilename);
+		gsifree((char*)contentType);
 		return GHTTPFalse;
 	}
 
@@ -420,11 +420,11 @@ GHTTPBool ghiPostAddFileFromMemory
 	//////////
 	memset(&data, 0, sizeof(GHIPostData));
 	data.type = GHIFileMemory;
-	data.name = (char *)name;
-	data.data.fileMemory.buffer = (char *)buffer;
+	data.name = (char*)name;
+	data.data.fileMemory.buffer = (char*)buffer;
 	data.data.fileMemory.len = bufferLen;
-	data.data.fileMemory.reportFilename = (char *)reportFilename;
-	data.data.fileMemory.contentType = (char *)contentType;
+	data.data.fileMemory.reportFilename = (char*)reportFilename;
+	data.data.fileMemory.contentType = (char*)contentType;
 
 	// Add it.
 	//////////
@@ -450,7 +450,7 @@ GHTTPBool ghiPostAddXml
 	GHIPostData data;
 	//unsigned int rcode = 0;
 
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 
 	data.type = GHIXmlData;
 	data.data.xml.xml = xml;
@@ -468,10 +468,10 @@ void ghiPostSetCallback
 (
 	GHTTPPost _post,
 	ghttpPostCallback callback,
-	void * param
+	void* param
 )
 {
-	GHIPost * post = (GHIPost *)_post;
+	GHIPost* post = (GHIPost*)_post;
 
 	// Set the callback and param.
 	//////////////////////////////
@@ -479,20 +479,20 @@ void ghiPostSetCallback
 	post->param = param;
 }
 
-const char * ghiPostGetContentType
+const char* ghiPostGetContentType
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
-	GHIPost * post = connection->post;
+	GHIPost* post = connection->post;
 
 	assert(post);
-	if(!post)
+	if (!post)
 		return "";
 
 	// Report content-type based on if we are sending files or not.
 	///////////////////////////////////////////////////////////////
-	if(post->useDIME)
+	if (post->useDIME)
 		return ("application/dime");
 	else if (post->hasFiles)
 	{
@@ -514,23 +514,23 @@ const char * ghiPostGetContentType
 
 static int ghiPostGetNoFilesContentLength
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
-	GHIPost * post = connection->post;
-	GHIPostData * data;
+	GHIPost* post = connection->post;
+	GHIPostData* data;
 	int i;
 	int num;
 	int total = 0;
 	int foundSoapAlready = 0;
 
 	num = ArrayLength(post->data);
-	if(!num)
+	if (!num)
 		return 0;
 
-	for(i = 0 ; i < num ; i++)
+	for (i = 0; i < num; i++)
 	{
-		data = (GHIPostData *)ArrayNth(post->data, i);
+		data = (GHIPostData*)ArrayNth(post->data, i);
 
 		GS_ASSERT(data->type == GHIString || data->type == GHIXmlData);
 
@@ -557,11 +557,11 @@ static int ghiPostGetNoFilesContentLength
 
 static int ghiPostGetHasFilesContentLength
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
-	GHIPost * post = connection->post;
-	GHIPostData * data;
+	GHIPost* post = connection->post;
+	GHIPostData* data;
 	int i;
 	int num;
 	int total = 0;
@@ -571,8 +571,8 @@ static int ghiPostGetHasFilesContentLength
 	static int fileBaseLen;
 	static int endLen;
 	static int xmlBaseLen;
-	
-	if(!boundaryLen)
+
+	if (!boundaryLen)
 	{
 		if (post->useDIME)
 		{
@@ -597,24 +597,24 @@ static int ghiPostGetHasFilesContentLength
 
 	num = ArrayLength(post->data);
 
-	for(i = 0 ; i < num ; i++)
+	for (i = 0; i < num; i++)
 	{
-		data = (GHIPostData *)ArrayNth(post->data, i);
+		data = (GHIPostData*)ArrayNth(post->data, i);
 
-		if(data->type == GHIString)
+		if (data->type == GHIString)
 		{
 			total += stringBaseLen;
 			total += (int)strlen(data->name);
 			total += data->data.string.len;
 		}
-		else if(data->type == GHIFileDisk)
+		else if (data->type == GHIFileDisk)
 		{
-			GHIPostState * state;
+			GHIPostState* state;
 
 			total += fileBaseLen;
 			total += (int)strlen(data->name);
 			total += (int)strlen(data->data.fileDisk.contentType);
-			state = (GHIPostState *)ArrayNth(connection->postingState.states, i);
+			state = (GHIPostState*)ArrayNth(connection->postingState.states, i);
 			assert(state);
 			total += (int)state->state.fileDisk.len;
 
@@ -626,18 +626,18 @@ static int ghiPostGetHasFilesContentLength
 				// have to include padding bytes!
 				int padBytes = 0;
 
-				padBytes = 4-(int)strlen(data->name)%4;
+				padBytes = 4 - (int)strlen(data->name) % 4;
 				if (padBytes != 4)
 					total += padBytes;
-				padBytes = 4-(int)strlen(data->data.fileDisk.contentType)%4;
+				padBytes = 4 - (int)strlen(data->data.fileDisk.contentType) % 4;
 				if (padBytes != 4)
 					total += padBytes;
-				padBytes = 4-(int)state->state.fileDisk.len%4;
+				padBytes = 4 - (int)state->state.fileDisk.len % 4;
 				if (padBytes != 4)
 					total += padBytes;
 			}
 		}
-		else if(data->type == GHIFileMemory)
+		else if (data->type == GHIFileMemory)
 		{
 			total += fileBaseLen;
 			total += (int)strlen(data->name);
@@ -652,18 +652,18 @@ static int ghiPostGetHasFilesContentLength
 				// have to include padding bytes!
 				int padBytes = 0;
 
-				padBytes = 4-(int)strlen(data->name)%4;
+				padBytes = 4 - (int)strlen(data->name) % 4;
 				if (padBytes != 4)
 					total += padBytes;
-				padBytes = 4-(int)strlen(data->data.fileMemory.contentType)%4;
+				padBytes = 4 - (int)strlen(data->data.fileMemory.contentType) % 4;
 				if (padBytes != 4)
 					total += padBytes;
-				padBytes = 4-(int)data->data.fileMemory.len%4;
+				padBytes = 4 - (int)data->data.fileMemory.len % 4;
 				if (padBytes != 4)
 					total += padBytes;
 			}
 		}
-		else if(data->type == GHIXmlData)
+		else if (data->type == GHIXmlData)
 		{
 			int padBytes = 0;
 
@@ -674,15 +674,15 @@ static int ghiPostGetHasFilesContentLength
 			total += gsXmlWriterGetDataLength(data->data.xml.xml);
 
 			// have to include padding bytes!
-			padBytes = 4-(int)gsXmlWriterGetDataLength(data->data.xml.xml)%4;
+			padBytes = 4 - (int)gsXmlWriterGetDataLength(data->data.xml.xml) % 4;
 			if (padBytes != 4)
 				total += padBytes;
 			total += (int)strlen(GHI_DIME_SOAPID);
-			padBytes = 4-(int)strlen(GHI_DIME_SOAPID)%4;
+			padBytes = 4 - (int)strlen(GHI_DIME_SOAPID) % 4;
 			if (padBytes != 4)
 				total += padBytes;
 			total += (int)strlen(GHI_DIME_SOAPTYPE);
-			padBytes = 4-(int)strlen(GHI_DIME_SOAPTYPE)%4;
+			padBytes = 4 - (int)strlen(GHI_DIME_SOAPTYPE) % 4;
 			if (padBytes != 4)
 				total += padBytes;
 		}
@@ -703,16 +703,16 @@ static int ghiPostGetHasFilesContentLength
 
 static int ghiPostGetContentLength
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
-	GHIPost * post = connection->post;
+	GHIPost* post = connection->post;
 
 	assert(post);
-	if(!post)
+	if (!post)
 		return 0;
 
-	if(post->hasFiles)
+	if (post->hasFiles)
 		return ghiPostGetHasFilesContentLength(connection);
 
 	return ghiPostGetNoFilesContentLength(connection);
@@ -720,7 +720,7 @@ static int ghiPostGetContentLength
 
 static GHTTPBool ghiPostStateInit
 (
-	GHIPostState * state
+	GHIPostState* state
 )
 {
 	GHIPostDataType type;
@@ -735,32 +735,32 @@ static GHTTPBool ghiPostStateInit
 
 	// Init based on type.
 	//////////////////////
-	if(type == GHIString)
+	if (type == GHIString)
 	{
 	}
-	else if(type == GHIFileDisk)
+	else if (type == GHIFileDisk)
 	{
 		// Open the file.
 		/////////////////
 #ifndef NOFILE
 		state->state.fileDisk.file = fopen(state->data->data.fileDisk.filename, "rb");
 #endif
-		if(!state->state.fileDisk.file)
+		if (!state->state.fileDisk.file)
 			return GHTTPFalse;
 
 		// Get the file length.
 		///////////////////////
-		if(fseek(state->state.fileDisk.file, 0, SEEK_END) != 0)
+		if (fseek(state->state.fileDisk.file, 0, SEEK_END) != 0)
 			return GHTTPFalse;
 		state->state.fileDisk.len = ftell(state->state.fileDisk.file);
-		if(state->state.fileDisk.len == EOF)
+		if (state->state.fileDisk.len == EOF)
 			return GHTTPFalse;
 		rewind(state->state.fileDisk.file);
 	}
-	else if(type == GHIFileMemory)
+	else if (type == GHIFileMemory)
 	{
 	}
-	else if(type == GHIXmlData)
+	else if (type == GHIXmlData)
 	{
 	}
 	else
@@ -777,7 +777,7 @@ static GHTTPBool ghiPostStateInit
 
 static void ghiPostStateCleanup
 (
-	GHIPostState * state
+	GHIPostState* state
 )
 {
 	GHIPostDataType type;
@@ -788,19 +788,19 @@ static void ghiPostStateCleanup
 
 	// Init based on type.
 	//////////////////////
-	if(type == GHIString)
+	if (type == GHIString)
 	{
 	}
-	else if(type == GHIFileDisk)
+	else if (type == GHIFileDisk)
 	{
-		if(state->state.fileDisk.file)
+		if (state->state.fileDisk.file)
 			fclose(state->state.fileDisk.file);
 		state->state.fileDisk.file = NULL;
 	}
-	else if(type == GHIFileMemory)
+	else if (type == GHIFileMemory)
 	{
 	}
-	else if(type == GHIXmlData)
+	else if (type == GHIXmlData)
 	{
 	}
 	else
@@ -813,17 +813,17 @@ static void ghiPostStateCleanup
 
 GHTTPBool ghiPostInitState
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
 	int i;
 	int len;
-	GHIPostData * data;
+	GHIPostData* data;
 	GHIPostState state;
-	GHIPostState * pState;
+	GHIPostState* pState;
 
 	assert(connection->post);
-	if(!connection->post)
+	if (!connection->post)
 		return GHTTPFalse;
 
 	// Create an array for the states.
@@ -836,16 +836,16 @@ GHTTPBool ghiPostInitState
 	connection->postingState.param = connection->post->param;
 	len = ArrayLength(connection->post->data);
 	connection->postingState.states = ArrayNew(sizeof(GHIPostState), len, NULL);
-	if(!connection->postingState.states)
+	if (!connection->postingState.states)
 		return GHTTPFalse;
 
 	// Setup all the states.
 	////////////////////////
-	for(i = 0 ; i < len ; i++)
+	for (i = 0; i < len; i++)
 	{
 		// Get the data object for this index.
 		//////////////////////////////////////
-		data = (GHIPostData *)ArrayNth(connection->post->data, i);
+		data = (GHIPostData*)ArrayNth(connection->post->data, i);
 
 		// Initialize the state's members.
 		//////////////////////////////////
@@ -854,13 +854,13 @@ GHTTPBool ghiPostInitState
 
 		// Call the init function.
 		//////////////////////////
-		if(!ghiPostStateInit(&state))
+		if (!ghiPostStateInit(&state))
 		{
 			// We need to cleanup everything we just initialized.
 			/////////////////////////////////////////////////////
-			for(i-- ; i >= 0 ; i--)
+			for (i--; i >= 0; i--)
 			{
-				pState = (GHIPostState *)ArrayNth(connection->postingState.states, i);
+				pState = (GHIPostState*)ArrayNth(connection->postingState.states, i);
 				ghiPostStateCleanup(pState);
 			}
 
@@ -896,21 +896,21 @@ GHTTPBool ghiPostInitState
 
 void ghiPostCleanupState
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
 	int i;
 	int len;
-	GHIPostState * state;
+	GHIPostState* state;
 
 	// Loop through and call the cleanup function.
 	//////////////////////////////////////////////
-	if(connection->postingState.states)
+	if (connection->postingState.states)
 	{
 		len = ArrayLength(connection->postingState.states);
-		for(i = 0 ; i < len ; i++)
+		for (i = 0; i < len; i++)
 		{
-			state = (GHIPostState *)ArrayNth(connection->postingState.states, i);
+			state = (GHIPostState*)ArrayNth(connection->postingState.states, i);
 			ghiPostStateCleanup(state);
 		}
 
@@ -922,7 +922,7 @@ void ghiPostCleanupState
 
 	// Free the post.
 	/////////////////
-	if(connection->post && connection->post->autoFree)
+	if (connection->post && connection->post->autoFree)
 	{
 		ghiFreePost(connection->post);
 		connection->post = NULL;
@@ -931,17 +931,17 @@ void ghiPostCleanupState
 
 static GHIPostingResult ghiPostStringStateDoPosting
 (
-	GHIPostState * state,
-	GHIConnection * connection
+	GHIPostState* state,
+	GHIConnection* connection
 )
 {
 	//GHTTPBool result;
-	
+
 	assert(state->pos >= 0);
 
 	// Is this an empty string?
 	///////////////////////////
-	if(state->data->data.string.len == 0)
+	if (state->data->data.string.len == 0)
 		return GHIPostingDone;
 
 	assert(state->pos < state->data->data.string.len);
@@ -949,32 +949,32 @@ static GHIPostingResult ghiPostStringStateDoPosting
 	// If we're doing a simple post, we need to fix invalid characters.
 	//   - only applies to simple posts
 	///////////////////////////////////////////////////////////////////
-	if(!connection->post->hasFiles && !connection->post->hasSoap && state->data->data.string.invalidChars)
+	if (!connection->post->hasFiles && !connection->post->hasSoap && state->data->data.string.invalidChars)
 	{
 		int i;
 		int c;
-		const char * string = state->data->data.string.string;
+		const char* string = state->data->data.string.string;
 		char hex[4] = "%00";
-		GHIBuffer *writeBuffer;
+		GHIBuffer* writeBuffer;
 
 		// When encrypting, we need space for two copies
 		if (connection->encryptor.mEngine == GHTTPEncryptionEngine_None)
-			writeBuffer = &connection->sendBuffer; 
+			writeBuffer = &connection->sendBuffer;
 		else
 			writeBuffer = &connection->encodeBuffer;
 
 		// This could probably be done a lot better.
 		////////////////////////////////////////////
-		for(i = 0 ; (c = string[i]) != 0 ; i++)
+		for (i = 0; (c = string[i]) != 0; i++)
 		{
-			if(strchr(GHI_LEGAL_URLENCODED_CHARS, c))
+			if (strchr(GHI_LEGAL_URLENCODED_CHARS, c))
 			{
 				// Legal.
 				/////////
 				//result = ghiAppendCharToBuffer(writeBuffer, c);
 				ghiAppendCharToBuffer(writeBuffer, c);
 			}
-			else if(c == ' ')
+			else if (c == ' ')
 			{
 				// Space.
 				/////////
@@ -996,7 +996,7 @@ static GHIPostingResult ghiPostStringStateDoPosting
 	else
 	{
 		// copy the string as-is, encrypting if necessary
-		GHITrySendResult result = ghiTrySendThenBuffer(connection, 
+		GHITrySendResult result = ghiTrySendThenBuffer(connection,
 			state->data->data.string.string, state->data->data.string.len);
 		if (result == GHITrySendError)
 			return GHIPostingError;
@@ -1026,14 +1026,14 @@ static GHIPostingResult ghiPostStringStateDoPosting
 
 static GHIPostingResult ghiPostXmlStateDoPosting
 (
-	GHIPostState * state,
-	GHIConnection * connection
+	GHIPostState* state,
+	GHIConnection* connection
 )
 {
 	GSXmlStreamWriter xml = state->data->data.xml.xml;
 	char pad[3] = { '\0', '\0', '\0' };
 	int padlen = 0;
-	
+
 	// make sure state is valid
 	GS_ASSERT(state->pos >= 0);
 	GS_ASSERT(connection->post != NULL);
@@ -1041,7 +1041,7 @@ static GHIPostingResult ghiPostXmlStateDoPosting
 	// when using a DIME, we have to pad to multiple of 4
 	if (connection->post->useDIME)
 	{
-		padlen = 4-(gsXmlWriterGetDataLength(xml)%4);
+		padlen = 4 - (gsXmlWriterGetDataLength(xml) % 4);
 		if (padlen == 4)
 			padlen = 0;
 	}
@@ -1088,8 +1088,8 @@ static GHIPostingResult ghiPostXmlStateDoPosting
 
 static GHIPostingResult ghiPostFileDiskStateDoPosting
 (
-	GHIPostState * state,
-	GHIConnection * connection
+	GHIPostState* state,
+	GHIConnection* connection
 )
 {
 	char buffer[4096];
@@ -1107,7 +1107,7 @@ static GHIPostingResult ghiPostFileDiskStateDoPosting
 		// Read some data from the file.
 		////////////////////////////////
 		len = (int)fread(buffer, 1, sizeof(buffer), state->state.fileDisk.file);
-		if(len <= 0)
+		if (len <= 0)
 		{
 			connection->completed = GHTTPTrue;
 			connection->result = GHTTPFileReadFailed;
@@ -1120,7 +1120,7 @@ static GHIPostingResult ghiPostFileDiskStateDoPosting
 
 		// Check for too much.
 		//////////////////////
-		if(state->pos > state->state.fileDisk.len)
+		if (state->pos > state->state.fileDisk.len)
 		{
 			connection->completed = GHTTPTrue;
 			connection->result = GHTTPFileReadFailed;
@@ -1130,18 +1130,18 @@ static GHIPostingResult ghiPostFileDiskStateDoPosting
 		// Send.
 		////////
 		result = ghiTrySendThenBuffer(connection, buffer, len);
-		if(result == GHITrySendError)
+		if (result == GHITrySendError)
 			return GHIPostingError;
 
 		// Check if we've handled everything.
 		/////////////////////////////////////
-		if(state->pos == state->state.fileDisk.len)
+		if (state->pos == state->state.fileDisk.len)
 		{
 			// when using a DIME, we have to pad to multiple of 4
 			if (connection->post->useDIME)
 			{
 				char pad[3] = { '\0', '\0', '\0' };
-				int padlen = 4-state->state.fileDisk.len%4;
+				int padlen = 4 - state->state.fileDisk.len % 4;
 				if (padlen != 4 && padlen > 0)
 				{
 					if (GHITrySendError == ghiTrySendThenBuffer(connection, pad, padlen))
@@ -1150,16 +1150,15 @@ static GHIPostingResult ghiPostFileDiskStateDoPosting
 			}
 			return GHIPostingDone;
 		}
-	}
-	while(result == GHITrySendSent);
+	} while (result == GHITrySendSent);
 
 	return GHIPostingPosting;
 }
 
 static GHIPostingResult ghiPostFileMemoryStateDoPosting
 (
-	GHIPostState * state,
-	GHIConnection * connection
+	GHIPostState* state,
+	GHIConnection* connection
 )
 {
 	int rcode;
@@ -1169,7 +1168,7 @@ static GHIPostingResult ghiPostFileMemoryStateDoPosting
 
 	// Is this an empty file?
 	/////////////////////////
-	if(state->data->data.fileMemory.len == 0)
+	if (state->data->data.fileMemory.len == 0)
 		return GHIPostingDone;
 
 	assert(state->pos < state->data->data.fileMemory.len);
@@ -1183,7 +1182,7 @@ static GHIPostingResult ghiPostFileMemoryStateDoPosting
 		{
 			len = (state->data->data.fileMemory.len - state->pos);
 			rcode = ghiDoSend(connection, state->data->data.fileMemory.buffer + state->pos, len);
-			if(gsiSocketIsError(rcode))
+			if (gsiSocketIsError(rcode))
 				return GHIPostingError;
 
 			// Update the pos.
@@ -1192,13 +1191,13 @@ static GHIPostingResult ghiPostFileMemoryStateDoPosting
 
 			// Did we send it all?
 			//////////////////////
-			if(state->data->data.fileMemory.len == state->pos)
+			if (state->data->data.fileMemory.len == state->pos)
 			{
 				// when using a DIME, we have to pad to multiple of 4
 				if (connection->post->useDIME)
 				{
 					char pad[3] = { '\0', '\0', '\0' };
-					int padlen = 4-state->data->data.fileMemory.len%4;
+					int padlen = 4 - state->data->data.fileMemory.len % 4;
 					if (padlen != 4 && padlen > 0)
 					{
 						if (GHITrySendError == ghiTrySendThenBuffer(connection, pad, padlen))
@@ -1207,35 +1206,34 @@ static GHIPostingResult ghiPostFileMemoryStateDoPosting
 				}
 				return GHIPostingDone;
 			}
-		}
-		while(rcode);
+		} while (rcode);
 		return GHIPostingPosting; // (rcode == 0) ?
 	}
 	else
 	{
 		// Encrypted: can't avoid the copy due to encryption+MAC
 		GHITrySendResult result;
-		do 
+		do
 		{
 			len = (state->data->data.fileMemory.len - state->pos);
 			len = min(len, GS_SSL_MAX_CONTENTLENGTH);
 			result = ghiTrySendThenBuffer(connection, state->data->data.fileMemory.buffer + state->pos, len);
 			if (result == GHITrySendError)
 				return GHIPostingError;
-			
+
 			// Update the pos.
 			//////////////////
 			state->pos += len;
 
 			// Did we send it all?
 			//////////////////////
-			if(state->data->data.fileMemory.len == state->pos)
+			if (state->data->data.fileMemory.len == state->pos)
 			{
 				// when using a DIME, we have to pad to multiple of 4
 				if (connection->post->useDIME)
 				{
 					char pad[3] = { '\0', '\0', '\0' };
-					int padlen = 4-state->data->data.fileMemory.len%4;
+					int padlen = 4 - state->data->data.fileMemory.len % 4;
 					if (padlen != 4 && padlen > 0)
 					{
 						if (GHITrySendError == ghiTrySendThenBuffer(connection, pad, padlen))
@@ -1244,16 +1242,15 @@ static GHIPostingResult ghiPostFileMemoryStateDoPosting
 				}
 				return GHIPostingDone;
 			}
-		} 
-		while(result == GHITrySendSent);
+		} while (result == GHITrySendSent);
 		return GHIPostingPosting;
 	}
 }
 
 static GHIPostingResult ghiPostStateDoPosting
 (
-	GHIPostState * state,
-	GHIConnection * connection,
+	GHIPostState* state,
+	GHIConnection* connection,
 	GHTTPBool first,
 	GHTTPBool last
 )
@@ -1263,17 +1260,17 @@ static GHIPostingResult ghiPostStateDoPosting
 
 	// Check for sending the header.
 	////////////////////////////////
-	if(state->pos == -1)
+	if (state->pos == -1)
 	{
 		char buffer[2048];
-		
+
 		// Bump up the position so we only send the header once.
 		////////////////////////////////////////////////////////
 		state->pos = 0;
 
 		// Check if this is a simple post.
 		//////////////////////////////////
-		if(!connection->post->hasFiles && !connection->post->hasSoap)
+		if (!connection->post->hasFiles && !connection->post->hasSoap)
 		{
 			// Simple post only supports strings.
 			/////////////////////////////////////
@@ -1281,7 +1278,7 @@ static GHIPostingResult ghiPostStateDoPosting
 
 			// Format the header.
 			/////////////////////
-			if(first)
+			if (first)
 				sprintf(buffer, "%s=", state->data->name);
 			else
 				sprintf(buffer, "&%s=", state->data->name);
@@ -1290,17 +1287,17 @@ static GHIPostingResult ghiPostStateDoPosting
 		{
 			// Format the header based on string or file.
 			/////////////////////////////////////////////
-			if(state->data->type == GHIString)
+			if (state->data->type == GHIString)
 			{
 				sprintf(buffer,
 					"%s"
 					"Content-Disposition: form-data; "
 					"name=\"%s\"" CRLF
 					CRLF,
-					first?GHI_MULTIPART_BOUNDARY_FIRST:GHI_MULTIPART_BOUNDARY_NORMAL,
+					first ? GHI_MULTIPART_BOUNDARY_FIRST : GHI_MULTIPART_BOUNDARY_NORMAL,
 					state->data->name);
 			}
-			else if(state->data->type == GHIXmlData)
+			else if (state->data->type == GHIXmlData)
 			{
 				if (connection->post->useDIME)
 				{
@@ -1327,20 +1324,20 @@ static GHIPostingResult ghiPostStateDoPosting
 					// id
 					strcpy(&buffer[writePos], GHI_DIME_SOAPID);
 					writePos += strlen(GHI_DIME_SOAPID);
-					padBytes = (int)(4-strlen(GHI_DIME_SOAPID)%4);
+					padBytes = (int)(4 - strlen(GHI_DIME_SOAPID) % 4);
 					if (padBytes != 4)
 					{
-						while(padBytes-- > 0)
+						while (padBytes-- > 0)
 							buffer[writePos++] = '\0';
 					}
 
 					// type
 					strcpy(&buffer[writePos], GHI_DIME_SOAPTYPE);
 					writePos += strlen(GHI_DIME_SOAPTYPE);
-					padBytes = (int)(4-strlen(GHI_DIME_SOAPTYPE)%4);
+					padBytes = (int)(4 - strlen(GHI_DIME_SOAPTYPE) % 4);
 					if (padBytes != 4)
 					{
-						while(padBytes-- > 0)
+						while (padBytes-- > 0)
 							buffer[writePos++] = '\0';
 					}
 
@@ -1349,13 +1346,13 @@ static GHIPostingResult ghiPostStateDoPosting
 				else
 					buffer[0] = '\0';
 			}
-			else if((state->data->type == GHIFileDisk) || (state->data->type == GHIFileMemory))
+			else if ((state->data->type == GHIFileDisk) || (state->data->type == GHIFileMemory))
 			{
-				const char * filename;
-				const char * contentType;
+				const char* filename;
+				const char* contentType;
 				int filelen;
 
-				if(state->data->type == GHIFileDisk)
+				if (state->data->type == GHIFileDisk)
 				{
 					filelen = state->state.fileDisk.len;
 					filename = state->data->data.fileDisk.reportFilename;
@@ -1393,20 +1390,20 @@ static GHIPostingResult ghiPostStateDoPosting
 					// id
 					strcpy(&buffer[writePos], state->data->name);
 					writePos += strlen(state->data->name);
-					padBytes = (int)(4-strlen(state->data->name)%4);
+					padBytes = (int)(4 - strlen(state->data->name) % 4);
 					if (padBytes != 4)
 					{
-						while(padBytes-- > 0)
+						while (padBytes-- > 0)
 							buffer[writePos++] = '\0';
 					}
 
 					// type
 					strcpy(&buffer[writePos], contentType);
 					writePos += strlen(contentType);
-					padBytes = (int)(4-strlen(contentType)%4);
+					padBytes = (int)(4 - strlen(contentType) % 4);
 					if (padBytes != 4)
 					{
-						while(padBytes-- > 0)
+						while (padBytes-- > 0)
 							buffer[writePos++] = '\0';
 					}
 
@@ -1421,7 +1418,7 @@ static GHIPostingResult ghiPostStateDoPosting
 						"name=\"%s\"; "
 						"filename=\"%s\"" CRLF
 						"Content-Type: %s" CRLF CRLF,
-						first?GHI_MULTIPART_BOUNDARY_FIRST:GHI_MULTIPART_BOUNDARY_NORMAL,
+						first ? GHI_MULTIPART_BOUNDARY_FIRST : GHI_MULTIPART_BOUNDARY_NORMAL,
 						state->data->name,
 						filename,
 						contentType);
@@ -1441,12 +1438,12 @@ static GHIPostingResult ghiPostStateDoPosting
 			if (len == 0)
 				len = (int)strlen(buffer);
 			result = ghiTrySendThenBuffer(connection, buffer, len);
-			if(result == GHITrySendError)
+			if (result == GHITrySendError)
 				return GHIPostingError;
 
 			// If it was buffered, don't try anymore.
 			/////////////////////////////////////////
-			if(result == GHITrySendBuffered)
+			if (result == GHITrySendBuffered)
 				return GHIPostingPosting;
 
 			// We sent everything, reset the send buffer to conserve space
@@ -1473,13 +1470,13 @@ static GHIPostingResult ghiPostStateDoPosting
 
 	// Post based on type.
 	//////////////////////
-	if(state->data->type == GHIString)
+	if (state->data->type == GHIString)
 		return ghiPostStringStateDoPosting(state, connection);
 
-	if(state->data->type == GHIXmlData)
+	if (state->data->type == GHIXmlData)
 		return ghiPostXmlStateDoPosting(state, connection);
 
-	if(state->data->type == GHIFileDisk)
+	if (state->data->type == GHIFileDisk)
 		return ghiPostFileDiskStateDoPosting(state, connection);
 
 	assert(state->data->type == GHIFileMemory);
@@ -1488,13 +1485,13 @@ static GHIPostingResult ghiPostStateDoPosting
 
 GHIPostingResult ghiPostDoPosting
 (
-	struct GHIConnection * connection
+	struct GHIConnection* connection
 )
 {
 	GHIPostingResult postingResult;
 	GHITrySendResult trySendResult;
-	GHIPostingState * postingState;
-	GHIPostState * postState;
+	GHIPostingState* postingState;
+	GHIPostState* postState;
 	int len;
 
 	assert(connection);
@@ -1511,16 +1508,16 @@ GHIPostingResult ghiPostDoPosting
 
 	// Check for buffered data.
 	///////////////////////////
-	if(connection->sendBuffer.pos < connection->sendBuffer.len)
+	if (connection->sendBuffer.pos < connection->sendBuffer.len)
 	{
 		// Send the buffered data.
 		//////////////////////////
-		if(!ghiSendBufferedData(connection))
+		if (!ghiSendBufferedData(connection))
 			return GHIPostingError;
 
 		// Check if we couldn't send it all.
 		////////////////////////////////////
-		if(connection->sendBuffer.pos < connection->sendBuffer.len)
+		if (connection->sendBuffer.pos < connection->sendBuffer.len)
 			return GHIPostingPosting;
 
 		// We sent it all, so reset the buffer.
@@ -1534,7 +1531,7 @@ GHIPostingResult ghiPostDoPosting
 
 		// Was that all that's left?
 		////////////////////////////
-		if(connection->postingState.index == len)
+		if (connection->postingState.index == len)
 			return GHIPostingDone;
 	}
 
@@ -1546,9 +1543,9 @@ GHIPostingResult ghiPostDoPosting
 		if (connection->post->hasFiles || connection->post->hasSoap)
 		{
 			// terminate the header and wait for a response
-		  	GS_ASSERT(connection->encodeBuffer.len == 0);
+			GS_ASSERT(connection->encodeBuffer.len == 0);
 			trySendResult = ghiTrySendThenBuffer(connection, CRLF, (int)strlen(CRLF));
-			if(trySendResult == GHITrySendError)
+			if (trySendResult == GHITrySendError)
 				return GHIPostingError;
 			else if (trySendResult == GHITrySendBuffered)
 				return GHIPostingPosting;
@@ -1570,22 +1567,22 @@ GHIPostingResult ghiPostDoPosting
 
 	// Loop while there's data to upload.
 	/////////////////////////////////////
-	while(postingState->index < len)
+	while (postingState->index < len)
 	{
 		// Get the current data state.
 		//////////////////////////////
-		postState = (GHIPostState *)ArrayNth(postingState->states, postingState->index);
+		postState = (GHIPostState*)ArrayNth(postingState->states, postingState->index);
 		assert(postState);
 
 		// Upload the current data.
 		///////////////////////////
-		postingResult = ghiPostStateDoPosting(postState, connection, 
-			(postingState->index == 0)?GHTTPTrue:GHTTPFalse,
-			(postingState->index == (ArrayLength(postingState->states)-1))?GHTTPTrue:GHTTPFalse);
+		postingResult = ghiPostStateDoPosting(postState, connection,
+			(postingState->index == 0) ? GHTTPTrue : GHTTPFalse,
+			(postingState->index == (ArrayLength(postingState->states) - 1)) ? GHTTPTrue : GHTTPFalse);
 
 		// Check for error.
 		///////////////////
-		if(postingResult == GHIPostingError)
+		if (postingResult == GHIPostingError)
 		{
 			// Make sure we already set the error stuff.
 			////////////////////////////////////////////
@@ -1596,7 +1593,7 @@ GHIPostingResult ghiPostDoPosting
 
 		// Check for still posting.
 		///////////////////////////
-		if(postingResult == GHIPostingPosting)
+		if (postingResult == GHIPostingPosting)
 			return GHIPostingPosting;
 
 		// One more done.
@@ -1611,8 +1608,8 @@ GHIPostingResult ghiPostDoPosting
 		if (connection->encodeBuffer.len > 0)
 		{
 			GS_ASSERT(connection->encodeBuffer.pos == 0); // if you hit this, it means you forgot the clear the buffer
-			if (GHTTPFalse == ghiEncryptDataToBuffer(&connection->sendBuffer, 
-						connection->encodeBuffer.data, connection->encodeBuffer.len))
+			if (GHTTPFalse == ghiEncryptDataToBuffer(&connection->sendBuffer,
+				connection->encodeBuffer.data, connection->encodeBuffer.len))
 			{
 				return GHIPostingError;
 			}
@@ -1622,19 +1619,19 @@ GHIPostingResult ghiPostDoPosting
 
 	// Send or buffer the end marker.
 	/////////////////////////////////
-	if(connection->post->hasFiles && !connection->post->useDIME)
+	if (connection->post->hasFiles && !connection->post->useDIME)
 	{
 		GS_ASSERT(!connection->post->hasSoap);
 
 		// send MIME boundary end
 		trySendResult = ghiTrySendThenBuffer(connection, GHI_MULTIPART_BOUNDARY_END, (int)strlen(GHI_MULTIPART_BOUNDARY_END));
-		if(trySendResult == GHITrySendError)
+		if (trySendResult == GHITrySendError)
 			return GHIPostingError;
 	}
 
 	// We're not done if there's stuff in the buffer.
 	/////////////////////////////////////////////////
-	if(connection->sendBuffer.pos < connection->sendBuffer.len)
+	if (connection->sendBuffer.pos < connection->sendBuffer.len)
 		return GHIPostingPosting;
 
 	return GHIPostingDone;

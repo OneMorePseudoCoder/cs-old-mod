@@ -9,11 +9,11 @@ class CStateMonsterCustomAction : public CState<_Object> {
 	SStateDataAction	data;
 
 public:
-						CStateMonsterCustomAction	(_Object *obj);
-	virtual				~CStateMonsterCustomAction	();
+	CStateMonsterCustomAction(_Object* obj);
+	virtual				~CStateMonsterCustomAction();
 
-	virtual	void		execute						();
-	virtual bool		check_completion			();
+	virtual	void		execute();
+	virtual bool		check_completion();
 };
 
 #include "state_custom_action_inline.h"

@@ -17,9 +17,9 @@
 #endif
 
 #ifdef __BORLANDC__
-	#include <vcl.h>
-	#include <mmsystem.h>
-	#include <stdint.h>
+#include <vcl.h>
+#include <mmsystem.h>
+#include <stdint.h>
 #endif
 
 #ifndef QDC_ONLY_ACTIVE
@@ -46,7 +46,7 @@
 #pragma warning(disable:4005)
 #include <windows.h>
 #ifndef __BORLANDC__
-	#include <windowsx.h>
+#include <windowsx.h>
 #endif
 #pragma warning(pop)
 

@@ -52,7 +52,7 @@ namespace nv
 		}
 
 		// Get pixel component shift and size given its mask.
-		inline void maskShiftAndSize(uint mask, uint * shift, uint * size)
+		inline void maskShiftAndSize(uint mask, uint* shift, uint* size)
 		{
 			if (!mask)
 			{
@@ -62,13 +62,13 @@ namespace nv
 			}
 
 			*shift = 0;
-			while((mask & 1) == 0) {
+			while ((mask & 1) == 0) {
 				++(*shift);
 				mask >>= 1;
 			}
-			
+
 			*size = 0;
-			while((mask & 1) == 1) {
+			while ((mask & 1) == 1) {
 				++(*size);
 				mask >>= 1;
 			}

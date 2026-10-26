@@ -1,5 +1,5 @@
- /*
-GameSpy GHTTP SDK 
+/*
+GameSpy GHTTP SDK
 Dan "Mr. Pants" Schoenblum
 dan@gamespy.com
 
@@ -24,11 +24,11 @@ devsupport@gamespy.com
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 // Ascii versions which must be available even in the unicode build
-GHTTPRequest ghttpGetExA(const char * URL, const char * headers, char * buffer, int bufferSize, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void * param);
-GHTTPRequest ghttpSaveExA(const char * URL, const char * filename, const char * headers, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void * param);
-GHTTPRequest ghttpStreamExA(const char * URL, const char * headers, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void * param);
-GHTTPRequest ghttpHeadExA(const char * URL, const char * headers, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void * param);
-GHTTPRequest ghttpPostExA(const char * URL, const char * headers, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void * param);
+GHTTPRequest ghttpGetExA(const char* URL, const char* headers, char* buffer, int bufferSize, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void* param);
+GHTTPRequest ghttpSaveExA(const char* URL, const char* filename, const char* headers, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void* param);
+GHTTPRequest ghttpStreamExA(const char* URL, const char* headers, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void* param);
+GHTTPRequest ghttpHeadExA(const char* URL, const char* headers, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void* param);
+GHTTPRequest ghttpPostExA(const char* URL, const char* headers, GHTTPPost post, GHTTPBool throttle, GHTTPBool blocking, ghttpProgressCallback progressCallback, ghttpCompletedCallback completedCallback, void* param);
 
 
 
@@ -41,12 +41,12 @@ static int ghiReferenceCount;
 /////////////////////////////////////////////
 static void ghiHandleStatus
 (
-	GHIConnection * connection
+	GHIConnection* connection
 )
 {
 	// Check the status code.
 	/////////////////////////
-	switch(connection->statusCode / 100)
+	switch (connection->statusCode / 100)
 	{
 	case 1:  // Informational.
 		return;
@@ -55,7 +55,7 @@ static void ghiHandleStatus
 	case 3:  // Redirection.
 		return;
 	case 4:  // Client Error.
-		switch(connection->statusCode)
+		switch (connection->statusCode)
 		{
 		case 401:
 			connection->result = GHTTPUnauthorized;
@@ -83,7 +83,7 @@ static void ghiHandleStatus
 ////////////////////////////////////////////////////
 static GHTTPBool ghiProcessConnection
 (
-	GHIConnection * connection
+	GHIConnection* connection
 )
 {
 	GHTTPBool completed;
@@ -94,7 +94,7 @@ static GHTTPBool ghiProcessConnection
 	// Don't process if already processing this connection.
 	// Happens if, for example, ghttpThink is called from a callback.
 	/////////////////////////////////////////////////////////////////
-	if(connection->processing)
+	if (connection->processing)
 		return GHTTPFalse;
 
 	// We're now processing.
@@ -106,38 +106,38 @@ static GHTTPBool ghiProcessConnection
 	// finishes the one after it can start.
 	//////////////////////////////////////////////
 
-	if(connection->state == GHTTPSocketInit)
+	if (connection->state == GHTTPSocketInit)
 		ghiDoSocketInit(connection);
-	if(connection->state == GHTTPHostLookup)
+	if (connection->state == GHTTPHostLookup)
 		ghiDoHostLookup(connection);
-	if(connection->state == GHTTPLookupPending)
+	if (connection->state == GHTTPLookupPending)
 		ghiDoLookupPending(connection);
-	if(connection->state == GHTTPConnecting)
+	if (connection->state == GHTTPConnecting)
 		ghiDoConnecting(connection);
-	if(connection->state == GHTTPSecuringSession)
+	if (connection->state == GHTTPSecuringSession)
 		ghiDoSecuringSession(connection);
-	if(connection->state == GHTTPSendingRequest)
+	if (connection->state == GHTTPSendingRequest)
 		ghiDoSendingRequest(connection);
-	if(connection->state == GHTTPPosting)
+	if (connection->state == GHTTPPosting)
 		ghiDoPosting(connection);
-	if(connection->state == GHTTPWaiting)
+	if (connection->state == GHTTPWaiting)
 		ghiDoWaiting(connection);
-	if(connection->state == GHTTPReceivingStatus)
+	if (connection->state == GHTTPReceivingStatus)
 		ghiDoReceivingStatus(connection);
-	if(connection->state == GHTTPReceivingHeaders)
+	if (connection->state == GHTTPReceivingHeaders)
 		ghiDoReceivingHeaders(connection);
-	if(connection->state == GHTTPReceivingFile)
+	if (connection->state == GHTTPReceivingFile)
 		ghiDoReceivingFile(connection);
 
 	// Check for a redirect.
 	////////////////////////
-	if(connection->redirectURL)
+	if (connection->redirectURL)
 		ghiRedirectConnection(connection);
 
 	// Grab completed before we possibly free it.
 	/////////////////////////////////////////////
 	completed = connection->completed;
-	
+
 	// Graceful shutdown support.  
 	// Close connection when there is no more data
 	if (connection->result == GHTTPRequestCancelled && !connection->completed && !CanReceiveOnSocket(connection->socket))
@@ -147,7 +147,7 @@ static GHTTPBool ghiProcessConnection
 
 	// Is it finished?
 	//////////////////
-	if(connection->completed)
+	if (connection->completed)
 	{
 		// Set result based on status code.
 		///////////////////////////////////
@@ -156,7 +156,7 @@ static GHTTPBool ghiProcessConnection
 		// If we're saving to file, close it before the callback.
 		/////////////////////////////////////////////////////////
 #ifndef NOFILE
-		if(connection->saveFile)
+		if (connection->saveFile)
 		{
 			fclose(connection->saveFile);
 			connection->saveFile = NULL;
@@ -200,7 +200,7 @@ void ghttpStartup
 
 	// Check if we are the first.
 	/////////////////////////////
-	if(ghiReferenceCount == 1)
+	if (ghiReferenceCount == 1)
 	{
 		// Create the lock.
 		///////////////////
@@ -234,7 +234,7 @@ void ghttpCleanup
 
 	// Should we cleanup?
 	/////////////////////
-	if(!ghiReferenceCount)
+	if (!ghiReferenceCount)
 	{
 		// Cleanup the connections.
 		///////////////////////////
@@ -242,7 +242,7 @@ void ghttpCleanup
 
 		// Cleanup proxy.
 		/////////////////
-		if(ghiProxyAddress)
+		if (ghiProxyAddress)
 		{
 			gsifree(ghiProxyAddress);
 			ghiProxyAddress = NULL;
@@ -266,10 +266,10 @@ void ghttpCleanup
 
 GHTTPRequest ghttpGetA
 (
-	const char * URL,
+	const char* URL,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	return ghttpGetExA(URL, NULL, NULL, 0, NULL, GHTTPFalse, blocking, NULL, completedCallback, param);
@@ -277,10 +277,10 @@ GHTTPRequest ghttpGetA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpGetW
 (
-	const unsigned short * URL,
+	const unsigned short* URL,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	char URL_A[1024];
@@ -293,20 +293,20 @@ GHTTPRequest ghttpGetW
 
 GHTTPRequest ghttpGetExA
 (
-	const char * URL,
-	const char * headers,
-	char * buffer,
+	const char* URL,
+	const char* headers,
+	char* buffer,
 	int bufferSize,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	GHTTPBool bResult;
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	assert(URL && URL[0]);
 	assert(bufferSize >= 0);
@@ -314,37 +314,37 @@ GHTTPRequest ghttpGetExA
 
 	// Check args.
 	//////////////
-	if(!URL || !URL[0])
+	if (!URL || !URL[0])
 		return GHTTPInvalidURL;
-	if(bufferSize < 0)
+	if (bufferSize < 0)
 		return GHTTPInvalidBufferSize;
-	if(buffer && !bufferSize)
+	if (buffer && !bufferSize)
 		return GHTTPInvalidBufferSize;
 
 	// Startup if it hasn't been done.
 	//////////////////////////////////
-	if(!ghiReferenceCount)
+	if (!ghiReferenceCount)
 		ghttpStartup();
 
 	// Get a new connection object.
 	///////////////////////////////
 	connection = ghiNewConnection();
-	if(!connection)
+	if (!connection)
 		return GHTTPInsufficientMemory;
 
 	// Fill in the necessary info.
 	//////////////////////////////
 	connection->type = GHIGET;
 	connection->URL = strdup(URL);
-	if(!connection->URL)
+	if (!connection->URL)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInsufficientMemory;
 	}
-	if(headers && *headers)
+	if (headers && *headers)
 	{
 		connection->sendHeaders = goastrdup(headers);
-		if(!connection->sendHeaders)
+		if (!connection->sendHeaders)
 		{
 			ghiFreeConnection(connection);
 			return GHTTPInsufficientMemory;
@@ -356,12 +356,12 @@ GHTTPRequest ghttpGetExA
 	connection->completedCallback = completedCallback;
 	connection->callbackParam = param;
 	connection->throttle = throttle;
-	connection->userBufferSupplied = (buffer != NULL)?GHTTPTrue:GHTTPFalse;
-	if(connection->userBufferSupplied)
+	connection->userBufferSupplied = (buffer != NULL) ? GHTTPTrue : GHTTPFalse;
+	if (connection->userBufferSupplied)
 		bResult = ghiInitFixedBuffer(connection, &connection->getFileBuffer, buffer, bufferSize);
 	else
 		bResult = ghiInitBuffer(connection, &connection->getFileBuffer, GET_FILE_BUFFER_INITIAL_SIZE, GET_FILE_BUFFER_INCREMENT_SIZE);
-	if(!bResult)
+	if (!bResult)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPUnspecifiedError;
@@ -369,7 +369,7 @@ GHTTPRequest ghttpGetExA
 
 	// Setup the post state if needed.
 	//////////////////////////////////
-	if(post && !ghiPostInitState(connection))
+	if (post && !ghiPostInitState(connection))
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInvalidPost;
@@ -377,11 +377,11 @@ GHTTPRequest ghttpGetExA
 
 	// Check blocking.
 	//////////////////
-	if(blocking)
+	if (blocking)
 	{
 		// Loop until completed.
 		////////////////////////
-		while(!ghiProcessConnection(connection))
+		while (!ghiProcessConnection(connection))
 			msleep(10);
 
 		// Done.
@@ -394,16 +394,16 @@ GHTTPRequest ghttpGetExA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpGetExW
 (
-	const unsigned short * URL,
-	const unsigned short * headers,
-	char * buffer,
+	const unsigned short* URL,
+	const unsigned short* headers,
+	char* buffer,
 	int bufferSize,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	char URL_A[1024];
@@ -419,11 +419,11 @@ GHTTPRequest ghttpGetExW
 
 GHTTPRequest ghttpSaveA
 (
-	const char * URL,
-	const char * filename,
+	const char* URL,
+	const char* filename,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	return ghttpSaveExA(URL, filename, NULL, NULL, GHTTPFalse, blocking, NULL, completedCallback, param);
@@ -431,11 +431,11 @@ GHTTPRequest ghttpSaveA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpSaveW
 (
-	const unsigned short * URL,
-	const unsigned short * filename,
+	const unsigned short* URL,
+	const unsigned short* filename,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	char URL_A[1024] = { '\0' };
@@ -450,53 +450,53 @@ GHTTPRequest ghttpSaveW
 
 GHTTPRequest ghttpSaveExA
 (
-	const char * URL,
-	const char * filename,
-	const char * headers,
+	const char* URL,
+	const char* filename,
+	const char* headers,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	assert(URL && URL[0]);
 	assert(filename && filename[0]);
 
 	// Check args.
 	//////////////
-	if(!URL || !URL[0])
+	if (!URL || !URL[0])
 		return GHTTPInvalidURL;
-	if(!filename || !filename[0])
+	if (!filename || !filename[0])
 		return GHTTPInvalidFileName;
 
 	// Startup if it hasn't been done.
 	//////////////////////////////////
-	if(!ghiReferenceCount)
+	if (!ghiReferenceCount)
 		ghttpStartup();
 
 	// Get a new connection object.
 	///////////////////////////////
 	connection = ghiNewConnection();
-	if(!connection)
+	if (!connection)
 		return GHTTPInsufficientMemory;
 
 	// Fill in the necessary info.
 	//////////////////////////////
 	connection->type = GHISAVE;
 	connection->URL = strdup(URL);
-	if(!connection->URL)
+	if (!connection->URL)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInsufficientMemory;
 	}
-	if(headers && *headers)
+	if (headers && *headers)
 	{
 		connection->sendHeaders = goastrdup(headers);
-		if(!connection->sendHeaders)
+		if (!connection->sendHeaders)
 		{
 			ghiFreeConnection(connection);
 			return GHTTPInsufficientMemory;
@@ -511,7 +511,7 @@ GHTTPRequest ghttpSaveExA
 
 	// Setup the post state if needed.
 	//////////////////////////////////
-	if(post && !ghiPostInitState(connection))
+	if (post && !ghiPostInitState(connection))
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInvalidPost;
@@ -524,7 +524,7 @@ GHTTPRequest ghttpSaveExA
 #else
 	connection->saveFile = fopen(filename, "wb");
 #endif
-	if(!connection->saveFile)
+	if (!connection->saveFile)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPFailedToOpenFile;
@@ -532,11 +532,11 @@ GHTTPRequest ghttpSaveExA
 
 	// Check blocking.
 	//////////////////
-	if(blocking)
+	if (blocking)
 	{
 		// Loop until completed.
 		////////////////////////
-		while(!ghiProcessConnection(connection))
+		while (!ghiProcessConnection(connection))
 			msleep(10);
 
 		// Done.
@@ -549,15 +549,15 @@ GHTTPRequest ghttpSaveExA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpSaveExW
 (
-	const unsigned short * URL,
-	const unsigned short * filename,
-	const unsigned short * headers,
+	const unsigned short* URL,
+	const unsigned short* filename,
+	const unsigned short* headers,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	char URL_A[1024];
@@ -577,11 +577,11 @@ GHTTPRequest ghttpSaveExW
 
 GHTTPRequest ghttpStreamA
 (
-	const char * URL,
+	const char* URL,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	return ghttpStreamExA(URL, NULL, NULL, GHTTPFalse, blocking, progressCallback, completedCallback, param);
@@ -589,11 +589,11 @@ GHTTPRequest ghttpStreamA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpStreamW
 (
-	const unsigned short * URL,
+	const unsigned short* URL,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	char* URL_A = { '\0' };
@@ -604,49 +604,49 @@ GHTTPRequest ghttpStreamW
 
 GHTTPRequest ghttpStreamExA
 (
-	const char * URL,
-	const char * headers,
+	const char* URL,
+	const char* headers,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	assert(URL && URL[0]);
 
 	// Check args.
 	//////////////
-	if(!URL || !URL[0])
+	if (!URL || !URL[0])
 		return GHTTPInvalidURL;
 
 	// Startup if it hasn't been done.
 	//////////////////////////////////
-	if(!ghiReferenceCount)
+	if (!ghiReferenceCount)
 		ghttpStartup();
 
 	// Get a new connection object.
 	///////////////////////////////
 	connection = ghiNewConnection();
-	if(!connection)
+	if (!connection)
 		return GHTTPInsufficientMemory;
 
 	// Fill in the necessary info.
 	//////////////////////////////
 	connection->type = GHISTREAM;
 	connection->URL = strdup(URL);
-	if(!connection->URL)
+	if (!connection->URL)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInsufficientMemory;
 	}
-	if(headers && *headers)
+	if (headers && *headers)
 	{
 		connection->sendHeaders = goastrdup(headers);
-		if(!connection->sendHeaders)
+		if (!connection->sendHeaders)
 		{
 			ghiFreeConnection(connection);
 			return GHTTPInsufficientMemory;
@@ -661,7 +661,7 @@ GHTTPRequest ghttpStreamExA
 
 	// Setup the post state if needed.
 	//////////////////////////////////
-	if(post && !ghiPostInitState(connection))
+	if (post && !ghiPostInitState(connection))
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInvalidPost;
@@ -669,11 +669,11 @@ GHTTPRequest ghttpStreamExA
 
 	// Check blocking.
 	//////////////////
-	if(blocking)
+	if (blocking)
 	{
 		// Loop until completed.
 		////////////////////////
-		while(!ghiProcessConnection(connection))
+		while (!ghiProcessConnection(connection))
 			msleep(10);
 
 		// Done.
@@ -686,20 +686,20 @@ GHTTPRequest ghttpStreamExA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpStreamExW
 (
-	const unsigned short * URL,
-	const unsigned short * headers,
+	const unsigned short* URL,
+	const unsigned short* headers,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	char URL_A[1024] = {'\0'};
-	char headers_A[1024] = {'\0'};
+	char URL_A[1024] = { '\0' };
+	char headers_A[1024] = { '\0' };
 	UCS2ToAsciiString(URL, URL_A);
-	if(headers != NULL)
+	if (headers != NULL)
 		UCS2ToAsciiString(headers, headers_A);
 	return ghttpStreamExA(URL_A, headers_A, post, throttle, blocking, progressCallback, completedCallback, param);
 }
@@ -707,10 +707,10 @@ GHTTPRequest ghttpStreamExW
 
 GHTTPRequest ghttpHeadA
 (
-	const char * URL,
+	const char* URL,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	return ghttpHeadExA(URL, NULL, GHTTPFalse, blocking, NULL, completedCallback, param);
@@ -718,13 +718,13 @@ GHTTPRequest ghttpHeadA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpHeadW
 (
-	const unsigned short * URL,
+	const unsigned short* URL,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	char URL_A[1024] = {'\0'};
+	char URL_A[1024] = { '\0' };
 	UCS2ToAsciiString(URL, URL_A);
 	return ghttpHeadA(URL_A, blocking, completedCallback, param);
 }
@@ -732,48 +732,48 @@ GHTTPRequest ghttpHeadW
 
 GHTTPRequest ghttpHeadExA
 (
-	const char * URL,
-	const char * headers,
+	const char* URL,
+	const char* headers,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	assert(URL && URL[0]);
 
 	// Check args.
 	//////////////
-	if(!URL || !URL[0])
+	if (!URL || !URL[0])
 		return GHTTPInvalidURL;
 
 	// Startup if it hasn't been done.
 	//////////////////////////////////
-	if(!ghiReferenceCount)
+	if (!ghiReferenceCount)
 		ghttpStartup();
 
 	// Get a new connection object.
 	///////////////////////////////
 	connection = ghiNewConnection();
-	if(!connection)
+	if (!connection)
 		return GHTTPInsufficientMemory;
 
 	// Fill in the necessary info.
 	//////////////////////////////
 	connection->type = GHIHEAD;
 	connection->URL = strdup(URL);
-	if(!connection->URL)
+	if (!connection->URL)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInsufficientMemory;
 	}
-	if(headers && *headers)
+	if (headers && *headers)
 	{
 		connection->sendHeaders = goastrdup(headers);
-		if(!connection->sendHeaders)
+		if (!connection->sendHeaders)
 		{
 			ghiFreeConnection(connection);
 			return GHTTPInsufficientMemory;
@@ -787,11 +787,11 @@ GHTTPRequest ghttpHeadExA
 
 	// Check blocking.
 	//////////////////
-	if(blocking)
+	if (blocking)
 	{
 		// Loop until completed.
 		////////////////////////
-		while(!ghiProcessConnection(connection))
+		while (!ghiProcessConnection(connection))
 			msleep(10);
 
 		// Done.
@@ -804,17 +804,17 @@ GHTTPRequest ghttpHeadExA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpHeadExW
 (
-	const unsigned short * URL,
-	const unsigned short * headers,
+	const unsigned short* URL,
+	const unsigned short* headers,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	char URL_A[1024] = {'\0'};
-	char headers_A[1024] = {'\0'};
+	char URL_A[1024] = { '\0' };
+	char headers_A[1024] = { '\0' };
 	if (URL != NULL)
 		UCS2ToAsciiString(URL, URL_A);
 	if (headers != NULL)
@@ -825,11 +825,11 @@ GHTTPRequest ghttpHeadExW
 
 GHTTPRequest ghttpPostA
 (
-	const char * URL,
+	const char* URL,
 	GHTTPPost post,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
 	return ghttpPostExA(URL, NULL, post, GHTTPFalse, blocking, NULL, completedCallback, param);
@@ -837,14 +837,14 @@ GHTTPRequest ghttpPostA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpPostW
 (
-	const unsigned short * URL,
+	const unsigned short* URL,
 	GHTTPPost post,
 	GHTTPBool blocking,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	char URL_A[1024] = {'\0'};
+	char URL_A[1024] = { '\0' };
 	UCS2ToAsciiString(URL, URL_A);
 	return ghttpPostA(URL_A, post, blocking, completedCallback, param);
 }
@@ -852,52 +852,52 @@ GHTTPRequest ghttpPostW
 
 GHTTPRequest ghttpPostExA
 (
-	const char * URL,
-	const char * headers,
+	const char* URL,
+	const char* headers,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	assert(URL && URL[0]);
 	assert(post);
 
 	// Check args.
 	//////////////
-	if(!URL || !URL[0])
+	if (!URL || !URL[0])
 		return GHTTPInvalidURL;
-	if(!post)
+	if (!post)
 		return GHTTPInvalidPost;
 
 	// Startup if it hasn't been done.
 	//////////////////////////////////
-	if(!ghiReferenceCount)
+	if (!ghiReferenceCount)
 		ghttpStartup();
 
 	// Get a new connection object.
 	///////////////////////////////
 	connection = ghiNewConnection();
-	if(!connection)
+	if (!connection)
 		return GHTTPInsufficientMemory;
 
 	// Fill in the necessary info.
 	//////////////////////////////
 	connection->type = GHIPOST;
 	connection->URL = strdup(URL);
-	if(!connection->URL)
+	if (!connection->URL)
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInsufficientMemory;
 	}
-	if(headers && *headers)
+	if (headers && *headers)
 	{
 		connection->sendHeaders = goastrdup(headers);
-		if(!connection->sendHeaders)
+		if (!connection->sendHeaders)
 		{
 			ghiFreeConnection(connection);
 			return GHTTPInsufficientMemory;
@@ -912,7 +912,7 @@ GHTTPRequest ghttpPostExA
 
 	// Setup the post state if needed.
 	//////////////////////////////////
-	if(post && !ghiPostInitState(connection))
+	if (post && !ghiPostInitState(connection))
 	{
 		ghiFreeConnection(connection);
 		return GHTTPInvalidPost;
@@ -920,11 +920,11 @@ GHTTPRequest ghttpPostExA
 
 	// Check blocking.
 	//////////////////
-	if(blocking)
+	if (blocking)
 	{
 		// Loop until completed.
 		////////////////////////
-		while(!ghiProcessConnection(connection))
+		while (!ghiProcessConnection(connection))
 			msleep(10);
 
 		// Done.
@@ -937,18 +937,18 @@ GHTTPRequest ghttpPostExA
 #ifdef GSI_UNICODE
 GHTTPRequest ghttpPostExW
 (
-	const unsigned short * URL,
-	const unsigned short * headers,
+	const unsigned short* URL,
+	const unsigned short* headers,
 	GHTTPPost post,
 	GHTTPBool throttle,
 	GHTTPBool blocking,
 	ghttpProgressCallback progressCallback,
 	ghttpCompletedCallback completedCallback,
-	void * param
+	void* param
 )
 {
-	char URL_A[1024] = {'\0'};
-	char headers_A[1024] = {'\0'};
+	char URL_A[1024] = { '\0' };
+	char headers_A[1024] = { '\0' };
 	UCS2ToAsciiString(URL, URL_A);
 	if (headers != NULL)
 		UCS2ToAsciiString(headers, headers_A);
@@ -971,12 +971,12 @@ GHTTPBool ghttpRequestThink
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return GHTTPFalse;
 
 	// Think.
@@ -990,12 +990,12 @@ void ghttpCancelRequest
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return;
 
 	// Free it.
@@ -1010,7 +1010,7 @@ void ghttpCloseRequest
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	connection = ghiRequestToConnection(request);
 	if (!connection)
@@ -1032,81 +1032,81 @@ GHTTPState ghttpGetState
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return (GHTTPState)0;
 
 	return connection->state;
 }
 
-const char * ghttpGetResponseStatus
+const char* ghttpGetResponseStatus
 (
 	GHTTPRequest request,
-	int * statusCode
+	int* statusCode
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return NULL;
 
 	// Check if we don't have the status yet.
 	/////////////////////////////////////////
-	if(connection->state <= GHTTPReceivingStatus)
+	if (connection->state <= GHTTPReceivingStatus)
 		return NULL;
 
 	// Set the status code.
 	///////////////////////
-	if(statusCode)
+	if (statusCode)
 		*statusCode = connection->statusCode;
 
 	return (connection->recvBuffer.data + connection->statusStringIndex);
 }
 
-const char * ghttpGetHeaders
+const char* ghttpGetHeaders
 (
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return NULL;
 
 	// Check if we don't have the headers yet.
 	//////////////////////////////////////////
-	if(connection->state < GHTTPReceivingHeaders)
+	if (connection->state < GHTTPReceivingHeaders)
 		return NULL;
 
 	// Verify we have headers.
 	//////////////////////////
-	if(connection->headerStringIndex >= connection->recvBuffer.len)
+	if (connection->headerStringIndex >= connection->recvBuffer.len)
 		return NULL;
 
 	return (connection->recvBuffer.data + connection->headerStringIndex);
 }
 
-const char * ghttpGetURL
+const char* ghttpGetURL
 (
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return NULL;
 
 	return connection->URL;
@@ -1114,7 +1114,7 @@ const char * ghttpGetURL
 
 GHTTPBool ghttpSetProxy
 (
-	const char * server
+	const char* server
 )
 {
 	return ghiSetProxy(server);
@@ -1122,8 +1122,8 @@ GHTTPBool ghttpSetProxy
 
 GHTTPBool ghttpSetRequestProxy
 (
-	GHTTPRequest request, 
-	const char * server 
+	GHTTPRequest request,
+	const char* server
 )
 {
 	return ghiSetRequestProxy(request, server);
@@ -1136,20 +1136,20 @@ void ghttpSetThrottle
 	GHTTPBool throttle
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return;
 
 	connection->throttle = throttle;
 
 	// Set the buffer size based on the throttle setting.
 	/////////////////////////////////////////////////////
-	if(connection->socket != INVALID_SOCKET)
-		SetReceiveBufferSize(connection->socket, throttle?ghiThrottleBufferSize:(8 * 1024));
+	if (connection->socket != INVALID_SOCKET)
+		SetReceiveBufferSize(connection->socket, throttle ? ghiThrottleBufferSize : (8 * 1024));
 }
 
 void ghttpThrottleSettings
@@ -1189,13 +1189,13 @@ SOCKET ghttpGetSocket
 	GHTTPRequest request
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 	SOCKET ret;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return INVALID_SOCKET;
 
 	// Only allow them to grab the socket during the competion callback (not while a request is in process)
@@ -1206,7 +1206,7 @@ SOCKET ghttpGetSocket
 	ret = connection->socket;
 	// Mark the connection as invalid so that it doesn't get closed
 	connection->socket = INVALID_SOCKET;
-	
+
 	return ret;
 }
 
@@ -1221,12 +1221,12 @@ GHTTPBool ghttpReuseSocket
 	SOCKET socket
 )
 {
-	GHIConnection * connection;
+	GHIConnection* connection;
 
 	// Get the connection object for this request.
 	//////////////////////////////////////////////
 	connection = ghiRequestToConnection(request);
-	if(!connection)
+	if (!connection)
 		return GHTTPFalse;
 	if (connection->state != GHTTPSocketInit)
 		return GHTTPFalse;
@@ -1247,7 +1247,7 @@ GHTTPBool ghttpReuseSocket
 
 	// Skip the host lookup & connect - send data once the socket is writable
 	//////////////////////////////////////////////
-	connection->state = GHTTPConnecting;	
+	connection->state = GHTTPConnecting;
 	*/
 	return GHTTPTrue;
 }
@@ -1268,7 +1268,7 @@ void ghttpPostSetAutoFree
 )
 {
 	assert(post);
-	if(!post)
+	if (!post)
 		return;
 
 	ghiPostSetAutoFree(post, autoFree);
@@ -1280,7 +1280,7 @@ void ghttpFreePost
 )
 {
 	assert(post);
-	if(!post)
+	if (!post)
 		return;
 
 	ghiFreePost(post);
@@ -1289,18 +1289,18 @@ void ghttpFreePost
 GHTTPBool ghttpPostAddStringA
 (
 	GHTTPPost post,
-	const char * name,
-	const char * string
+	const char* name,
+	const char* string
 )
 {
 	assert(post);
 	assert(name && name[0]);
 
-	if(!post)
+	if (!post)
 		return GHTTPFalse;
-	if(!name || !name[0])
+	if (!name || !name[0])
 		return GHTTPFalse;
-	if(!string)
+	if (!string)
 		string = "";
 
 	return ghiPostAddString(post, name, string);
@@ -1309,12 +1309,12 @@ GHTTPBool ghttpPostAddStringA
 GHTTPBool ghttpPostAddStringW
 (
 	GHTTPPost post,
-	const unsigned short * name,
-	const unsigned short * string
+	const unsigned short* name,
+	const unsigned short* string
 )
 {
-	char name_A[1024] = {'\0'};
-	char string_A[1024] = {'\0'};
+	char name_A[1024] = { '\0' };
+	char string_A[1024] = { '\0' };
 	if (name != NULL)
 		UCS2ToAsciiString(name, name_A);
 	if (string != NULL)
@@ -1326,25 +1326,25 @@ GHTTPBool ghttpPostAddStringW
 GHTTPBool ghttpPostAddFileFromDiskA
 (
 	GHTTPPost post,
-	const char * name,
-	const char * filename,
-	const char * reportFilename,
-	const char * contentType
+	const char* name,
+	const char* filename,
+	const char* reportFilename,
+	const char* contentType
 )
 {
 	assert(post);
 	assert(name && name[0]);
 	assert(filename && filename[0]);
 
-	if(!post)
+	if (!post)
 		return GHTTPFalse;
-	if(!name || !name[0])
+	if (!name || !name[0])
 		return GHTTPFalse;
-	if(!filename || !filename[0])
+	if (!filename || !filename[0])
 		return GHTTPFalse;
-	if(!reportFilename || !reportFilename[0])
+	if (!reportFilename || !reportFilename[0])
 		reportFilename = filename;
-	if(!contentType)
+	if (!contentType)
 		contentType = "application/octet-stream";
 
 	return ghiPostAddFileFromDisk(post, name, filename, reportFilename, contentType);
@@ -1353,16 +1353,16 @@ GHTTPBool ghttpPostAddFileFromDiskA
 GHTTPBool ghttpPostAddFileFromDiskW
 (
 	GHTTPPost post,
-	const unsigned short * name,
-	const unsigned short * filename,
-	const unsigned short * reportFilename,
-	const unsigned short * contentType
+	const unsigned short* name,
+	const unsigned short* filename,
+	const unsigned short* reportFilename,
+	const unsigned short* contentType
 )
 {
-	char name_A[1024] = {'\0'};
-	char filename_A[1024] = {'\0'};
-	char reportFilename_A[1024] = {'\0'};
-	char contentType_A[1024] = {'\0'};
+	char name_A[1024] = { '\0' };
+	char filename_A[1024] = { '\0' };
+	char reportFilename_A[1024] = { '\0' };
+	char contentType_A[1024] = { '\0' };
 	if (name != NULL)			UCS2ToAsciiString(name, name_A);
 	if (filename != NULL)		UCS2ToAsciiString(filename, filename_A);
 	if (reportFilename != NULL)	UCS2ToAsciiString(reportFilename, reportFilename_A);
@@ -1374,31 +1374,31 @@ GHTTPBool ghttpPostAddFileFromDiskW
 GHTTPBool ghttpPostAddFileFromMemoryA
 (
 	GHTTPPost post,
-	const char * name,
-	const char * buffer,
+	const char* name,
+	const char* buffer,
 	int bufferLen,
-	const char * reportFilename,
-	const char * contentType
+	const char* reportFilename,
+	const char* contentType
 )
 {
 	assert(post);
 	assert(name && name[0]);
 	assert(bufferLen >= 0);
 #ifdef _DEBUG
-	if(bufferLen > 0)
+	if (bufferLen > 0)
 		assert(buffer);
 #endif
 	assert(reportFilename && reportFilename[0]);
 
-	if(!post)
+	if (!post)
 		return GHTTPFalse;
-	if(!name || !name[0])
+	if (!name || !name[0])
 		return GHTTPFalse;
-	if(bufferLen < 0)
+	if (bufferLen < 0)
 		return GHTTPFalse;
-	if(!bufferLen && !buffer)
+	if (!bufferLen && !buffer)
 		return GHTTPFalse;
-	if(!contentType)
+	if (!contentType)
 		contentType = "application/octet-stream";
 
 	return ghiPostAddFileFromMemory(post, name, buffer, bufferLen, reportFilename, contentType);
@@ -1407,11 +1407,11 @@ GHTTPBool ghttpPostAddFileFromMemoryA
 GHTTPBool ghttpPostAddFileFromMemoryW
 (
 	GHTTPPost post,
-	const unsigned short * name,
-	const char * buffer,
+	const unsigned short* name,
+	const char* buffer,
 	int bufferLen,
-	const unsigned short * reportFilename,
-	const unsigned short * contentType
+	const unsigned short* reportFilename,
+	const unsigned short* contentType
 )
 {
 	char name_A[1024] = { '\0' };
@@ -1424,9 +1424,9 @@ GHTTPBool ghttpPostAddFileFromMemoryW
 	if (name != NULL)
 		UCS2ToAsciiString(name, name_A);
 
-	
+
 	return ghttpPostAddFileFromMemoryA(post, name_A, buffer, bufferLen, reportFilename_A, contentType_A);
-	
+
 	GSI_UNUSED(reportFilename);
 	GSI_UNUSED(contentType);
 }
@@ -1448,12 +1448,12 @@ void ghttpPostSetCallback
 (
 	GHTTPPost post,
 	ghttpPostCallback callback,
-	void * param
+	void* param
 )
 {
 	assert(post);
 
-	if(!post)
+	if (!post)
 		return;
 
 	ghiPostSetCallback(post, callback, param);

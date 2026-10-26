@@ -45,24 +45,24 @@
 
 /* JIT engine status codes for prototypes (grep "ORDER JIT_S"). */
 enum {
-  JIT_S_OK,		/* OK, code has been compiled. */
-  JIT_S_NONE,		/* Nothing compiled yet (default). */
+	JIT_S_OK,		/* OK, code has been compiled. */
+	JIT_S_NONE,		/* Nothing compiled yet (default). */
 
-  JIT_S_OFF,		/* Compilation for this prototype disabled. */
-  JIT_S_ENGINE_OFF,	/* JIT engine is turned off. */
-  JIT_S_DELAYED,	/* Compilation delayed (recursive invocation). */
+	JIT_S_OFF,		/* Compilation for this prototype disabled. */
+	JIT_S_ENGINE_OFF,	/* JIT engine is turned off. */
+	JIT_S_DELAYED,	/* Compilation delayed (recursive invocation). */
 
-  JIT_S_TOOLARGE,	/* Bytecode or machine code is too large. */
-  JIT_S_COMPILER_ERROR,	/* Error from compiler frontend. */
-  JIT_S_DASM_ERROR,	/* Error from DynASM engine. */
+	JIT_S_TOOLARGE,	/* Bytecode or machine code is too large. */
+	JIT_S_COMPILER_ERROR,	/* Error from compiler frontend. */
+	JIT_S_DASM_ERROR,	/* Error from DynASM engine. */
 
-  JIT_S_MAX
+	JIT_S_MAX
 };
 
 /* Machine code trailer and mcode fragment map. */
 typedef struct jit_MCTrailer {
-  char *mcode;			/* Pointer to next machine code block. */
-  size_t sz;			/* Size of next machine code block. */
+	char* mcode;			/* Pointer to next machine code block. */
+	size_t sz;			/* Size of next machine code block. */
 } jit_MCTrailer;
 
 typedef unsigned short jit_Mfm;
@@ -93,50 +93,50 @@ typedef unsigned short jit_Mfm;
 struct dasm_State;
 
 /* Frontend wrapper. */
-typedef int (*jit_FrontWrap)(lua_State *L, Table *st);
+typedef int (*jit_FrontWrap)(lua_State* L, Table* st);
 
 /* Global JIT state. */
 typedef struct jit_State {
-  /* Permanent backend environment: */
-  struct dasm_State *D;	/* DynASM state. Keep this as the first field. */
-  void *mcodeheap;	/* Private heap to allocate executable memory from. */
-  void **jsub;		/* Addresses of JIT subroutines. */
-  void *jsubmcode;	/* Base address of JSUB mcode. */
-  size_t szjsubmcode;	/* Size of JSUB mcode. */
-  int numjsub;		/* Number of JSUBs. */
+	/* Permanent backend environment: */
+	struct dasm_State* D;	/* DynASM state. Keep this as the first field. */
+	void* mcodeheap;	/* Private heap to allocate executable memory from. */
+	void** jsub;		/* Addresses of JIT subroutines. */
+	void* jsubmcode;	/* Base address of JSUB mcode. */
+	size_t szjsubmcode;	/* Size of JSUB mcode. */
+	int numjsub;		/* Number of JSUBs. */
 
-  /* Temporary backend environment (valid only while running): */
-  lua_State *L;		/* Compiler thread. */
-  Table *comstate;	/* Compiler state table. */
-  Proto *pt;		/* Currently compiled prototype. */
-  const Instruction *nextins;	/* Pointer to next instruction. */
-  jit_Mfm *mfm;		/* Position in temporary mcode fragment map. */
-  int nextpc;		/* Next PC. */
-  int combine;		/* Number of following instructions to combine. */
-  unsigned int tflags;	/* Temporary flags. */
-  int dasmstatus;	/* DynASM status code. */
+	/* Temporary backend environment (valid only while running): */
+	lua_State* L;		/* Compiler thread. */
+	Table* comstate;	/* Compiler state table. */
+	Proto* pt;		/* Currently compiled prototype. */
+	const Instruction* nextins;	/* Pointer to next instruction. */
+	jit_Mfm* mfm;		/* Position in temporary mcode fragment map. */
+	int nextpc;		/* Next PC. */
+	int combine;		/* Number of following instructions to combine. */
+	unsigned int tflags;	/* Temporary flags. */
+	int dasmstatus;	/* DynASM status code. */
 
-  /* JIT engine fields: */
-  jit_FrontWrap frontwrap; /* Compiler frontend wrapper. */
-  unsigned int flags;	/* Global JIT engine flags. */
+	/* JIT engine fields: */
+	jit_FrontWrap frontwrap; /* Compiler frontend wrapper. */
+	unsigned int flags;	/* Global JIT engine flags. */
 } jit_State;
 
 
 /* --- ljit_core.c */
 
 /* Initialize and free JIT engine state. */
-LUAI_FUNC void luaJIT_initstate(lua_State *L);
-LUAI_FUNC void luaJIT_freestate(lua_State *L);
+LUAI_FUNC void luaJIT_initstate(lua_State* L);
+LUAI_FUNC void luaJIT_freestate(lua_State* L);
 
 /* Compile and run a function. */
-LUAI_FUNC int luaJIT_run(lua_State *L, StkId func, int nresults);
+LUAI_FUNC int luaJIT_run(lua_State* L, StkId func, int nresults);
 /* Deoptimize the current instruction. Return new mcode addr to continue. */
-LUAI_FUNC void *luaJIT_deoptimize(lua_State *L);
+LUAI_FUNC void* luaJIT_deoptimize(lua_State* L);
 
 /* Find relative PC (0 based) for a bytecode pointer or a JIT mcode address. */
-LUAI_FUNC int luaJIT_findpc(Proto *pt, const Instruction *savedpc);
+LUAI_FUNC int luaJIT_findpc(Proto* pt, const Instruction* savedpc);
 /* Find mcode address for PC (1 based). */
-LUAI_FUNC void *luaJIT_findmcode(Proto *pt, int pc);
+LUAI_FUNC void* luaJIT_findmcode(Proto* pt, int pc);
 
 
 /* --- ljit_backend.c */
@@ -144,24 +144,24 @@ LUAI_FUNC void *luaJIT_findmcode(Proto *pt, int pc);
 /* Arch string. */
 LUAI_DATA const char luaJIT_arch[];
 /* Initialize and free compiler backend. */
-LUAI_FUNC int luaJIT_initbackend(lua_State *L);
-LUAI_FUNC void luaJIT_freebackend(lua_State *L);
+LUAI_FUNC int luaJIT_initbackend(lua_State* L);
+LUAI_FUNC void luaJIT_freebackend(lua_State* L);
 /* Compiler backend. */
-LUAI_FUNC int luaJIT_backend(lua_State *L);
+LUAI_FUNC int luaJIT_backend(lua_State* L);
 /* Notify backend that the debug mode may have changed. */
-LUAI_FUNC void luaJIT_debugnotify(jit_State *J);
+LUAI_FUNC void luaJIT_debugnotify(jit_State* J);
 
 
 /* ---- ljit_mem.c */
 
 /* Free the mcode heap. */
-LUAI_FUNC void luaJIT_freemcodeheap(jit_State *J);
+LUAI_FUNC void luaJIT_freemcodeheap(jit_State* J);
 /* Free mcode. */
-LUAI_FUNC void luaJIT_freemcode(jit_State *J, void *mcode, size_t sz);
+LUAI_FUNC void luaJIT_freemcode(jit_State* J, void* mcode, size_t sz);
 /* Free JIT structures in function prototype. */
-LUAI_FUNC void luaJIT_freeproto(lua_State *L, Proto *pt);
+LUAI_FUNC void luaJIT_freeproto(lua_State* L, Proto* pt);
 /* Link generated code. */
-LUAI_FUNC int luaJIT_link(jit_State *J, void **mcodep, size_t *szp);
+LUAI_FUNC int luaJIT_link(jit_State* J, void** mcodep, size_t* szp);
 
 
 #endif

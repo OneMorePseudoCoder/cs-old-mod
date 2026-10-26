@@ -26,7 +26,7 @@
 
 namespace nv
 {
-	
+
 	namespace cuda
 	{
 		bool isHardwarePresent();
@@ -34,10 +34,10 @@ namespace nv
 		int getFastestDevice();
 		bool isValidDevice(int i);
 
-		bool initDevice(int * device_ptr);
+		bool initDevice(int* device_ptr);
 		void exitDevice();
 	};
-	
+
 } // nv namespace
 
 

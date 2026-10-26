@@ -3,10 +3,10 @@
 
 #include "stdafx.h"
 #include "xrGameSpy.h"
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
 	switch (ul_reason_for_call)
 	{
@@ -16,7 +16,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	case DLL_PROCESS_DETACH:
 		break;
 	}
-    return TRUE;
+	return TRUE;
 }
 
 void	FillSecretKey(char* SecretKey)
@@ -31,13 +31,13 @@ void	FillSecretKey(char* SecretKey)
 	SecretKey[7] = '\0';
 }
 
-const char* GetGameVersion	(const char*KeyValue)
+const char* GetGameVersion(const char* KeyValue)
 {
 	HKEY KeyCDKey = 0;
-	long res = RegOpenKeyEx(REGISTRY_BASE, 
+	long res = RegOpenKeyEx(REGISTRY_BASE,
 		REGISTRY_PATH, 0, KEY_READ, &KeyCDKey);
 
-//	char	KeyValue[1024] = "";
+	//	char	KeyValue[1024] = "";
 	DWORD KeyValueSize = 128;
 	DWORD KeyValueType = REG_SZ;
 	if (res == ERROR_SUCCESS && KeyCDKey != 0)
@@ -52,16 +52,16 @@ const char* GetGameVersion	(const char*KeyValue)
 	{
 		return GAME_VERSION;
 	};
-//	return KeyValue;	
+	//	return KeyValue;	
 	return GAME_VERSION;
 }
 
-XRGAMESPY_API const char* xrGS_GetGameVersion	(const char*KeyValue)
+XRGAMESPY_API const char* xrGS_GetGameVersion(const char* KeyValue)
 {
 	return GetGameVersion(KeyValue);
 }
 
-XRGAMESPY_API void xrGS_GetGameID	(int* GameID, int verID)
+XRGAMESPY_API void xrGS_GetGameID(int* GameID, int verID)
 {
 	*GameID = int(GAMESPY_GAMEID);
 
@@ -72,6 +72,6 @@ XRGAMESPY_API void xrGS_GetGameID	(int* GameID, int verID)
 	case 2: *GameID = int(1576); break;
 	case 3: *GameID = int(1620); break;
 	default: *GameID = int(GAMESPY_GAMEID); break;
-	}	
+	}
 #endif
 }

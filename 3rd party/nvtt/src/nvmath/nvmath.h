@@ -100,66 +100,66 @@ inline float asinf_assert(const float f)
 
 namespace nv
 {
-inline float toRadian(float degree) { return degree * (PI / 180.0f); }
-inline float toDegree(float radian) { return radian * (180.0f / PI); }
-	
-inline bool equal(const float f0, const float f1, const float epsilon = NV_EPSILON)
-{
-	return fabs(f0-f1) <= epsilon;
-}
+	inline float toRadian(float degree) { return degree * (PI / 180.0f); }
+	inline float toDegree(float radian) { return radian * (180.0f / PI); }
 
-inline bool isZero(const float f, const float epsilon = NV_EPSILON)
-{
-	return fabs(f) <= epsilon;
-}
+	inline bool equal(const float f0, const float f1, const float epsilon = NV_EPSILON)
+	{
+		return fabs(f0 - f1) <= epsilon;
+	}
 
-inline bool isFinite(const float f)
-{
+	inline bool isZero(const float f, const float epsilon = NV_EPSILON)
+	{
+		return fabs(f) <= epsilon;
+	}
+
+	inline bool isFinite(const float f)
+	{
 #if NV_OS_WIN32 && !NV_CC_GNUC
-	return _finite(f) != 0;
+		return _finite(f) != 0;
 #elif NV_OS_DARWIN || NV_CC_GNUC
-	return isfinite(f);
+		return isfinite(f);
 #elif NV_OS_LINUX
-	return finitef(f);
+		return finitef(f);
 #else
 #	error "isFinite not supported"
 #endif
-//return std::isfinite (f);
-//return finite (f);
-}
+		//return std::isfinite (f);
+		//return finite (f);
+	}
 
-inline bool isNan(const float f)
-{
+	inline bool isNan(const float f)
+	{
 #if NV_OS_WIN32 && !NV_CC_GNUC
-	return _isnan(f) != 0;
+		return _isnan(f) != 0;
 #elif NV_OS_DARWIN || NV_CC_GNUC
-	return isnan(f);
+		return isnan(f);
 #elif NV_OS_LINUX
-	return isnanf(f);
+		return isnanf(f);
 #else
 #	error "isNan not supported"
 #endif
-}
-
-inline uint log2(uint i)
-{
-	uint value = 0;
-	while( i >>= 1 ) {
-		value++;
 	}
-	return value;
-}
 
-inline float lerp(float f0, float f1, float t)
-{
-	const float s = 1.0f - t;
-	return f0 * s + f1 * t;
-}
+	inline uint log2(uint i)
+	{
+		uint value = 0;
+		while (i >>= 1) {
+			value++;
+		}
+		return value;
+	}
 
-inline float square(float f)
-{
-	return f * f;
-}
+	inline float lerp(float f0, float f1, float t)
+	{
+		const float s = 1.0f - t;
+		return f0 * s + f1 * t;
+	}
+
+	inline float square(float f)
+	{
+		return f * f;
+	}
 
 } // nv
 

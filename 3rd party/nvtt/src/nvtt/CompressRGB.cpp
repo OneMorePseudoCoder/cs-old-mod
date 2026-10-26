@@ -34,7 +34,7 @@
 using namespace nv;
 using namespace nvtt;
 
-namespace 
+namespace
 {
 
 	inline uint computePitch(uint w, uint bitsize)
@@ -45,12 +45,12 @@ namespace
 		return ((p + 3) / 4) * 4;
 	}
 
-	inline void convert_to_a8r8g8b8(const void * src, void * dst, uint w)
+	inline void convert_to_a8r8g8b8(const void* src, void* dst, uint w)
 	{
 		memcpy(dst, src, 4 * w);
 	}
 
-	inline void convert_to_x8r8g8b8(const void * src, void * dst, uint w)
+	inline void convert_to_x8r8g8b8(const void* src, void* dst, uint w)
 	{
 		memcpy(dst, src, 4 * w);
 	}
@@ -59,7 +59,7 @@ namespace
 
 
 // Pixel format converter.
-void nv::compressRGB(const Image * image, const OutputOptions::Private & outputOptions, const CompressionOptions::Private & compressionOptions)
+void nv::compressRGB(const Image* image, const OutputOptions::Private& outputOptions, const CompressionOptions::Private& compressionOptions)
 {
 	nvCheck(image != NULL);
 
@@ -74,15 +74,15 @@ void nv::compressRGB(const Image * image, const OutputOptions::Private & outputO
 	const uint rmask = compressionOptions.rmask;
 	uint rshift, rsize;
 	PixelFormat::maskShiftAndSize(rmask, &rshift, &rsize);
-	
+
 	const uint gmask = compressionOptions.gmask;
 	uint gshift, gsize;
 	PixelFormat::maskShiftAndSize(gmask, &gshift, &gsize);
-	
+
 	const uint bmask = compressionOptions.bmask;
 	uint bshift, bsize;
 	PixelFormat::maskShiftAndSize(bmask, &bshift, &bsize);
-	
+
 	const uint amask = compressionOptions.amask;
 	uint ashift, asize;
 	PixelFormat::maskShiftAndSize(amask, &ashift, &asize);
@@ -90,11 +90,11 @@ void nv::compressRGB(const Image * image, const OutputOptions::Private & outputO
 	// Determine pitch.
 	uint pitch = computePitch(w, compressionOptions.bitcount);
 
-	uint8 * dst = (uint8 *)mem::malloc(pitch + 4);
+	uint8* dst = (uint8*)mem::malloc(pitch + 4);
 
 	for (uint y = 0; y < h; y++)
 	{
-		const Color32 * src = image->scanline(y);
+		const Color32* src = image->scanline(y);
 
 		if (bitCount == 32 && rmask == 0xFF0000 && gmask == 0xFF00 && bmask == 0xFF && amask == 0xFF000000)
 		{
@@ -114,14 +114,14 @@ void nv::compressRGB(const Image * image, const OutputOptions::Private & outputO
 				c |= PixelFormat::convert(src[x].g, 8, gsize) << gshift;
 				c |= PixelFormat::convert(src[x].b, 8, bsize) << bshift;
 				c |= PixelFormat::convert(src[x].a, 8, asize) << ashift;
-				
+
 				// Output one byte at a time.
 				for (uint i = 0; i < byteCount; i++)
 				{
 					*(dst + x * byteCount + i) = (c >> (i * 8)) & 0xFF;
 				}
 			}
-			
+
 			// Zero padding.
 			for (uint x = w * byteCount; x < pitch; x++)
 			{

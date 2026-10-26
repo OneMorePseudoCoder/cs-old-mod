@@ -22,7 +22,7 @@
 #include "os.h"
 
 #ifdef _MSC_VER
-/* MS Visual Studio doesn't have C99 inline keyword. */
+ /* MS Visual Studio doesn't have C99 inline keyword. */
 #define inline __inline
 #endif
 
@@ -30,34 +30,34 @@
 #define VORBIS_IEEE_FLOAT32 1
 #ifdef VORBIS_IEEE_FLOAT32
 
-static inline float unitnorm(float x){
-  union {
-    ogg_uint32_t i;
-    float f;
-  } ix;
-  ix.f = x;
-  ix.i = (ix.i & 0x80000000U) | (0x3f800000U);
-  return ix.f;
+static inline float unitnorm(float x) {
+	union {
+		ogg_uint32_t i;
+		float f;
+	} ix;
+	ix.f = x;
+	ix.i = (ix.i & 0x80000000U) | (0x3f800000U);
+	return ix.f;
 }
 
 /* Segher was off (too high) by ~ .3 decibel.  Center the conversion correctly. */
-static inline float todB(const float *x){
-  union {
-    ogg_uint32_t i;
-    float f;
-  } ix;
-  ix.f = *x;
-  ix.i = ix.i&0x7fffffff;
-  return (float)(ix.i * 7.17711438e-7f -764.6161886f);
+static inline float todB(const float* x) {
+	union {
+		ogg_uint32_t i;
+		float f;
+	} ix;
+	ix.f = *x;
+	ix.i = ix.i & 0x7fffffff;
+	return (float)(ix.i * 7.17711438e-7f - 764.6161886f);
 }
 
 #define todB_nn(x) todB(x)
 
 #else
 
-static float unitnorm(float x){
-  if(x<0)return(-1.f);
-  return(1.f);
+static float unitnorm(float x) {
+	if (x < 0)return(-1.f);
+	return(1.f);
 }
 
 #define todB(x)   (*(x)==0?-400.f:log(*(x)**(x))*4.34294480f)
@@ -81,8 +81,8 @@ static float unitnorm(float x){
 #define toMEL(n)    (log(1.f+(n)*.001f)*1442.695f)
 #define fromMEL(m)  (1000.f*exp((m)/1442.695f)-1000.f)
 
-/* Frequency to octave.  We arbitrarily declare 63.5 Hz to be octave
-   0.0 */
+   /* Frequency to octave.  We arbitrarily declare 63.5 Hz to be octave
+	  0.0 */
 
 #define toOC(n)     (log(n)*1.442695f-5.965784f)
 #define fromOC(o)   (exp(((o)+5.965784f)*.693147f))

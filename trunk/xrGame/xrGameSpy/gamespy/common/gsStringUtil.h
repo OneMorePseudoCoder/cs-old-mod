@@ -11,8 +11,8 @@ extern "C" {
 #endif
 
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
 #ifdef _PS2
 #define ALIGNED	__attribute__ ((aligned(16)))
 #else
@@ -46,35 +46,35 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////
 // Prototypes
 //		'_' denotes internal use functions
-int _ReadUCS2CharFromUTF8String (const UTF8String  theUTF8String, UCS2Char* theUnicodeChar);
-int _UCS2CharToUTF8String       (UCS2Char          theUCS2Char,   UTF8String theUTF8String);
-int _UCS2ToUTF8ConversionLengthOnly (const UCS2String theUCS2String);
-int _UTF8ToUCS2ConversionLengthOnly (const UTF8String theUTF8String);
+	int _ReadUCS2CharFromUTF8String(const UTF8String  theUTF8String, UCS2Char* theUnicodeChar);
+	int _UCS2CharToUTF8String(UCS2Char          theUCS2Char, UTF8String theUTF8String);
+	int _UCS2ToUTF8ConversionLengthOnly(const UCS2String theUCS2String);
+	int _UTF8ToUCS2ConversionLengthOnly(const UTF8String theUTF8String);
 
-// Convert string types
-int AsciiToUTF8String(const char*      theAsciiString, UTF8String theUTF8String );
-int UTF8ToAsciiString(const UTF8String theUTF8String,  char*      theAsciiString);
-int UCS2ToUTF8String (const UCS2String theUCS2String,  UTF8String theUTF8String );
-int UTF8ToUCS2String (const UTF8String theUTF8String,  UCS2String theUCS2String );
-int UCS2ToAsciiString(const UCS2String theUCS2String,  char*      theAsciiString);
-int AsciiToUCS2String(const char*      theAsciiString, UCS2String theUCS2String );
+	// Convert string types
+	int AsciiToUTF8String(const char* theAsciiString, UTF8String theUTF8String);
+	int UTF8ToAsciiString(const UTF8String theUTF8String, char* theAsciiString);
+	int UCS2ToUTF8String(const UCS2String theUCS2String, UTF8String theUTF8String);
+	int UTF8ToUCS2String(const UTF8String theUTF8String, UCS2String theUCS2String);
+	int UCS2ToAsciiString(const UCS2String theUCS2String, char* theAsciiString);
+	int AsciiToUCS2String(const char* theAsciiString, UCS2String theUCS2String);
 
-// Convert with maximum buffer length
-// similar to strncpy
-//int UCS2ToUTF8StringLength(const UCS2String theUCS2String, UTF8String theUTF8String, int theMaxLength);
-//int UTF8ToUCS2StringLength(const UTF8String theUTF8String, UCS2String theUCS2String, int theMaxLength);
+	// Convert with maximum buffer length
+	// similar to strncpy
+	//int UCS2ToUTF8StringLength(const UCS2String theUCS2String, UTF8String theUTF8String, int theMaxLength);
+	//int UTF8ToUCS2StringLength(const UTF8String theUTF8String, UCS2String theUCS2String, int theMaxLength);
 
-// Convert a string, allocate space for the new string
-UTF8String UCS2ToUTF8StringAlloc(const UCS2String theUCS2String);
-UCS2String UTF8ToUCS2StringAlloc(const UTF8String theUTF8String);
+	// Convert a string, allocate space for the new string
+	UTF8String UCS2ToUTF8StringAlloc(const UCS2String theUCS2String);
+	UCS2String UTF8ToUCS2StringAlloc(const UTF8String theUTF8String);
 
-// Convert an array of strings, allocate space for the new strings
-UTF8String* UCS2ToUTF8StringArrayAlloc(const UCS2String* theUCS2StringArray, int theNumStrings);
-UCS2String* UTF8ToUCS2StringArrayAlloc(const UTF8String* theUTF8StringArray, int theNumStrings);
+	// Convert an array of strings, allocate space for the new strings
+	UTF8String* UCS2ToUTF8StringArrayAlloc(const UCS2String* theUCS2StringArray, int theNumStrings);
+	UCS2String* UTF8ToUCS2StringArrayAlloc(const UTF8String* theUTF8StringArray, int theNumStrings);
 
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
 #ifdef __cplusplus
 } // extern "C"
 #endif

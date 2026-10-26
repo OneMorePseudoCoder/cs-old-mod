@@ -14,19 +14,19 @@
 using namespace luabind;
 
 #pragma optimize("s",on)
-void CSE_ALifeInventoryItem::script_register(lua_State *L)
+void CSE_ALifeInventoryItem::script_register(lua_State* L)
 {
 	module(L)[
 		class_<CSE_ALifeInventoryItem>
 			("cse_alife_inventory_item")
-//			.def(		constructor<LPCSTR>())
+			//			.def(		constructor<LPCSTR>())
 	];
 }
 
-void CSE_ALifeItem::script_register(lua_State *L)
+void CSE_ALifeItem::script_register(lua_State* L)
 {
 	module(L)[
-//		luabind_class_item2(
+		//		luabind_class_item2(
 		luabind_class_abstract2(
 			CSE_ALifeItem,
 			"cse_alife_item",
@@ -36,7 +36,7 @@ void CSE_ALifeItem::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemTorch::script_register(lua_State *L)
+void CSE_ALifeItemTorch::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -47,7 +47,7 @@ void CSE_ALifeItemTorch::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemAmmo::script_register(lua_State *L)
+void CSE_ALifeItemAmmo::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -58,7 +58,7 @@ void CSE_ALifeItemAmmo::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemWeapon::script_register(lua_State *L)
+void CSE_ALifeItemWeapon::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -69,18 +69,18 @@ void CSE_ALifeItemWeapon::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemWeaponShotGun::script_register(lua_State *L)
+void CSE_ALifeItemWeaponShotGun::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
 			CSE_ALifeItemWeaponShotGun,
 			"cse_alife_item_weapon_shotgun",
 			CSE_ALifeItemWeapon
-			)
+		)
 	];
 }
 
-void CSE_ALifeItemDetector::script_register(lua_State *L)
+void CSE_ALifeItemDetector::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(
@@ -91,7 +91,7 @@ void CSE_ALifeItemDetector::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeItemArtefact::script_register(lua_State *L)
+void CSE_ALifeItemArtefact::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_item1(

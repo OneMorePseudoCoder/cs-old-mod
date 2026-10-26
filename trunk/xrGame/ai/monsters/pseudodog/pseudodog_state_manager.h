@@ -5,9 +5,9 @@ class CAI_PseudoDog;
 
 class CStateManagerPseudodog : public CMonsterStateManager<CAI_PseudoDog> {
 	typedef CMonsterStateManager<CAI_PseudoDog> inherited;
-	
+
 public:
 
-					CStateManagerPseudodog	(CAI_PseudoDog *monster); 
-	virtual void	execute					();
+	CStateManagerPseudodog(CAI_PseudoDog* monster);
+	virtual void	execute();
 };

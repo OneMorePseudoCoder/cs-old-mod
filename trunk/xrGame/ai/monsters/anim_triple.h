@@ -28,20 +28,20 @@ struct SAnimationTripleData : public ControlCom::IComData {
 	u32			capture_type;
 };
 
-class CAnimationTriple : public CControl_ComCustom<SAnimationTripleData>{
+class CAnimationTriple : public CControl_ComCustom<SAnimationTripleData> {
 	EStateAnimTriple		m_current_state;
 	EStateAnimTriple		m_previous_state;
 public:
-	virtual void	reset_data				();
-	virtual	void	on_capture				();
-	virtual void	on_release				();
-	virtual void	on_event				(ControlCom::EEventType, ControlCom::IEventData*);
-	virtual bool	check_start_conditions	();
-	virtual void	activate				();
+	virtual void	reset_data();
+	virtual	void	on_capture();
+	virtual void	on_release();
+	virtual void	on_event(ControlCom::EEventType, ControlCom::IEventData*);
+	virtual bool	check_start_conditions();
+	virtual void	activate();
 
-			void	pointbreak				();
+	void	pointbreak();
 private:
-			void	select_next_state		();
-			void	play_selected			();
+	void	select_next_state();
+	void	play_selected();
 };
 

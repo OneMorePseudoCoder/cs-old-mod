@@ -16,16 +16,16 @@
 using namespace ALife;
 
 /**/
-CALifeInteractionManager::CALifeInteractionManager	(xrServer*server, LPCSTR section) : 
-	CALifeCombatManager			(server,section),
-	CALifeCommunicationManager	(server,section),
-	CALifeSimulatorBase			(server,section)
+CALifeInteractionManager::CALifeInteractionManager(xrServer* server, LPCSTR section) :
+	CALifeCombatManager(server, section),
+	CALifeCommunicationManager(server, section),
+	CALifeSimulatorBase(server, section)
 {
-/**
-	m_inventory_slot_count		= pSettings->r_u32("inventory","slots");
-	m_temp_weapons.resize		(m_inventory_slot_count);
-	m_temp_marks.assign			(u16(-1),false);
-/**/
+	/**
+		m_inventory_slot_count		= pSettings->r_u32("inventory","slots");
+		m_temp_weapons.resize		(m_inventory_slot_count);
+		m_temp_marks.assign			(u16(-1),false);
+	/**/
 }
 
 /**
@@ -42,7 +42,7 @@ void CALifeInteractionManager::check_for_interaction(CSE_ALifeSchedulable *tpALi
 	R_ASSERT2					(l_tpALifeDynamicObject,"Unknown schedulable object class");
 	GameGraph::_GRAPH_ID		l_tGraphID = l_tpALifeDynamicObject->m_tGraphID;
 	check_for_interaction		(tpALifeSchedulable,l_tGraphID);
-	
+
 	CGameGraph::const_iterator	I, E;
 	ai().game_graph().begin		(l_tGraphID,I,E);
 	for ( ; I != E; ++I)

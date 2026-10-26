@@ -9,16 +9,16 @@ class CStateControlFire : public CState<_Object> {
 
 public:
 
-					CStateControlFire	(_Object *obj) : inherited(obj) {}
-	virtual			~CStateControlFire	() {}
+	CStateControlFire(_Object* obj) : inherited(obj) {}
+	virtual			~CStateControlFire() {}
 
-	virtual void	reinit					();
-	virtual void	initialize				();
-	virtual void	execute					();
-	virtual void	finalize				();
-	virtual void	critical_finalize		();
-	virtual bool	check_completion		();
-	virtual bool	check_start_conditions	();
+	virtual void	reinit();
+	virtual void	initialize();
+	virtual void	execute();
+	virtual void	finalize();
+	virtual void	critical_finalize();
+	virtual bool	check_completion();
+	virtual bool	check_start_conditions();
 
 };
 

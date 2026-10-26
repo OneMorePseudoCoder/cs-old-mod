@@ -17,24 +17,24 @@
 
 using namespace nv;
 
-namespace 
+namespace
 {
-	static char * strAlloc(uint size)
+	static char* strAlloc(uint size)
 	{
-		return static_cast<char *>(mem::malloc(size));
+		return static_cast<char*>(mem::malloc(size));
 	}
-	
-	static char * strReAlloc(char * str, uint size)
+
+	static char* strReAlloc(char* str, uint size)
 	{
-		return static_cast<char *>(mem::realloc(str, size));
+		return static_cast<char*>(mem::realloc(str, size));
 	}
-	
-	static void strFree(const char * str)
+
+	static void strFree(const char* str)
 	{
-		return mem::free(const_cast<char *>(str));
+		return mem::free(const_cast<char*>(str));
 	}
-	
-	/*static char * strDup( const char * str ) 
+
+	/*static char * strDup( const char * str )
 	{
 		nvDebugCheck( str != NULL );
 		uint len = uint(strlen( str ) + 1);
@@ -42,44 +42,44 @@ namespace
 		memcpy( dup, str, len );
 		return dup;
 	}*/
-	
+
 	// helper function for integer to string conversion.
-	static char * i2a( uint i, char *a, uint r )
+	static char* i2a(uint i, char* a, uint r)
 	{
-		if( i / r > 0 ) {
-			a = i2a( i / r, a, r );
+		if (i / r > 0) {
+			a = i2a(i / r, a, r);
 		}
 		*a = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i % r];
 		return a + 1;
 	}
-	
+
 	// Locale independent functions.
-	static inline char toUpper( char c ) {
-		return (c<'a' || c>'z') ? (c) : (c+'A'-'a');
+	static inline char toUpper(char c) {
+		return (c < 'a' || c>'z') ? (c) : (c + 'A' - 'a');
 	}
-	static inline char toLower( char c ) {
-		return (c<'A' || c>'Z') ? (c) : (c+'a'-'A');
+	static inline char toLower(char c) {
+		return (c < 'A' || c>'Z') ? (c) : (c + 'a' - 'A');
 	}
-	static inline bool isAlpha( char c ) {
-		return (c>='a' && c<='z') || (c>='A' && c<='Z');
+	static inline bool isAlpha(char c) {
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 	}
-	static inline bool isDigit( char c ) {
-		return c>='0' && c<='9';
+	static inline bool isDigit(char c) {
+		return c >= '0' && c <= '9';
 	}
-	static inline bool isAlnum( char c ) {
-		return (c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9');
+	static inline bool isAlnum(char c) {
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 	}
-	
+
 }
 
-int nv::strCmp(const char * s1, const char * s2)
+int nv::strCmp(const char* s1, const char* s2)
 {
 	nvDebugCheck(s1 != NULL);
 	nvDebugCheck(s2 != NULL);
 	return strcmp(s1, s2);
 }
 
-int nv::strCaseCmp(const char * s1, const char * s2)
+int nv::strCaseCmp(const char* s1, const char* s2)
 {
 	nvDebugCheck(s1 != NULL);
 	nvDebugCheck(s1 != NULL);
@@ -90,7 +90,7 @@ int nv::strCaseCmp(const char * s1, const char * s2)
 #endif
 }
 
-void nv::strCpy(char * dst, int size, const char * src)
+void nv::strCpy(char* dst, int size, const char* src)
 {
 	nvDebugCheck(dst != NULL);
 	nvDebugCheck(src != NULL);
@@ -102,7 +102,7 @@ void nv::strCpy(char * dst, int size, const char * src)
 #endif
 }
 
-void nv::strCpy(char * dst, int size, const char * src, int len)
+void nv::strCpy(char* dst, int size, const char* src, int len)
 {
 	nvDebugCheck(dst != NULL);
 	nvDebugCheck(src != NULL);
@@ -114,7 +114,7 @@ void nv::strCpy(char * dst, int size, const char * src, int len)
 #endif
 }
 
-void nv::strCat(char * dst, int size, const char * src)
+void nv::strCat(char* dst, int size, const char* src)
 {
 	nvDebugCheck(dst != NULL);
 	nvDebugCheck(src != NULL);
@@ -128,63 +128,63 @@ void nv::strCat(char * dst, int size, const char * src)
 
 
 /** Pattern matching routine. I don't remember where did I get this. */
-bool nv::strMatch(const char * str, const char * pat)
+bool nv::strMatch(const char* str, const char* pat)
 {
 	nvDebugCheck(str != NULL);
 	nvDebugCheck(pat != NULL);
 
-    char c2;
+	char c2;
 
-    while (true) {
-        if (*pat==0) {
-            if (*str==0) return true;
-            else         return false;
-        }
-        if ((*str==0) && (*pat!='*')) return false;
-        if (*pat=='*') {
-            pat++;
-            if (*pat==0) return true;
-            while (true) {
-                if (strMatch(str, pat)) return true;
-                if (*str==0) return false;
-                str++;
-            }
-        }
-        if (*pat=='?') goto match;
-        if (*pat=='[') {
-            pat++;
-            while (true) {
-                if ((*pat==']') || (*pat==0)) return false;
-                if (*pat==*str) break;
-                if (pat[1] == '-') {
-                    c2 = pat[2];
-                    if (c2==0) return false;
-                    if ((*pat<=*str) && (c2>=*str)) break;
-                    if ((*pat>=*str) && (c2<=*str)) break;
-                    pat+=2;
-                }
-                pat++;
-            }
-            while (*pat!=']') {
-                if (*pat==0) {
-                    pat--;
-                    break;
-                }
-                pat++;
-            }
-            goto match;
-        }
+	while (true) {
+		if (*pat == 0) {
+			if (*str == 0) return true;
+			else         return false;
+		}
+		if ((*str == 0) && (*pat != '*')) return false;
+		if (*pat == '*') {
+			pat++;
+			if (*pat == 0) return true;
+			while (true) {
+				if (strMatch(str, pat)) return true;
+				if (*str == 0) return false;
+				str++;
+			}
+		}
+		if (*pat == '?') goto match;
+		if (*pat == '[') {
+			pat++;
+			while (true) {
+				if ((*pat == ']') || (*pat == 0)) return false;
+				if (*pat == *str) break;
+				if (pat[1] == '-') {
+					c2 = pat[2];
+					if (c2 == 0) return false;
+					if ((*pat <= *str) && (c2 >= *str)) break;
+					if ((*pat >= *str) && (c2 <= *str)) break;
+					pat += 2;
+				}
+				pat++;
+			}
+			while (*pat != ']') {
+				if (*pat == 0) {
+					pat--;
+					break;
+				}
+				pat++;
+			}
+			goto match;
+		}
 
-        if (*pat == NV_PATH_SEPARATOR) {
-            pat++;
-            if (*pat==0) return false;
-        }
-        if (*pat!=*str) return false;
+		if (*pat == NV_PATH_SEPARATOR) {
+			pat++;
+			if (*pat == 0) return false;
+		}
+		if (*pat != *str) return false;
 
-match:
-        pat++;
-        str++;
-    }
+	match:
+		pat++;
+		str++;
+	}
 }
 
 
@@ -195,7 +195,7 @@ StringBuilder::StringBuilder() : m_size(0), m_str(NULL)
 }
 
 /** Preallocate space. */
-StringBuilder::StringBuilder( int size_hint ) : m_size(size_hint)
+StringBuilder::StringBuilder(int size_hint) : m_size(size_hint)
 {
 	nvDebugCheck(m_size > 0);
 	m_str = strAlloc(m_size);
@@ -203,13 +203,13 @@ StringBuilder::StringBuilder( int size_hint ) : m_size(size_hint)
 }
 
 /** Copy ctor. */
-StringBuilder::StringBuilder( const StringBuilder & s ) : m_size(0), m_str(NULL)
+StringBuilder::StringBuilder(const StringBuilder& s) : m_size(0), m_str(NULL)
 {
 	copy(s);
 }
 
 /** Copy string. */
-StringBuilder::StringBuilder( const char * s ) : m_size(0), m_str(NULL)
+StringBuilder::StringBuilder(const char* s) : m_size(0), m_str(NULL)
 {
 	copy(s);
 }
@@ -224,28 +224,28 @@ StringBuilder::~StringBuilder()
 
 
 /** Format a string safely. */
-StringBuilder & StringBuilder::format( const char * fmt, ... )
+StringBuilder& StringBuilder::format(const char* fmt, ...)
 {
 	nvDebugCheck(fmt != NULL);
 	va_list arg;
-	va_start( arg, fmt );
+	va_start(arg, fmt);
 
-	format( fmt, arg );
+	format(fmt, arg);
 
-	va_end( arg );
+	va_end(arg);
 
 	return *this;
 }
 
 
 /** Format a string safely. */
-StringBuilder & StringBuilder::format( const char * fmt, va_list arg )
+StringBuilder& StringBuilder::format(const char* fmt, va_list arg)
 {
 	nvDebugCheck(fmt != NULL);
 
-	if( m_size == 0 ) {
+	if (m_size == 0) {
 		m_size = 64;
-		m_str = strAlloc( m_size );
+		m_str = strAlloc(m_size);
 	}
 
 	va_list tmp;
@@ -257,8 +257,8 @@ StringBuilder & StringBuilder::format( const char * fmt, va_list arg )
 #endif
 	va_end(tmp);
 
-	while( n < 0 || n >= int(m_size) ) {
-		if( n > -1 ) {
+	while (n < 0 || n >= int(m_size)) {
+		if (n > -1) {
 			m_size = n + 1;
 		}
 		else {
@@ -275,9 +275,9 @@ StringBuilder & StringBuilder::format( const char * fmt, va_list arg )
 #endif
 		va_end(tmp);
 	}
-	
+
 	nvDebugCheck(n < int(m_size));
-	
+
 	// Make sure it's null terminated.
 	nvDebugCheck(m_str[n] == '\0');
 	//str[n] = '\0';
@@ -287,27 +287,27 @@ StringBuilder & StringBuilder::format( const char * fmt, va_list arg )
 
 
 /** Append a string. */
-StringBuilder & StringBuilder::append( const char * s )
+StringBuilder& StringBuilder::append(const char* s)
 {
 	nvDebugCheck(s != NULL);
 
-	const uint slen = uint(strlen( s ));
+	const uint slen = uint(strlen(s));
 
-	if( m_str == NULL ) {
+	if (m_str == NULL) {
 		m_size = slen + 1;
 		m_str = strAlloc(m_size);
-		strCpy( m_str, m_size, s );
+		strCpy(m_str, m_size, s);
 	}
 	else {
-	
-		const uint len = uint(strlen( m_str ));
 
-		if( m_size < len + slen + 1 ) {
+		const uint len = uint(strlen(m_str));
+
+		if (m_size < len + slen + 1) {
 			m_size = len + slen + 1;
 			m_str = strReAlloc(m_str, m_size);
 		}
-		
-		strCat( m_str, m_size, s );
+
+		strCat(m_str, m_size, s);
 	}
 
 	return *this;
@@ -315,33 +315,33 @@ StringBuilder & StringBuilder::append( const char * s )
 
 
 /** Append a formatted string. */
-StringBuilder & StringBuilder::appendFormat( const char * format, ... )
+StringBuilder& StringBuilder::appendFormat(const char* format, ...)
 {
-	nvDebugCheck( format != NULL );
+	nvDebugCheck(format != NULL);
 
 	va_list arg;
-	va_start( arg, format );
+	va_start(arg, format);
 
-	appendFormat( format, arg );
+	appendFormat(format, arg);
 
-	va_end( arg );
+	va_end(arg);
 
 	return *this;
 }
 
 
 /** Append a formatted string. */
-StringBuilder & StringBuilder::appendFormat( const char * format, va_list arg )
+StringBuilder& StringBuilder::appendFormat(const char* format, va_list arg)
 {
-	nvDebugCheck( format != NULL );
-	
+	nvDebugCheck(format != NULL);
+
 	va_list tmp;
 	va_copy(tmp, arg);
 
 	StringBuilder tmp_str;
-	tmp_str.format( format, tmp );
-	append( tmp_str );
-	
+	tmp_str.format(format, tmp);
+	append(tmp_str);
+
 	va_end(tmp);
 
 	return *this;
@@ -349,19 +349,19 @@ StringBuilder & StringBuilder::appendFormat( const char * format, va_list arg )
 
 
 /** Convert number to string in the given base. */
-StringBuilder & StringBuilder::number( int i, int base )
+StringBuilder& StringBuilder::number(int i, int base)
 {
-	nvCheck( base >= 2 );
-	nvCheck( base <= 36 );
+	nvCheck(base >= 2);
+	nvCheck(base <= 36);
 
 	// @@ This needs to be done correctly.
 	// length = floor(log(i, base));
 	uint len = uint(log(float(i)) / log(float(base)) + 2);	// one more if negative
 	reserve(len);
 
-	if( i < 0 ) {
+	if (i < 0) {
 		*m_str = '-';
-		*i2a(uint(-i), m_str+1, base) = 0;
+		*i2a(uint(-i), m_str + 1, base) = 0;
 	}
 	else {
 		*i2a(i, m_str, base) = 0;
@@ -372,10 +372,10 @@ StringBuilder & StringBuilder::number( int i, int base )
 
 
 /** Convert number to string in the given base. */
-StringBuilder & StringBuilder::number( uint i, int base )
+StringBuilder& StringBuilder::number(uint i, int base)
 {
-	nvCheck( base >= 2 );
-	nvCheck( base <= 36 );
+	nvCheck(base >= 2);
+	nvCheck(base <= 36);
 
 	// @@ This needs to be done correctly.
 	// length = floor(log(i, base));
@@ -389,10 +389,10 @@ StringBuilder & StringBuilder::number( uint i, int base )
 
 
 /** Resize the string preserving the contents. */
-StringBuilder & StringBuilder::reserve( uint size_hint )
+StringBuilder& StringBuilder::reserve(uint size_hint)
 {
 	nvCheck(size_hint != 0);
-	if( size_hint > m_size ) {
+	if (size_hint > m_size) {
 		m_str = strReAlloc(m_str, size_hint);
 		m_size = size_hint;
 	}
@@ -401,28 +401,28 @@ StringBuilder & StringBuilder::reserve( uint size_hint )
 
 
 /** Copy a string safely. */
-StringBuilder & StringBuilder::copy( const char * s )
+StringBuilder& StringBuilder::copy(const char* s)
 {
-	nvCheck( s != NULL );
-	uint str_size = uint(strlen( s )) + 1;
+	nvCheck(s != NULL);
+	uint str_size = uint(strlen(s)) + 1;
 	reserve(str_size);
-	strCpy( m_str, str_size, s );
+	strCpy(m_str, str_size, s);
 	return *this;
 }
 
 
 /** Copy an StringBuilder. */
-StringBuilder & StringBuilder::copy( const StringBuilder & s )
+StringBuilder& StringBuilder::copy(const StringBuilder& s)
 {
-	if( s.m_str == NULL ) {
-		nvCheck( s.m_size == 0 );
+	if (s.m_str == NULL) {
+		nvCheck(s.m_size == 0);
 		m_size = 0;
-		strFree( m_str );
+		strFree(m_str);
 		m_str = NULL;
 	}
 	else {
-		reserve( s.m_size );
-		strCpy( m_str, s.m_size, s.m_str );
+		reserve(s.m_size);
+		strCpy(m_str, s.m_size, s.m_str);
 	}
 	return *this;
 }
@@ -431,20 +431,20 @@ StringBuilder & StringBuilder::copy( const StringBuilder & s )
 void StringBuilder::reset()
 {
 	m_size = 0;
-	strFree( m_str );
+	strFree(m_str);
 	m_str = NULL;
 }
 
 
 /// Get the file name from a path.
-const char * Path::fileName() const
+const char* Path::fileName() const
 {
 	return fileName(m_str);
 }
 
 
 /// Get the extension from a file path.
-const char * Path::extension() const
+const char* Path::extension() const
 {
 	return extension(m_str);
 }
@@ -453,14 +453,14 @@ const char * Path::extension() const
 /// Toggles path separators (ie. \\ into /).
 void Path::translatePath()
 {
-	nvCheck( m_str != NULL );
+	nvCheck(m_str != NULL);
 
-	for(int i = 0; ; i++) {
-		if( m_str[i] == '\0' ) break;
+	for (int i = 0; ; i++) {
+		if (m_str[i] == '\0') break;
 #if NV_PATH_SEPARATOR == '/'
-		if( m_str[i] == '\\' ) m_str[i] = NV_PATH_SEPARATOR;
+		if (m_str[i] == '\\') m_str[i] = NV_PATH_SEPARATOR;
 #else
-		if( m_str[i] == '/' ) m_str[i] = NV_PATH_SEPARATOR;
+		if (m_str[i] == '/') m_str[i] = NV_PATH_SEPARATOR;
 #endif
 	}
 }
@@ -472,14 +472,14 @@ void Path::translatePath()
  */
 void Path::stripFileName()
 {
-	nvCheck( m_str != NULL );
+	nvCheck(m_str != NULL);
 
 	int length = (int)strlen(m_str) - 1;
-	while (length > 0 && m_str[length] != '/' && m_str[length] != '\\'){
+	while (length > 0 && m_str[length] != '/' && m_str[length] != '\\') {
 		length--;
 	}
-	if( length ) {
-		m_str[length+1] = 0;
+	if (length) {
+		m_str[length + 1] = 0;
 	}
 	else {
 		m_str[0] = 0;
@@ -490,16 +490,16 @@ void Path::stripFileName()
 /// Strip the extension from a path name.
 void Path::stripExtension()
 {
-	nvCheck( m_str != NULL );
-	
+	nvCheck(m_str != NULL);
+
 	int length = (int)strlen(m_str) - 1;
-	while( length > 0 && m_str[length] != '.' ) {
+	while (length > 0 && m_str[length] != '.') {
 		length--;
-		if( m_str[length] == NV_PATH_SEPARATOR ) {
+		if (m_str[length] == NV_PATH_SEPARATOR) {
 			return;		// no extension
 		}
 	}
-	if( length ) {
+	if (length) {
 		m_str[length] = 0;
 	}
 }
@@ -513,32 +513,32 @@ char Path::separator()
 }
 
 // static 
-const char * Path::fileName(const char * str)
+const char* Path::fileName(const char* str)
 {
-	nvCheck( str != NULL );
+	nvCheck(str != NULL);
 
 	int length = (int)strlen(str) - 1;
-	while( length >= 0 && str[length] != separator() ) {
+	while (length >= 0 && str[length] != separator()) {
 		length--;
 	}
 
-	return &str[length+1];
+	return &str[length + 1];
 }
 
 // static 
-const char * Path::extension(const char * str)
+const char* Path::extension(const char* str)
 {
-	nvCheck( str != NULL );
+	nvCheck(str != NULL);
 
 	int length, l;
-	l = length = (int)strlen( str );
-	while( length > 0 && str[length] != '.' ) {
+	l = length = (int)strlen(str);
+	while (length > 0 && str[length] != '.') {
 		length--;
-		if( str[length] == separator() ) {
+		if (str[length] == separator()) {
 			return &str[l];		// no extension
 		}
 	}
-	if( length == 0 ) {
+	if (length == 0) {
 		return &str[l];
 	}
 	return &str[length];
@@ -553,18 +553,18 @@ String String::clone() const
 	return str;
 }
 
-void String::setString(const char * str)
+void String::setString(const char* str)
 {
 	if (str == NULL) {
 		data = NULL;
 	}
 	else {
-		allocString( str );
+		allocString(str);
 		addRef();
 	}
 }
 
-void String::setString(const char * str, int length)
+void String::setString(const char* str, int length)
 {
 	nvDebugCheck(str != NULL);
 
@@ -572,13 +572,13 @@ void String::setString(const char * str, int length)
 	addRef();
 }
 
-void String::setString(const StringBuilder & str)
+void String::setString(const StringBuilder& str)
 {
 	if (str.str() == NULL) {
-		data =	NULL;
+		data = NULL;
 	}
 	else {
 		allocString(str);
 		addRef();
 	}
-}	
+}

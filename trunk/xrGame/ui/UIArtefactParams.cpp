@@ -6,21 +6,21 @@
 
 CUIArtefactParams::CUIArtefactParams()
 {
-	Memory.mem_fill			(m_info_items_restore, 0, sizeof(m_info_items_restore));
-	Memory.mem_fill			(m_info_items_immunity, 0, sizeof(m_info_items_immunity));
+	Memory.mem_fill(m_info_items_restore, 0, sizeof(m_info_items_restore));
+	Memory.mem_fill(m_info_items_immunity, 0, sizeof(m_info_items_immunity));
 }
 
 CUIArtefactParams::~CUIArtefactParams()
 {
 	for (u32 i = _item_start; i < _max_item_index; ++i)
 	{
-		CUIStatic* _s			= m_info_items_restore[i];
-		xr_delete				(_s);
+		CUIStatic* _s = m_info_items_restore[i];
+		xr_delete(_s);
 	}
 	for (u32 i1 = 0; i1 <= ALife::eHitTypeFireWound; ++i1)
 	{
-		CUIStatic* _s			= m_info_items_immunity[i1];
-		xr_delete				(_s);
+		CUIStatic* _s = m_info_items_immunity[i1];
+		xr_delete(_s);
 	}
 }
 
@@ -65,7 +65,7 @@ LPCSTR af_item_param_immunity_names[] = {
 	"ui_inv_outfit_fire_wound_protection",		// "(fire_wound_imm)",
 };
 
-LPCSTR af_actor_param_names[]={
+LPCSTR af_actor_param_names[] = {
 	"satiety_health_v",
 	"radiation_v",
 	"satiety_v",
@@ -74,28 +74,28 @@ LPCSTR af_actor_param_names[]={
 };
 void CUIArtefactParams::InitFromXml(CUIXml& xml_doc)
 {
-	LPCSTR _base				= "af_params";
+	LPCSTR _base = "af_params";
 	if (!xml_doc.NavigateToNode(_base, 0))	return;
 
 	string256					_buff;
-	CUIXmlInit::InitWindow		(xml_doc, _base, 0, this);
+	CUIXmlInit::InitWindow(xml_doc, _base, 0, this);
 
 	for (u32 i = _item_start; i < _max_item_index; ++i)
 	{
-		m_info_items_restore[i]			= xr_new<CUIStatic>();
-		CUIStatic* _s			= m_info_items_restore[i];
-		_s->SetAutoDelete		(false);
-		strconcat				(sizeof(_buff),_buff, _base, ":static_", af_item_sect_restore_names[i]);
-		CUIXmlInit::InitStatic	(xml_doc, _buff,	0, _s);
+		m_info_items_restore[i] = xr_new<CUIStatic>();
+		CUIStatic* _s = m_info_items_restore[i];
+		_s->SetAutoDelete(false);
+		strconcat(sizeof(_buff), _buff, _base, ":static_", af_item_sect_restore_names[i]);
+		CUIXmlInit::InitStatic(xml_doc, _buff, 0, _s);
 	}
 
 	for (u32 i1 = 0; i1 <= ALife::eHitTypeFireWound; ++i1)
 	{
-		m_info_items_immunity[i1]			= xr_new<CUIStatic>();
-		CUIStatic* _s			= m_info_items_immunity[i1];
-		_s->SetAutoDelete		(false);
-		strconcat				(sizeof(_buff),_buff, _base, ":static_", af_item_sect_immunity_names[i1]);
-		CUIXmlInit::InitStatic	(xml_doc, _buff,	0, _s);
+		m_info_items_immunity[i1] = xr_new<CUIStatic>();
+		CUIStatic* _s = m_info_items_immunity[i1];
+		_s->SetAutoDelete(false);
+		strconcat(sizeof(_buff), _buff, _base, ":static_", af_item_sect_immunity_names[i1]);
+		CUIXmlInit::InitStatic(xml_doc, _buff, 0, _s);
 	}
 }
 
@@ -109,71 +109,71 @@ void CUIArtefactParams::SetInfo(const shared_str& af_section)
 
 	string128					_buff;
 	float						_h = 0.0f;
-	DetachAll					();
-	for(u32 i=_item_start; i<_max_item_index; ++i)
+	DetachAll();
+	for (u32 i = _item_start; i < _max_item_index; ++i)
 	{
-		CUIStatic* _s			= m_info_items_restore[i];
+		CUIStatic* _s = m_info_items_restore[i];
 
 		float					_val;
-		float _actor_val		= pSettings->r_float	("actor_condition", af_actor_param_names[i]);
-		_val					= pSettings->r_float	(af_section, af_item_sect_restore_names[i]);
+		float _actor_val = pSettings->r_float("actor_condition", af_actor_param_names[i]);
+		_val = pSettings->r_float(af_section, af_item_sect_restore_names[i]);
 
 		if (fis_zero(_val))
 			continue;
-		
-		_val					= (_val / _actor_val) * 100.0f;
+
+		_val = (_val / _actor_val) * 100.0f;
 		LPCSTR _sn = "%";
 		if (i == _item_radiation_restore_speed || i == _item_power_restore_speed)
 		{
-			_val				/= 100.0f;
-			_sn					= "";
+			_val /= 100.0f;
+			_sn = "";
 		}
 
-		LPCSTR _color = (_val>0)?"%c[green]":"%c[red]";
+		LPCSTR _color = (_val > 0) ? "%c[green]" : "%c[red]";
 
 		if (i == _item_bleeding_restore_speed)
-			_val		*=	-1.0f;
+			_val *= -1.0f;
 
 		if (i == _item_bleeding_restore_speed || i == _item_radiation_restore_speed)
 			_color = (_val > 0) ? "%c[red]" : "%c[green]";
 
 
-		sprintf_s					(_buff, "%s %s %+.0f %s", 
-									CStringTable().translate(af_item_param_restore_names[i]).c_str(), 
-									_color, 
-									_val, 
-									_sn);
-		_s->SetText				(_buff);
-		_s->SetWndPos			(_s->GetWndPos().x, _h);
-		_h						+= _s->GetWndSize().y;
-		AttachChild				(_s);
+		sprintf_s(_buff, "%s %s %+.0f %s",
+			CStringTable().translate(af_item_param_restore_names[i]).c_str(),
+			_color,
+			_val,
+			_sn);
+		_s->SetText(_buff);
+		_s->SetWndPos(_s->GetWndPos().x, _h);
+		_h += _s->GetWndSize().y;
+		AttachChild(_s);
 	}
 	for (u32 i1 = 0; i1 <= ALife::eHitTypeFireWound; ++i1)
 	{
-		CUIStatic* _s			= m_info_items_immunity[i1];
+		CUIStatic* _s = m_info_items_immunity[i1];
 
 		float					_val = 0.f;
-		shared_str _sect	= pSettings->r_string(af_section, "hit_absorbation_sect");
-		_val				= pSettings->r_float(_sect, af_item_sect_immunity_names[i1]);
+		shared_str _sect = pSettings->r_string(af_section, "hit_absorbation_sect");
+		_val = pSettings->r_float(_sect, af_item_sect_immunity_names[i1]);
 		if (fsimilar(_val, 1.0f))
 			continue;
-		_val				= (1.0f - _val);
-		_val				*= 100.0f;
+		_val = (1.0f - _val);
+		_val *= 100.0f;
 
 		LPCSTR _sn = "%";
 
 		LPCSTR _color = (_val > 0) ? "%c[green]" : "%c[red]";
 
 
-		sprintf_s					(_buff, "%s %s %+.0f %s", 
-									CStringTable().translate(af_item_param_immunity_names[i1]).c_str(), 
-									_color, 
-									_val, 
-									_sn);
-		_s->SetText				(_buff);
-		_s->SetWndPos			(_s->GetWndPos().x, _h);
-		_h						+= _s->GetWndSize().y;
-		AttachChild				(_s);
+		sprintf_s(_buff, "%s %s %+.0f %s",
+			CStringTable().translate(af_item_param_immunity_names[i1]).c_str(),
+			_color,
+			_val,
+			_sn);
+		_s->SetText(_buff);
+		_s->SetWndPos(_s->GetWndPos().x, _h);
+		_h += _s->GetWndSize().y;
+		AttachChild(_s);
 	}
-	SetHeight					(_h);
+	SetHeight(_h);
 }

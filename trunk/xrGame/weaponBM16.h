@@ -18,14 +18,14 @@ protected:
 	HUD_SOUND		m_sndReload1;
 
 public:
-	virtual			~CWeaponBM16					();
-	virtual void	Load							(LPCSTR section);
+	virtual			~CWeaponBM16();
+	virtual void	Load(LPCSTR section);
 
 protected:
-	virtual void	PlayAnimShoot					();
-	virtual void	PlayAnimReload					();
-	virtual void	PlayReloadSound					();
-	virtual void	PlayAnimIdle					();
+	virtual void	PlayAnimShoot();
+	virtual void	PlayAnimReload();
+	virtual void	PlayReloadSound();
+	virtual void	PlayAnimIdle();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

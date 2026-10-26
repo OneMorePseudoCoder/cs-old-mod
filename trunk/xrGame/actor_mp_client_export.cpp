@@ -35,60 +35,60 @@
 // 3  camera
 // 4  inventory_active_slot,body_state_flags,health,radiation,physics_state_enabled
 
-void CActorMP::fill_state	(actor_mp_state &state)
+void CActorMP::fill_state(actor_mp_state& state)
 {
 	if (OnClient())
 	{
-		R_ASSERT						(g_Alive());
-		R_ASSERT2						(PHGetSyncItemsNumber() == 1,make_string("PHGetSyncItemsNumber() returned %d, health = %.2f",PHGetSyncItemsNumber(),GetfHealth()));
+		R_ASSERT(g_Alive());
+		R_ASSERT2(PHGetSyncItemsNumber() == 1, make_string("PHGetSyncItemsNumber() returned %d, health = %.2f", PHGetSyncItemsNumber(), GetfHealth()));
 	}
 
 	SPHNetState						State;
-	PHGetSyncItem(0)->get_State		(State);
+	PHGetSyncItem(0)->get_State(State);
 
-//	static test = false;
-//	if (test) {
+	//	static test = false;
+	//	if (test) {
 #if 0
-		Msg							("Frame [%d], object [%d]",Device.dwFrame,ID());
-//		Msg							("quaternion   : [%f][%f][%f][%f]",State.quaternion.x,State.quaternion.y,State.quaternion.z,State.quaternion.w);
-//		Msg							("angular      : [%f][%f][%f]",State.angular_vel.x,State.angular_vel.y,State.angular_vel.z);
-		Msg							("linear       : [%f][%f][%f]",State.linear_vel.x,State.linear_vel.y,State.linear_vel.z);
-//		Msg							("force        : [%f][%f][%f]",State.force.x,State.force.y,State.force.z);
-//		Msg							("torque       : [%f][%f][%f]",State.torque.x,State.torque.y,State.torque.z);
-//		Msg							("acceleration : [%f][%f][%f]",NET_SavedAccel.x,NET_SavedAccel.y,NET_SavedAccel.z);
-		Msg							("model_yaw    : [%f]",angle_normalize(r_model_yaw));
-		Msg							("camera_yaw   : [%f]",angle_normalize(unaffected_r_torso.yaw));
-//		Msg							("camera_pitch : [%f]",angle_normalize(unaffected_r_torso.pitch));
-//		Msg							("camera_roll  : [%f]",angle_normalize(unaffected_r_torso.roll));
-//	}
+	Msg("Frame [%d], object [%d]", Device.dwFrame, ID());
+	//		Msg							("quaternion   : [%f][%f][%f][%f]",State.quaternion.x,State.quaternion.y,State.quaternion.z,State.quaternion.w);
+	//		Msg							("angular      : [%f][%f][%f]",State.angular_vel.x,State.angular_vel.y,State.angular_vel.z);
+	Msg("linear       : [%f][%f][%f]", State.linear_vel.x, State.linear_vel.y, State.linear_vel.z);
+	//		Msg							("force        : [%f][%f][%f]",State.force.x,State.force.y,State.force.z);
+	//		Msg							("torque       : [%f][%f][%f]",State.torque.x,State.torque.y,State.torque.z);
+	//		Msg							("acceleration : [%f][%f][%f]",NET_SavedAccel.x,NET_SavedAccel.y,NET_SavedAccel.z);
+	Msg("model_yaw    : [%f]", angle_normalize(r_model_yaw));
+	Msg("camera_yaw   : [%f]", angle_normalize(unaffected_r_torso.yaw));
+	//		Msg							("camera_pitch : [%f]",angle_normalize(unaffected_r_torso.pitch));
+	//		Msg							("camera_roll  : [%f]",angle_normalize(unaffected_r_torso.roll));
+	//	}
 #endif // 0
 
-	state.physics_quaternion		= State.quaternion;
-	state.physics_angular_velocity	= State.angular_vel;
-	state.physics_linear_velocity	= State.linear_vel;
-	state.physics_force				= State.force;
-	state.physics_torque			= State.torque;
-	state.physics_position			= State.position;
+	state.physics_quaternion = State.quaternion;
+	state.physics_angular_velocity = State.angular_vel;
+	state.physics_linear_velocity = State.linear_vel;
+	state.physics_force = State.force;
+	state.physics_torque = State.torque;
+	state.physics_position = State.position;
 
-	state.position					= Position();
+	state.position = Position();
 
-	state.logic_acceleration		= NET_SavedAccel;
+	state.logic_acceleration = NET_SavedAccel;
 
-	state.model_yaw					= angle_normalize(r_model_yaw);
-	state.camera_yaw				= angle_normalize(unaffected_r_torso.yaw);
-	state.camera_pitch				= angle_normalize(unaffected_r_torso.pitch);
-	state.camera_roll				= angle_normalize(unaffected_r_torso.roll);
+	state.model_yaw = angle_normalize(r_model_yaw);
+	state.camera_yaw = angle_normalize(unaffected_r_torso.yaw);
+	state.camera_pitch = angle_normalize(unaffected_r_torso.pitch);
+	state.camera_roll = angle_normalize(unaffected_r_torso.roll);
 
-	state.time						= Level().timeServer();
+	state.time = Level().timeServer();
 
-	state.inventory_active_slot		= inventory().GetActiveSlot();
-	state.body_state_flags			= mstate_real & 0x0000ffff;
-	state.health					= GetfHealth();
-	state.radiation					= g_Radiation()/100.0f;
-	state.physics_state_enabled		= State.enabled ? 1 : 0;
+	state.inventory_active_slot = inventory().GetActiveSlot();
+	state.body_state_flags = mstate_real & 0x0000ffff;
+	state.health = GetfHealth();
+	state.radiation = g_Radiation() / 100.0f;
+	state.physics_state_enabled = State.enabled ? 1 : 0;
 }
 
-BOOL CActorMP::net_Relevant	()
+BOOL CActorMP::net_Relevant()
 {
 	if (OnClient())
 	{
@@ -103,16 +103,16 @@ BOOL CActorMP::net_Relevant	()
 		return							(false);
 
 	actor_mp_state					state;
-	fill_state						(state);
+	fill_state(state);
 	return							(m_state_holder.relevant(state));
 }
 
-void CActorMP::net_Export	(NET_Packet &packet)
+void CActorMP::net_Export(NET_Packet& packet)
 {
 	if (OnClient())
 	{
-		R_ASSERT						(g_Alive());
-		R_ASSERT						(PHGetSyncItemsNumber() == 1);
+		R_ASSERT(g_Alive());
+		R_ASSERT(PHGetSyncItemsNumber() == 1);
 	}
-	m_state_holder.write			(packet);
+	m_state_holder.write(packet);
 }

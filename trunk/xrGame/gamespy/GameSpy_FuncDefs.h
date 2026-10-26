@@ -1,7 +1,7 @@
 #pragma once
 //-----------------------------------------------------------------------------------------------
 //Callbacks that can occur during server browsing operations
-typedef enum 
+typedef enum
 {
 	sbc_serveradded, //a server was added to the list, may just have an IP & port at this point
 	sbc_serverupdated, //server information has been updated - either basic or full information is now available about this server
@@ -10,7 +10,7 @@ typedef enum
 	sbc_updatecomplete, //the server query engine is now idle
 	sbc_queryerror,		//the master returned an error string for the provided query
 	sbc_serverchallengereceived // received ip verification challenge from server
-} SBCallbackReason;	
+} SBCallbackReason;
 
 // these are possible return types for GSIAvailableCheckThink
 typedef enum
@@ -21,7 +21,7 @@ typedef enum
 	GSIACTemporarilyUnavailable   // the game's backend services are temporarily unavailable
 } GSIACResult;
 //States the ServerBrowser object can be in
-typedef enum 
+typedef enum
 {
 	sb_disconnected, //idle and not connected to the master server
 	sb_listxfer,	//downloading list of servers from the master server
@@ -30,7 +30,7 @@ typedef enum
 } SBState;
 
 //Error codes that can be returned from functions
-typedef enum 
+typedef enum
 {
 	sbe_noerror,  //no error has occured
 	sbe_socketerror, //a socket function has returned an unexpected error
@@ -40,22 +40,23 @@ typedef enum
 	sbe_allocerror, //memory allocation failed
 	sbe_paramerror,	//an invalid parameter was passed to a function
 	sbe_duplicateupdateerror //server update requested on a server that was already being updated
-} SBError;		
+} SBError;
 
-typedef enum {SBFalse, SBTrue} SBBool;
-typedef enum {PTFalse, PTTrue} PTBool;
-typedef enum {sbcm_int, sbcm_float, sbcm_strcase, sbcm_stricase} SBCompareMode;
+typedef enum { SBFalse, SBTrue } SBBool;
+typedef enum { PTFalse, PTTrue } PTBool;
+typedef enum { sbcm_int, sbcm_float, sbcm_strcase, sbcm_stricase } SBCompareMode;
 
-typedef enum {key_server, key_player, key_team} qr2_key_type;
+typedef enum { key_server, key_player, key_team } qr2_key_type;
 
-typedef enum 
-{e_qrnoerror, //no error occured
-e_qrwsockerror, //a standard socket call failed (exhausted resources?)
-e_qrbinderror, //the SDK was unable to find an available port to bind on
-e_qrdnserror, //a DNS lookup (for the master server) failed
-e_qrconnerror,  //the server is behind a nat and does not support negotiation
-e_qrnochallengeerror, //no challenge was received from the master - either the master is down, or a firewall is blocking UDP
-qr2_error_t_count
+typedef enum
+{
+	e_qrnoerror, //no error occured
+	e_qrwsockerror, //a standard socket call failed (exhausted resources?)
+	e_qrbinderror, //the SDK was unable to find an available port to bind on
+	e_qrdnserror, //a DNS lookup (for the master server) failed
+	e_qrconnerror,  //the server is behind a nat and does not support negotiation
+	e_qrnochallengeerror, //no challenge was received from the master - either the master is down, or a firewall is blocking UDP
+	qr2_error_t_count
 } qr2_error_t;
 
 typedef int GHTTPRequest;
@@ -105,25 +106,25 @@ typedef enum
 
 typedef __int64 GHTTPByteCount;
 //-----------------------------------------------------------------------------------------------
-typedef void (__cdecl* fnSBCallback)(void* sb, SBCallbackReason reason, void* server, void *instance);
-typedef void (__cdecl* fnAuthCallBackFn)(int gameid, int localid, int authenticated, char *errmsg, void *instance);
-typedef void (__cdecl* fnRefreshAuthCallBackFn)(int gameid, int localid, int hint, char *challenge, void *instance);
+typedef void(__cdecl* fnSBCallback)(void* sb, SBCallbackReason reason, void* server, void* instance);
+typedef void(__cdecl* fnAuthCallBackFn)(int gameid, int localid, int authenticated, char* errmsg, void* instance);
+typedef void(__cdecl* fnRefreshAuthCallBackFn)(int gameid, int localid, int hint, char* challenge, void* instance);
 
-typedef void (__cdecl* fnqr2_natnegcallback_t)(int cookie, void *userdata);	
-typedef void (__cdecl* fnqr2_clientmessagecallback_t)(char *data, int len, void *userdata);	
-typedef void (__cdecl* fnqr2_publicaddresscallback_t)(unsigned int ip, unsigned short port, void *userdata);
+typedef void(__cdecl* fnqr2_natnegcallback_t)(int cookie, void* userdata);
+typedef void(__cdecl* fnqr2_clientmessagecallback_t)(char* data, int len, void* userdata);
+typedef void(__cdecl* fnqr2_publicaddresscallback_t)(unsigned int ip, unsigned short port, void* userdata);
 
-typedef void (__cdecl* fnqr2_serverkeycallback_t)(int keyid, void* outbuf, void *userdata);
-typedef void (__cdecl* fnqr2_playerteamkeycallback_t)(int keyid, int index, void* outbuf, void *userdata);	
-typedef void (__cdecl* fnqr2_keylistcallback_t)(qr2_key_type keytype, void* keybuffer, void *userdata);	
-typedef int  (__cdecl* fnqr2_countcallback_t)(qr2_key_type keytype, void *userdata);	
-typedef void (__cdecl* fnqr2_adderrorcallback_t)(qr2_error_t error, char *errmsg, void *userdata);	
+typedef void(__cdecl* fnqr2_serverkeycallback_t)(int keyid, void* outbuf, void* userdata);
+typedef void(__cdecl* fnqr2_playerteamkeycallback_t)(int keyid, int index, void* outbuf, void* userdata);
+typedef void(__cdecl* fnqr2_keylistcallback_t)(qr2_key_type keytype, void* keybuffer, void* userdata);
+typedef int(__cdecl* fnqr2_countcallback_t)(qr2_key_type keytype, void* userdata);
+typedef void(__cdecl* fnqr2_adderrorcallback_t)(qr2_error_t error, char* errmsg, void* userdata);
 
-typedef void (__cdecl* ptPatchCallback) ( PTBool available, PTBool mandatory, const char * versionName, int fileID, const char * downloadURL,  void * param );
+typedef void(__cdecl* ptPatchCallback) (PTBool available, PTBool mandatory, const char* versionName, int fileID, const char* downloadURL, void* param);
 
-typedef void (__cdecl* ghttpProgressCallback) ( GHTTPRequest request, GHTTPState state, const char * buffer, GHTTPByteCount bufferLen, GHTTPByteCount bytesReceived, GHTTPByteCount totalSize, void * param );
+typedef void(__cdecl* ghttpProgressCallback) (GHTTPRequest request, GHTTPState state, const char* buffer, GHTTPByteCount bufferLen, GHTTPByteCount bytesReceived, GHTTPByteCount totalSize, void* param);
 
-typedef GHTTPBool (__cdecl* ghttpCompletedCallback) ( GHTTPRequest request, GHTTPResult result, char * buffer, GHTTPByteCount bufferLen, void * param );
+typedef GHTTPBool(__cdecl* ghttpCompletedCallback) (GHTTPRequest request, GHTTPResult result, char* buffer, GHTTPByteCount bufferLen, void* param);
 
 extern "C" {
 

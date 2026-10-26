@@ -8,18 +8,18 @@ class CUIMessageBox;
 class CUIMessageBoxEx : public CUIDialogWnd, public CUIWndCallback
 {
 public:
-					CUIMessageBoxEx		();
-	virtual			~CUIMessageBoxEx	();
-			void	SetText				(LPCSTR text);
-			LPCSTR	GetText				();
-	virtual void	Init				(LPCSTR xml_template);
-	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	CUIMessageBoxEx();
+	virtual			~CUIMessageBoxEx();
+	void	SetText(LPCSTR text);
+	LPCSTR	GetText();
+	virtual void	Init(LPCSTR xml_template);
+	virtual void	SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
-	LPCSTR			GetHost				();
-	LPCSTR			GetPassword			();
-	virtual bool	NeedCenterCursor	() const { return false; }
+	LPCSTR			GetHost();
+	LPCSTR			GetPassword();
+	virtual bool	NeedCenterCursor() const { return false; }
 
-	CUIMessageBox*	m_pMessageBox;
+	CUIMessageBox* m_pMessageBox;
 
-	virtual bool	IR_OnKeyboardPress	(int dik);
+	virtual bool	IR_OnKeyboardPress(int dik);
 };

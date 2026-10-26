@@ -7,6 +7,6 @@ class CStateManagerGigant : public CMonsterStateManager<CPseudoGigant> {
 	typedef CMonsterStateManager<CPseudoGigant> inherited;
 public:
 
-					CStateManagerGigant	(CPseudoGigant *monster); 
-	virtual void	execute				();
+	CStateManagerGigant(CPseudoGigant* monster);
+	virtual void	execute();
 };

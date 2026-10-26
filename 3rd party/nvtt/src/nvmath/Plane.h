@@ -14,22 +14,22 @@ namespace nv
 	class NVMATH_CLASS Plane
 	{
 	public:
-		typedef Plane const & Arg;
-		
+		typedef Plane const& Arg;
+
 		Plane();
 		Plane(float x, float y, float z, float w);
 		Plane(Vector4::Arg v);
 		Plane(Vector3::Arg v, float d);
 		Plane(Vector3::Arg normal, Vector3::Arg point);
-		
-		const Plane & operator=(Plane::Arg v);
-		
+
+		const Plane& operator=(Plane::Arg v);
+
 		Vector3 vector() const;
 		scalar offset() const;
-		
-		const Vector4 & asVector() const;
-		Vector4 & asVector();
-		
+
+		const Vector4& asVector() const;
+		Vector4& asVector();
+
 		void operator*=(scalar s);
 
 	private:
@@ -41,14 +41,14 @@ namespace nv
 	inline Plane::Plane(Vector4::Arg v) : p(v) {}
 	inline Plane::Plane(Vector3::Arg v, float d) : p(v, d) {}
 	inline Plane::Plane(Vector3::Arg normal, Vector3::Arg point) : p(normal, dot(normal, point)) {}
-	
-	inline const Plane & Plane::operator=(Plane::Arg v) { p = v.p; return *this; }
-	
+
+	inline const Plane& Plane::operator=(Plane::Arg v) { p = v.p; return *this; }
+
 	inline Vector3 Plane::vector() const { return p.xyz(); }
 	inline scalar Plane::offset() const { return p.w(); }
 
-	inline const Vector4 & Plane::asVector() const { return p; }
-	inline Vector4 & Plane::asVector() { return p; }
+	inline const Vector4& Plane::asVector() const { return p; }
+	inline Vector4& Plane::asVector() { return p; }
 
 	// Normalize plane.
 	inline Plane normalize(Plane::Arg plane, float epsilon = NV_EPSILON)
@@ -71,7 +71,7 @@ namespace nv
 	}
 
 	Plane transformPlane(const Matrix&, Plane::Arg);
-	
+
 } // nv namespace
 
 #endif // NV_MATH_PLANE_H

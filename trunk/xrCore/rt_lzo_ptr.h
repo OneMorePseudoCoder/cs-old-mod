@@ -34,10 +34,10 @@
  */
 
 
-/* WARNING: this file should *not* be used by applications. It is
-   part of the implementation of the library and is subject
-   to change.
- */
+ /* WARNING: this file should *not* be used by applications. It is
+	part of the implementation of the library and is subject
+	to change.
+  */
 
 
 #ifndef __LZO_PTR_H
@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 
-/***********************************************************************
-// Integral types
-************************************************************************/
+	/***********************************************************************
+	// Integral types
+	************************************************************************/
 
 #if !defined(lzo_uintptr_t)
 #  if defined(__LZO_MMODEL_HUGE)
@@ -64,24 +64,24 @@ extern "C" {
 #endif
 
 
-/***********************************************************************
-//
-************************************************************************/
+	/***********************************************************************
+	//
+	************************************************************************/
 
-/* Always use the safe (=integral) version for pointer-comparisions.
- * The compiler should optimize away the additional casts anyway.
- *
- * Note that this only works if the representation and ordering
- * of the pointer and the integral is the same (at bit level).
- *
- * Most 16-bit compilers have their own view about pointers -
- * fortunately they don't care about comparing pointers
- * that are pointing to Nirvana.
- */
+	/* Always use the safe (=integral) version for pointer-comparisions.
+	 * The compiler should optimize away the additional casts anyway.
+	 *
+	 * Note that this only works if the representation and ordering
+	 * of the pointer and the integral is the same (at bit level).
+	 *
+	 * Most 16-bit compilers have their own view about pointers -
+	 * fortunately they don't care about comparing pointers
+	 * that are pointing to Nirvana.
+	 */
 
 #if (LZO_ARCH_I086)
 #define PTR(a)              ((lzo_bytep) (a))
-/* only need the low bits of the pointer -> offset is ok */
+	 /* only need the low bits of the pointer -> offset is ok */
 #define PTR_ALIGNED_4(a)    ((ACC_PTR_FP_OFF(a) & 3) == 0)
 #define PTR_ALIGNED2_4(a,b) (((ACC_PTR_FP_OFF(a) | ACC_PTR_FP_OFF(b)) & 3) == 0)
 #else
@@ -99,38 +99,38 @@ extern "C" {
 #define pd(a,b)             ((lzo_uint) ((a)-(b)))
 
 
-LZO_EXTERN(lzo_uintptr_t)
-__lzo_ptr_linear(const lzo_voidp ptr);
+	LZO_EXTERN(lzo_uintptr_t)
+		__lzo_ptr_linear(const lzo_voidp ptr);
 
 
-typedef union
-{
-    char            a_char;
-    unsigned char   a_uchar;
-    short           a_short;
-    unsigned short  a_ushort;
-    int             a_int;
-    unsigned int    a_uint;
-    long            a_long;
-    unsigned long   a_ulong;
-    lzo_int         a_lzo_int;
-    lzo_uint        a_lzo_uint;
-    lzo_int32       a_lzo_int32;
-    lzo_uint32      a_lzo_uint32;
-    ptrdiff_t       a_ptrdiff_t;
-    lzo_uintptr_t   a_lzo_uintptr_t;
-    lzo_voidp       a_lzo_voidp;
-    void *          a_void_p;
-    lzo_bytep       a_lzo_bytep;
-    lzo_bytepp      a_lzo_bytepp;
-    lzo_uintp       a_lzo_uintp;
-    lzo_uint *      a_lzo_uint_p;
-    lzo_uint32p     a_lzo_uint32p;
-    lzo_uint32 *    a_lzo_uint32_p;
-    unsigned char * a_uchar_p;
-    char *          a_char_p;
-}
-lzo_full_align_t;
+	typedef union
+	{
+		char            a_char;
+		unsigned char   a_uchar;
+		short           a_short;
+		unsigned short  a_ushort;
+		int             a_int;
+		unsigned int    a_uint;
+		long            a_long;
+		unsigned long   a_ulong;
+		lzo_int         a_lzo_int;
+		lzo_uint        a_lzo_uint;
+		lzo_int32       a_lzo_int32;
+		lzo_uint32      a_lzo_uint32;
+		ptrdiff_t       a_ptrdiff_t;
+		lzo_uintptr_t   a_lzo_uintptr_t;
+		lzo_voidp       a_lzo_voidp;
+		void* a_void_p;
+		lzo_bytep       a_lzo_bytep;
+		lzo_bytepp      a_lzo_bytepp;
+		lzo_uintp       a_lzo_uintp;
+		lzo_uint* a_lzo_uint_p;
+		lzo_uint32p     a_lzo_uint32p;
+		lzo_uint32* a_lzo_uint32_p;
+		unsigned char* a_uchar_p;
+		char* a_char_p;
+	}
+	lzo_full_align_t;
 
 
 

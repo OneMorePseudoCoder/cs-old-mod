@@ -10,12 +10,12 @@
 
 IC	CAI_ObjectLocation::CAI_ObjectLocation()
 {
-	init					();
+	init();
 }
 
 IC	void CAI_ObjectLocation::reinit()
 {
-	init					();
+	init();
 }
 
 IC	const GameGraph::_GRAPH_ID CAI_ObjectLocation::game_vertex_id() const

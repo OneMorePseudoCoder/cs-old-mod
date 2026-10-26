@@ -37,14 +37,14 @@ namespace
 	static uint countMipmaps(int w, int h, int d)
 	{
 		uint mipmap = 0;
-		
+
 		while (w != 1 || h != 1 || d != 1) {
 			w = max(1, w / 2);
 			h = max(1, h / 2);
 			d = max(1, d / 2);
 			mipmap++;
 		}
-		
+
 		return mipmap + 1;
 	}
 
@@ -53,12 +53,12 @@ namespace
 	{
 		return nextPowerOfTwo(v + 1) / 2;
 	}
-	
+
 	static uint nearestPowerOfTwo(const uint v)
 	{
 		const uint np2 = nextPowerOfTwo(v);
 		const uint pp2 = previousPowerOfTwo(v);
-		
+
 		if (np2 - v <= v - pp2)
 		{
 			return np2;
@@ -68,13 +68,13 @@ namespace
 			return pp2;
 		}
 	}
-	
+
 } // namespace
 
 
 /// Constructor.
 InputOptions::InputOptions() : m(*new InputOptions::Private())
-{ 
+{
 	reset();
 }
 
@@ -82,8 +82,8 @@ InputOptions::InputOptions() : m(*new InputOptions::Private())
 InputOptions::~InputOptions()
 {
 	resetTextureLayout();
-	
-	delete &m;
+
+	delete& m;
 }
 
 
@@ -98,7 +98,7 @@ void InputOptions::reset()
 
 	m.inputGamma = 2.2f;
 	m.outputGamma = 2.2f;
-	
+
 	m.colorTransform = ColorTransform_None;
 	m.linearTransform = Matrix(identity);
 
@@ -115,7 +115,7 @@ void InputOptions::reset()
 	m.convertToNormalMap = false;
 	m.heightFactors.set(0.0f, 0.0f, 0.0f, 1.0f);
 	m.bumpFrequencyScale = Vector4(1.0f, 0.5f, 0.25f, 0.125f) / (1.0f + 0.5f + 0.25f + 0.125f);
-	
+
 	m.maxExtent = 0;
 	m.roundMode = RoundMode_None;
 }
@@ -136,17 +136,17 @@ void InputOptions::setTextureLayout(TextureType type, int width, int height, int
 
 	// Delete previous images.
 	resetTextureLayout();
-	
+
 	m.textureType = type;
-	
+
 	// Allocate images.
 	m.mipmapCount = countMipmaps(width, height, depth);
 	m.faceCount = (type == TextureType_Cube) ? 6 : 1;
 	m.imageCount = m.mipmapCount * m.faceCount;
-	
+
 	m.images = new Private::InputImage[m.imageCount];
-	
-	for(uint f = 0; f < m.faceCount; f++)
+
+	for (uint f = 0; f < m.faceCount; f++)
 	{
 		uint w = width;
 		uint h = height;
@@ -154,15 +154,15 @@ void InputOptions::setTextureLayout(TextureType type, int width, int height, int
 
 		for (uint mipLevel = 0; mipLevel < m.mipmapCount; mipLevel++)
 		{
-			Private::InputImage & img = m.images[f * m.mipmapCount + mipLevel];
+			Private::InputImage& img = m.images[f * m.mipmapCount + mipLevel];
 			img.width = w;
 			img.height = h;
 			img.depth = d;
 			img.mipLevel = mipLevel;
 			img.face = f;
-			
+
 			img.data = NULL;
-			
+
 			w = max(1U, w / 2);
 			h = max(1U, h / 2);
 			d = max(1U, d / 2);
@@ -176,7 +176,7 @@ void InputOptions::resetTextureLayout()
 	if (m.images != NULL)
 	{
 		// Delete image array.
-		delete [] m.images;
+		delete[] m.images;
 		m.images = NULL;
 
 		m.faceCount = 0;
@@ -187,22 +187,22 @@ void InputOptions::resetTextureLayout()
 
 
 // Copies the data to our internal structures.
-bool InputOptions::setMipmapData(const void * data, int width, int height, int depth /*= 1*/, int face /*= 0*/, int mipLevel /*= 0*/)
+bool InputOptions::setMipmapData(const void* data, int width, int height, int depth /*= 1*/, int face /*= 0*/, int mipLevel /*= 0*/)
 {
 	nvCheck(depth == 1);
-	
+
 	const int idx = face * m.mipmapCount + mipLevel;
-	
+
 	if (m.images[idx].width != width || m.images[idx].height != height || m.images[idx].depth != depth || m.images[idx].mipLevel != mipLevel || m.images[idx].face != face)
 	{
 		// Invalid dimension or index.
 		return false;
 	}
-	
+
 	m.images[idx].data = new nv::Image();
 	m.images[idx].data->allocate(width, height);
-	memcpy(m.images[idx].data->pixels(), data, width * height * 4); 
-	
+	memcpy(m.images[idx].data->pixels(), data, width * height * 4);
+
 	return true;
 }
 
@@ -320,7 +320,7 @@ void InputOptions::setRoundMode(RoundMode mode)
 void InputOptions::Private::computeTargetExtents() const
 {
 	nvCheck(images != NULL);
-	
+
 	uint maxExtent = this->maxExtent;
 	if (roundMode != RoundMode_None)
 	{
@@ -331,11 +331,11 @@ void InputOptions::Private::computeTargetExtents() const
 	uint w = images->width;
 	uint h = images->height;
 	uint d = images->depth;
-	
+
 	nvDebugCheck(w > 0);
 	nvDebugCheck(h > 0);
 	nvDebugCheck(d > 0);
-	
+
 	// Scale extents without changing aspect ratio.
 	uint maxwhd = max(max(w, h), d);
 	if (maxExtent != 0 && maxwhd > maxExtent)
@@ -344,7 +344,7 @@ void InputOptions::Private::computeTargetExtents() const
 		h = max((h * maxExtent) / maxwhd, 1U);
 		d = max((d * maxExtent) / maxwhd, 1U);
 	}
-	
+
 	// Round to power of two.
 	if (roundMode == RoundMode_ToNextPowerOfTwo)
 	{
@@ -364,11 +364,11 @@ void InputOptions::Private::computeTargetExtents() const
 		h = previousPowerOfTwo(h);
 		d = previousPowerOfTwo(d);
 	}
-	
+
 	this->targetWidth = w;
 	this->targetHeight = h;
 	this->targetDepth = d;
-	
+
 	this->targetMipmapCount = countMipmaps(w, h, d);
 }
 
@@ -378,7 +378,7 @@ void InputOptions::Private::computeTargetExtents() const
 int InputOptions::Private::realMipmapCount() const
 {
 	int mipmapCount = targetMipmapCount;
-	
+
 	if (!generateMipmaps) mipmapCount = 1;
 	else if (maxLevel != -1 && maxLevel < mipmapCount - 1) mipmapCount = maxLevel + 1;
 
@@ -386,23 +386,23 @@ int InputOptions::Private::realMipmapCount() const
 }
 
 
-const Image * InputOptions::Private::image(uint face, uint mipmap) const
+const Image* InputOptions::Private::image(uint face, uint mipmap) const
 {
 	nvDebugCheck(face < faceCount);
 	nvDebugCheck(mipmap < mipmapCount);
 
-	const InputImage & image = this->images[face * mipmapCount + mipmap];
+	const InputImage& image = this->images[face * mipmapCount + mipmap];
 	nvDebugCheck(image.face == face);
 	nvDebugCheck(image.mipLevel == mipmap);
 
 	return image.data.ptr();
 }
 
-const Image * InputOptions::Private::image(uint idx) const
+const Image* InputOptions::Private::image(uint idx) const
 {
 	nvDebugCheck(idx < faceCount * mipmapCount);
 
-	const InputImage & image = this->images[idx];
+	const InputImage& image = this->images[idx];
 
 	return image.data.ptr();
 }

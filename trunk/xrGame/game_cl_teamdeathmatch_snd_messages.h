@@ -5,7 +5,7 @@ enum {
 	ID_TEAMS_EQUAL,
 	ID_TEAM1_LEAD,
 	ID_TEAM2_LEAD,
-	
+
 	ID_TEAM1_RANK_0,
 	ID_TEAM1_RANK_1,
 	ID_TEAM1_RANK_2,
@@ -18,5 +18,5 @@ enum {
 	ID_TEAM2_RANK_3,
 	ID_TEAM2_RANK_4,
 
-	ID_TDM_forcedword		= u32(-1)
+	ID_TDM_forcedword = u32(-1)
 };

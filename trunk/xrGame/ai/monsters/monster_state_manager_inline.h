@@ -39,11 +39,12 @@ bool CMonsterStateManagerAbstract::can_eat()
 }
 
 TEMPLATE_SPECIALIZATION
-bool CMonsterStateManagerAbstract::check_state(u32 state_id) 
+bool CMonsterStateManagerAbstract::check_state(u32 state_id)
 {
 	if (prev_substate == state_id) {
 		if (!get_state_current()->check_completion())		return true;
-	} else {
+	}
+	else {
 		if (get_state(state_id)->check_start_conditions())	return true;
 	}
 
@@ -57,7 +58,7 @@ void CMonsterStateManagerAbstract::critical_finalize()
 }
 
 TEMPLATE_SPECIALIZATION
-EMonsterState CMonsterStateManagerAbstract::get_state_type() 
+EMonsterState CMonsterStateManagerAbstract::get_state_type()
 {
 	return inherited::get_state_type();
 }

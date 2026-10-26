@@ -27,8 +27,8 @@ struct SSpecificCharacterData : CSharedResource
 
 #ifdef  XRGAME_EXPORTS
 
-	SSpecificCharacterData ();
-	virtual ~SSpecificCharacterData ();
+	SSpecificCharacterData();
+	virtual ~SSpecificCharacterData();
 
 	//игровое имя персонажа
 	xr_string	m_sGameName;
@@ -53,7 +53,7 @@ struct SSpecificCharacterData : CSharedResource
 	xr_string m_sVisual;
 
 #ifdef  XRGAME_EXPORTS
-	
+
 	//начальный диалог
 	shared_str					m_StartDialog;
 	//диалоги актера, которые будут доступны только при встрече с данным персонажем
@@ -64,7 +64,7 @@ struct SSpecificCharacterData : CSharedResource
 	CHARACTER_COMMUNITY			m_Community;
 
 #endif
-	
+
 	//ранг
 	CHARACTER_RANK_VALUE		m_Rank;
 	//репутация
@@ -81,7 +81,7 @@ struct SSpecificCharacterData : CSharedResource
 	//если персонаж является заданым по умолчанию для своей команды
 	bool m_bDefaultForCommunity;
 #ifdef  XRGAME_EXPORTS
-	struct SMoneyDef{
+	struct SMoneyDef {
 		u32				min_money;
 		u32				max_money;
 		bool			inf_money;
@@ -95,8 +95,8 @@ class CCharacterInfo;
 class CSE_ALifeTraderAbstract;
 
 
-class CSpecificCharacter: public CSharedClass<SSpecificCharacterData, shared_str, false>,
-						  public CXML_IdToIndex<CSpecificCharacter>
+class CSpecificCharacter : public CSharedClass<SSpecificCharacterData, shared_str, false>,
+	public CXML_IdToIndex<CSpecificCharacter>
 {
 private:
 	typedef CSharedClass	<SSpecificCharacterData, shared_str, false>				inherited_shared;
@@ -108,45 +108,45 @@ private:
 	friend CSE_ALifeTraderAbstract;
 public:
 
-								CSpecificCharacter		();
-								~CSpecificCharacter		();
+	CSpecificCharacter();
+	~CSpecificCharacter();
 
-	virtual void				Load					(shared_str		id);
+	virtual void				Load(shared_str		id);
 
 protected:
-	const SSpecificCharacterData* data					() const	{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
-	SSpecificCharacterData*		  data					()			{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
+	const SSpecificCharacterData* data() const { VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd(); }
+	SSpecificCharacterData* data() { VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd(); }
 
 	//загрузка из XML файла
-	virtual void				load_shared				(LPCSTR);
-	static void					InitXmlIdToIndex		();
+	virtual void				load_shared(LPCSTR);
+	static void					InitXmlIdToIndex();
 
 	shared_str		m_OwnId;
 public:
 
 #ifdef  XRGAME_EXPORTS
-	LPCSTR						Name					() const ;
-	shared_str					Bio						() const ;
-	const CHARACTER_COMMUNITY&	Community				() const ;
-	SSpecificCharacterData::SMoneyDef& MoneyDef			() 	{return data()->money_def;}
+	LPCSTR						Name() const;
+	shared_str					Bio() const;
+	const CHARACTER_COMMUNITY& Community() const;
+	SSpecificCharacterData::SMoneyDef& MoneyDef() { return data()->money_def; }
 #endif
 
-	CHARACTER_RANK_VALUE		Rank					() const ;
-	CHARACTER_REPUTATION_VALUE	Reputation				() const ;
-	LPCSTR						Visual					() const ;
+	CHARACTER_RANK_VALUE		Rank() const;
+	CHARACTER_REPUTATION_VALUE	Reputation() const;
+	LPCSTR						Visual() const;
 
 #ifdef  XRGAME_EXPORTS
-	LPCSTR						SupplySpawn				() const ;
-	LPCSTR						NpcConfigSect			() const ;
-	LPCSTR						sound_voice_prefix		() const ;
-	float						panic_threshold			() const ;
-	float						hit_probability_factor	() const ;
-	int							crouch_type				() const ;
-	LPCSTR						critical_wound_weights	() const ;
+	LPCSTR						SupplySpawn() const;
+	LPCSTR						NpcConfigSect() const;
+	LPCSTR						sound_voice_prefix() const;
+	float						panic_threshold() const;
+	float						hit_probability_factor() const;
+	int							crouch_type() const;
+	LPCSTR						critical_wound_weights() const;
 
-	const shared_str&			IconName				() const	{return data()->m_icon_name;};
+	const shared_str& IconName() const { return data()->m_icon_name; };
 #endif
-	shared_str					terrain_sect			() const;
+	shared_str					terrain_sect() const;
 };
 
 

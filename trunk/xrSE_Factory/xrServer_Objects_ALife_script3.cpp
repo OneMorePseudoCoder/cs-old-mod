@@ -18,7 +18,7 @@
 using namespace luabind;
 
 #pragma optimize("s",on)
-void CSE_ALifeObjectHangingLamp::script_register(lua_State *L)
+void CSE_ALifeObjectHangingLamp::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_dynamic_alife2(
@@ -29,7 +29,7 @@ void CSE_ALifeObjectHangingLamp::script_register(lua_State *L)
 		)
 	];
 }
-void CSE_ALifeObjectPhysic::script_register(lua_State *L)
+void CSE_ALifeObjectPhysic::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_dynamic_alife2(
@@ -41,7 +41,7 @@ void CSE_ALifeObjectPhysic::script_register(lua_State *L)
 	];
 }
 
-void CSE_ALifeSmartZone::script_register(lua_State *L)
+void CSE_ALifeSmartZone::script_register(lua_State* L)
 {
 	module(L)[
 		luabind_class_zone2(

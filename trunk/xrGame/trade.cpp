@@ -17,31 +17,31 @@ class CInventoryOwner;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // CTrade class //////////////////////////////////////////////////////////////////////////
-CTrade::CTrade(CInventoryOwner *p_io) 
+CTrade::CTrade(CInventoryOwner* p_io)
 {
 	TradeState = false;
-	m_dwLastTradeTime	= 0;
-	pPartner.Set(TT_NONE,0,0);
+	m_dwLastTradeTime = 0;
+	pPartner.Set(TT_NONE, 0, 0);
 
 	m_bNeedToUpdateArtefactTasks = false;
 
 	// Заполнить pThis
-	CAI_Trader *pTrader;
-	CActor *pActor;
-	CAI_Stalker *pStalker;
+	CAI_Trader* pTrader;
+	CActor* pActor;
+	CAI_Stalker* pStalker;
 
 	// Определяем потомка этого экземпляра класса
-	pTrader = smart_cast<CAI_Trader *>(p_io);
-	if (pTrader) 
+	pTrader = smart_cast<CAI_Trader*>(p_io);
+	if (pTrader)
 		pThis.Set(TT_TRADER, pTrader, p_io);
-	else 
+	else
 	{
-		pActor = smart_cast<CActor *>(p_io);
-		if (pActor) 
+		pActor = smart_cast<CActor*>(p_io);
+		if (pActor)
 			pThis.Set(TT_ACTOR, pActor, p_io);
-		else 
+		else
 		{
-			pStalker = smart_cast<CAI_Stalker *>(p_io);
+			pStalker = smart_cast<CAI_Stalker*>(p_io);
 			if (pStalker) pThis.Set(TT_STALKER, pStalker, p_io);
 		}
 	}
@@ -49,12 +49,12 @@ CTrade::CTrade(CInventoryOwner *p_io)
 
 CTrade::~CTrade()
 {
-	
+
 }
 
 void CTrade::RemovePartner()
 {
-	pPartner.Set(TT_NONE,0,0);
+	pPartner.Set(TT_NONE, 0, 0);
 }
 //// предложение торговли
 //void CTrade::Communicate() 
@@ -72,24 +72,24 @@ void CTrade::RemovePartner()
 //
 //}
 //
-bool CTrade::SetPartner(CEntity *p)
+bool CTrade::SetPartner(CEntity* p)
 {
-	CAI_Trader *pTrader;
-	CActor *pActor;
-	CAI_Stalker *pStalker;
+	CAI_Trader* pTrader;
+	CActor* pActor;
+	CAI_Stalker* pStalker;
 
-	pTrader = smart_cast<CAI_Trader *>(p);
-	if (pTrader && (pTrader != pThis.base))  
+	pTrader = smart_cast<CAI_Trader*>(p);
+	if (pTrader && (pTrader != pThis.base))
 		pPartner.Set(TT_TRADER, pTrader, pTrader);
-	else 
+	else
 	{
-		pActor = smart_cast<CActor *>(p);
-		if (pActor && (pActor != pThis.base)) 
+		pActor = smart_cast<CActor*>(p);
+		if (pActor && (pActor != pThis.base))
 			pPartner.Set(TT_ACTOR, pActor, pActor);
-		else 
+		else
 		{
-			pStalker = smart_cast<CAI_Stalker *>(p);
-			if (pStalker && (pStalker != pThis.base)) 
+			pStalker = smart_cast<CAI_Stalker*>(p);
+			if (pStalker && (pStalker != pThis.base))
 				pPartner.Set(TT_STALKER, pStalker, pStalker);
 			else return false;
 		}
@@ -132,10 +132,10 @@ bool CTrade::SetPartner(CEntity *p)
 void CTrade::StartTrade()
 {
 	TradeState = true;
-	m_dwLastTradeTime =  Level().timeServer();
+	m_dwLastTradeTime = Level().timeServer();
 	m_bNeedToUpdateArtefactTasks = false;
 
-//	if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStartTrade();
+	//	if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStartTrade();
 }
 
 void CTrade::StartTrade(CInventoryOwner* pInvOwner)
@@ -145,16 +145,17 @@ void CTrade::StartTrade(CInventoryOwner* pInvOwner)
 }
 void CTrade::TradeCB(bool bStart)
 {
-	if(bStart){
+	if (bStart) {
 		if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStartTrade();
-	}else
+	}
+	else
 		if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStopTrade();
 
 }
 
 void CTrade::OnPerformTrade(u32 money_get, u32 money_put)
 {
-	if (pThis.type == TT_TRADER) 
+	if (pThis.type == TT_TRADER)
 		smart_cast<CAI_Trader*>(pThis.base)->callback(GameObject::eTradePerformTradeOperation)(money_get, money_put);
 }
 
@@ -162,7 +163,7 @@ void CTrade::StopTrade()
 {
 	TradeState = false;
 	m_dwLastTradeTime = 0;
-//	Msg("--TRADE:: [%s]: Trade stopped...",*pThis.base->cName());
+	//	Msg("--TRADE:: [%s]: Trade stopped...",*pThis.base->cName());
 
 	CAI_Trader* pTrader = NULL;
 	if (pThis.type == TT_TRADER)

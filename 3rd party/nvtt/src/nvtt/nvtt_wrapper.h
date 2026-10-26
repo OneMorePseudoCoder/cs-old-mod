@@ -74,7 +74,7 @@ typedef enum
 	NVTT_Format_DXT3,
 	NVTT_Format_DXT5,
 	NVTT_Format_DXT5n,
-	
+
 	// DX10 formats.
 	NVTT_Format_BC1 = NVTT_Format_DXT1,
 	NVTT_Format_BC1a = NVTT_Format_DXT1a,
@@ -169,69 +169,69 @@ typedef enum
 extern "C" {
 #endif
 
-// Callbacks
-//typedef void (* nvttErrorHandler)(NvttError e);
-//typedef void (* nvttOutputHandler)(const void * data, int size);
-//typedef void (* nvttImageHandler)(int size, int width, int height, int depth, int face, int miplevel);
+	// Callbacks
+	//typedef void (* nvttErrorHandler)(NvttError e);
+	//typedef void (* nvttOutputHandler)(const void * data, int size);
+	//typedef void (* nvttImageHandler)(int size, int width, int height, int depth, int face, int miplevel);
 
 
-// InputOptions class.
-NVTT_API NvttInputOptions * nvttCreateInputOptions();
-NVTT_API void nvttDestroyInputOptions(NvttInputOptions * inputOptions);
+	// InputOptions class.
+	NVTT_API NvttInputOptions* nvttCreateInputOptions();
+	NVTT_API void nvttDestroyInputOptions(NvttInputOptions* inputOptions);
 
-NVTT_API void nvttSetInputOptionsTextureLayout(NvttInputOptions * inputOptions, NvttTextureType type, int w, int h, int d);
-NVTT_API void nvttResetInputOptionsTextureLayout(NvttInputOptions * inputOptions);
-NVTT_API NvttBoolean nvttSetInputOptionsMipmapData(NvttInputOptions * inputOptions, const void * data, int w, int h, int d, int face, int mipmap);
-NVTT_API void nvttSetInputOptionsFormat(NvttInputOptions * inputOptions, NvttInputFormat format);
-NVTT_API void nvttSetInputOptionsAlphaMode(NvttInputOptions * inputOptions, NvttAlphaMode alphaMode);
-NVTT_API void nvttSetInputOptionsGamma(NvttInputOptions * inputOptions, float inputGamma, float outputGamma);
-NVTT_API void nvttSetInputOptionsWrapMode(NvttInputOptions * inputOptions, NvttWrapMode mode);
-NVTT_API void nvttSetInputOptionsMipmapFilter(NvttInputOptions * inputOptions, NvttMipmapFilter filter);
-NVTT_API void nvttSetInputOptionsMipmapGeneration(NvttInputOptions * inputOptions, NvttBoolean enabled, int maxLevel);
-NVTT_API void nvttSetInputOptionsKaiserParameters(NvttInputOptions * inputOptions, float width, float alpha, float stretch);
-NVTT_API void nvttSetInputOptionsNormalMap(NvttInputOptions * inputOptions, NvttBoolean b);
-NVTT_API void nvttSetInputOptionsConvertToNormalMap(NvttInputOptions * inputOptions, NvttBoolean convert);
-NVTT_API void nvttSetInputOptionsHeightEvaluation(NvttInputOptions * inputOptions, float redScale, float greenScale, float blueScale, float alphaScale);
-NVTT_API void nvttSetInputOptionsNormalFilter(NvttInputOptions * inputOptions, float sm, float medium, float big, float large);
-NVTT_API void nvttSetInputOptionsNormalizeMipmaps(NvttInputOptions * inputOptions, NvttBoolean b);
-NVTT_API void nvttSetInputOptionsColorTransform(NvttInputOptions * inputOptions, NvttColorTransform t);
-NVTT_API void nvttSetInputOptionsLinearTransform(NvttInputOptions * inputOptions, int channel, float w0, float w1, float w2, float w3);
-NVTT_API void nvttSetInputOptionsMaxExtents(NvttInputOptions * inputOptions, int dim);
-NVTT_API void nvttSetInputOptionsRoundMode(NvttInputOptions * inputOptions, NvttRoundMode mode);
-
-
-// CompressionOptions class.
-NVTT_API NvttCompressionOptions * nvttCreateCompressionOptions();
-NVTT_API void nvttDestroyCompressionOptions(NvttCompressionOptions * compressionOptions);
-
-NVTT_API void nvttSetCompressionOptionsFormat(NvttCompressionOptions * compressionOptions, NvttFormat format);
-NVTT_API void nvttSetCompressionOptionsQuality(NvttCompressionOptions * compressionOptions, NvttQuality quality);
-NVTT_API void nvttSetCompressionOptionsColorWeights(NvttCompressionOptions * compressionOptions, float red, float green, float blue, float alpha);
-NVTT_API void nvttSetCompressionOptionsPixelFormat(NvttCompressionOptions * compressionOptions, unsigned int bitcount, unsigned int rmask, unsigned int gmask, unsigned int bmask, unsigned int amask);
-NVTT_API void nvttSetCompressionOptionsQuantization(NvttCompressionOptions * compressionOptions, NvttBoolean colorDithering, NvttBoolean alphaDithering, NvttBoolean binaryAlpha, int alphaThreshold);
+	NVTT_API void nvttSetInputOptionsTextureLayout(NvttInputOptions* inputOptions, NvttTextureType type, int w, int h, int d);
+	NVTT_API void nvttResetInputOptionsTextureLayout(NvttInputOptions* inputOptions);
+	NVTT_API NvttBoolean nvttSetInputOptionsMipmapData(NvttInputOptions* inputOptions, const void* data, int w, int h, int d, int face, int mipmap);
+	NVTT_API void nvttSetInputOptionsFormat(NvttInputOptions* inputOptions, NvttInputFormat format);
+	NVTT_API void nvttSetInputOptionsAlphaMode(NvttInputOptions* inputOptions, NvttAlphaMode alphaMode);
+	NVTT_API void nvttSetInputOptionsGamma(NvttInputOptions* inputOptions, float inputGamma, float outputGamma);
+	NVTT_API void nvttSetInputOptionsWrapMode(NvttInputOptions* inputOptions, NvttWrapMode mode);
+	NVTT_API void nvttSetInputOptionsMipmapFilter(NvttInputOptions* inputOptions, NvttMipmapFilter filter);
+	NVTT_API void nvttSetInputOptionsMipmapGeneration(NvttInputOptions* inputOptions, NvttBoolean enabled, int maxLevel);
+	NVTT_API void nvttSetInputOptionsKaiserParameters(NvttInputOptions* inputOptions, float width, float alpha, float stretch);
+	NVTT_API void nvttSetInputOptionsNormalMap(NvttInputOptions* inputOptions, NvttBoolean b);
+	NVTT_API void nvttSetInputOptionsConvertToNormalMap(NvttInputOptions* inputOptions, NvttBoolean convert);
+	NVTT_API void nvttSetInputOptionsHeightEvaluation(NvttInputOptions* inputOptions, float redScale, float greenScale, float blueScale, float alphaScale);
+	NVTT_API void nvttSetInputOptionsNormalFilter(NvttInputOptions* inputOptions, float sm, float medium, float big, float large);
+	NVTT_API void nvttSetInputOptionsNormalizeMipmaps(NvttInputOptions* inputOptions, NvttBoolean b);
+	NVTT_API void nvttSetInputOptionsColorTransform(NvttInputOptions* inputOptions, NvttColorTransform t);
+	NVTT_API void nvttSetInputOptionsLinearTransform(NvttInputOptions* inputOptions, int channel, float w0, float w1, float w2, float w3);
+	NVTT_API void nvttSetInputOptionsMaxExtents(NvttInputOptions* inputOptions, int dim);
+	NVTT_API void nvttSetInputOptionsRoundMode(NvttInputOptions* inputOptions, NvttRoundMode mode);
 
 
-// OutputOptions class.
-NVTT_API NvttOutputOptions * nvttCreateOutputOptions();
-NVTT_API void nvttDestroyOutputOptions(NvttOutputOptions * outputOptions);
+	// CompressionOptions class.
+	NVTT_API NvttCompressionOptions* nvttCreateCompressionOptions();
+	NVTT_API void nvttDestroyCompressionOptions(NvttCompressionOptions* compressionOptions);
 
-NVTT_API void nvttSetOutputOptionsFileName(NvttOutputOptions * outputOptions, const char * fileName);
-NVTT_API void nvttSetOutputOptionsOutputHeader(NvttOutputOptions * outputOptions, NvttBoolean b);
-//NVTT_API void nvttSetOutputOptionsErrorHandler(NvttOutputOptions * outputOptions, nvttErrorHandler errorHandler);
-//NVTT_API void nvttSetOutputOptionsOutputHandler(NvttOutputOptions * outputOptions, nvttOutputHandler outputHandler, nvttImageHandler imageHandler);
-
-
-// Compressor class.
-NVTT_API NvttCompressor * nvttCreateCompressor();
-NVTT_API void nvttDestroyCompressor(NvttCompressor * compressor);
-
-NVTT_API NvttBoolean nvttCompress(const NvttCompressor * compressor, const NvttInputOptions * inputOptions, const NvttCompressionOptions * compressionOptions, const NvttOutputOptions * outputOptions);
-NVTT_API int nvttEstimateSize(const NvttCompressor * compressor, const NvttInputOptions * inputOptions, const NvttCompressionOptions * compressionOptions);
+	NVTT_API void nvttSetCompressionOptionsFormat(NvttCompressionOptions* compressionOptions, NvttFormat format);
+	NVTT_API void nvttSetCompressionOptionsQuality(NvttCompressionOptions* compressionOptions, NvttQuality quality);
+	NVTT_API void nvttSetCompressionOptionsColorWeights(NvttCompressionOptions* compressionOptions, float red, float green, float blue, float alpha);
+	NVTT_API void nvttSetCompressionOptionsPixelFormat(NvttCompressionOptions* compressionOptions, unsigned int bitcount, unsigned int rmask, unsigned int gmask, unsigned int bmask, unsigned int amask);
+	NVTT_API void nvttSetCompressionOptionsQuantization(NvttCompressionOptions* compressionOptions, NvttBoolean colorDithering, NvttBoolean alphaDithering, NvttBoolean binaryAlpha, int alphaThreshold);
 
 
-// Global functions.
-NVTT_API const char * nvttErrorString(NvttError e);
-NVTT_API unsigned int nvttVersion();
+	// OutputOptions class.
+	NVTT_API NvttOutputOptions* nvttCreateOutputOptions();
+	NVTT_API void nvttDestroyOutputOptions(NvttOutputOptions* outputOptions);
+
+	NVTT_API void nvttSetOutputOptionsFileName(NvttOutputOptions* outputOptions, const char* fileName);
+	NVTT_API void nvttSetOutputOptionsOutputHeader(NvttOutputOptions* outputOptions, NvttBoolean b);
+	//NVTT_API void nvttSetOutputOptionsErrorHandler(NvttOutputOptions * outputOptions, nvttErrorHandler errorHandler);
+	//NVTT_API void nvttSetOutputOptionsOutputHandler(NvttOutputOptions * outputOptions, nvttOutputHandler outputHandler, nvttImageHandler imageHandler);
+
+
+	// Compressor class.
+	NVTT_API NvttCompressor* nvttCreateCompressor();
+	NVTT_API void nvttDestroyCompressor(NvttCompressor* compressor);
+
+	NVTT_API NvttBoolean nvttCompress(const NvttCompressor* compressor, const NvttInputOptions* inputOptions, const NvttCompressionOptions* compressionOptions, const NvttOutputOptions* outputOptions);
+	NVTT_API int nvttEstimateSize(const NvttCompressor* compressor, const NvttInputOptions* inputOptions, const NvttCompressionOptions* compressionOptions);
+
+
+	// Global functions.
+	NVTT_API const char* nvttErrorString(NvttError e);
+	NVTT_API unsigned int nvttVersion();
 
 
 #ifdef __cplusplus

@@ -14,7 +14,7 @@
 
 #include "UITextBanner.h"
 
-class CUIMultiTextStatic: public CUIStatic
+class CUIMultiTextStatic : public CUIStatic
 {
 	typedef CUIStatic inherited;
 public:
@@ -27,10 +27,10 @@ public:
 		CUITextBanner				effect;
 		shared_str						str;
 
-		void						SetText	(const char *fmt, ...);
+		void						SetText(const char* fmt, ...);
 
 		// Ctor		
-		SPh							();
+		SPh();
 		shared_str					key;
 	} SinglePhrase;
 
@@ -40,16 +40,16 @@ protected:
 	Phrases							m_vPhrases;
 public:
 
-					CUIMultiTextStatic				();
-	virtual			~CUIMultiTextStatic				();
+	CUIMultiTextStatic();
+	virtual			~CUIMultiTextStatic();
 
 	virtual void Draw();
 	virtual void Update();
 	// Добавить надпись
 	// Return:	Указатель на добавленную запись
-	SinglePhrase * AddPhrase();
+	SinglePhrase* AddPhrase();
 	// Получить запись по номеру
-	SinglePhrase * GetPhraseByIndex(u32 idx);
+	SinglePhrase* GetPhraseByIndex(u32 idx);
 	void			RemovePhraseByIndex(u32 idx);
 };
 
@@ -61,9 +61,9 @@ class CUICaption :protected CUIMultiTextStatic
 	u32					findIndexOf_(const shared_str& key);
 public:
 	virtual void		Draw();
-	void				addCustomMessage(const shared_str& msg_name, float x, float y, float font_size, CGameFont *pFont, CGameFont::EAligment al, u32 color, LPCSTR def_str="");
-	EffectParams*		customizeMessage(const shared_str& msg_name, const CUITextBanner::TextBannerStyles styleName);
-	void				setCaption(const shared_str& msg_name, LPCSTR message_to_out, u32 color=0, bool replaceColor=false);
+	void				addCustomMessage(const shared_str& msg_name, float x, float y, float font_size, CGameFont* pFont, CGameFont::EAligment al, u32 color, LPCSTR def_str = "");
+	EffectParams* customizeMessage(const shared_str& msg_name, const CUITextBanner::TextBannerStyles styleName);
+	void				setCaption(const shared_str& msg_name, LPCSTR message_to_out, u32 color = 0, bool replaceColor = false);
 	void				removeCustomMessage(const shared_str& msg_name);
 };
 #endif	//UI_MULTITEXT_STATIC_H_

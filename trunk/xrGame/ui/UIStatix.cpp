@@ -2,22 +2,23 @@
 
 #include "UIStatix.h"
 
-CUIStatix::CUIStatix(){
-	m_bSelected		= false;
+CUIStatix::CUIStatix() {
+	m_bSelected = false;
 }
 
 CUIStatix::~CUIStatix()
-{}
+{
+}
 
 void CUIStatix::start_anim()
 {
-	SetClrLightAnim	("ui_slow_blinking", true, true, true, true);
-	ResetClrAnimation	();
+	SetClrLightAnim("ui_slow_blinking", true, true, true, true);
+	ResetClrAnimation();
 }
 
 void CUIStatix::stop_anim()
 {
-	SetClrLightAnim	(NULL, true, true, true, true);
+	SetClrLightAnim(NULL, true, true, true, true);
 }
 
 void CUIStatix::Update()
@@ -34,14 +35,14 @@ void CUIStatix::Update()
 	{
 		SetTextureColor(0x80ffffff);
 	};
-	
+
 	CUIStatic::Update();
 }
 
 void CUIStatix::OnFocusLost()
 {
-	CUIStatic::OnFocusLost	();
-	SetTextureColor				(0xffffffff);
+	CUIStatic::OnFocusLost();
+	SetTextureColor(0xffffffff);
 	if (!IsEnabled())
 	{
 		SetTextureColor(0x80ffffff);
@@ -50,8 +51,8 @@ void CUIStatix::OnFocusLost()
 
 void CUIStatix::OnFocusReceive()
 {
-	CUIStatic::OnFocusReceive	();
-	ResetClrAnimation			();
+	CUIStatic::OnFocusReceive();
+	ResetClrAnimation();
 }
 
 bool CUIStatix::OnMouseDown(int mouse_btn)
@@ -62,15 +63,15 @@ bool CUIStatix::OnMouseDown(int mouse_btn)
 
 void CUIStatix::SetSelectedState(bool state)
 {
-	bool b		= m_bSelected;
+	bool b = m_bSelected;
 	m_bSelected = state;
 
-	if(	b==m_bSelected )		return;
-	
+	if (b == m_bSelected)		return;
+
 	if (!state)
 		OnFocusLost();
 
-	if(state)
+	if (state)
 		start_anim();
 	else
 		stop_anim();

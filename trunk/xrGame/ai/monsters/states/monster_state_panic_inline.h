@@ -14,11 +14,11 @@
 #define CStateMonsterPanicAbstract CStateMonsterPanic<_Object>
 
 TEMPLATE_SPECIALIZATION
-CStateMonsterPanicAbstract::CStateMonsterPanic(_Object *obj) : inherited(obj)
+CStateMonsterPanicAbstract::CStateMonsterPanic(_Object* obj) : inherited(obj)
 {
-	add_state(eStatePanic_Run,					xr_new<CStateMonsterPanicRun<_Object> >(obj));
-	add_state(eStatePanic_FaceUnprotectedArea,	xr_new<CStateMonsterLookToUnprotectedArea<_Object> >(obj));
-	add_state(eStatePanic_MoveToHomePoint,		xr_new<CStateMonsterAttackMoveToHomePoint<_Object> >(obj));	
+	add_state(eStatePanic_Run, xr_new<CStateMonsterPanicRun<_Object> >(obj));
+	add_state(eStatePanic_FaceUnprotectedArea, xr_new<CStateMonsterLookToUnprotectedArea<_Object> >(obj));
+	add_state(eStatePanic_MoveToHomePoint, xr_new<CStateMonsterAttackMoveToHomePoint<_Object> >(obj));
 }
 
 TEMPLATE_SPECIALIZATION
@@ -51,12 +51,12 @@ void CStateMonsterPanicAbstract::setup_substates()
 
 	if (current_substate == eStatePanic_FaceUnprotectedArea) {
 		SStateDataAction data;
-		
-		data.action			= ACT_STAND_IDLE;
-		data.spec_params	= ASP_STAND_SCARED;
-		data.time_out		= 3000;		
-		data.sound_type		= MonsterSound::eMonsterSoundPanic;
-		data.sound_delay	= object->db().m_dwAttackSndDelay;
+
+		data.action = ACT_STAND_IDLE;
+		data.spec_params = ASP_STAND_SCARED;
+		data.time_out = 3000;
+		data.sound_type = MonsterSound::eMonsterSoundPanic;
+		data.sound_delay = object->db().m_dwAttackSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateDataAction));
 
@@ -68,7 +68,7 @@ void CStateMonsterPanicAbstract::setup_substates()
 TEMPLATE_SPECIALIZATION
 void CStateMonsterPanicAbstract::check_force_state()
 {
-	if ((current_substate == eStatePanic_FaceUnprotectedArea)){
+	if ((current_substate == eStatePanic_FaceUnprotectedArea)) {
 		// если видит врага
 		if (object->EnemyMan.get_enemy_time_last_seen() == Device.dwTimeGlobal) {
 			select_state(eStatePanic_Run);

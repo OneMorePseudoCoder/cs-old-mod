@@ -23,11 +23,11 @@ protected:
 	typedef _server_type		SERVER_TYPE;
 
 public:
-	IC											CObjectItemClientServer	(const CLASS_ID &clsid, LPCSTR script_clsid);
+	IC											CObjectItemClientServer(const CLASS_ID& clsid, LPCSTR script_clsid);
 #ifndef NO_XR_GAME
-	virtual ObjectFactory::CLIENT_BASE_CLASS	*client_object			() const;
+	virtual ObjectFactory::CLIENT_BASE_CLASS* client_object() const;
 #endif
-	virtual ObjectFactory::SERVER_BASE_CLASS	*server_object			(LPCSTR section) const;
+	virtual ObjectFactory::SERVER_BASE_CLASS* server_object(LPCSTR section) const;
 };
 
 #include "object_item_client_server_inline.h"

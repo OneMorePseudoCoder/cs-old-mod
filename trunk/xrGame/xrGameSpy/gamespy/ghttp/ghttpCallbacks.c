@@ -1,5 +1,5 @@
- /*
-GameSpy GHTTP SDK 
+/*
+GameSpy GHTTP SDK
 Dan "Mr. Pants" Schoenblum
 dan@gamespy.com
 
@@ -17,17 +17,17 @@ devsupport@gamespy.com
 
 void ghiCallCompletedCallback
 (
-	GHIConnection * connection
+	GHIConnection* connection
 )
 {
 	GHTTPBool freeBuffer;
-	char * buffer;
+	char* buffer;
 	GHTTPByteCount bufferLen;
 
 	assert(connection);
-	
+
 #ifdef GSI_COMMON_DEBUG
-	if(connection->result != GHTTPSuccess)
+	if (connection->result != GHTTPSuccess)
 	{
 		gsDebugFormat(GSIDebugCat_HTTP, GSIDebugType_Network, GSIDebugLevel_WarmError,
 			"Socket Error: %d\n", connection->socketError);
@@ -36,12 +36,12 @@ void ghiCallCompletedCallback
 
 	// Check for no callback.
 	/////////////////////////
-	if(!connection->completedCallback)
+	if (!connection->completedCallback)
 		return;
 
 	// Figure out the buffer/bufferLen parameters.
 	//////////////////////////////////////////////
-	if(connection->type == GHIGET)
+	if (connection->type == GHIGET)
 	{
 		buffer = connection->getFileBuffer.data;
 	}
@@ -62,22 +62,22 @@ void ghiCallCompletedCallback
 
 	// Check for gsifree.
 	//////////////////
-	if(buffer && !freeBuffer)
+	if (buffer && !freeBuffer)
 		connection->getFileBuffer.dontFree = GHTTPTrue;
 }
 
 void ghiCallProgressCallback
 (
-	GHIConnection * connection,
-	const char * buffer,
+	GHIConnection* connection,
+	const char* buffer,
 	GHTTPByteCount bufferLen
 )
-{	
+{
 	assert(connection);
 
 	// Check for no callback.
 	/////////////////////////
-	if(!connection->progressCallback)
+	if (!connection->progressCallback)
 		return;
 
 	// Call the callback.
@@ -90,19 +90,19 @@ void ghiCallProgressCallback
 		connection->fileBytesReceived,
 		connection->totalSize,
 		connection->callbackParam
-		);
+	);
 }
 
 void ghiCallPostCallback
 (
-	GHIConnection * connection
+	GHIConnection* connection
 )
 {
 	assert(connection);
 
 	// Check for no callback.
 	/////////////////////////
-	if(!connection->postingState.callback)
+	if (!connection->postingState.callback)
 		return;
 
 	// Call the callback.
@@ -114,5 +114,5 @@ void ghiCallPostCallback
 		connection->postingState.index,
 		ArrayLength(connection->postingState.states),
 		connection->callbackParam
-		);
+	);
 }

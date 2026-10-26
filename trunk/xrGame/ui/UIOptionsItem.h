@@ -5,38 +5,38 @@ class CUIOptionsItem
 {
 	friend class CUIOptionsManager;
 public:
-	virtual					~CUIOptionsItem		();
-	virtual void			Register			(const char* entry, const char* group);
-	static CUIOptionsManager* GetOptionsManager	() {return &m_optionsManager;}
-	IC		LPCSTR			GetEntry			() const { return m_entry.c_str(); }
-			xr_token*		GetOptToken			();
+	virtual					~CUIOptionsItem();
+	virtual void			Register(const char* entry, const char* group);
+	static CUIOptionsManager* GetOptionsManager() { return &m_optionsManager; }
+	IC		LPCSTR			GetEntry() const { return m_entry.c_str(); }
+	xr_token* GetOptToken();
 protected:
-	virtual void			SetCurrentValue		()	=0;	
-	virtual void			SaveValue			();
+	virtual void			SetCurrentValue() = 0;
+	virtual void			SaveValue();
 
-	virtual bool			IsChanged			()			=0;
-	virtual void			SaveBackUpValue		()	{};
-	virtual void			Undo				()				{SetCurrentValue();};
-			
-			void			SendMessage2Group	(const char* group, const char* message);
-	virtual	void			OnMessage			(const char* message);
+	virtual bool			IsChanged() = 0;
+	virtual void			SaveBackUpValue() {};
+	virtual void			Undo() { SetCurrentValue(); };
+
+	void			SendMessage2Group(const char* group, const char* message);
+	virtual	void			OnMessage(const char* message);
 
 
-			// string
-			LPCSTR			GetOptStringValue	();
-			void			SaveOptStringValue	(const char* val);
-			// integer
-			void			GetOptIntegerValue	(int& val, int& min, int& max);
-			void			SaveOptIntegerValue	(int val);
-			// float
-			void			GetOptFloatValue	(float& val, float& min, float& max);
-			void			SaveOptFloatValue	(float val);
-			// bool
-			bool			GetOptBoolValue		();
-			void			SaveOptBoolValue	(bool val);
-			// token
-			LPCSTR			GetOptTokenValue	();
-			void			SaveOptTokenValue	(const char* val);
+	// string
+	LPCSTR			GetOptStringValue();
+	void			SaveOptStringValue(const char* val);
+	// integer
+	void			GetOptIntegerValue(int& val, int& min, int& max);
+	void			SaveOptIntegerValue(int val);
+	// float
+	void			GetOptFloatValue(float& val, float& min, float& max);
+	void			SaveOptFloatValue(float val);
+	// bool
+	bool			GetOptBoolValue();
+	void			SaveOptBoolValue(bool val);
+	// token
+	LPCSTR			GetOptTokenValue();
+	void			SaveOptTokenValue(const char* val);
 
 	xr_string		m_entry;
 

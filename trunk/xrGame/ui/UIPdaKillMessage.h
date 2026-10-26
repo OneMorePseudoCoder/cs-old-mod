@@ -10,19 +10,19 @@
 #include "UIPdaMsgListItem.h"
 
 class CUIPdaKillMessage : public CUIStatic {
-typedef CUIPdaMsgListItem inherited;
+	typedef CUIPdaMsgListItem inherited;
 public:
 	CUIPdaKillMessage();
 	virtual ~CUIPdaKillMessage();
 
-			void Init(KillMessageStruct& msg);
+	void Init(KillMessageStruct& msg);
 	virtual void SetFont(CGameFont* pFont);
 	virtual void SetTextColor(u32 color);
 	virtual void SetTextureColor(u32 color);
 
 protected:
-			float InitText(CUIStatic& refStatic, float x, PlayerInfo& info);
-			float InitIcon(CUIStatic& refStatic, float x, IconInfo& info);
+	float InitText(CUIStatic& refStatic, float x, PlayerInfo& info);
+	float InitIcon(CUIStatic& refStatic, float x, IconInfo& info);
 
 	CUIStatic	m_victim_name;
 	CUIStatic	m_initiator;

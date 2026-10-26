@@ -32,7 +32,7 @@ namespace nv
 	class Image;
 	class FloatImage;
 
-	FloatImage * createConeMap(const Image * img, Vector4::Arg heightWeights);
+	FloatImage* createConeMap(const Image* img, Vector4::Arg heightWeights);
 
 } // nv namespace
 

@@ -17,13 +17,13 @@ private:
 	typedef CActionPlannerActionScript<CAI_Stalker> inherited;
 
 protected:
-			void		add_evaluators					();
-			void		add_actions						();
+	void		add_evaluators();
+	void		add_actions();
 
 public:
-						CStalkerDangerBySoundPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual	void		setup							(CAI_Stalker *object, CPropertyStorage *storage);
-	virtual void		initialize						();
-	virtual void		update							();
-	virtual void		finalize						();
+	CStalkerDangerBySoundPlanner(CAI_Stalker* object = 0, LPCSTR action_name = "");
+	virtual	void		setup(CAI_Stalker* object, CPropertyStorage* storage);
+	virtual void		initialize();
+	virtual void		update();
+	virtual void		finalize();
 };

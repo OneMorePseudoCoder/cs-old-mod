@@ -11,10 +11,10 @@ class CPolterSpecialAbility;
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPoltergeist :	public CBaseMonster ,
-						public CTelekinesis,
-						public CEnergyHolder {
-	
+class CPoltergeist : public CBaseMonster,
+	public CTelekinesis,
+	public CEnergyHolder {
+
 	typedef		CBaseMonster	inherited;
 	typedef		CEnergyHolder	Energy;
 
@@ -26,70 +26,70 @@ class CPoltergeist :	public CBaseMonster ,
 	SMotionVel				invisible_vel;
 
 
-	CPolterSpecialAbility	*m_flame;
-	CPolterSpecialAbility	*m_tele;
+	CPolterSpecialAbility* m_flame;
+	CPolterSpecialAbility* m_tele;
 
 
 public:
-					CPoltergeist		();
-	virtual			~CPoltergeist		();	
+	CPoltergeist();
+	virtual			~CPoltergeist();
 
-	virtual void	Load				(LPCSTR section);
-	virtual void	reload				(LPCSTR section);
-	virtual void	reinit				();
+	virtual void	Load(LPCSTR section);
+	virtual void	reload(LPCSTR section);
+	virtual void	reinit();
 
-	virtual BOOL	net_Spawn			(CSE_Abstract* DC);
-	virtual void	net_Destroy			();
-	virtual void	net_Relcase			(CObject *O);
+	virtual BOOL	net_Spawn(CSE_Abstract* DC);
+	virtual void	net_Destroy();
+	virtual void	net_Relcase(CObject* O);
 
-	virtual void	UpdateCL			();
-	virtual	void	shedule_Update		(u32 dt);
+	virtual void	UpdateCL();
+	virtual	void	shedule_Update(u32 dt);
 
-	virtual void	Die					(CObject* who);
+	virtual void	Die(CObject* who);
 
-	virtual CMovementManager *create_movement_manager();
-	
-	virtual void	ForceFinalAnimation	();
+	virtual CMovementManager* create_movement_manager();
 
-	virtual	void	on_activate			();
-	virtual	void	on_deactivate		();
-	virtual	void	Hit					(SHit* pHDS);
+	virtual void	ForceFinalAnimation();
+
+	virtual	void	on_activate();
+	virtual	void	on_deactivate();
+	virtual	void	Hit(SHit* pHDS);
 
 
-	IC		CPolterSpecialAbility		*ability() {return (m_flame ? m_flame : m_tele);}
-	
-	
-	IC		bool	is_hidden			() {return state_invisible;}
+	IC		CPolterSpecialAbility* ability() { return (m_flame ? m_flame : m_tele); }
 
-	
+
+	IC		bool	is_hidden() { return state_invisible; }
+
+
 	// Poltergeist ability
-			void	PhysicalImpulse		(const Fvector &position);
-			void	StrangeSounds		(const Fvector &position);
-			
-			ref_sound m_strange_sound;
-	
+	void	PhysicalImpulse(const Fvector& position);
+	void	StrangeSounds(const Fvector& position);
+
+	ref_sound m_strange_sound;
+
 	// Movement
-			Fvector m_current_position;		// Позиция на ноде
+	Fvector m_current_position;		// Позиция на ноде
 
 	// Dynamic Height
-			u32		time_height_updated;
-			float	target_height;
+	u32		time_height_updated;
+	float	target_height;
 
-			void	UpdateHeight			();
+	void	UpdateHeight();
 
 	// Invisibility 
 
-			void	EnableHide				(){m_disable_hide = false;}
-			void	DisableHide				(){m_disable_hide = true;}
-	
+	void	EnableHide() { m_disable_hide = false; }
+	void	DisableHide() { m_disable_hide = true; }
+
 private:
-			void	Hide					();
-			void	Show					();
+	void	Hide();
+	void	Show();
 
 
 public:
 #ifdef DEBUG
-			virtual CBaseMonster::SDebugInfo show_debug_info();
+	virtual CBaseMonster::SDebugInfo show_debug_info();
 #endif
 
 
@@ -107,8 +107,8 @@ add_to_type_list(CPoltergeist)
 
 class CPolterSpecialAbility {
 
-	CParticlesObject	*m_particles_object;
-	CParticlesObject	*m_particles_object_electro;
+	CParticlesObject* m_particles_object;
+	CParticlesObject* m_particles_object_electro;
 
 	LPCSTR				m_particles_hidden;
 	LPCSTR				m_particles_damage;
@@ -119,20 +119,20 @@ class CPolterSpecialAbility {
 	u32					m_last_hit_frame;
 
 protected:
-	CPoltergeist		*m_object;	
+	CPoltergeist* m_object;
 
-public:			
-					CPolterSpecialAbility		(CPoltergeist *polter);
-	virtual			~CPolterSpecialAbility		();
+public:
+	CPolterSpecialAbility(CPoltergeist* polter);
+	virtual			~CPolterSpecialAbility();
 
-	virtual void	load						(LPCSTR section);
-	virtual void	update_schedule				();
-	virtual void	update_frame				();
-	virtual void	on_hide						();
-	virtual void	on_show						();
-	virtual void	on_destroy					(){}
-	virtual void	on_die						();
-	virtual void	on_hit						(SHit* pHDS);
+	virtual void	load(LPCSTR section);
+	virtual void	update_schedule();
+	virtual void	update_frame();
+	virtual void	on_hide();
+	virtual void	on_show();
+	virtual void	on_destroy() {}
+	virtual void	on_die();
+	virtual void	on_hit(SHit* pHDS);
 };
 
 
@@ -167,12 +167,12 @@ class CPolterFlame : public CPolterSpecialAbility {
 
 	float					m_pmt_aura_radius;
 
-	
+
 	// Scanner
 	float					m_scan_radius;
 	u32						m_scan_delay_min;
 	u32						m_scan_delay_max;
-	
+
 	SPPInfo					m_scan_effector_info;
 	float					m_scan_effector_time;
 	float					m_scan_effector_time_attack;
@@ -192,34 +192,34 @@ class CPolterFlame : public CPolterSpecialAbility {
 
 public:
 	struct SFlameElement {
-		const CObject		*target_object;
+		const CObject* target_object;
 		Fvector				position;
 		Fvector				target_dir;
 		u32					time_started;
 		ref_sound			sound;
-		CParticlesObject	*particles_object;
+		CParticlesObject* particles_object;
 		EFlameState			state;
 		u32					time_last_hit;
 	};
 
 
 private:
-	DEFINE_VECTOR			(SFlameElement*, FLAME_ELEMS_VEC, FLAME_ELEMS_IT);
+	DEFINE_VECTOR(SFlameElement*, FLAME_ELEMS_VEC, FLAME_ELEMS_IT);
 	FLAME_ELEMS_VEC			m_flames;
 
-public:	
-					CPolterFlame				(CPoltergeist *polter);
-	virtual			~CPolterFlame				();
+public:
+	CPolterFlame(CPoltergeist* polter);
+	virtual			~CPolterFlame();
 
-	virtual void	load						(LPCSTR section);
-	virtual void	update_schedule				();
-	virtual void	on_destroy					();
-	virtual void	on_die						();
+	virtual void	load(LPCSTR section);
+	virtual void	update_schedule();
+	virtual void	on_destroy();
+	virtual void	on_die();
 
 private:
-			void	select_state				(SFlameElement *elem, EFlameState state);
-			bool	get_valid_flame_position	(const CObject *target_object, Fvector &res_pos);
-			void	create_flame				(const CObject *target_object);
+	void	select_state(SFlameElement* elem, EFlameState state);
+	bool	get_valid_flame_position(const CObject* target_object, Fvector& res_pos);
+	void	create_flame(const CObject* target_object);
 };
 
 
@@ -260,18 +260,18 @@ class CPolterTele : public CPolterSpecialAbility {
 	u32					m_time;
 	u32					m_time_next;
 
-public:	
-					CPolterTele					(CPoltergeist *polter);
-	virtual			~CPolterTele				();
+public:
+	CPolterTele(CPoltergeist* polter);
+	virtual			~CPolterTele();
 
-	virtual void	load						(LPCSTR section);
-	virtual void	update_schedule				();
+	virtual void	load(LPCSTR section);
+	virtual void	update_schedule();
 
 private:
-			void	tele_find_objects			(xr_vector<CObject*> &objects, const Fvector &pos);
-			bool	tele_raise_objects			();
-			void	tele_fire_objects			();
+	void	tele_find_objects(xr_vector<CObject*>& objects, const Fvector& pos);
+	bool	tele_raise_objects();
+	void	tele_fire_objects();
 
-			bool	trace_object				(CObject *obj, const Fvector &target);
+	bool	trace_object(CObject* obj, const Fvector& target);
 };
 

@@ -18,87 +18,87 @@
 
 CUITrackBar::CUITrackBar() : m_f_min(0), m_f_max(1.f), m_f_val(0.f), m_f_back_up(0.f), m_i_back_up(0), m_f_step(0.01f), m_b_invert(false), m_mode(eTrackBarModeFloat), m_tokens(nullptr), m_i_num_of_signs(1)
 {
-	m_b_mouse_capturer				= false;
-	m_pFrameLine					= xr_new<CUIFrameLineWnd>();
-	AttachChild						(m_pFrameLine);
-	m_pFrameLine->SetAutoDelete		(true);
-	m_pFrameLine_d					= xr_new<CUIFrameLineWnd>();
-	m_pFrameLine_d->SetVisible		(false);
-	AttachChild						(m_pFrameLine_d);
-	m_pFrameLine_d->SetAutoDelete	(true);
-	m_pSlider						= xr_new<CUI3tButton>();
-	AttachChild						(m_pSlider);
-	m_pSlider->SetAutoDelete		(true);
-//.	m_pSlider->SetOwner				(this);
+	m_b_mouse_capturer = false;
+	m_pFrameLine = xr_new<CUIFrameLineWnd>();
+	AttachChild(m_pFrameLine);
+	m_pFrameLine->SetAutoDelete(true);
+	m_pFrameLine_d = xr_new<CUIFrameLineWnd>();
+	m_pFrameLine_d->SetVisible(false);
+	AttachChild(m_pFrameLine_d);
+	m_pFrameLine_d->SetAutoDelete(true);
+	m_pSlider = xr_new<CUI3tButton>();
+	AttachChild(m_pSlider);
+	m_pSlider->SetAutoDelete(true);
+	//.	m_pSlider->SetOwner				(this);
 }
 
 bool CUITrackBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
 	CUIWindow::OnMouseAction(x, y, mouse_action);
-	
+
 	switch (mouse_action)
 	{
-		case WINDOW_MOUSE_MOVE:
+	case WINDOW_MOUSE_MOVE:
+	{
+		if (m_bCursorOverWindow && m_b_mouse_capturer)
 		{
-			if (m_bCursorOverWindow && m_b_mouse_capturer)
-			{
-				if (pInput->iGetAsyncBtnState(0))
-					UpdatePosRelativeToMouse();
-
-				GetMessageTarget()->SendMessage(this, WINDOW_MOUSE_MOVE, nullptr);
-			}
-		}break;
-		case WINDOW_LBUTTON_DOWN:
-		{
-			m_b_mouse_capturer = m_bCursorOverWindow;
-			if (m_b_mouse_capturer)
+			if (pInput->iGetAsyncBtnState(0))
 				UpdatePosRelativeToMouse();
-		}break;
 
-		case WINDOW_LBUTTON_UP:
+			GetMessageTarget()->SendMessage(this, WINDOW_MOUSE_MOVE, nullptr);
+		}
+	}break;
+	case WINDOW_LBUTTON_DOWN:
+	{
+		m_b_mouse_capturer = m_bCursorOverWindow;
+		if (m_b_mouse_capturer)
+			UpdatePosRelativeToMouse();
+	}break;
+
+	case WINDOW_LBUTTON_UP:
+	{
+		m_b_mouse_capturer = false;
+	}break;
+	case WINDOW_MOUSE_WHEEL_UP:
+	{
+		if (IsFltMode())
 		{
-			m_b_mouse_capturer = false;
-		}break;
-		case WINDOW_MOUSE_WHEEL_UP:
+			m_f_val -= GetInvert() ? -m_f_step : m_f_step;
+			clamp(m_f_val, m_f_min, m_f_max);
+		}
+		else
 		{
-			if (IsFltMode())
-			{
-				m_f_val -= GetInvert() ? -m_f_step : m_f_step;
-				clamp(m_f_val, m_f_min, m_f_max);
-			}
+			if (IsIntMode())
+				m_i_val -= GetInvert() ? -m_i_step : m_i_step;
 			else
-			{
-				if (IsIntMode())
-					m_i_val -= GetInvert() ? -m_i_step : m_i_step;
-				else
-					m_i_val -= GetInvert() ? -1 : 1;
-				clamp(m_i_val, m_i_min, m_i_max);
-			}
+				m_i_val -= GetInvert() ? -1 : 1;
+			clamp(m_i_val, m_i_min, m_i_max);
+		}
 
-			UpdatePos();
+		UpdatePos();
 
-			GetMessageTarget()->SendMessage(this, TRACK_MOVE, nullptr);
-		}break;
-		case WINDOW_MOUSE_WHEEL_DOWN:
+		GetMessageTarget()->SendMessage(this, TRACK_MOVE, nullptr);
+	}break;
+	case WINDOW_MOUSE_WHEEL_DOWN:
+	{
+		if (IsFltMode())
 		{
-			if (IsFltMode())
-			{
-				m_f_val += GetInvert() ? -m_f_step : m_f_step;
-				clamp(m_f_val, m_f_min, m_f_max);
-			}
+			m_f_val += GetInvert() ? -m_f_step : m_f_step;
+			clamp(m_f_val, m_f_min, m_f_max);
+		}
+		else
+		{
+			if (IsIntMode())
+				m_i_val += GetInvert() ? -m_i_step : m_i_step;
 			else
-			{
-				if (IsIntMode())
-					m_i_val += GetInvert() ? -m_i_step : m_i_step;
-				else
-					m_i_val += GetInvert() ? -1 : 1;
-				clamp(m_i_val, m_i_min, m_i_max);
-			}
+				m_i_val += GetInvert() ? -1 : 1;
+			clamp(m_i_val, m_i_min, m_i_max);
+		}
 
-			UpdatePos();
+		UpdatePos();
 
-			GetMessageTarget()->SendMessage(this, TRACK_MOVE, nullptr);
-		}break;
+		GetMessageTarget()->SendMessage(this, TRACK_MOVE, nullptr);
+	}break;
 	}
 	if (m_bCursorOverWindow && m_b_mouse_capturer)
 	{
@@ -113,31 +113,31 @@ void CUITrackBar::InitTrackBar(Fvector2 pos, Fvector2 size)
 	string128					buf;
 	float						item_height;
 	float						item_width;
-	SetHeight					(DEF_CONTROL_HEIGHT);
+	SetHeight(DEF_CONTROL_HEIGHT);
 
-	item_height					= CUITextureMaster::GetTextureHeight(strconcat(sizeof(buf), buf, FRAME_LINE_TEXTURE, "_b"));
-	m_pFrameLine->Init			(0, (size.y - item_height) / 2, size.x, item_height);
-	m_pFrameLine->InitTexture	(FRAME_LINE_TEXTURE);
-	m_pFrameLine_d->Init		(0, (size.y - item_height) / 2, size.x, item_height);
-	m_pFrameLine_d->InitTexture	(FRAME_LINE_TEXTURE_D);
+	item_height = CUITextureMaster::GetTextureHeight(strconcat(sizeof(buf), buf, FRAME_LINE_TEXTURE, "_b"));
+	m_pFrameLine->Init(0, (size.y - item_height) / 2, size.x, item_height);
+	m_pFrameLine->InitTexture(FRAME_LINE_TEXTURE);
+	m_pFrameLine_d->Init(0, (size.y - item_height) / 2, size.x, item_height);
+	m_pFrameLine_d->InitTexture(FRAME_LINE_TEXTURE_D);
 
-	strconcat					(sizeof(buf), buf, SLIDER_TEXTURE, "_e");
-	item_width					= CUITextureMaster::GetTextureWidth(buf);
-	item_height					= CUITextureMaster::GetTextureHeight(buf);
-	item_width					*= UI()->get_current_kx();
-	m_pSlider->Init				(0, (size.y - item_height) / 2, item_width, item_height);
-	m_pSlider->InitTexture		(SLIDER_TEXTURE);
-	
+	strconcat(sizeof(buf), buf, SLIDER_TEXTURE, "_e");
+	item_width = CUITextureMaster::GetTextureWidth(buf);
+	item_height = CUITextureMaster::GetTextureHeight(buf);
+	item_width *= UI()->get_current_kx();
+	m_pSlider->Init(0, (size.y - item_height) / 2, item_width, item_height);
+	m_pSlider->InitTexture(SLIDER_TEXTURE);
+
 	if (GameConstants::GetTrackBarValuesShowing() || IsTokenMode())
 	{
-		m_pSlider->AddStatic				();
-		m_pSlider->SetStaticColorChanging	(true);
-		CUIStatic* pStatic					= m_pSlider->GetBtnStatic();
-		pStatic->SetTextComplexMode			(false);
-		pStatic->SetWndSize					(Fvector2().set(item_width, item_height));
-		pStatic->SetWndPos					(0.f, IsTokenMode() ? item_height : 0.f);
-		pStatic->SetTextAlignment			(ETextAlignment::alCenter);
-		pStatic->SetVTextAlignment			(EVTextAlignment::valCenter);
+		m_pSlider->AddStatic();
+		m_pSlider->SetStaticColorChanging(true);
+		CUIStatic* pStatic = m_pSlider->GetBtnStatic();
+		pStatic->SetTextComplexMode(false);
+		pStatic->SetWndSize(Fvector2().set(item_width, item_height));
+		pStatic->SetWndPos(0.f, IsTokenMode() ? item_height : 0.f);
+		pStatic->SetTextAlignment(ETextAlignment::alCenter);
+		pStatic->SetVTextAlignment(EVTextAlignment::valCenter);
 	}
 }
 
@@ -185,7 +185,7 @@ void CUITrackBar::SetCurrentValue()
 		}
 	}
 
-	UpdatePos			();
+	UpdatePos();
 }
 
 void CUITrackBar::Draw()
@@ -236,22 +236,22 @@ void CUITrackBar::Update()
 			std::string out_str = "";
 			switch (m_mode)
 			{
-				case eTrackBarModeInt:
-				{
-					out_str = std::to_string(m_i_val);
-				}break;
-				case eTrackBarModeFloat:
-				{
-					out_str = FormatFloatWithStep(m_f_val, m_i_num_of_signs);
-				}break;
-				case eTrackBarModeToken:
-				{
-					out_str = *CStringTable().translate(GetOptStringValue());
-				}break;
-				case eTrackBarModeBool:
-				{
-					out_str = m_i_val == m_i_min ? *CStringTable().translate("st_track_opt_off") : *CStringTable().translate("st_track_opt_on");
-				}break;
+			case eTrackBarModeInt:
+			{
+				out_str = std::to_string(m_i_val);
+			}break;
+			case eTrackBarModeFloat:
+			{
+				out_str = FormatFloatWithStep(m_f_val, m_i_num_of_signs);
+			}break;
+			case eTrackBarModeToken:
+			{
+				out_str = *CStringTable().translate(GetOptStringValue());
+			}break;
+			case eTrackBarModeBool:
+			{
+				out_str = m_i_val == m_i_min ? *CStringTable().translate("st_track_opt_off") : *CStringTable().translate("st_track_opt_on");
+			}break;
 			}
 			pUIStatic->SetText(out_str.c_str());
 		}
@@ -295,36 +295,36 @@ bool CUITrackBar::IsChanged()
 void CUITrackBar::SetStep(float step)
 {
 	if (IsFltMode())
-		m_f_step	= step;
+		m_f_step = step;
 	else
-		m_i_step	= iFloor(step);
+		m_i_step = iFloor(step);
 }
 
 void CUITrackBar::SaveBackUpValue()
 {
 	if (IsFltMode())
-		m_f_back_up		= m_f_val;
+		m_f_back_up = m_f_val;
 	else
-		m_i_back_up		= m_i_val;
+		m_i_back_up = m_i_val;
 }
 
 void CUITrackBar::Undo()
 {
 	if (IsFltMode())
-		m_f_val			= m_f_back_up;
+		m_f_val = m_f_back_up;
 	else
-		m_i_val			= m_i_back_up;
+		m_i_val = m_i_back_up;
 
-	SaveValue			();
-	SetCurrentValue		();
+	SaveValue();
+	SetCurrentValue();
 }
 
 void CUITrackBar::Enable(bool status)
 {
-	m_bIsEnabled				= status;
-	m_pFrameLine->SetVisible	(status);
-	m_pSlider->Enable			(status);
-	m_pFrameLine_d->SetVisible	(!status);
+	m_bIsEnabled = status;
+	m_pFrameLine->SetVisible(status);
+	m_pSlider->Enable(status);
+	m_pFrameLine_d->SetVisible(!status);
 }
 
 void CUITrackBar::UpdatePosRelativeToMouse()
@@ -415,7 +415,7 @@ void CUITrackBar::SetTokenValues(xr_token* tokens)
 		for (xr_token* tok = m_tokens; tok->name; ++tok)
 		{
 			++count;
-}
+		}
 	}
 
 	if (count > 0)
@@ -442,35 +442,35 @@ void CUITrackBar::SetTokenValues(xr_token* tokens)
 void CUITrackBar::UpdatePos()
 {
 #ifdef DEBUG
-	
-	if(IsFltMode())
-		R_ASSERT2(m_f_val >= m_f_min && m_f_val <= m_f_max, "CUITrackBar::UpdatePos() - m_val >= m_min && m_val <= m_max" );
+
+	if (IsFltMode())
+		R_ASSERT2(m_f_val >= m_f_min && m_f_val <= m_f_max, "CUITrackBar::UpdatePos() - m_val >= m_min && m_val <= m_max");
 	else
-		R_ASSERT2(m_i_val >= m_i_min && m_i_val <= m_i_max, "CUITrackBar::UpdatePos() - m_val >= m_min && m_val <= m_max" );
+		R_ASSERT2(m_i_val >= m_i_min && m_i_val <= m_i_max, "CUITrackBar::UpdatePos() - m_val >= m_min && m_val <= m_max");
 
 #endif
 
-	float btn_width				= m_pSlider->GetWidth();
-	float window_width			= GetWidth();
-	float free_space			= window_width - btn_width;
-	Fvector2 pos				= m_pSlider->GetWndPos();
-	
-	float __fval	= (IsFltMode()) ? m_f_val : (float)m_i_val;
-	float __fmax	= (IsFltMode()) ? m_f_max : (float)m_i_max;
-	float __fmin	= (IsFltMode()) ? m_f_min : (float)m_i_min;
+	float btn_width = m_pSlider->GetWidth();
+	float window_width = GetWidth();
+	float free_space = window_width - btn_width;
+	Fvector2 pos = m_pSlider->GetWndPos();
+
+	float __fval = (IsFltMode()) ? m_f_val : (float)m_i_val;
+	float __fmax = (IsFltMode()) ? m_f_max : (float)m_i_max;
+	float __fmin = (IsFltMode()) ? m_f_min : (float)m_i_min;
 
 
-	pos.x						= (__fval - __fmin) * free_space / (__fmax - __fmin);
+	pos.x = (__fval - __fmin) * free_space / (__fmax - __fmin);
 	if (GetInvert())
-		pos.x					= free_space - pos.x;
+		pos.x = free_space - pos.x;
 
-	m_pSlider->SetWndPos		(pos);
-	SaveValue					();
+	m_pSlider->SetWndPos(pos);
+	SaveValue();
 }
 
 void CUITrackBar::OnMessage(const char* message)
 {
-	if (0 == xr_strcmp(message,"set_default_value"))
+	if (0 == xr_strcmp(message, "set_default_value"))
 	{
 		if (IsFltMode())
 			m_f_val = m_f_min + (m_f_max - m_f_min) / 2.0f;

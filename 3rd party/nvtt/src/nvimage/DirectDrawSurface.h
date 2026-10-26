@@ -55,11 +55,11 @@ namespace nv
 	/// DDS file header for DX10.
 	struct NVIMAGE_CLASS DDSHeader10
 	{
-	    uint dxgiFormat;
-	    uint resourceDimension;
-	    uint miscFlag;
-	    uint arraySize;
-	    uint reserved;
+		uint dxgiFormat;
+		uint resourceDimension;
+		uint miscFlag;
+		uint arraySize;
+		uint reserved;
 	};
 
 	/// DDS file header.
@@ -78,11 +78,11 @@ namespace nv
 		DDSCaps caps;
 		uint notused;
 		DDSHeader10 header10;
-		
-		
+
+
 		// Helper methods.
 		DDSHeader();
-		
+
 		void setWidth(uint w);
 		void setHeight(uint h);
 		void setDepth(uint d);
@@ -96,25 +96,25 @@ namespace nv
 		void setPixelFormat(uint bitcount, uint rmask, uint gmask, uint bmask, uint amask);
 		void setDX10Format(uint format);
 		void setNormalFlag(bool b);
-		
+
 		void swapBytes();
-		
+
 		bool hasDX10Header() const;
 	};
 
-	NVIMAGE_API Stream & operator<< (Stream & s, DDSHeader & header);
+	NVIMAGE_API Stream& operator<< (Stream& s, DDSHeader& header);
 
 
 	/// DirectDraw Surface. (DDS)
 	class NVIMAGE_CLASS DirectDrawSurface
 	{
 	public:
-		DirectDrawSurface(const char * file);
+		DirectDrawSurface(const char* file);
 		~DirectDrawSurface();
-		
+
 		bool isValid() const;
 		bool isSupported() const;
-		
+
 		uint mipmapCount() const;
 		uint width() const;
 		uint height() const;
@@ -125,27 +125,27 @@ namespace nv
 		bool isTextureCube() const;
 
 		void setNormalFlag(bool b);
-		
-		void mipmap(Image * img, uint f, uint m);
+
+		void mipmap(Image* img, uint f, uint m);
 		//	void mipmap(FloatImage * img, uint f, uint m);
-		
+
 		void printInfo() const;
 
 	private:
-		
+
 		uint blockSize() const;
 		uint faceSize() const;
 		uint mipmapSize(uint m) const;
-		
+
 		uint offset(uint f, uint m);
-		
-		void readLinearImage(Image * img);
-		void readBlockImage(Image * img);
-		void readBlock(ColorBlock * rgba);
-		
-		
+
+		void readLinearImage(Image* img);
+		void readBlockImage(Image* img);
+		void readBlock(ColorBlock* rgba);
+
+
 	private:
-		Stream * const stream;
+		Stream* const stream;
 		DDSHeader header;
 		DDSHeader10 header10;
 	};

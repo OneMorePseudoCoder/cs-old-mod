@@ -5,9 +5,9 @@
 
 struct CEventTAPrepareAnimation : public IEventData {
 	u32		m_current_state;
-	
+
 	IC		CEventTAPrepareAnimation(u32 state) : m_current_state(state) {}
-	
+
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -18,7 +18,7 @@ template <
 >
 class CSafeMapIterator {
 public:
-	typedef xr_map<_key_type,_data_type*,_predicate>	_REGISTRY;
+	typedef xr_map<_key_type, _data_type*, _predicate>	_REGISTRY;
 	typedef typename _REGISTRY::iterator				_iterator;
 	typedef typename _REGISTRY::const_iterator			_const_iterator;
 
@@ -31,23 +31,23 @@ protected:
 	bool					m_first_update;
 
 protected:
-	IC		void			update_next			();
-	IC		_iterator		&next				();
-	IC		void			start_timer			();
-	IC		bool			time_over			();
+	IC		void			update_next();
+	IC		_iterator& next();
+	IC		void			start_timer();
+	IC		bool			time_over();
 
 public:
-	IC						CSafeMapIterator	();
-	virtual					~CSafeMapIterator	();
-	IC		void			add					(const _key_type &id, _data_type *value, bool no_assert = false);
-	IC		void			remove				(const _key_type &id, bool no_assert = false);
+	IC						CSafeMapIterator();
+	virtual					~CSafeMapIterator();
+	IC		void			add(const _key_type& id, _data_type* value, bool no_assert = false);
+	IC		void			remove(const _key_type& id, bool no_assert = false);
 	template <typename _update_predicate>
-	IC		u32				update				(const _update_predicate &predicate);
-	IC		void			set_process_time	(const float &process_time);
-	IC		const _REGISTRY	&objects			() const;
-	IC		void			clear				();
-	IC		bool			empty				() const;
-	IC		void			begin				();
+	IC		u32				update(const _update_predicate& predicate);
+	IC		void			set_process_time(const float& process_time);
+	IC		const _REGISTRY& objects() const;
+	IC		void			clear();
+	IC		bool			empty() const;
+	IC		void			begin();
 };
 
 #include "safe_map_iterator_inline.h"

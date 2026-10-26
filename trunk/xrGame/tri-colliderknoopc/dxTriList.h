@@ -9,15 +9,15 @@
 
 
 
-struct dcVector3{
+struct dcVector3 {
 
 	float x, y, z;
 
 
 
-	dcVector3(){}
+	dcVector3() {}
 
-	dcVector3(dReal x, dReal y, dReal z){
+	dcVector3(dReal x, dReal y, dReal z) {
 
 		this->x = (float)x;
 
@@ -29,7 +29,7 @@ struct dcVector3{
 
 
 
-	dcVector3(const dReal* v){
+	dcVector3(const dReal* v) {
 
 		x = (float)v[0];
 
@@ -41,18 +41,18 @@ struct dcVector3{
 
 
 
-	~dcVector3(){}
+	~dcVector3() {}
 
 
 
 
-	operator float* (){  //&slipch
+	operator float* () {  //&slipch
 
-	return reinterpret_cast<float*>(this);
+		return reinterpret_cast<float*>(this);
 	}
 	/* Add */
 
-	dcVector3 operator+(const dcVector3& v) const{
+	dcVector3 operator+(const dcVector3& v) const {
 
 		dcVector3 Out;
 
@@ -68,7 +68,7 @@ struct dcVector3{
 
 
 
-	dcVector3& operator+=(const dcVector3& v){
+	dcVector3& operator+=(const dcVector3& v) {
 
 		x += v.x;
 
@@ -84,7 +84,7 @@ struct dcVector3{
 
 	/* Sub */
 
-	dcVector3 operator-(const dcVector3& v) const{
+	dcVector3 operator-(const dcVector3& v) const {
 
 		dcVector3 Out;
 
@@ -100,7 +100,7 @@ struct dcVector3{
 
 
 
-	dcVector3& operator-=(const dcVector3& v){
+	dcVector3& operator-=(const dcVector3& v) {
 
 		x -= v.x;
 
@@ -116,7 +116,7 @@ struct dcVector3{
 
 	/* Mul */
 
-	dcVector3 operator*(const dcVector3& v) const{
+	dcVector3 operator*(const dcVector3& v) const {
 
 		dcVector3 Out;
 
@@ -132,7 +132,7 @@ struct dcVector3{
 
 
 
-	dcVector3 operator*(float Scalar) const{
+	dcVector3 operator*(float Scalar) const {
 
 		dcVector3 Out;
 
@@ -148,7 +148,7 @@ struct dcVector3{
 
 
 
-	dcVector3& operator*=(const dcVector3& v){
+	dcVector3& operator*=(const dcVector3& v) {
 
 		x *= v.x;
 
@@ -162,7 +162,7 @@ struct dcVector3{
 
 
 
-	dcVector3& operator*=(float Scalar){
+	dcVector3& operator*=(float Scalar) {
 
 		x *= Scalar;
 
@@ -178,7 +178,7 @@ struct dcVector3{
 
 	/* Div */
 
-	dcVector3 operator/(const dcVector3& v) const{
+	dcVector3 operator/(const dcVector3& v) const {
 
 		dcVector3 Out;
 
@@ -194,7 +194,7 @@ struct dcVector3{
 
 
 
-	dcVector3 operator/(float Scalar) const{
+	dcVector3 operator/(float Scalar) const {
 
 		dcVector3 Out;
 
@@ -210,7 +210,7 @@ struct dcVector3{
 
 
 
-	dcVector3& operator/=(const dcVector3& v){
+	dcVector3& operator/=(const dcVector3& v) {
 
 		x /= v.x;
 
@@ -224,7 +224,7 @@ struct dcVector3{
 
 
 
-	dcVector3& operator/=(float Scalar){
+	dcVector3& operator/=(float Scalar) {
 
 		x /= Scalar;
 
@@ -240,7 +240,7 @@ struct dcVector3{
 
 	/* Negative */
 
-	dcVector3& operator-(){
+	dcVector3& operator-() {
 
 		x = -x;
 
@@ -256,7 +256,7 @@ struct dcVector3{
 
 	/* Comparison */
 
-	bool operator==(const dcVector3& v) const{
+	bool operator==(const dcVector3& v) const {
 
 		return x == v.x && y == v.y && z == v.z;
 
@@ -264,7 +264,7 @@ struct dcVector3{
 
 
 
-	bool operator!=(const dcVector3& v) const{
+	bool operator!=(const dcVector3& v) const {
 
 		return v.x != x || v.y != y || v.z != z;
 
@@ -272,7 +272,7 @@ struct dcVector3{
 
 
 
-	float DotProduct(const dcVector3& v) const{
+	float DotProduct(const dcVector3& v) const {
 
 		return x * v.x + y * v.y + z * v.z;
 
@@ -280,7 +280,7 @@ struct dcVector3{
 
 
 
-	dcVector3 CrossProduct(const dcVector3& v) const{
+	dcVector3 CrossProduct(const dcVector3& v) const {
 
 		dcVector3 Out;
 
@@ -296,7 +296,7 @@ struct dcVector3{
 
 
 
-	float MagnitudeSq() const{
+	float MagnitudeSq() const {
 
 		return DotProduct(*this);
 
@@ -304,7 +304,7 @@ struct dcVector3{
 
 
 
-	float Magnitude() const{
+	float Magnitude() const {
 
 		return _sqrt(MagnitudeSq());
 
@@ -312,7 +312,7 @@ struct dcVector3{
 
 
 
-	void Normalize(){
+	void Normalize() {
 
 		operator/=(Magnitude());
 
@@ -322,7 +322,7 @@ struct dcVector3{
 
 	/* Member access */
 
-	float& operator[](int Index){
+	float& operator[](int Index) {
 
 		return *(&x + Index);
 
@@ -330,7 +330,7 @@ struct dcVector3{
 
 
 
-	float operator[](int Index) const{
+	float operator[](int Index) const {
 
 		return *(&x + Index);
 
@@ -392,7 +392,7 @@ class dcTriListCollider;
 
 
 
-struct dxTriList{
+struct dxTriList {
 
 	dReal p[4];						// dxPlane
 
@@ -406,7 +406,7 @@ struct dxTriList{
 
 
 
-struct dcPlane{
+struct dcPlane {
 
 	dcVector3 Normal;
 
@@ -414,9 +414,9 @@ struct dcPlane{
 
 
 
-	dcPlane(){}
+	dcPlane() {}
 
-	dcPlane(const dcVector3& v0, const dcVector3& v1, const dcVector3& v2){
+	dcPlane(const dcVector3& v0, const dcVector3& v1, const dcVector3& v2) {
 
 		dcVector3 u = v1 - v0;
 
@@ -434,7 +434,7 @@ struct dcPlane{
 
 
 
-	void Normalize(){
+	void Normalize() {
 
 		float Factor = 1.0f / Normal.Magnitude();
 
@@ -446,9 +446,9 @@ struct dcPlane{
 
 
 
-	bool Contains(const dcVector3& RefObject, float Epsilon = 0.0f) const{
+	bool Contains(const dcVector3& RefObject, float Epsilon = 0.0f) const {
 
-		return Normal.DotProduct(RefObject) - Distance >= - Epsilon; //@slipch ">=" instead ">"
+		return Normal.DotProduct(RefObject) - Distance >= -Epsilon; //@slipch ">=" instead ">"
 
 	}
 
@@ -456,7 +456,7 @@ struct dcPlane{
 
 
 
-template<class T> const T& dcMAX(const T& x, const T& y){
+template<class T> const T& dcMAX(const T& x, const T& y) {
 
 	return x > y ? x : y;
 
@@ -464,7 +464,7 @@ template<class T> const T& dcMAX(const T& x, const T& y){
 
 
 
-template<class T> const T& dcMIN(const T& x, const T& y){
+template<class T> const T& dcMIN(const T& x, const T& y) {
 
 	return x < y ? x : y;
 

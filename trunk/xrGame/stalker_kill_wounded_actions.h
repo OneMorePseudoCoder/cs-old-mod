@@ -19,10 +19,10 @@ protected:
 	typedef CStalkerActionCombatBase inherited;
 
 public:
-						CStalkerActionReachWounded	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	CStalkerActionReachWounded(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,13 +34,13 @@ protected:
 	typedef CStalkerActionCombatBase inherited;
 
 private:
-//	float				m_speed;
+	//	float				m_speed;
 
 public:
-						CStalkerActionAimWounded	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	CStalkerActionAimWounded(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,10 +52,10 @@ protected:
 	typedef CStalkerActionCombatBase inherited;
 
 public:
-						CStalkerActionPrepareWounded(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	CStalkerActionPrepareWounded(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,10 +67,10 @@ protected:
 	typedef CStalkerActionCombatBase inherited;
 
 public:
-						CStalkerActionKillWounded	(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
-	virtual void		finalize					();
+	CStalkerActionKillWounded(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
+	virtual void		finalize();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ protected:
 	typedef CStalkerActionCombatBase inherited;
 
 public:
-						CStalkerActionPauseAfterKill(CAI_Stalker *object, LPCSTR action_name = "");
-	virtual void		initialize					();
-	virtual void		execute						();
+	CStalkerActionPauseAfterKill(CAI_Stalker* object, LPCSTR action_name = "");
+	virtual void		initialize();
+	virtual void		execute();
 };

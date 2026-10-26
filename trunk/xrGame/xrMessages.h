@@ -7,7 +7,7 @@
 // SV	== server 2 client message
 
 enum {
-	M_UPDATE			= 0,	// DUAL: Update state
+	M_UPDATE = 0,	// DUAL: Update state
 	M_SPAWN,					// DUAL: Spawning, full state
 
 	M_SV_CONFIG_NEW_CLIENT,
@@ -26,7 +26,7 @@ enum {
 	M_UPDATE_OBJECTS,
 	//-------------------------------------------------
 	M_CLIENTREADY,				// Client has finished to load level and are ready to play
-	
+
 	M_CHANGE_LEVEL,				// changing level
 	M_LOAD_GAME,
 	M_RELOAD_GAME,
@@ -68,7 +68,7 @@ enum {
 	M_BATTLEYE,
 	M_MAP_SYNC,
 
-	MSG_FORCEDWORD				= u32(-1)
+	MSG_FORCEDWORD = u32(-1)
 };
 
 enum {
@@ -92,7 +92,7 @@ enum {
 
 
 	GE_INFO_TRANSFER,			//transfer _new_ info on PDA
-	
+
 	GE_TRADE_SELL,
 	GE_TRADE_BUY,
 
@@ -102,7 +102,7 @@ enum {
 	GE_ADDON_ATTACH,
 	GE_ADDON_DETACH,
 	GE_ADDON_CHANGE,
-	
+
 	GE_GRENADE_EXPLODE,
 	GE_INV_ACTION,				//a action beign taken on inventory
 
@@ -128,7 +128,7 @@ enum {
 	GEG_PLAYER_ACTIVATEARTEFACT,
 
 	GEG_PLAYER_WEAPON_HIDE_STATE,
-	
+
 	GEG_PLAYER_ATTACH_HOLDER,
 	GEG_PLAYER_DETACH_HOLDER,
 
@@ -141,42 +141,42 @@ enum {
 	GE_FREEZE_OBJECT,
 	GE_LAUNCH_ROCKET,
 
-	GE_FORCEDWORD				= u32(-1)
+	GE_FORCEDWORD = u32(-1)
 };
 
 
 enum EGameMessages {  //game_cl <----> game_sv messages
-	GAME_EVENT_PLAYER_READY,	
+	GAME_EVENT_PLAYER_READY,
 	GAME_EVENT_PLAYER_KILL,			//player wants to die
 	GAME_EVENT_PLAYER_BUY_FINISHED,	//player end to buy items
 	GAME_EVENT_PLAYER_BUY_SPAWN,
 
 	GAME_EVENT_PLAYER_GAME_MENU,
-	GAME_EVENT_PLAYER_GAME_MENU_RESPOND,	
+	GAME_EVENT_PLAYER_GAME_MENU_RESPOND,
 
-	GAME_EVENT_PLAYER_CONNECTED	,
-	GAME_EVENT_PLAYER_DISCONNECTED	,
-	GAME_EVENT_PLAYER_ENTERED_GAME	,
-	
-	GAME_EVENT_PLAYER_KILLED			,//////!!!!!
+	GAME_EVENT_PLAYER_CONNECTED,
+	GAME_EVENT_PLAYER_DISCONNECTED,
+	GAME_EVENT_PLAYER_ENTERED_GAME,
+
+	GAME_EVENT_PLAYER_KILLED,//////!!!!!
 	GAME_EVENT_PLAYER_HITTED,
 
-	GAME_EVENT_PLAYER_JOIN_TEAM		,
-	GAME_EVENT_ROUND_STARTED		,
-	GAME_EVENT_ROUND_END		,
-	
-	GAME_EVENT_ARTEFACT_SPAWNED		,
-	GAME_EVENT_ARTEFACT_DESTROYED		,
-	GAME_EVENT_ARTEFACT_TAKEN			,
-	GAME_EVENT_ARTEFACT_DROPPED		,
-	GAME_EVENT_ARTEFACT_ONBASE		,
+	GAME_EVENT_PLAYER_JOIN_TEAM,
+	GAME_EVENT_ROUND_STARTED,
+	GAME_EVENT_ROUND_END,
 
-	GAME_EVENT_PLAYER_ENTER_TEAM_BASE	,
-	GAME_EVENT_PLAYER_LEAVE_TEAM_BASE	,
+	GAME_EVENT_ARTEFACT_SPAWNED,
+	GAME_EVENT_ARTEFACT_DESTROYED,
+	GAME_EVENT_ARTEFACT_TAKEN,
+	GAME_EVENT_ARTEFACT_DROPPED,
+	GAME_EVENT_ARTEFACT_ONBASE,
 
-	GAME_EVENT_BUY_MENU_CLOSED		,
-	GAME_EVENT_TEAM_MENU_CLOSED		,
-	GAME_EVENT_SKIN_MENU_CLOSED		,
+	GAME_EVENT_PLAYER_ENTER_TEAM_BASE,
+	GAME_EVENT_PLAYER_LEAVE_TEAM_BASE,
+
+	GAME_EVENT_BUY_MENU_CLOSED,
+	GAME_EVENT_TEAM_MENU_CLOSED,
+	GAME_EVENT_SKIN_MENU_CLOSED,
 
 	GAME_EVENT_CREATE_CLIENT,
 	GAME_EVENT_ON_HIT,
@@ -187,7 +187,7 @@ enum EGameMessages {  //game_cl <----> game_sv messages
 	GAME_EVENT_VOTE_NO,
 	GAME_EVENT_VOTE_STOP,
 	GAME_EVENT_VOTE_END,
-//	GAME_EVENT_VOTE_PLAYER_VOTED,
+	//	GAME_EVENT_VOTE_PLAYER_VOTED,
 
 	GAME_EVENT_PLAYER_AUTH,
 	GAME_EVENT_PLAYER_NAME,
@@ -201,21 +201,21 @@ enum EGameMessages {  //game_cl <----> game_sv messages
 
 	//-----------------------------------------
 	GAME_EVENT_SCRIPT_BEGINS_FROM,		// don't add messages after this
-	GAME_EVENT_FORCEDWORD				= u32(-1)
+	GAME_EVENT_FORCEDWORD = u32(-1)
 };
 
 enum
 {
-	M_SPAWN_OBJECT_LOCAL		= (1<<0),	// after spawn it becomes local (authorative)
-	M_SPAWN_OBJECT_HASUPDATE	= (1<<2),	// after spawn info it has update inside message
-	M_SPAWN_OBJECT_ASPLAYER		= (1<<3),	// after spawn it must become viewable
-	M_SPAWN_OBJECT_PHANTOM		= (1<<4),	// after spawn it must become viewable
-	M_SPAWN_VERSION				= (1<<5),	// control version
-	M_SPAWN_UPDATE				= (1<<6),	// + update packet
-	M_SPAWN_TIME				= (1<<7),	// + spawn time
-	M_SPAWN_DENIED				= (1<<8),	// don't spawn entity with this flag
+	M_SPAWN_OBJECT_LOCAL = (1 << 0),	// after spawn it becomes local (authorative)
+	M_SPAWN_OBJECT_HASUPDATE = (1 << 2),	// after spawn info it has update inside message
+	M_SPAWN_OBJECT_ASPLAYER = (1 << 3),	// after spawn it must become viewable
+	M_SPAWN_OBJECT_PHANTOM = (1 << 4),	// after spawn it must become viewable
+	M_SPAWN_VERSION = (1 << 5),	// control version
+	M_SPAWN_UPDATE = (1 << 6),	// + update packet
+	M_SPAWN_TIME = (1 << 7),	// + spawn time
+	M_SPAWN_DENIED = (1 << 8),	// don't spawn entity with this flag
 
-	M_SPAWN_OBJECT_FORCEDWORD	= u32(-1)
+	M_SPAWN_OBJECT_FORCEDWORD = u32(-1)
 };
 
 #endif /*_INCDEF_XRMESSAGES_H_*/

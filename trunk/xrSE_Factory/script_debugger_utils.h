@@ -21,8 +21,8 @@ private:
 	HANDLE			m_event;
 
 private: //hidden
-	xr_event(const xr_event &);
-	void operator = (const xr_event &);
+	xr_event(const xr_event&);
+	void operator = (const xr_event&);
 };
 
 class xr_mutex
@@ -37,22 +37,22 @@ public:
 private:
 	CRITICAL_SECTION	m_mutex;
 private: // hidden
-	xr_mutex(const xr_mutex &);
-	void operator = (const xr_mutex &);
+	xr_mutex(const xr_mutex&);
+	void operator = (const xr_mutex&);
 };
 
 class xr_sync
 {
 public:
-	xr_sync(xr_mutex &);
+	xr_sync(xr_mutex&);
 	virtual ~xr_sync();
 
 private:
-	xr_mutex &m_mutex;
+	xr_mutex& m_mutex;
 
 private: // hidden
-	xr_sync(const xr_sync &);
-	void operator=(const xr_sync &);
+	xr_sync(const xr_sync&);
+	void operator=(const xr_sync&);
 };
 
 
@@ -69,18 +69,18 @@ public:
 	bool join();
 	static bool yield();
 	static void sleep(unsigned msec);
-//	static pid_t getId();
+	//	static pid_t getId();
 	static unsigned getTickCount(); // msec
 
 private:
 	HANDLE		m_thread;
 
 private: // hidden
-	xr_thread(const xr_thread &);
-	void operator = (const xr_thread &);
+	xr_thread(const xr_thread&);
+	void operator = (const xr_thread&);
 };
 
-class xr_waitableThread: private xr_thread
+class xr_waitableThread : private xr_thread
 {
 public:
 	xr_waitableThread();
@@ -99,7 +99,7 @@ private:
 	xr_event m_event;
 
 private: // hidden
-	xr_waitableThread(const xr_waitableThread &);
-	void operator = (const xr_waitableThread &);
+	xr_waitableThread(const xr_waitableThread&);
+	void operator = (const xr_waitableThread&);
 };
 

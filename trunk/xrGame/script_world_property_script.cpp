@@ -13,15 +13,15 @@
 using namespace luabind;
 
 #pragma optimize("s",on)
-void CScriptWorldPropertyWrapper::script_register(lua_State *L)
+void CScriptWorldPropertyWrapper::script_register(lua_State* L)
 {
 	module(L)
-	[
-		class_<CScriptWorldProperty>("world_property")
-			.def(								constructor<CScriptWorldProperty::_condition_type, CScriptWorldProperty::_value_type>())
-			.def("condition",					&CScriptWorldProperty::condition)
-			.def("value",						&CScriptWorldProperty::value)
-			.def(m_const_self < other<CScriptWorldProperty>())
-			.def(m_const_self == other<CScriptWorldProperty>())
-	];
+		[
+			class_<CScriptWorldProperty>("world_property")
+				.def(constructor<CScriptWorldProperty::_condition_type, CScriptWorldProperty::_value_type>())
+				.def("condition", &CScriptWorldProperty::condition)
+				.def("value", &CScriptWorldProperty::value)
+				.def(m_const_self < other<CScriptWorldProperty>())
+				.def(m_const_self == other<CScriptWorldProperty>())
+		];
 }

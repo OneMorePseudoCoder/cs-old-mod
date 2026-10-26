@@ -25,14 +25,15 @@ struct EffectParams
 
 	// Constructor
 	EffectParams()
-		:	fPeriod				(0.0f),
-			fTimePassed			(0.0f),
-			iEffectStage		(0),
-			fAdditionalParam	(0.0f),
-			iAdditionalParam	(0),
-			bCyclic				(true),
-			bOn					(true)
-	{}
+		: fPeriod(0.0f),
+		fTimePassed(0.0f),
+		iEffectStage(0),
+		fAdditionalParam(0.0f),
+		iAdditionalParam(0),
+		bCyclic(true),
+		bOn(true)
+	{
+	}
 private:
 	float			fTimePassed;
 };
@@ -46,34 +47,34 @@ class CUITextBanner
 public:
 	enum TextBannerStyles
 	{
-		tbsNone		= 0,
-		tbsFlicker	= 1,
-		tbsFade		= 1 << 1
+		tbsNone = 0,
+		tbsFlicker = 1,
+		tbsFade = 1 << 1
 	};
 	// Ctor and Dtor
-	CUITextBanner				();
-	~CUITextBanner				();
+	CUITextBanner();
+	~CUITextBanner();
 
-	virtual void	Update		();
-	void			Out			(float x, float y, const char *fmt, ...);
+	virtual void	Update();
+	void			Out(float x, float y, const char* fmt, ...);
 
 	// Установить параметры визуализации баннера. Флаги см. перечисление TextBannerStyles
-	EffectParams * SetStyleParams(const TextBannerStyles styleName);
-	void		ResetAnimation		(const TextBannerStyles styleName);
+	EffectParams* SetStyleParams(const TextBannerStyles styleName);
+	void		ResetAnimation(const TextBannerStyles styleName);
 
 	// Font
-	void		SetFont				(CGameFont *pFont)	{ m_pFont = pFont; }
-	CGameFont	*GetFont			() const { return m_pFont; }
-	void		SetFontSize			(float sz)	{ fontSize = sz; }
-	void		SetFontAlignment	(CGameFont::EAligment al) {aligment = al;}
+	void		SetFont(CGameFont* pFont) { m_pFont = pFont; }
+	CGameFont* GetFont() const { return m_pFont; }
+	void		SetFontSize(float sz) { fontSize = sz; }
+	void		SetFontAlignment(CGameFont::EAligment al) { aligment = al; }
 
 	// Color
-	void		SetTextColor		(u32 cl);
-	u32			GetTextColor		();
+	void		SetTextColor(u32 cl);
+	u32			GetTextColor();
 
 	// Вкл/выкл анимации
-	void		PlayAnimation		()					{ m_bAnimate = true;	}
-	void		StopAnimation		()					{ m_bAnimate = false;	}
+	void		PlayAnimation() { m_bAnimate = true; }
+	void		StopAnimation() { m_bAnimate = false; }
 
 protected:
 	// Переменные времени для каждого из стилей.
@@ -91,7 +92,7 @@ protected:
 	bool		m_bAnimate;
 
 	// Font
-	CGameFont				*m_pFont;
+	CGameFont* m_pFont;
 	float					fontSize;
 	CGameFont::EAligment	aligment;
 

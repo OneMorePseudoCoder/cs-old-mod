@@ -22,7 +22,7 @@ struct ServerInfo;
 #define DIF_HEIGHT		180
 #define LST_COLUMN_COUNT	7
 
-class SServerFilters{
+class SServerFilters {
 public:
 	bool	empty;
 	bool	full;
@@ -33,46 +33,46 @@ public:
 	bool	listen_servers;
 };
 
-class CServerList : public CUIWindow{
+class CServerList : public CUIWindow {
 public:
 	CServerList();
 	virtual ~CServerList();
 
-	virtual void 	Init				(float x, float y, float width, float height);
-	virtual void 	Update				();
-	virtual void 	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-			void 	InitFromXml			(CUIXml& xml_doc, LPCSTR path);
-			void 	InitHeader			();
-			void 	InitSeparator		();
-			void 	AddServerToList		(ServerInfo* pServerInfo);
-			void 	UpdateServerInList	(ServerInfo* pServerInfo, int index);
-			void 	UpdateServerInList	(ServerInfo* pServerInfo, CUIListItemServer* pItem);
-			void 	ConnectToSelected	();
-			void 	SetFilters			(SServerFilters& sf);
-			void 	SetPlayerName		(LPCSTR name);
-			void 	SetSortFunc			(LPCSTR func_name, bool make_sort);
-			void	NetRadioChanged		(bool Local);
-	virtual void	RefreshGameSpyList	(bool Local);
-			void	RefreshQuick();
-			void	ShowServerInfo();			
+	virtual void 	Init(float x, float y, float width, float height);
+	virtual void 	Update();
+	virtual void 	SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void 	InitFromXml(CUIXml& xml_doc, LPCSTR path);
+	void 	InitHeader();
+	void 	InitSeparator();
+	void 	AddServerToList(ServerInfo* pServerInfo);
+	void 	UpdateServerInList(ServerInfo* pServerInfo, int index);
+	void 	UpdateServerInList(ServerInfo* pServerInfo, CUIListItemServer* pItem);
+	void 	ConnectToSelected();
+	void 	SetFilters(SServerFilters& sf);
+	void 	SetPlayerName(LPCSTR name);
+	void 	SetSortFunc(LPCSTR func_name, bool make_sort);
+	void	NetRadioChanged(bool Local);
+	virtual void	RefreshGameSpyList(bool Local);
+	void	RefreshQuick();
+	void	ShowServerInfo();
 	virtual	void	RefreshList();
 
 protected:
-			bool IsValidItem(ServerInfo& item);
-			void SrvInfo2LstSrvInfo(const ServerInfo* pSrvInfo);
-			void UpdateSizes();
-			void UpdateVisibility();
-			void BeforeAppear();
-			void AfterAppear();
-			void BeforeDisapear();
-			void AfterDisappear();
-			void FillUpDetailedServerInfo();
-			void ClearDetailedServerInfo();
+	bool IsValidItem(ServerInfo& item);
+	void SrvInfo2LstSrvInfo(const ServerInfo* pSrvInfo);
+	void UpdateSizes();
+	void UpdateVisibility();
+	void BeforeAppear();
+	void AfterAppear();
+	void BeforeDisapear();
+	void AfterDisappear();
+	void FillUpDetailedServerInfo();
+	void ClearDetailedServerInfo();
 
-			void SaveCurItem();
-			void RestoreCurItem();
-			void ResetCurItem();
-			bool NeedToRefreshCurServer	();
+	void SaveCurItem();
+	void RestoreCurItem();
+	void ResetCurItem();
+	bool NeedToRefreshCurServer();
 
 	static	bool sort_by_ServerName(int p1, int p2);
 	static	bool sort_by_Map(int p1, int p2);
@@ -101,17 +101,17 @@ protected:
 
 	CUIMessageBoxEx* m_message_box;
 
-	CGameSpy_Browser*	m_GSBrowser;	
+	CGameSpy_Browser* m_GSBrowser;
 
 	shared_str						m_sort_func;
 	xr_vector<int>					m_tmp_srv_lst;
-	struct SrvItem{
-		CUIListItemServer*	m_ui_item;
+	struct SrvItem {
+		CUIListItemServer* m_ui_item;
 		bool				m_busy;
 	};
-	CUIListItemServer*			GetFreeItem		();
-	void						DestroySrvItems	();	
-	void						ClearSrvItems	();	
+	CUIListItemServer* GetFreeItem();
+	void						DestroySrvItems();
+	void						ClearSrvItems();
 
 	typedef xr_vector<SrvItem>	SrvItems;
 	typedef SrvItems::iterator	SrvItems_It;

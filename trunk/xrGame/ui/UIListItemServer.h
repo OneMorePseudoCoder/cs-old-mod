@@ -7,20 +7,20 @@ struct LIST_SRV_SIZES {
 	float icon;
 	float server;
 	float map;
-	float game; 
+	float game;
 	float players;
 	float ping;
 	float version;
 };
 
-struct SRV_ICONS{
+struct SRV_ICONS {
 	bool pass;
 	bool dedicated;
 	bool punkbuster;
 	bool user_pass;
 };
 
-struct LIST_SRV_INFO{
+struct LIST_SRV_INFO {
 	shared_str server;
 	shared_str address;
 	shared_str map;
@@ -34,12 +34,12 @@ struct LIST_SRV_INFO{
 
 struct LIST_SRV_ITEM {
 	u32				color;
-	CGameFont*		font;
+	CGameFont* font;
 	LIST_SRV_SIZES	size;
 	LIST_SRV_INFO	info;
 };
 
-class CUIListItemServer : public CUIListItem 
+class CUIListItemServer : public CUIListItem
 {
 public:
 	CUIListItemServer();
@@ -50,17 +50,17 @@ public:
 	virtual void Draw();
 
 	// own
-	virtual void			Init					(LIST_SRV_ITEM& params, float x, float y, float width, float height);
-			void			SetParams				(LIST_SRV_ITEM& params);
-			void			CreateConsoleCommand	(xr_string& command, LPCSTR player_name, LPCSTR player_pass, LPCSTR server_psw);
+	virtual void			Init(LIST_SRV_ITEM& params, float x, float y, float width, float height);
+	void			SetParams(LIST_SRV_ITEM& params);
+	void			CreateConsoleCommand(xr_string& command, LPCSTR player_name, LPCSTR player_pass, LPCSTR server_psw);
 
-			int				Get_gs_index			()		{return m_srv_info.info.Index;}
-			LIST_SRV_ITEM*	GetInfo					()		{return &m_srv_info;};
-	
+	int				Get_gs_index() { return m_srv_info.info.Index; }
+	LIST_SRV_ITEM* GetInfo() { return &m_srv_info; };
+
 
 protected:
-			void			SetTextColor			(u32 color);
-			void			SetFont					(CGameFont* pFont);
+	void			SetTextColor(u32 color);
+	void			SetFont(CGameFont* pFont);
 	LIST_SRV_SIZES			m_sizes;
 
 	LIST_SRV_ITEM			m_srv_info;

@@ -5,21 +5,21 @@ public:
 	void Init();
 	CUIOptConCom();
 protected:
-	enum{
-		flNetSrvDedicated				= 1,
-		flNetConPublicServer			= 2,
-		flNetConSpectatorOn				= 8,
-		flNetConBattlEyeOn				= 16,
-//=		flNetConBattlEyeAutoUpdate		= 32,
+	enum {
+		flNetSrvDedicated = 1,
+		flNetConPublicServer = 2,
+		flNetConSpectatorOn = 8,
+		flNetConBattlEyeOn = 16,
+		//=		flNetConBattlEyeAutoUpdate		= 32,
 	};
-	enum{
-		fl_empty						= (1<<0),
-		fl_full							= (1<<1),
-		fl_pass							= (1<<2),
-		fl_wo_pass						= (1<<3),
-		fl_wo_ff						= (1<<4),
-		fl_listen						= (1<<5),
-		fl_battleye						= (1<<6),
+	enum {
+		fl_empty = (1 << 0),
+		fl_full = (1 << 1),
+		fl_pass = (1 << 2),
+		fl_wo_pass = (1 << 3),
+		fl_wo_ff = (1 << 4),
+		fl_listen = (1 << 5),
+		fl_battleye = (1 << 6),
 	};
 	int			m_iMaxPlayers;
 	Flags32		m_uNetSrvParams;
@@ -32,6 +32,6 @@ protected:
 	//string64	m_sReinforcementType;
 	float		m_fNetWeatherRate;
 
-	void		ReadPlayerNameFromRegistry		();
-	void		WritePlayerNameToRegistry		();
+	void		ReadPlayerNameFromRegistry();
+	void		WritePlayerNameToRegistry();
 };

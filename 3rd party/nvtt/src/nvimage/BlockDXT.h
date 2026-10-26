@@ -43,28 +43,28 @@ namespace nv
 			uint8 row[4];
 			uint indices;
 		};
-	
+
 		bool isFourColorMode() const;
-	
+
 		uint evaluatePalette(Color32 color_array[4]) const;
 		uint evaluatePaletteFast(Color32 color_array[4]) const;
 		void evaluatePalette3(Color32 color_array[4]) const;
 		void evaluatePalette4(Color32 color_array[4]) const;
-		
-		void decodeBlock(ColorBlock * block) const;
-		
-		void setIndices(int * idx);
+
+		void decodeBlock(ColorBlock* block) const;
+
+		void setIndices(int* idx);
 
 		void flip4();
 		void flip2();
 	};
-	
+
 	/// Return true if the block uses four color mode, false otherwise.
 	inline bool BlockDXT1::isFourColorMode() const
 	{
 		return col0.u > col1.u;
 	}
-	
+
 
 	/// DXT3 alpha block with explicit alpha.
 	struct AlphaBlockDXT3
@@ -90,27 +90,27 @@ namespace nv
 			};
 			uint16 row[4];
 		};
-		
-		void decodeBlock(ColorBlock * block) const;
-		
+
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
-	
-	
+
+
 	/// DXT3 block.
 	struct BlockDXT3
 	{
 		AlphaBlockDXT3 alpha;
 		BlockDXT1 color;
-		
-		void decodeBlock(ColorBlock * block) const;
-		
+
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
-	
-	
+
+
 	/// DXT5 alpha block.
 	struct AlphaBlockDXT5
 	{
@@ -137,7 +137,7 @@ namespace nv
 			};
 			uint64 u;
 		};
-		
+
 		void evaluatePalette(uint8 alpha[8]) const;
 		void evaluatePalette8(uint8 alpha[8]) const;
 		void evaluatePalette6(uint8 alpha[8]) const;
@@ -145,22 +145,22 @@ namespace nv
 
 		uint index(uint index) const;
 		void setIndex(uint index, uint value);
-		
-		void decodeBlock(ColorBlock * block) const;
-		
+
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
 
-	
+
 	/// DXT5 block.
 	struct BlockDXT5
 	{
 		AlphaBlockDXT5 alpha;
 		BlockDXT1 color;
-		
-		void decodeBlock(ColorBlock * block) const;
-		
+
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
@@ -169,9 +169,9 @@ namespace nv
 	struct BlockATI1
 	{
 		AlphaBlockDXT5 alpha;
-		
-		void decodeBlock(ColorBlock * block) const;
-		
+
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
@@ -181,9 +181,9 @@ namespace nv
 	{
 		AlphaBlockDXT5 x;
 		AlphaBlockDXT5 y;
-		
-		void decodeBlock(ColorBlock * block) const;
-		
+
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
@@ -199,24 +199,24 @@ namespace nv
 		};
 
 		void evaluatePalette(Color32 color_array[4]) const;
-		void setIndices(int * idx);
+		void setIndices(int* idx);
 
-		void decodeBlock(ColorBlock * block) const;
-		
+		void decodeBlock(ColorBlock* block) const;
+
 		void flip4();
 		void flip2();
 	};
 
 
 	// Serialization functions.
-	NVIMAGE_API Stream & operator<<(Stream & stream, BlockDXT1 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, AlphaBlockDXT3 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, BlockDXT3 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, AlphaBlockDXT5 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, BlockDXT5 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, BlockATI1 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, BlockATI2 & block);
-	NVIMAGE_API Stream & operator<<(Stream & stream, BlockCTX1 & block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, BlockDXT1& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, AlphaBlockDXT3& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, BlockDXT3& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, AlphaBlockDXT5& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, BlockDXT5& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, BlockATI1& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, BlockATI2& block);
+	NVIMAGE_API Stream& operator<<(Stream& stream, BlockCTX1& block);
 
 } // nv namespace
 

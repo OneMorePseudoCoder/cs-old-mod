@@ -38,17 +38,17 @@ void print_time(LPCSTR S, _TIME_ID tTimeID)
 }
 
 /**/
-CALifeCombatManager::CALifeCombatManager	(xrServer *server, LPCSTR section) :
-	CALifeSimulatorBase	(server,section)
+CALifeCombatManager::CALifeCombatManager(xrServer* server, LPCSTR section) :
+	CALifeSimulatorBase(server, section)
 {
-/**
-	seed						(u32(CPU::QPC() & 0xffffffff));
-	m_dwMaxCombatIterationCount	= pSettings->r_u32	(section,"max_combat_iteration_count");
-	for (int i=0; i<2; ++i) {
-		m_tpaCombatGroups[i].clear();
-		m_tpaCombatGroups[i].reserve(255);
-	}
-/**/
+	/**
+		seed						(u32(CPU::QPC() & 0xffffffff));
+		m_dwMaxCombatIterationCount	= pSettings->r_u32	(section,"max_combat_iteration_count");
+		for (int i=0; i<2; ++i) {
+			m_tpaCombatGroups[i].clear();
+			m_tpaCombatGroups[i].reserve(255);
+		}
+	/**/
 }
 
 /**
@@ -169,7 +169,7 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 {
 	if (!tpALifeSchedulable1->bfActive() || !tpALifeSchedulable2->bfActive())
 		return(false);
-	
+
 	// determine combat type
 	CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract1	= smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable1);
 	CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract2	= smart_cast<CSE_ALifeMonsterAbstract*>(tpALifeSchedulable2);
@@ -209,7 +209,7 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 			}
 		}
 	}
-	
+
 	// perform interaction
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife)) {
@@ -228,7 +228,7 @@ bool CALifeCombatManager::bfCheckForInteraction(CSE_ALifeSchedulable *tpALifeSch
 		);
 	}
 #endif
-	
+
 	bMutualDetection				= false;
 	iCombatGroupIndex				= -1;
 
@@ -318,7 +318,7 @@ void CALifeCombatManager::vfPerformAttackAction(int iCombatGroupIndex)
 			l_tHitType		= (*I)->m_tpCurrentBestWeapon->m_tHitType;
 			l_fHitPower		= (*I)->m_tpCurrentBestWeapon->m_fHitPower;
 		}
-		
+
 		ai().ef_storage().alife().member_item() = smart_cast<CSE_ALifeObject*>(*I);
 		ai().ef_storage().alife().member() = *I;
 #ifdef DEBUG
@@ -400,7 +400,7 @@ void CALifeCombatManager::vfFinishCombat(ECombatResult tCombatResult)
 			}
 		}
 	}
-	
+
 	if (m_temp_item_vector.empty() || (eCombatTypeMonsterMonster != combat_type())) {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
@@ -426,7 +426,7 @@ void CALifeCombatManager::vfFinishCombat(ECombatResult tCombatResult)
 		}
 		default							: NODEFAULT;
 	}
-	
+
 	if (l_iGroupIndex >= 0) {
 #ifdef DEBUG
 		if (psAI_Flags.test(aiALife)) {
@@ -455,20 +455,20 @@ ALife::ERelationType	CALifeCombatManager::relation_type	(CSE_ALifeMonsterAbstrac
 		return(ALife::eRelationTypeNeutral);
 }
 /**/
-void CALifeCombatManager::kill_entity	(CSE_ALifeMonsterAbstract *l_tpALifeMonsterAbstract, const GameGraph::_GRAPH_ID &l_tGraphID, CSE_ALifeSchedulable *schedulable)
+void CALifeCombatManager::kill_entity(CSE_ALifeMonsterAbstract* l_tpALifeMonsterAbstract, const GameGraph::_GRAPH_ID& l_tGraphID, CSE_ALifeSchedulable* schedulable)
 {
-	VERIFY									(l_tpALifeMonsterAbstract->g_Alive());
-	append_item_vector						(l_tpALifeMonsterAbstract->children,m_temp_item_vector);
+	VERIFY(l_tpALifeMonsterAbstract->g_Alive());
+	append_item_vector(l_tpALifeMonsterAbstract->children, m_temp_item_vector);
 	GameGraph::_GRAPH_ID					l_tGraphID1 = l_tpALifeMonsterAbstract->m_tGraphID;
-	assign_death_position					(l_tpALifeMonsterAbstract, l_tGraphID, schedulable);
-	l_tpALifeMonsterAbstract->vfDetachAll	();
-	R_ASSERT								(l_tpALifeMonsterAbstract->children.empty());
-	scheduled().remove						(l_tpALifeMonsterAbstract);
+	assign_death_position(l_tpALifeMonsterAbstract, l_tGraphID, schedulable);
+	l_tpALifeMonsterAbstract->vfDetachAll();
+	R_ASSERT(l_tpALifeMonsterAbstract->children.empty());
+	scheduled().remove(l_tpALifeMonsterAbstract);
 	if (l_tpALifeMonsterAbstract->m_tGraphID != l_tGraphID1) {
-		graph().remove						(l_tpALifeMonsterAbstract,l_tGraphID1);
-		graph().add							(l_tpALifeMonsterAbstract,l_tpALifeMonsterAbstract->m_tGraphID);
+		graph().remove(l_tpALifeMonsterAbstract, l_tGraphID1);
+		graph().add(l_tpALifeMonsterAbstract, l_tpALifeMonsterAbstract->m_tGraphID);
 	}
-	CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
+	CSE_ALifeInventoryItem* l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
 	if (l_tpALifeInventoryItem)
-		m_temp_item_vector.push_back		(l_tpALifeInventoryItem);
+		m_temp_item_vector.push_back(l_tpALifeInventoryItem);
 }

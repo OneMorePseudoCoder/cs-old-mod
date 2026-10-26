@@ -11,10 +11,10 @@
 #define CStateMonsterHearHelpSoundAbstract CStateMonsterHearHelpSound<_Object>
 
 TEMPLATE_SPECIALIZATION
-CStateMonsterHearHelpSoundAbstract::CStateMonsterHearHelpSound(_Object *obj) : inherited(obj)
+CStateMonsterHearHelpSoundAbstract::CStateMonsterHearHelpSound(_Object* obj) : inherited(obj)
 {
-	add_state	(eStateHearHelpSound_MoveToDest,	xr_new<CStateMonsterMoveToPointEx<_Object> >(obj));
-	add_state	(eStateHearHelpSound_LookAround,	xr_new<CStateMonsterCustomActionLook<_Object> >(obj));
+	add_state(eStateHearHelpSound_MoveToDest, xr_new<CStateMonsterMoveToPointEx<_Object> >(obj));
+	add_state(eStateHearHelpSound_LookAround, xr_new<CStateMonsterCustomActionLook<_Object> >(obj));
 }
 
 TEMPLATE_SPECIALIZATION
@@ -38,7 +38,7 @@ void CStateMonsterHearHelpSoundAbstract::reselect_state()
 {
 	if (prev_substate == u32(-1))
 		select_state(eStateHearHelpSound_MoveToDest);
-	else if (prev_substate == eStateHearHelpSound_MoveToDest) 
+	else if (prev_substate == eStateHearHelpSound_MoveToDest)
 		select_state(eStateHearHelpSound_LookAround);
 }
 
@@ -50,16 +50,16 @@ void CStateMonsterHearHelpSoundAbstract::setup_substates()
 	if (current_substate == eStateHearHelpSound_MoveToDest) {
 		SStateDataMoveToPointEx data;
 
-		data.vertex				= object->SoundMemory.hear_help_sound_node();
-		data.point				= ai().level_graph().vertex_position(data.vertex);
-		data.action.action		= ACT_RUN;
-		data.action.time_out	= 0;		// do not use time out
-		data.completion_dist	= 0.f;		// get exactly to the point
-		data.time_to_rebuild	= 0;		// do not rebuild
-		data.accelerated		= true;
-		data.braking			= true;
-		data.accel_type 		= eAT_Aggressive;
-		data.action.sound_type	= MonsterSound::eMonsterSoundIdle;
+		data.vertex = object->SoundMemory.hear_help_sound_node();
+		data.point = ai().level_graph().vertex_position(data.vertex);
+		data.action.action = ACT_RUN;
+		data.action.time_out = 0;		// do not use time out
+		data.completion_dist = 0.f;		// get exactly to the point
+		data.time_to_rebuild = 0;		// do not rebuild
+		data.accelerated = true;
+		data.braking = true;
+		data.accel_type = eAT_Aggressive;
+		data.action.sound_type = MonsterSound::eMonsterSoundIdle;
 		data.action.sound_delay = object->db().m_dwIdleSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateDataMoveToPointEx));
@@ -69,10 +69,10 @@ void CStateMonsterHearHelpSoundAbstract::setup_substates()
 
 	if (current_substate == eStateHearHelpSound_LookAround) {
 		SStateDataAction	data;
-		data.action			= ACT_LOOK_AROUND;
-		data.time_out		= 3000;
-		data.sound_type		= MonsterSound::eMonsterSoundIdle;
-		data.sound_delay	= object->db().m_dwIdleSndDelay;
+		data.action = ACT_LOOK_AROUND;
+		data.time_out = 3000;
+		data.sound_type = MonsterSound::eMonsterSoundIdle;
+		data.sound_delay = object->db().m_dwIdleSndDelay;
 
 		state->fill_data_with(&data, sizeof(SStateDataAction));
 

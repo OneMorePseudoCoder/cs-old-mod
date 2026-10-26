@@ -50,9 +50,9 @@ Comments:
 #endif
 
 
-	// FDebug defined in NV_Error.h
+// FDebug defined in NV_Error.h
 #ifndef ASSERT_MSG
-	#define ASSERT_MSG( var, msg )	\
+#define ASSERT_MSG( var, msg )	\
 	{									\
 		if( !(var) )					\
 		{								\
@@ -75,7 +75,7 @@ Comments:
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
 #endif
-  
+
 ///////////////////////////////////////////////////////////////
 
 

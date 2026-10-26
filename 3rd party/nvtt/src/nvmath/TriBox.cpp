@@ -33,11 +33,11 @@ static bool planeBoxOverlap(Vector3::Arg normal, Vector3::Arg vert, Vector3::Arg
 {
 	Vector3 vmin, vmax;
 
-	float signs[3] = {1, 1, 1};
+	float signs[3] = { 1, 1, 1 };
 	if (normal.x() <= 0.0f) signs[0] = -1;
 	if (normal.y() <= 0.0f) signs[1] = -1;
 	if (normal.z() <= 0.0f) signs[2] = -1;
-	
+
 	Vector3 sign(signs[0], signs[1], signs[2]);
 	vmin = -scale(sign, maxbox) - vert;
 	vmax = scale(sign, maxbox) - vert;
@@ -96,7 +96,7 @@ static bool planeBoxOverlap(Vector3::Arg normal, Vector3::Arg vert, Vector3::Arg
 	if(min>rad || max<-rad) return false;
 
 
-bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle & tri)
+bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle& tri)
 {
 	// use separating axis theorem to test overlap between triangle and box
 	// need to test for overlap in these directions:
@@ -151,15 +151,15 @@ bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Trian
 
 	// test in X-direction
 	FINDMINMAX(v0.x(), v1.x(), v2.x(), min, max);
-	if(min > boxhalfsize.x() || max < -boxhalfsize.x()) return false;
+	if (min > boxhalfsize.x() || max < -boxhalfsize.x()) return false;
 
 	// test in Y-direction
 	FINDMINMAX(v0.y(), v1.y(), v2.y(), min, max);
-	if(min > boxhalfsize.y() || max < -boxhalfsize.y()) return false;
+	if (min > boxhalfsize.y() || max < -boxhalfsize.y()) return false;
 
 	// test in Z-direction
 	FINDMINMAX(v0.z(), v1.z(), v2.z(), min, max);
-	if(min > boxhalfsize.z() || max < -boxhalfsize.z()) return false;
+	if (min > boxhalfsize.z() || max < -boxhalfsize.z()) return false;
 
 	// Bullet 2:
 	//  test if the box intersects the plane of the triangle
@@ -170,7 +170,7 @@ bool triBoxOverlap(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Trian
 }
 
 
-bool triBoxOverlapNoBounds(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle & tri)
+bool triBoxOverlapNoBounds(Vector3::Arg boxcenter, Vector3::Arg boxhalfsize, const Triangle& tri)
 {
 	// use separating axis theorem to test overlap between triangle and box
 	// need to test for overlap in these directions:

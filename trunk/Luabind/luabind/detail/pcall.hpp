@@ -27,10 +27,12 @@
 
 struct lua_State;
 
-namespace luabind { namespace detail
-{
-	LUABIND_API int pcall(lua_State *L, int nargs, int nresults);
-	LUABIND_API int resume_impl(lua_State *L, int nargs, int nresults);
-}}
+namespace luabind {
+	namespace detail
+	{
+		LUABIND_API int pcall(lua_State* L, int nargs, int nresults);
+		LUABIND_API int resume_impl(lua_State* L, int nargs, int nresults);
+	}
+}
 
 #endif

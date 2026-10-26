@@ -51,7 +51,7 @@ namespace luabind
 		namespace free_functions
 		{
 
-			struct overload_rep: public overload_rep_base
+			struct overload_rep : public overload_rep_base
 			{
 
 #define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 1))
@@ -74,19 +74,19 @@ namespace luabind
 				// this is the actual function pointer to be called when this overload is invoked
 				void (*fun)();
 
-//TODO:		private: 
+				//TODO:		private: 
 
 				call_ptr call_fun;
 
 				// the types of the parameter it takes
 				std::vector<LUABIND_TYPE_INFO> m_params_;
 
-                char end;
+				char end;
 			};
 
-    		struct LUABIND_API function_rep
+			struct LUABIND_API function_rep
 			{
-				function_rep(const char* name): m_name(name) {}
+				function_rep(const char* name) : m_name(name) {}
 				void add_overload(const free_functions::overload_rep& o);
 
 				const std::vector<overload_rep>& overloads() const throw() { return m_overloads; }
@@ -104,7 +104,7 @@ namespace luabind
 
 
 
-		// returns generates functions that calls function pointers
+			// returns generates functions that calls function pointers
 
 #define LUABIND_DECL(z, n, text) typedef typename find_conversion_policy<n + 1, Policies>::type BOOST_PP_CAT(converter_policy,n); \
 		typename BOOST_PP_CAT(converter_policy,n)::template generate_converter<A##n, lua_to_cpp>::type BOOST_PP_CAT(c,n);
@@ -133,23 +133,23 @@ namespace luabind
 				}
 			};
 
-		
+
 			template<class T>
 			struct returns
 			{
-				#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 2))
-				#include BOOST_PP_ITERATE()
+#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 2))
+#include BOOST_PP_ITERATE()
 			};
 
 			template<>
 			struct returns<void>
 			{
-				#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 3))
-				#include BOOST_PP_ITERATE()
+#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 3))
+#include BOOST_PP_ITERATE()
 			};
 
-			#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 4))
-			#include BOOST_PP_ITERATE()
+#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 4))
+#include BOOST_PP_ITERATE()
 
 
 #undef LUABIND_PARAMS
@@ -159,8 +159,8 @@ namespace luabind
 #undef LUABIND_INDEX_MAP
 
 
-			#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 5))
-			#include BOOST_PP_ITERATE()
+#define BOOST_PP_ITERATION_PARAMS_1 (4, (0, LUABIND_MAX_ARITY, <luabind/function.hpp>, 5))
+#include BOOST_PP_ITERATE()
 
 
 			template<class F, class Policies>
@@ -196,7 +196,7 @@ namespace luabind
 	template<class F, class Policies>
 	void function(lua_State* L, const char* name, F f, const Policies& p)
 	{
-		module(L) [ def(name, f, p) ];
+		module(L)[def(name, f, p)];
 	}
 
 	// deprecated
@@ -215,7 +215,8 @@ namespace luabind
 				: m_name(n)
 				, fun(f)
 				, policies(p)
-			{}
+			{
+			}
 
 			virtual void register_(lua_State* L) const
 			{
@@ -257,9 +258,9 @@ namespace luabind
 					rep = static_cast<detail::free_functions::function_rep*>(lua_newuserdata(L, sizeof(detail::free_functions::function_rep)));
 					new(rep) detail::free_functions::function_rep(m_name);
 
-                    // STORE IN REGISTRY
-                    lua_pushvalue(L, -1);
-                    detail::ref(L);
+					// STORE IN REGISTRY
+					lua_pushvalue(L, -1);
+					detail::ref(L);
 
 					detail::class_registry* r = detail::class_registry::get_registry(L);
 					assert(r && "you must call luabind::open() prior to any function registrations");
@@ -288,14 +289,14 @@ namespace luabind
 	scope def(const char* name, F f, const Policies& policies)
 	{
 		return scope(std::auto_ptr<detail::registration>(
-			new detail::function_commiter<F,Policies>(name, f, policies)));
+			new detail::function_commiter<F, Policies>(name, f, policies)));
 	}
 
 	template<class F>
 	scope def(const char* name, F f)
 	{
 		return scope(std::auto_ptr<detail::registration>(
-			new detail::function_commiter<F,detail::null_type>(
+			new detail::function_commiter<F, detail::null_type>(
 				name, f, detail::null_type())));
 	}
 
@@ -319,9 +320,9 @@ overload_rep(R(*f)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), Policies*)
 {
 	m_params_.reserve(BOOST_PP_ITERATION());
 	BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_INIT_PARAM, _)
-	BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_POLICY_DECL, _)
+		BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_POLICY_DECL, _)
 
-	m_arity = 0 BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_ARITY, _);
+		m_arity = 0 BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_ARITY, _);
 }
 
 #undef LUABIND_INIT_PARAM
@@ -333,25 +334,25 @@ overload_rep(R(*f)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), Policies*)
 template<class Policies BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), class A)>
 static int call(T(*f)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), lua_State* L, const Policies*)
 {
-/*	typedef typename get_policy<0, Policies>::type ret_policy;
-	typedef typename ret_policy::head return_value_converter_intermediate;
-	typedef typename return_value_converter_intermediate::template generate_converter<T, cpp_to_lua>::type ret_conv;*/
+	/*	typedef typename get_policy<0, Policies>::type ret_policy;
+		typedef typename ret_policy::head return_value_converter_intermediate;
+		typedef typename return_value_converter_intermediate::template generate_converter<T, cpp_to_lua>::type ret_conv;*/
 
 	int nargs = lua_gettop(L);
 
-//	typedef typename get_policy_list<0, Policies>::type policy_list_ret;
-//	typedef typename find_converter_policy<policy_list_ret>::type converter_policy_ret;
+	//	typedef typename get_policy_list<0, Policies>::type policy_list_ret;
+	//	typedef typename find_converter_policy<policy_list_ret>::type converter_policy_ret;
 	typedef typename find_conversion_policy<0, Policies>::type converter_policy_ret;
 	typename converter_policy_ret::template generate_converter<T, cpp_to_lua>::type converter_ret;
 
 	BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_DECL, _)
 		converter_ret.apply(L, f
-				(
-				 BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_PARAMS, _)
-				));
+		(
+			BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_PARAMS, _)
+		));
 	BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_POSTCALL, _)
 
-	int nret = lua_gettop(L) - nargs;
+		int nret = lua_gettop(L) - nargs;
 
 	const int indices[] =
 	{
@@ -377,11 +378,11 @@ static int call(void(*f)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), lua_Sta
 	BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_DECL, _)
 		f
 		(
-		 BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_PARAMS, _)
+			BOOST_PP_ENUM(BOOST_PP_ITERATION(), LUABIND_PARAMS, _)
 		);
 	BOOST_PP_REPEAT(BOOST_PP_ITERATION(), LUABIND_POSTCALL, _)
 
-	int nret = lua_gettop(L) - nargs;
+		int nret = lua_gettop(L) - nargs;
 
 	const int indices[] =
 	{
@@ -406,13 +407,13 @@ int call(R(*f)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), lua_State* L, con
 
 #elif BOOST_PP_ITERATION_FLAGS() == 5
 
-	template<class Policies, class R BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), class A)>
-	static int match(R(*)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), lua_State* L, const Policies* policies)
-	{
-		//if (lua_gettop(L) != BOOST_PP_ITERATION()) return -1;
-		typedef constructor<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)> ParameterTypes;
-		return match_params(L, 1, static_cast<ParameterTypes*>(0), policies);
-	}
+template<class Policies, class R BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), class A)>
+static int match(R(*)(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)), lua_State* L, const Policies* policies)
+{
+	//if (lua_gettop(L) != BOOST_PP_ITERATION()) return -1;
+	typedef constructor<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), A)> ParameterTypes;
+	return match_params(L, 1, static_cast<ParameterTypes*>(0), policies);
+}
 
 
 

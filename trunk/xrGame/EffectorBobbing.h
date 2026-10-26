@@ -5,7 +5,7 @@
 #include "CameraEffector.h"
 #include "../xr_3da/CameraManager.h"
 
-class CEffectorBobbing : public CEffectorCam  
+class CEffectorBobbing : public CEffectorCam
 {
 	float	fTime;
 	Fvector	vAngleAmplitude;
@@ -26,10 +26,10 @@ class CEffectorBobbing : public CEffectorCam
 	float	m_fSpeedLimp;
 
 public:
-			CEffectorBobbing	();
-	virtual ~CEffectorBobbing	();
-	virtual BOOL	ProcessCam	(SCamEffectorInfo& info);
-	void	SetState			(u32 st, bool limping, bool ZoomMode);
+	CEffectorBobbing();
+	virtual ~CEffectorBobbing();
+	virtual BOOL	ProcessCam(SCamEffectorInfo& info);
+	void	SetState(u32 st, bool limping, bool ZoomMode);
 };
 
 #endif //_EFFECTOR_BOBBING_H

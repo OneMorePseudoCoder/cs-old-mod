@@ -15,24 +15,24 @@
 #define CSObjectItemClientServer CObjectItemClientServer<_client_type,_server_type>
 
 TEMPLATE_SPECIALIZATION
-IC	CSObjectItemClientServer::CObjectItemClientServer	(const CLASS_ID &clsid, LPCSTR script_clsid) :
-	inherited			(clsid,script_clsid)
+IC	CSObjectItemClientServer::CObjectItemClientServer(const CLASS_ID& clsid, LPCSTR script_clsid) :
+	inherited(clsid, script_clsid)
 {
 }
 
 #ifndef NO_XR_GAME
 TEMPLATE_SPECIALIZATION
-ObjectFactory::CLIENT_BASE_CLASS *CSObjectItemClientServer::client_object	() const
+ObjectFactory::CLIENT_BASE_CLASS* CSObjectItemClientServer::client_object() const
 {
 	return				(xr_new<CLIENT_TYPE>()->_construct());
 }
 #endif
 
 TEMPLATE_SPECIALIZATION
-ObjectFactory::SERVER_BASE_CLASS *CSObjectItemClientServer::server_object	(LPCSTR section) const
+ObjectFactory::SERVER_BASE_CLASS* CSObjectItemClientServer::server_object(LPCSTR section) const
 {
-	ObjectFactory::SERVER_BASE_CLASS * o = xr_new<SERVER_TYPE>(section)->init();
-	R_ASSERT			(o);
+	ObjectFactory::SERVER_BASE_CLASS* o = xr_new<SERVER_TYPE>(section)->init();
+	R_ASSERT(o);
 	return				(o);
 }
 

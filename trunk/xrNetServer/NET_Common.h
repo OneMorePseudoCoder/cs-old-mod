@@ -3,7 +3,7 @@
 #pragma once
 //==============================================================================
 
-    
+
 #define NET_MERGE_PACKETS               1
 #define NET_TAG_MERGED                  0xE1
 #define NET_TAG_NONMERGED               0xE0
@@ -29,58 +29,58 @@ extern XRNETSERVER_API int psNET_GuaranteedPacketMode;
 //==============================================================================
 
 class XRNETSERVER_API
-MultipacketSender
+	MultipacketSender
 {
 public:
-                    MultipacketSender();
-    virtual         ~MultipacketSender() {}
+	MultipacketSender();
+	virtual         ~MultipacketSender() {}
 
-    void            SendPacket( const void* packet_data, u32 packet_sz, u32 flags, u32 timeout );
-    void            FlushSendBuffer( u32 timeout );
+	void            SendPacket(const void* packet_data, u32 packet_sz, u32 flags, u32 timeout);
+	void            FlushSendBuffer(u32 timeout);
 
 
 protected:
 
-    virtual void    _SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout ) =0;
+	virtual void    _SendTo_LL(const void* data, u32 size, u32 flags, u32 timeout) = 0;
 
 
 private:
 
-    struct Buffer;
+	struct Buffer;
 
 
-    void            _FlushSendBuffer( u32 timeout, Buffer* buf );
+	void            _FlushSendBuffer(u32 timeout, Buffer* buf);
 
-    struct
-    Buffer
-    {
-                    Buffer() : last_flags(0) { buffer.B.count = 0; }
-                    
-        NET_Packet  buffer;
-        u32         last_flags;
-    };
+	struct
+		Buffer
+	{
+		Buffer() : last_flags(0) { buffer.B.count = 0; }
 
-    Buffer              _buf;
-    Buffer              _gbuf;
-    xrCriticalSection   _buf_cs;
+		NET_Packet  buffer;
+		u32         last_flags;
+	};
+
+	Buffer              _buf;
+	Buffer              _gbuf;
+	xrCriticalSection   _buf_cs;
 };
 
 
 //==============================================================================
 
 class XRNETSERVER_API
-MultipacketReciever
+	MultipacketReciever
 {
 public:
 
-    virtual         ~MultipacketReciever() {}
+	virtual         ~MultipacketReciever() {}
 
-    void            RecievePacket( const void* packet_data, u32 packet_sz, u32 param=0 );
+	void            RecievePacket(const void* packet_data, u32 packet_sz, u32 param = 0);
 
 
 protected:
 
-    virtual void    _Recieve( const void* data, u32 data_size, u32 param ) =0;
+	virtual void    _Recieve(const void* data, u32 data_size, u32 param) = 0;
 };
 
 

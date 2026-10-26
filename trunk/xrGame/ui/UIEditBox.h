@@ -12,10 +12,10 @@
 class CUIEditBox : /*public CUIMultiTextureOwner,*/ public CUIOptionsItem, public CUICustomEdit
 {
 public:
-					CUIEditBox		();
-	virtual			~CUIEditBox		();
+	CUIEditBox();
+	virtual			~CUIEditBox();
 
-	virtual void	InitCustomEdit	(Fvector2 pos, Fvector2 size);
+	virtual void	InitCustomEdit(Fvector2 pos, Fvector2 size);
 
 	// CUIOptionsItem
 	virtual void	SetCurrentValue();
@@ -23,8 +23,8 @@ public:
 	virtual bool	IsChanged();
 
 	// CUIMultiTextureOwner
-	virtual void	InitTexture					(LPCSTR texture);
-	virtual void	InitTextureEx				(LPCSTR texture, LPCSTR  shader);
+	virtual void	InitTexture(LPCSTR texture);
+	virtual void	InitTextureEx(LPCSTR texture, LPCSTR  shader);
 protected:
 	CUIFrameLineWnd	m_frameLine;
 	DECLARE_SCRIPT_REGISTER_FUNCTION

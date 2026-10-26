@@ -5,14 +5,14 @@
 #include "UIXmlInit.h"
 #include "UIStatic.h"
 
-CUIFrags::CUIFrags(){	
+CUIFrags::CUIFrags() {
 	m_pBackT = xr_new<CUIStatic>(); AttachChild(m_pBackT);
 	m_pBackC = xr_new<CUIStatic>(); AttachChild(m_pBackC);
 	m_pBackB = xr_new<CUIStatic>(); AttachChild(m_pBackB);
 	m_pStats = xr_new<CUIStats>();  AttachChild(m_pStats);
 }
 
-CUIFrags::~CUIFrags(){
+CUIFrags::~CUIFrags() {
 	xr_delete(m_pStats);
 	xr_delete(m_pBackT);
 	xr_delete(m_pBackC);
@@ -20,18 +20,18 @@ CUIFrags::~CUIFrags(){
 
 }
 
-void CUIFrags::Init(CUIXml& xml_doc, LPCSTR path, LPCSTR backgrnd_path){
+void CUIFrags::Init(CUIXml& xml_doc, LPCSTR path, LPCSTR backgrnd_path) {
 	m_pStats->Init(xml_doc, path, 0);
-	InitBackground(xml_doc, backgrnd_path);	
+	InitBackground(xml_doc, backgrnd_path);
 }
 
-void CUIFrags::InitBackground(CUIXml& xml_doc, LPCSTR path){
+void CUIFrags::InitBackground(CUIXml& xml_doc, LPCSTR path) {
 	string256 _path;
 	CUIXmlInit::InitWindow(xml_doc, path, 0, this);
-	CUIXmlInit::InitStatic(xml_doc, strconcat(sizeof(_path),_path, path, ":back_c"), 0, m_pBackC);
+	CUIXmlInit::InitStatic(xml_doc, strconcat(sizeof(_path), _path, path, ":back_c"), 0, m_pBackC);
 	int count = xml_doc.ReadAttribInt(_path, 0, "count", 1);
-	m_pBackC->GetStaticItem()->SetTile(1,count,0,0);
-	CUIXmlInit::InitStatic(xml_doc, strconcat(sizeof(_path),_path, path, ":back_t"), 0, m_pBackT);
-	CUIXmlInit::InitStatic(xml_doc, strconcat(sizeof(_path),_path, path, ":back_b"), 0, m_pBackB);
+	m_pBackC->GetStaticItem()->SetTile(1, count, 0, 0);
+	CUIXmlInit::InitStatic(xml_doc, strconcat(sizeof(_path), _path, path, ":back_t"), 0, m_pBackT);
+	CUIXmlInit::InitStatic(xml_doc, strconcat(sizeof(_path), _path, path, ":back_b"), 0, m_pBackB);
 
 }

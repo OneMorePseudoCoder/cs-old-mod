@@ -7,7 +7,7 @@ class light;
 #define DU_CONE_NUMVERTEX	18
 #define DU_CONE_NUMFACES	32
 
-class CRenderTarget		: public IRender_Target
+class CRenderTarget : public IRender_Target
 {
 private:
 	u32							dwWidth;
@@ -16,21 +16,21 @@ private:
 public:
 	u32							dwLightMarkerID;
 	// 
-	IBlender*					b_occq;
-	IBlender*					b_accum_mask;
-	IBlender*					b_accum_direct;
-	IBlender*					b_accum_point;
-	IBlender*					b_accum_spot;
-	IBlender*					b_accum_reflected;
-	IBlender*					b_bloom;
-	IBlender*					b_luminance;
-	IBlender*					b_combine;
+	IBlender* b_occq;
+	IBlender* b_accum_mask;
+	IBlender* b_accum_direct;
+	IBlender* b_accum_point;
+	IBlender* b_accum_spot;
+	IBlender* b_accum_reflected;
+	IBlender* b_bloom;
+	IBlender* b_luminance;
+	IBlender* b_combine;
 #ifdef DEBUG
-	struct		dbg_line_t		{
-		Fvector	P0,P1;
+	struct		dbg_line_t {
+		Fvector	P0, P1;
 		u32		color;
 	};
-	xr_vector<std::pair<Fsphere,Fcolor> >		dbg_spheres;
+	xr_vector<std::pair<Fsphere, Fcolor> >		dbg_spheres;
 	xr_vector<dbg_line_t>						dbg_lines;
 	xr_vector<Fplane>							dbg_planes;
 #endif
@@ -51,48 +51,48 @@ public:
 	ref_rt						rt_LUM_64;			// 64bit, 64x64,	log-average in all components
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
-	ref_rt						rt_LUM_pool	[4]	;	// 1xfp32,1x1,		exp-result -> scaler
-	ref_texture					t_LUM_src		;	// source
-	ref_texture					t_LUM_dest		;	// destination & usage for current frame
+	ref_rt						rt_LUM_pool[4];	// 1xfp32,1x1,		exp-result -> scaler
+	ref_texture					t_LUM_src;	// source
+	ref_texture					t_LUM_dest;	// destination & usage for current frame
 
 	// env
-	ref_texture					t_envmap_0		;	// env-0
-	ref_texture					t_envmap_1		;	// env-1
+	ref_texture					t_envmap_0;	// env-0
+	ref_texture					t_envmap_1;	// env-1
 
 	// smap
 	ref_rt						rt_smap_surf;	// 32bit,		color
 	ref_rt						rt_smap_depth;	// 24(32) bit,	depth 
-	IDirect3DSurface9*			rt_smap_ZB;		//
+	IDirect3DSurface9* rt_smap_ZB;		//
 
 	// Textures
-	IDirect3DVolumeTexture9*	t_material_surf;
+	IDirect3DVolumeTexture9* t_material_surf;
 	ref_texture					t_material;
 
-	IDirect3DTexture9*			t_noise_surf	[TEX_jitter_count];
-	ref_texture					t_noise			[TEX_jitter_count];
+	IDirect3DTexture9* t_noise_surf[TEX_jitter_count];
+	ref_texture					t_noise[TEX_jitter_count];
 private:
 	// OCCq
 	ref_shader					s_occq;
 
 	// Accum
-	ref_shader					s_accum_mask	;
-	ref_shader					s_accum_direct	;
-	ref_shader					s_accum_point	;
-	ref_shader					s_accum_spot	;
+	ref_shader					s_accum_mask;
+	ref_shader					s_accum_direct;
+	ref_shader					s_accum_point;
+	ref_shader					s_accum_spot;
 	ref_shader					s_accum_reflected;
 
-	ref_geom					g_accum_point	;
-	ref_geom					g_accum_spot	;
+	ref_geom					g_accum_point;
+	ref_geom					g_accum_spot;
 	ref_geom					g_accum_omnipart;
 
-	IDirect3DVertexBuffer9*		g_accum_point_vb;
-	IDirect3DIndexBuffer9*		g_accum_point_ib;
+	IDirect3DVertexBuffer9* g_accum_point_vb;
+	IDirect3DIndexBuffer9* g_accum_point_ib;
 
-	IDirect3DVertexBuffer9*		g_accum_omnip_vb;
-	IDirect3DIndexBuffer9*		g_accum_omnip_ib;
+	IDirect3DVertexBuffer9* g_accum_omnip_vb;
+	IDirect3DIndexBuffer9* g_accum_omnip_ib;
 
-	IDirect3DVertexBuffer9*		g_accum_spot_vb	;
-	IDirect3DIndexBuffer9*		g_accum_spot_ib	;
+	IDirect3DVertexBuffer9* g_accum_spot_vb;
+	IDirect3DIndexBuffer9* g_accum_spot_ib;
 
 	// Bloom
 	ref_geom					g_bloom_build;
@@ -125,7 +125,7 @@ private:
 	float						im_noise_time;
 	u32							im_noise_shift_w;
 	u32							im_noise_shift_h;
-	
+
 	float						param_blur;
 	float						param_gray;
 	float						param_duality_h;
@@ -137,83 +137,83 @@ private:
 	u32							param_color_gray;
 	u32							param_color_add;
 public:
-								CRenderTarget			();
-								~CRenderTarget			();
-	void						accum_point_geom_create	();
+	CRenderTarget();
+	~CRenderTarget();
+	void						accum_point_geom_create();
 	void						accum_point_geom_destroy();
-	void						accum_omnip_geom_create	();
+	void						accum_omnip_geom_create();
 	void						accum_omnip_geom_destroy();
-	void						accum_spot_geom_create	();
-	void						accum_spot_geom_destroy	();
+	void						accum_spot_geom_create();
+	void						accum_spot_geom_destroy();
 
-	void						u_stencil_optimize		(BOOL		common_stencil=TRUE);
-	void						u_compute_texgen_screen	(Fmatrix&	dest);
-	void						u_compute_texgen_jitter	(Fmatrix&	dest);
-	void						u_setrt					(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb);
-	void						u_setrt					(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSurface9* _2, IDirect3DSurface9* _3, IDirect3DSurface9* zb);
-	void						u_calc_tc_noise			(Fvector2& p0, Fvector2& p1);
-	void						u_calc_tc_duality_ss	(Fvector2& r0, Fvector2& r1, Fvector2& l0, Fvector2& l1);
-	BOOL						u_need_PP				();
-	BOOL						u_DBT_enable			(float zMin, float zMax);
-	void						u_DBT_disable			();
+	void						u_stencil_optimize(BOOL		common_stencil = TRUE);
+	void						u_compute_texgen_screen(Fmatrix& dest);
+	void						u_compute_texgen_jitter(Fmatrix& dest);
+	void						u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb);
+	void						u_setrt(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSurface9* _2, IDirect3DSurface9* _3, IDirect3DSurface9* zb);
+	void						u_calc_tc_noise(Fvector2& p0, Fvector2& p1);
+	void						u_calc_tc_duality_ss(Fvector2& r0, Fvector2& r1, Fvector2& l0, Fvector2& l1);
+	BOOL						u_need_PP();
+	BOOL						u_DBT_enable(float zMin, float zMax);
+	void						u_DBT_disable();
 
-	void						phase_scene_prepare		();
-	void						phase_scene_begin		();
-	void						phase_scene_end			();
-	void						phase_occq				();
-	void						phase_wallmarks			();
-	void						phase_smap_direct		(light* L,	u32 sub_phase);
-	void						phase_smap_direct_tsh	(light* L,	u32 sub_phase);
-	void						phase_smap_spot_clear	();
-	void						phase_smap_spot			(light* L);
-	void						phase_smap_spot_tsh		(light* L);
-	void						phase_accumulator		();
-	void						shadow_direct			(light* L, u32 dls_phase);
-	
-	BOOL						enable_scissor			(light* L);		// true if intersects near plane
-	void						enable_dbt_bounds		(light* L);
+	void						phase_scene_prepare();
+	void						phase_scene_begin();
+	void						phase_scene_end();
+	void						phase_occq();
+	void						phase_wallmarks();
+	void						phase_smap_direct(light* L, u32 sub_phase);
+	void						phase_smap_direct_tsh(light* L, u32 sub_phase);
+	void						phase_smap_spot_clear();
+	void						phase_smap_spot(light* L);
+	void						phase_smap_spot_tsh(light* L);
+	void						phase_accumulator();
+	void						shadow_direct(light* L, u32 dls_phase);
 
-	void						disable_aniso			();
+	BOOL						enable_scissor(light* L);		// true if intersects near plane
+	void						enable_dbt_bounds(light* L);
 
-	void						draw_volume				(light* L);
-	void						accum_direct			(u32	sub_phase);
-	void						accum_direct_f			(u32	sub_phase);
-	void						accum_direct_lum		();
-	void						accum_direct_blend		();
-	void						accum_point				(light* L);
-	void						accum_spot				(light* L);
-	void						accum_reflected			(light* L);
-	void						phase_bloom				();
-	void						phase_luminance			();
-	void						phase_combine			();
-	void						phase_pp				();
+	void						disable_aniso();
 
-	virtual void				set_blur				(float	f)		{ param_blur=f;						}
-	virtual void				set_gray				(float	f)		{ param_gray=f;						}
-	virtual void				set_duality_h			(float	f)		{ param_duality_h=_abs(f);			}
-	virtual void				set_duality_v			(float	f)		{ param_duality_v=_abs(f);			}
-	virtual void				set_noise				(float	f)		{ param_noise=f;					}
-	virtual void				set_noise_scale			(float	f)		{ param_noise_scale=f;				}
-	virtual void				set_noise_fps			(float	f)		{ param_noise_fps=_abs(f)+EPS_S;	}
-	virtual void				set_color_base			(u32	f)		{ param_color_base=f;				}
-	virtual void				set_color_gray			(u32	f)		{ param_color_gray=f;				}
-	virtual void				set_color_add			(u32	f)		{ param_color_add=f;				}
+	void						draw_volume(light* L);
+	void						accum_direct(u32	sub_phase);
+	void						accum_direct_f(u32	sub_phase);
+	void						accum_direct_lum();
+	void						accum_direct_blend();
+	void						accum_point(light* L);
+	void						accum_spot(light* L);
+	void						accum_reflected(light* L);
+	void						phase_bloom();
+	void						phase_luminance();
+	void						phase_combine();
+	void						phase_pp();
 
-	virtual u32					get_width				()				{ return dwWidth;					}
-	virtual u32					get_height				()				{ return dwHeight;					}
+	virtual void				set_blur(float	f) { param_blur = f; }
+	virtual void				set_gray(float	f) { param_gray = f; }
+	virtual void				set_duality_h(float	f) { param_duality_h = _abs(f); }
+	virtual void				set_duality_v(float	f) { param_duality_v = _abs(f); }
+	virtual void				set_noise(float	f) { param_noise = f; }
+	virtual void				set_noise_scale(float	f) { param_noise_scale = f; }
+	virtual void				set_noise_fps(float	f) { param_noise_fps = _abs(f) + EPS_S; }
+	virtual void				set_color_base(u32	f) { param_color_base = f; }
+	virtual void				set_color_gray(u32	f) { param_color_gray = f; }
+	virtual void				set_color_add(u32	f) { param_color_add = f; }
+
+	virtual u32					get_width() { return dwWidth; }
+	virtual u32					get_height() { return dwHeight; }
 
 #ifdef DEBUG
-	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{
-		dbg_lines.push_back		(dbg_line_t());
-		dbg_lines.back().P0		= P0;
-		dbg_lines.back().P1		= P1;
-		dbg_lines.back().color	= c;
+	IC void						dbg_addline(Fvector& P0, Fvector& P1, u32 c) {
+		dbg_lines.push_back(dbg_line_t());
+		dbg_lines.back().P0 = P0;
+		dbg_lines.back().P1 = P1;
+		dbg_lines.back().color = c;
 	}
-	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{
+	IC void						dbg_addplane(Fplane& P0, u32 c) {
 		dbg_planes.push_back(P0);
 	}
 #else
-	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{}
-	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{}
+	IC void						dbg_addline(Fvector& P0, Fvector& P1, u32 c) {}
+	IC void						dbg_addplane(Fplane& P0, u32 c) {}
 #endif
 };

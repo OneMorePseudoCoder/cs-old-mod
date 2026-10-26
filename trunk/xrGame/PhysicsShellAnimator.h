@@ -7,13 +7,13 @@ class CPhysicsShellAnimator
 {
 	friend class CPhysicsShellAnimatorBoneData;
 	xr_vector<CPhysicsShellAnimatorBoneData>		m_bones_data;
-	CPhysicsShell*									m_pPhysicsShell;
+	CPhysicsShell* m_pPhysicsShell;
 
 
 public:
-													CPhysicsShellAnimator		(CPhysicsShell* _pPhysicsShell);
-													~CPhysicsShellAnimator		();
-	void											OnFrame						();
+	CPhysicsShellAnimator(CPhysicsShell* _pPhysicsShell);
+	~CPhysicsShellAnimator();
+	void											OnFrame();
 };
-	
+
 

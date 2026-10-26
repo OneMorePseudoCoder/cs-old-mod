@@ -8,17 +8,17 @@
 //#define DEMO_BUILD
 
 #ifdef DEMO_BUILD
-	#define	GAMESPY_GAMENAME				"stalkerscd"
-	#define GAMESPY_GAMEID					1576
-	#define GAMESPY_PRODUCTID				10954
-	#define GAME_VERSION					"1.0007(rc1)"
-	#define REGISTRY_PATH					"Software\\GSC Game World\\STALKER-SoC\\"
+#define	GAMESPY_GAMENAME				"stalkerscd"
+#define GAMESPY_GAMEID					1576
+#define GAMESPY_PRODUCTID				10954
+#define GAME_VERSION					"1.0007(rc1)"
+#define REGISTRY_PATH					"Software\\GSC Game World\\STALKER-SoC\\"
 #else
-	#define	GAMESPY_GAMENAME				"stalkersc"
-	#define GAMESPY_GAMEID					1067
-	#define GAMESPY_PRODUCTID				10953
-	#define GAME_VERSION					"1.0007(rc1)"
-	#define REGISTRY_PATH					"Software\\GSC Game World\\STALKER-SHOC\\"
+#define	GAMESPY_GAMENAME				"stalkersc"
+#define GAMESPY_GAMEID					1067
+#define GAMESPY_PRODUCTID				10953
+#define GAME_VERSION					"1.0007(rc1)"
+#define REGISTRY_PATH					"Software\\GSC Game World\\STALKER-SHOC\\"
 #endif
 
 #define	GAMESPY_QR2_BASEPORT				5447
@@ -38,14 +38,14 @@
 #define GAMESPY_PATCHING_VERSIONUNIQUE_ID	"test_version_1"
 #define GAMESPY_PATCHING_DISTRIBUTION_ID	0
 
- 
+
 
 #ifndef XRGAMESPY_API
-	#ifdef XRGAMESPY_EXPORTS
-		#define XRGAMESPY_API				__declspec(dllexport)
-	#endif
+#ifdef XRGAMESPY_EXPORTS
+#define XRGAMESPY_API				__declspec(dllexport)
+#endif
 #endif
 
 #define EXPORT_FN_DECL(r, f, p)		XRGAMESPY_API r xrGS_##f p;
 
-extern void FillSecretKey (char* SecretKey);
+extern void FillSecretKey(char* SecretKey);

@@ -40,9 +40,9 @@ void CBottleItem::OnEvent(NET_Packet& P, u16 type)
 
 	switch (type)
 	{
-		case GE_GRENADE_EXPLODE:
-			BreakToPieces();
-			break;
+	case GE_GRENADE_EXPLODE:
+		BreakToPieces();
+		break;
 	}
 }
 
@@ -52,11 +52,11 @@ void CBottleItem::BreakToPieces()
 	sndBreaking.play_at_pos(0, Position(), false);
 
 	//отыграть партиклы разбивания
-	if(*m_sBreakParticles)
+	if (*m_sBreakParticles)
 	{
 		//показываем эффекты
 		CParticlesObject* pStaticPG;
-		pStaticPG = CParticlesObject::Create(*m_sBreakParticles,TRUE);
+		pStaticPG = CParticlesObject::Create(*m_sBreakParticles, TRUE);
 		pStaticPG->play_at_pos(Position());
 	}
 
@@ -70,20 +70,20 @@ void CBottleItem::BreakToPieces()
 void CBottleItem::Hit(SHit* pHDS)
 {
 	inherited::Hit(pHDS);
-	
-	if(pHDS->damage()>BREAK_POWER)
+
+	if (pHDS->damage() > BREAK_POWER)
 	{
 		//Generate Expode event
 		if (Local())
 		{
 			NET_Packet		P;
-			u_EventGen		(P, GE_GRENADE_EXPLODE,ID());
-			u_EventSend		(P);
+			u_EventGen(P, GE_GRENADE_EXPLODE, ID());
+			u_EventSend(P);
 		}
 	}
 }
 
 void CBottleItem::UseBy(CEntityAlive* entity_alive)
 {
-	inherited::UseBy					(entity_alive);
+	inherited::UseBy(entity_alive);
 }

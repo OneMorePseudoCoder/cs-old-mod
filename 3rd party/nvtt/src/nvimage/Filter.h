@@ -107,7 +107,7 @@ namespace nv
 	public:
 		KaiserFilter(float w);
 		virtual float evaluate(float x) const;
-	
+
 		void setParameters(float a, float stretch);
 
 	private:
@@ -122,60 +122,60 @@ namespace nv
 	{
 		NV_FORBID_COPY(Kernel1);
 	public:
-		Kernel1(const Filter & f, int iscale, int samples = 32);
+		Kernel1(const Filter& f, int iscale, int samples = 32);
 		~Kernel1();
-		
+
 		float valueAt(uint x) const {
 			nvDebugCheck(x < (uint)m_windowSize);
 			return m_data[x];
 		}
-		
+
 		int windowSize() const {
 			return m_windowSize;
 		}
-		
+
 		float width() const {
 			return m_width;
 		}
-		
+
 		void debugPrint();
-		
+
 	private:
 		int m_windowSize;
 		float m_width;
-		float * m_data;
+		float* m_data;
 	};
 
 
 	/// A 2D kernel.
-	class NVIMAGE_CLASS Kernel2 
+	class NVIMAGE_CLASS Kernel2
 	{
 	public:
 		Kernel2(uint width);
-		Kernel2(const Kernel2 & k);
+		Kernel2(const Kernel2& k);
 		~Kernel2();
-		
+
 		void normalize();
 		void transpose();
-		
+
 		float valueAt(uint x, uint y) const {
 			return m_data[y * m_windowSize + x];
 		}
-		
+
 		uint windowSize() const {
 			return m_windowSize;
 		}
-		
+
 		void initLaplacian();
 		void initEdgeDetection();
 		void initSobel();
 		void initPrewitt();
-		
-		void initBlendedSobel(const Vector4 & scale);
-		
+
+		void initBlendedSobel(const Vector4& scale);
+
 	private:
 		const uint m_windowSize;
-		float * m_data;
+		float* m_data;
 	};
 
 
@@ -184,13 +184,13 @@ namespace nv
 	{
 		NV_FORBID_COPY(PolyphaseKernel);
 	public:
-		PolyphaseKernel(const Filter & f, uint srcLength, uint dstLength, int samples = 32);
+		PolyphaseKernel(const Filter& f, uint srcLength, uint dstLength, int samples = 32);
 		~PolyphaseKernel();
-		
+
 		int windowSize() const {
 			return m_windowSize;
 		}
-		
+
 		uint length() const {
 			return m_length;
 		}
@@ -206,12 +206,12 @@ namespace nv
 		}
 
 		void debugPrint() const;
-		
+
 	private:
 		int m_windowSize;
 		uint m_length;
 		float m_width;
-		float * m_data;
+		float* m_data;
 	};
 
 } // nv namespace

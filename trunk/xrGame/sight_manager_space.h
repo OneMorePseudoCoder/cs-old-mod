@@ -10,7 +10,7 @@
 
 namespace SightManager {
 	enum ESightType {
-		eSightTypeCurrentDirection	= u32(0),
+		eSightTypeCurrentDirection = u32(0),
 		eSightTypePathDirection,
 		eSightTypeDirection,
 		eSightTypePosition,
@@ -21,6 +21,6 @@ namespace SightManager {
 		eSightTypeCoverLookOver,
 		eSightTypeFireObject,
 		eSightTypeFirePosition,		// must be removed
-		eSightTypeDummy				= u32(-1),
+		eSightTypeDummy = u32(-1),
 	};
 };

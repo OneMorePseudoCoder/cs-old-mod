@@ -37,7 +37,7 @@ template <
 	typename _index_type,
 	typename _iteration_type
 >
-struct SFlooder ;
+struct SFlooder;
 
 template <
 	typename _dist_type,
@@ -79,13 +79,13 @@ namespace GraphEngineSpace {
 		_solver_condition_type	m_condition;
 		_solver_value_type		m_value;
 
-		IC				CSolverConditionValue	(const _solver_condition_type &condition, const _solver_value_type &value)
+		IC				CSolverConditionValue(const _solver_condition_type& condition, const _solver_value_type& value)
 		{
-			m_condition			= condition;
-			m_value				= value;
+			m_condition = condition;
+			m_value = value;
 		}
 
-		IC		bool	operator==				(const _solver_condition_type &condition) const
+		IC		bool	operator==				(const _solver_condition_type& condition) const
 		{
 			return				(condition == m_condition);
 		}
@@ -94,57 +94,57 @@ namespace GraphEngineSpace {
 	typedef xr_vector<CSolverConditionValue>	CSolverConditionStorage;
 
 	typedef COperatorConditionAbstract<
-				_solver_condition_type,
-				_solver_value_type
-			>			CWorldProperty;
+		_solver_condition_type,
+		_solver_value_type
+	>			CWorldProperty;
 
 	typedef CConditionState<
-				CWorldProperty
-			>			CWorldState;
+		CWorldProperty
+	>			CWorldState;
 
 	typedef COperatorAbstract<
-				CWorldProperty,
-				_solver_dist_type
-			>			CWorldOperator;
+		CWorldProperty,
+		_solver_dist_type
+	>			CWorldOperator;
 
 	typedef CWorldState	_solver_index_type;
 	typedef u32			_solver_edge_type;
 
 	typedef SBaseParameters<
-				_solver_dist_type,
-				_solver_index_type,
-				_iteration_type
-			>		CSolverBaseParameters;
+		_solver_dist_type,
+		_solver_index_type,
+		_iteration_type
+	>		CSolverBaseParameters;
 	typedef SBaseParameters<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>		CBaseParameters;
+		_dist_type,
+		_index_type,
+		_iteration_type
+	>		CBaseParameters;
 
 	typedef SFlooder<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>		CFlooder;
+		_dist_type,
+		_index_type,
+		_iteration_type
+	>		CFlooder;
 	typedef SStraightLineParams<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>		CStraightLineParams;
+		_dist_type,
+		_index_type,
+		_iteration_type
+	>		CStraightLineParams;
 	typedef SNearestVertex<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>		CNearestVertexParameters;
+		_dist_type,
+		_index_type,
+		_iteration_type
+	>		CNearestVertexParameters;
 	typedef SGameLevel<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>		CGameLevelParams;
+		_dist_type,
+		_index_type,
+		_iteration_type
+	>		CGameLevelParams;
 	typedef SGameVertex<
-				_dist_type,
-				_index_type,
-				_iteration_type
-			>		CGameVertexParams;
+		_dist_type,
+		_index_type,
+		_iteration_type
+	>		CGameVertexParams;
 };
 

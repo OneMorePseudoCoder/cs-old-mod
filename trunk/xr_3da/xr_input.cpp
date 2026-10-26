@@ -7,20 +7,20 @@
 #ifndef _EDITOR
 #	include "xr_input_xinput.h"
 #endif
-CInput *	pInput	= NULL;
+CInput* pInput = NULL;
 IInputReceiver		dummyController;
 
-ENGINE_API float	psMouseSens			= 1.f;
-ENGINE_API float	psMouseSensScale	= 1.f;
-ENGINE_API Flags32	psMouseInvert		= {FALSE};
+ENGINE_API float	psMouseSens = 1.f;
+ENGINE_API float	psMouseSensScale = 1.f;
+ENGINE_API Flags32	psMouseInvert = { FALSE };
 
-float stop_vibration_time				= flt_max;
+float stop_vibration_time = flt_max;
 
 #define MOUSEBUFFERSIZE			64
 #define KEYBOARDBUFFERSIZE		64
 #define _KEYDOWN(name,key)		( name[key] & 0x80 )
 
-static bool g_exclusive	= true;
+static bool g_exclusive = true;
 static void on_error_dialog(bool before)
 {
 	if (!pInput || !g_exclusive)
@@ -28,34 +28,34 @@ static void on_error_dialog(bool before)
 
 	if (before)
 	{
-		pInput->unacquire	();
+		pInput->unacquire();
 		return;
 	}
 
-	pInput->acquire			(true);
+	pInput->acquire(true);
 }
 
 CInput::CInput(BOOL bExclusive, int deviceForInit)
 {
-	g_exclusive							= !!bExclusive;
+	g_exclusive = !!bExclusive;
 
 	Log("Starting INPUT device...");
 
-	pDI 								=	NULL;
-	pMouse								=	NULL;
-	pKeyboard							=	NULL;
+	pDI = NULL;
+	pMouse = NULL;
+	pKeyboard = NULL;
 
 	//=====================Mouse
-	mouse_property.mouse_dt				=	25;
+	mouse_property.mouse_dt = 25;
 
-	ZeroMemory							(mouseState,	sizeof(mouseState));
-	ZeroMemory							(KBState,		sizeof(KBState));
-	ZeroMemory							(timeStamp,		sizeof(timeStamp));
-	ZeroMemory							(timeSave,		sizeof(timeStamp));
-	ZeroMemory							(offs,			sizeof(offs));
+	ZeroMemory(mouseState, sizeof(mouseState));
+	ZeroMemory(KBState, sizeof(KBState));
+	ZeroMemory(timeStamp, sizeof(timeStamp));
+	ZeroMemory(timeSave, sizeof(timeStamp));
+	ZeroMemory(offs, sizeof(offs));
 
 	//===================== Dummy pack
-	iCapture	(&dummyController);
+	iCapture(&dummyController);
 
 	if (!pDI) CHK_DX(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDI, NULL));
 
@@ -66,50 +66,50 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	// KEYBOARD
 	if (deviceForInit & keyboard_device_key)
 		CHK_DX(CreateInputDevice(
-		&pKeyboard, 	GUID_SysKeyboard, 	&c_dfDIKeyboard,
-		kb_input_flags,
-		KEYBOARDBUFFERSIZE ));
+			&pKeyboard, GUID_SysKeyboard, &c_dfDIKeyboard,
+			kb_input_flags,
+			KEYBOARDBUFFERSIZE));
 
 	// MOUSE
 	if (deviceForInit & mouse_device_key)
 		CHK_DX(CreateInputDevice(
-		&pMouse,		GUID_SysMouse,		&c_dfDIMouse2,
-		mouse_input_flags,
-		MOUSEBUFFERSIZE ));
+			&pMouse, GUID_SysMouse, &c_dfDIMouse2,
+			mouse_input_flags,
+			MOUSEBUFFERSIZE));
 
-	Debug.set_on_dialog				(&on_error_dialog);
+	Debug.set_on_dialog(&on_error_dialog);
 
 #ifdef ENGINE_BUILD
-	Device.seqAppActivate.Add		(this);
-	Device.seqAppDeactivate.Add		(this, REG_PRIORITY_HIGH);
-	Device.seqFrame.Add				(this, REG_PRIORITY_HIGH);
+	Device.seqAppActivate.Add(this);
+	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
+	Device.seqFrame.Add(this, REG_PRIORITY_HIGH);
 #endif
 }
 
 CInput::~CInput(void)
 {
 #ifdef ENGINE_BUILD
-	Device.seqFrame.Remove			(this);
-	Device.seqAppDeactivate.Remove	(this);
-	Device.seqAppActivate.Remove	(this);
+	Device.seqFrame.Remove(this);
+	Device.seqAppDeactivate.Remove(this);
+	Device.seqAppActivate.Remove(this);
 #endif
 	//_______________________
 
 	// Unacquire and release the device's interfaces
 	if (pMouse)
 	{
-		pMouse->Unacquire		();
-		_RELEASE				(pMouse);
+		pMouse->Unacquire();
+		_RELEASE(pMouse);
 	}
 
 	if (pKeyboard)
 	{
-		pKeyboard->Unacquire	();
-		_RELEASE				(pKeyboard);
+		pKeyboard->Unacquire();
+		_RELEASE(pKeyboard);
 	}
 
-	_SHOW_REF					("Input: ",pDI);
-	_RELEASE					(pDI);
+	_SHOW_REF("Input: ", pDI);
+	_RELEASE(pDI);
 }
 
 //-----------------------------------------------------------------------------
@@ -138,11 +138,11 @@ HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
 
 	// setup the buffer size for the keyboard data
 	DIPROPDWORD				dipdw;
-	dipdw.diph.dwSize		= sizeof(DIPROPDWORD);
+	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
 	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	dipdw.diph.dwObj		= 0;
-	dipdw.diph.dwHow		= DIPH_DEVICE;
-	dipdw.dwData			= buf_size;
+	dipdw.diph.dwObj = 0;
+	dipdw.diph.dwHow = DIPH_DEVICE;
+	dipdw.dwData = buf_size;
 
 	CHK_DX((*device)->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph));
 
@@ -176,9 +176,9 @@ void CInput::KeyUpdate()
 		return;
 
 	HRESULT						hr;
-	DWORD dwElements			= KEYBOARDBUFFERSIZE;
+	DWORD dwElements = KEYBOARDBUFFERSIZE;
 	DIDEVICEOBJECTDATA			od[KEYBOARDBUFFERSIZE];
-	DWORD key					= 0;
+	DWORD key = 0;
 
 	VERIFY(pKeyboard);
 
@@ -262,11 +262,11 @@ void CInput::KeyUpdate()
 bool CInput::get_dik_name(int dik, LPSTR dest_str, int dest_sz)
 {
 	DIPROPSTRING keyname;
-	keyname.diph.dwSize			= sizeof(DIPROPSTRING);
-	keyname.diph.dwHeaderSize	= sizeof(DIPROPHEADER);
-	keyname.diph.dwObj			= static_cast<DWORD>(dik);
-	keyname.diph.dwHow			= DIPH_BYOFFSET;
-	HRESULT hr					= pKeyboard->GetProperty(DIPROP_KEYNAME, &keyname.diph);
+	keyname.diph.dwSize = sizeof(DIPROPSTRING);
+	keyname.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	keyname.diph.dwObj = static_cast<DWORD>(dik);
+	keyname.diph.dwHow = DIPH_BYOFFSET;
+	HRESULT hr = pKeyboard->GetProperty(DIPROP_KEYNAME, &keyname.diph);
 	if (FAILED(hr))
 		return false;
 
@@ -274,14 +274,14 @@ bool CInput::get_dik_name(int dik, LPSTR dest_str, int dest_sz)
 	if (0 == wcslen(wct))
 		return false;
 
-	int cnt						= WideCharToMultiByte(CP_ACP, 0, keyname.wsz, -1, dest_str, dest_sz, NULL, NULL);
+	int cnt = WideCharToMultiByte(CP_ACP, 0, keyname.wsz, -1, dest_str, dest_sz, NULL, NULL);
 	//.	Msg("dik_name for[%d], is w[%S] ch[%s]", dik, wct, dest_str);
 	if (cnt == -1)
 	{
 		Msg("! cant convert dik_name for dik[%d], prop=[%S]", dik, keyname.wsz);
 		return false;
 	}
-	return						(cnt!=-1);
+	return						(cnt != -1);
 }
 
 #define MOUSE_1		(0xED + 100)
@@ -308,7 +308,7 @@ BOOL CInput::iGetAsyncBtnState(int btn)
 void CInput::MouseUpdate()
 {
 	HRESULT hr;
-	DWORD dwElements	= MOUSEBUFFERSIZE;
+	DWORD dwElements = MOUSEBUFFERSIZE;
 	DIDEVICEOBJECTDATA	od[MOUSEBUFFERSIZE];
 
 	VERIFY(pMouse);
@@ -324,20 +324,20 @@ void CInput::MouseUpdate()
 			return;
 	}
 
-	#ifndef _EDITOR
+#ifndef _EDITOR
 	if (Device.dwPrecacheFrame)
 		return;
-	#endif
+#endif
 	BOOL				mouse_prev[COUNT_MOUSE_BUTTONS];
 
-	mouse_prev[0]		= mouseState[0];
-	mouse_prev[1]		= mouseState[1];
-	mouse_prev[2]		= mouseState[2];
-	mouse_prev[3]		= mouseState[3];
-	mouse_prev[4]		= mouseState[4];
-	mouse_prev[5]		= mouseState[5];
-	mouse_prev[6]		= mouseState[6];
-	mouse_prev[7]		= mouseState[7];
+	mouse_prev[0] = mouseState[0];
+	mouse_prev[1] = mouseState[1];
+	mouse_prev[2] = mouseState[2];
+	mouse_prev[3] = mouseState[3];
+	mouse_prev[4] = mouseState[4];
+	mouse_prev[5] = mouseState[5];
+	mouse_prev[6] = mouseState[6];
+	mouse_prev[7] = mouseState[7];
 
 	offs[0] = offs[1] = offs[2] = 0;
 	for (u32 i = 0; i < dwElements; i++)
@@ -345,11 +345,11 @@ void CInput::MouseUpdate()
 		switch (od[i].dwOfs)
 		{
 		case DIMOFS_X:
-			offs[0]	+= od[i].dwData; timeStamp[0] = od[i].dwTimeStamp;	break;
+			offs[0] += od[i].dwData; timeStamp[0] = od[i].dwTimeStamp;	break;
 		case DIMOFS_Y:
-			offs[1]	+= od[i].dwData; timeStamp[1] = od[i].dwTimeStamp;	break;
+			offs[1] += od[i].dwData; timeStamp[1] = od[i].dwTimeStamp;	break;
 		case DIMOFS_Z:
-			offs[2]	+= od[i].dwData; timeStamp[2] = od[i].dwTimeStamp;	break;
+			offs[2] += od[i].dwData; timeStamp[2] = od[i].dwTimeStamp;	break;
 		case DIMOFS_BUTTON0:
 			if (od[i].dwData & 0x80)
 			{
@@ -472,7 +472,7 @@ void CInput::MouseUpdate()
 }
 
 //-------------------------------------------------------
-void CInput::iCapture(IInputReceiver *p)
+void CInput::iCapture(IInputReceiver* p)
 {
 	VERIFY(p);
 	if (pMouse)
@@ -487,18 +487,18 @@ void CInput::iCapture(IInputReceiver *p)
 	cbStack.back()->IR_OnActivate();
 
 	// prepare for _new_ controller
-	ZeroMemory			(timeStamp,	sizeof(timeStamp));
-	ZeroMemory			(timeSave,	sizeof(timeStamp));
-	ZeroMemory			(offs,		sizeof(offs));
+	ZeroMemory(timeStamp, sizeof(timeStamp));
+	ZeroMemory(timeSave, sizeof(timeStamp));
+	ZeroMemory(offs, sizeof(offs));
 }
 
-void CInput::iRelease(IInputReceiver *p)
+void CInput::iRelease(IInputReceiver* p)
 {
 	if (p == cbStack.back())
 	{
 		cbStack.back()->IR_OnDeactivate();
 		cbStack.pop_back();
-		IInputReceiver * ir = cbStack.back();
+		IInputReceiver* ir = cbStack.back();
 		ir->IR_OnActivate();
 	}
 	else
@@ -522,12 +522,12 @@ void CInput::OnAppActivate(void)
 	if (CurrentIR())
 		CurrentIR()->IR_OnActivate();
 
-	SetAllAcquire	(true);
-	ZeroMemory		(mouseState,	sizeof(mouseState));
-	ZeroMemory		(KBState,		sizeof(KBState));
-	ZeroMemory		(timeStamp,		sizeof(timeStamp));
-	ZeroMemory		(timeSave,		sizeof(timeStamp));
-	ZeroMemory		(offs,			sizeof(offs));
+	SetAllAcquire(true);
+	ZeroMemory(mouseState, sizeof(mouseState));
+	ZeroMemory(KBState, sizeof(KBState));
+	ZeroMemory(timeStamp, sizeof(timeStamp));
+	ZeroMemory(timeSave, sizeof(timeStamp));
+	ZeroMemory(offs, sizeof(offs));
 }
 
 void CInput::OnAppDeactivate(void)
@@ -535,23 +535,23 @@ void CInput::OnAppDeactivate(void)
 	if (CurrentIR())
 		CurrentIR()->IR_OnDeactivate();
 
-	SetAllAcquire	(false);
-	ZeroMemory		(mouseState,	sizeof(mouseState));
-	ZeroMemory		(KBState,		sizeof(KBState));
-	ZeroMemory		(timeStamp,	sizeof(timeStamp));
-	ZeroMemory		(timeSave,		sizeof(timeStamp));
-	ZeroMemory		(offs,			sizeof(offs));
+	SetAllAcquire(false);
+	ZeroMemory(mouseState, sizeof(mouseState));
+	ZeroMemory(KBState, sizeof(KBState));
+	ZeroMemory(timeStamp, sizeof(timeStamp));
+	ZeroMemory(timeSave, sizeof(timeStamp));
+	ZeroMemory(offs, sizeof(offs));
 }
 
 void CInput::OnFrame(void)
 {
-	Device.Statistic->Input.Begin			();
-	dwCurTime		= Device.TimerAsync_MMT	();
+	Device.Statistic->Input.Begin();
+	dwCurTime = Device.TimerAsync_MMT();
 	if (pKeyboard)
-		KeyUpdate							();
+		KeyUpdate();
 	if (pMouse)
-		MouseUpdate							();
-	Device.Statistic->Input.End				();
+		MouseUpdate();
+	Device.Statistic->Input.End();
 }
 
 IInputReceiver* CInput::CurrentIR()
@@ -564,30 +564,30 @@ IInputReceiver* CInput::CurrentIR()
 
 void CInput::unacquire()
 {
-	pKeyboard->Unacquire			();
-	pMouse->Unacquire				();
+	pKeyboard->Unacquire();
+	pMouse->Unacquire();
 }
 
 void CInput::acquire(const bool& exclusive)
 {
-	pKeyboard->SetCooperativeLevel	(
-		Device.m_hWnd, 
+	pKeyboard->SetCooperativeLevel(
+		Device.m_hWnd,
 		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND
 	);
-	pKeyboard->Acquire				();
+	pKeyboard->Acquire();
 
-	pMouse->SetCooperativeLevel		(
-		Device.m_hWnd, 
+	pMouse->SetCooperativeLevel(
+		Device.m_hWnd,
 		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY
 	);
-	pMouse->Acquire					();
+	pMouse->Acquire();
 }
 
 void CInput::exclusive_mode(const bool& exclusive)
 {
-	g_exclusive						= exclusive;
-	unacquire						();
-	acquire							(exclusive);
+	g_exclusive = exclusive;
+	unacquire();
+	acquire(exclusive);
 }
 
 bool CInput::get_exclusive_mode()
@@ -599,6 +599,6 @@ void  CInput::feedback(u16 s1, u16 s2, float time)
 {
 	stop_vibration_time = Device.fTimeGlobal + time;
 #ifndef _EDITOR
-//.	set_vibration (s1, s2);
+	//.	set_vibration (s1, s2);
 #endif
 }

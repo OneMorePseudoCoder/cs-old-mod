@@ -16,25 +16,25 @@
 #include "level.h"
 #include "../xr_3da/CameraManager.h"
 
-bool CCar::HUDView() const		
+bool CCar::HUDView() const
 {
-	return active_camera->tag==ectFirst;
+	return active_camera->tag == ectFirst;
 }
 
-void	CCar::cam_Update			(float dt, float fov)
+void	CCar::cam_Update(float dt, float fov)
 {
 	VERIFY(!ph_world->Processing());
-	Fvector							P,Da;
-	Da.set							(0,0,0);
+	Fvector							P, Da;
+	Da.set(0, 0, 0);
 	//bool							owner = !!Owner();
 
 
-	switch(active_camera->tag) {
+	switch (active_camera->tag) {
 	case ectFirst:
 		XFORM().transform_tiny(P, m_fp_cam_pos);
 		// rotate head
-		if(OwnerActor()) OwnerActor()->Orientation().yaw	= -active_camera->yaw;
-		if(OwnerActor()) OwnerActor()->Orientation().pitch	= -active_camera->pitch;
+		if (OwnerActor()) OwnerActor()->Orientation().yaw = -active_camera->yaw;
+		if (OwnerActor()) OwnerActor()->Orientation().pitch = -active_camera->pitch;
 		break;
 	case ectChase:
 		XFORM().transform_tiny(P, m_sp_cam_pos);
@@ -43,31 +43,31 @@ void	CCar::cam_Update			(float dt, float fov)
 		XFORM().transform_tiny(P, m_tp_cam_pos);
 		break;
 	}
-	active_camera->f_fov				= fov;
-	active_camera->Update				(P,Da);
-	Level().Cameras().UpdateFromCamera	(active_camera);
+	active_camera->f_fov = fov;
+	active_camera->Update(P, Da);
+	Level().Cameras().UpdateFromCamera(active_camera);
 }
 
-void	CCar::OnCameraChange		(int type)
+void	CCar::OnCameraChange(int type)
 {
-	if(Owner())
+	if (Owner())
 	{
-		if	(type==ectFirst)
+		if (type == ectFirst)
 		{
 			Owner()->setVisible(FALSE);
 		}
-		else if(active_camera->tag==ectFirst)
+		else if (active_camera->tag == ectFirst)
 		{
 			Owner()->setVisible(TRUE);
 		}
 	}
-	
-	if (!active_camera||active_camera->tag!=type){
-		active_camera	= camera[type];
-		if (ectFree==type){
+
+	if (!active_camera || active_camera->tag != type) {
+		active_camera = camera[type];
+		if (ectFree == type) {
 			Fvector xyz;
 			XFORM().getXYZi(xyz);
-			active_camera->yaw		= xyz.y;
+			active_camera->yaw = xyz.y;
 		}
 	}
 

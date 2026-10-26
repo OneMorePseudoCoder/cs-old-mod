@@ -11,16 +11,16 @@ class CStateMonsterLookToUnprotectedArea : public CState<_Object> {
 
 	SStateDataAction	data;
 
-	Fvector				target_point;	
+	Fvector				target_point;
 
 public:
-						CStateMonsterLookToUnprotectedArea	(_Object *obj);
-	virtual				~CStateMonsterLookToUnprotectedArea	();
+	CStateMonsterLookToUnprotectedArea(_Object* obj);
+	virtual				~CStateMonsterLookToUnprotectedArea();
 
-	virtual void		initialize					();
-	virtual	void		execute						();
+	virtual void		initialize();
+	virtual	void		execute();
 
-	virtual bool		check_completion			();
+	virtual bool		check_completion();
 };
 
 #include "state_look_unprotected_area_inline.h"
