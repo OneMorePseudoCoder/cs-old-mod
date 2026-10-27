@@ -21,6 +21,7 @@
 #include "EffectorShot.h"
 #include "phcollidevalidator.h"
 #include "PHShell.h"
+
 void CActor::cam_Set(EActorCameras style)
 {
 	CCameraBase* old_cam = cam_Active();
@@ -28,6 +29,7 @@ void CActor::cam_Set(EActorCameras style)
 	old_cam->OnDeactivate();
 	cam_Active()->OnActivate(old_cam);
 }
+
 float CActor::f_Ladder_cam_limit = 1.f;
 void CActor::cam_SetLadder()
 {
@@ -47,13 +49,16 @@ void CActor::cam_SetLadder()
 		C->bClampYaw = true;
 	}
 }
+
 void CActor::camUpdateLadder(float dt)
 {
 	if (!character_physics_support()->movement()->ElevatorState())
 		return;
-	if (cameras[eacFirstEye]->bClampYaw) return;
-	float yaw = (-XFORM().k.getH());
 
+	if (cameras[eacFirstEye]->bClampYaw)
+		return;
+
+	float yaw = (-XFORM().k.getH());
 	float& cam_yaw = cameras[eacFirstEye]->yaw;
 	float delta = angle_difference_signed(yaw, cam_yaw);
 
@@ -66,7 +71,8 @@ void CActor::camUpdateLadder(float dt)
 		cameras[eacFirstEye]->lim_yaw[1] = hi;
 		cameras[eacFirstEye]->bClampYaw = true;
 	}
-	else {
+	else 
+	{
 		cam_yaw += delta * _min(dt * 10.f, 1.f);
 	}
 
@@ -88,19 +94,20 @@ void CActor::cam_UnsetLadder()
 	C->lim_yaw[1] = 0;
 	C->bClampYaw = false;
 }
+
 float CActor::CameraHeight()
 {
-	Fvector						R;
+	Fvector R;
 	character_physics_support()->movement()->Box().getsize(R);
-	return						m_fCamHeightFactor * R.y;
+	return m_fCamHeightFactor * R.y;
 }
 
 IC float viewport_near(float& w, float& h)
 {
 	w = 2.f * VIEWPORT_NEAR * tan(deg2rad(Device.fFOV) / 2.f);
 	h = w * Device.fASPECT;
-	float	c = _sqrt(w * w + h * h);
-	return	_max(_max(VIEWPORT_NEAR, _max(w, h)), c);
+	float c = _sqrt(w * w + h * h);
+	return _max(_max(VIEWPORT_NEAR, _max(w, h)), c);
 }
 
 ICF void calc_point(Fvector& pt, float radius, float depth, float alpha)
@@ -112,17 +119,19 @@ ICF void calc_point(Fvector& pt, float radius, float depth, float alpha)
 
 ICF BOOL test_point(xrXRC& xrc, const Fmatrix& xform, const Fmatrix33& mat, const Fvector& ext, float radius, float angle)
 {
-	Fvector				pt;
+	Fvector pt;
 	calc_point(pt, radius, VIEWPORT_NEAR / 2, angle);
 	xform.transform_tiny(pt);
 
 	CDB::RESULT* it = xrc.r_begin();
 	CDB::RESULT* end = xrc.r_end();
-	for (; it != end; it++) {
+	for (; it != end; it++) 
+	{
 		CDB::RESULT& O = *it;
-		if (GMLib.GetMaterialByIdx(O.material)->Flags.is(SGameMtl::flPassable)) continue;
+		if (GMLib.GetMaterialByIdx(O.material)->Flags.is(SGameMtl::flPassable))
+			continue;
 		if (CDB::TestBBoxTri(mat, pt, ext, O.verts, FALSE))
-			return		TRUE;
+			return TRUE;
 	}
 	return FALSE;
 }
@@ -132,22 +141,32 @@ ICF BOOL test_point(xrXRC& xrc, const Fmatrix& xform, const Fmatrix33& mat, cons
 #include "debug_renderer.h"
 void CActor::cam_Update(float dt, float fFOV)
 {
-	if (m_holder && !Level().Cameras().GetCamEffector(cefDemo))		return;
+	if (m_holder && !Level().Cameras().GetCamEffector(cefDemo))
+		return;
 
 	if (mstate_real & mcClimb && cam_active != eacFreeLook)
 		camUpdateLadder(dt);
 
-	Fvector point = { 0,CameraHeight(),0 }, dangle = { 0,0,0 };
+	// Alex ADD: smooth crouch fix
+	constexpr const float HeightInterpolationSpeed = 4.f;
 
+	if (CurrentHeight < 0.0f)
+		CurrentHeight = CameraHeight();
 
-	Fmatrix				xform, xformR;
+	if (CurrentHeight != CameraHeight())
+		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed * dt)) + (CameraHeight() * HeightInterpolationSpeed * dt);
+
+	Fvector point = { 0, CurrentHeight, 0 }, dangle = { 0, 0, 0 };
+
+	Fmatrix xform, xformR;
 	xform.setXYZ(0, r_torso.yaw, 0);
 	xform.translate_over(XFORM().c);
 
 	// lookout
 	if (this == Level().CurrentControlEntity())
 	{
-		if (!fis_zero(r_torso_tgt_roll)) {
+		if (!fis_zero(r_torso_tgt_roll)) 
+		{
 			Fvector src_pt, tgt_pt;
 			float radius = point.y * 0.5f;
 			float alpha = r_torso_tgt_roll / 2.f;
@@ -158,7 +177,7 @@ void CActor::cam_Update(float dt, float fFOV)
 			float valid_angle = alpha;
 			// xform with roll
 			xformR.setXYZ(-r_torso.pitch, r_torso.yaw, -dZ);
-			Fmatrix33			mat;
+			Fmatrix33 mat;
 			mat.i = xformR.i;
 			mat.j = xformR.j;
 			mat.k = xformR.k;
@@ -173,26 +192,32 @@ void CActor::cam_Update(float dt, float fFOV)
 			box.grow(c);
 
 			// query
-			Fvector				bc, bd;
-			Fbox				xf;
+			Fvector bc, bd;
+			Fbox xf;
 			xf.xform(box, xform);
 			xf.get_CD(bc, bd);
 
-			xrXRC				xrc;
+			xrXRC xrc;
 			xrc.box_options(0);
 			xrc.box_query(Level().ObjectSpace.GetStaticModel(), bc, bd);
 			u32 tri_count = xrc.r_count();
-			if (tri_count) {
+			if (tri_count) 
+			{
 				float da = 0.f;
 				BOOL bIntersect = FALSE;
 				Fvector	ext = { w,h,VIEWPORT_NEAR / 2 };
-				if (test_point(xrc, xform, mat, ext, radius, alpha)) {
+				if (test_point(xrc, xform, mat, ext, radius, alpha)) 
+				{
 					da = PI / 1000.f;
 					if (!fis_zero(r_torso.roll))
 						da *= r_torso.roll / _abs(r_torso.roll);
 					float angle = 0.f;
 					for (angle = 0.f; _abs(angle) < _abs(alpha); angle += da)
-						if (test_point(xrc, xform, mat, ext, radius, angle)) { bIntersect = TRUE; break; }
+						if (test_point(xrc, xform, mat, ext, radius, angle))
+						{ 
+							bIntersect = TRUE;
+							break;
+						}
 					valid_angle = bIntersect ? angle : alpha;
 				}
 			}
@@ -205,6 +230,7 @@ void CActor::cam_Update(float dt, float fFOV)
 			r_torso.roll = 0.f;
 		}
 	}
+
 	if (!fis_zero(r_torso.roll))
 	{
 		float radius = point.y * 0.5f;
@@ -224,9 +250,11 @@ void CActor::cam_Update(float dt, float fFOV)
 			fPrevCamPos = flCurrentPlayerY - 0.2f;
 		point.y += fPrevCamPos - flCurrentPlayerY;
 	}
-	else {
+	else 
+	{
 		fPrevCamPos = flCurrentPlayerY;
 	}
+
 	float _viewport_near = VIEWPORT_NEAR;
 	// calc point
 	xform.transform_tiny(point);
@@ -235,9 +263,7 @@ void CActor::cam_Update(float dt, float fFOV)
 
 	if (eacFirstEye == cam_active)
 	{
-		//		CCameraBase* C				= cameras[eacFirstEye];
-
-		xrXRC						xrc;
+		xrXRC xrc;
 		xrc.box_options(0);
 		xrc.box_query(Level().ObjectSpace.GetStaticModel(), point, Fvector().set(VIEWPORT_NEAR, VIEWPORT_NEAR, VIEWPORT_NEAR));
 		u32 tri_count = xrc.r_count();
@@ -260,42 +286,7 @@ void CActor::cam_Update(float dt, float fFOV)
 			}
 		}
 	}
-	/*
-		{
-			CCameraBase* C				= cameras[eacFirstEye];
-			float oobox_size			= 2*VIEWPORT_NEAR;
 
-
-			Fmatrix						_rot;
-			_rot.k						= C->vDirection;
-			_rot.c						= C->vPosition;
-			_rot.i.crossproduct			(C->vNormal,	_rot.k);
-			_rot.j.crossproduct			(_rot.k,		_rot.i);
-
-
-			Fvector						vbox;
-			vbox.set					(oobox_size, oobox_size, oobox_size);
-
-
-			Level().debug_renderer().draw_aabb  (C->vPosition, 0.05f, 0.051f, 0.05f, D3DCOLOR_XRGB(0,255,0));
-			Level().debug_renderer().draw_obb  (_rot, Fvector().div(vbox,2.0f), D3DCOLOR_XRGB(255,0,0));
-
-			dMatrix3					d_rot;
-			PHDynamicData::FMXtoDMX		(_rot, d_rot);
-
-			CPHActivationShape			activation_shape;
-			activation_shape.Create		(point, vbox, this);
-
-			dBodySetRotation			(activation_shape.ODEBody(), d_rot);
-
-			CPHCollideValidator::SetDynamicNotCollide(activation_shape);
-			activation_shape.Activate	(vbox,1,1.f,0.0F);
-
-			point.set					(activation_shape.Position());
-
-			activation_shape.Destroy	();
-		}
-	*/
 	C->Update(point, dangle);
 	C->f_fov = fFOV;
 	if (eacFirstEye != cam_active)
@@ -321,11 +312,12 @@ void CActor::cam_Update(float dt, float fFOV)
 // shot effector stuff
 void CActor::update_camera(CCameraShotEffector* effector)
 {
-	if (!effector) return;
-	//	if (Level().CurrentViewEntity() != this) return;
+	if (!effector)
+		return;
 
 	CCameraBase* pACam = cam_Active();
-	if (!pACam) return;
+	if (!pACam)
+		return;
 
 	if (pACam->bClampPitch)
 	{
@@ -337,18 +329,21 @@ void CActor::update_camera(CCameraShotEffector* effector)
 
 	effector->ApplyLastAngles(&(pACam->pitch), &(pACam->yaw));
 
-	if (pACam->bClampYaw)	clamp(pACam->yaw, pACam->lim_yaw[0], pACam->lim_yaw[1]);
-	if (pACam->bClampPitch)	clamp(pACam->pitch, pACam->lim_pitch[0], pACam->lim_pitch[1]);
-}
+	if (pACam->bClampYaw)
+		clamp(pACam->yaw, pACam->lim_yaw[0], pACam->lim_yaw[1]);
 
+	if (pACam->bClampPitch)
+		clamp(pACam->pitch, pACam->lim_pitch[0], pACam->lim_pitch[1]);
+}
 
 #ifdef DEBUG
 void dbg_draw_frustum(float FOV, float _FAR, float A, Fvector& P, Fvector& D, Fvector& U);
-extern	Flags32	dbg_net_Draw_Flags;
+extern Flags32 dbg_net_Draw_Flags;
 
 void CActor::OnRender()
 {
-	if (!bDebug)				return;
+	if (!bDebug)
+		return;
 
 	if ((dbg_net_Draw_Flags.is_any(dbg_draw_actor_phys)))
 		character_physics_support()->movement()->dbg_Draw();
@@ -358,32 +353,6 @@ void CActor::OnRender()
 	inherited::OnRender();
 }
 #endif
-/*
-void CActor::LoadShootingEffector (LPCSTR section)
-{
-
-	if(!m_pShootingEffector)
-		m_pShootingEffector = xr_new<SShootingEffector>();
-
-
-	m_pShootingEffector->ppi.duality.h		= pSettings->r_float(section,"duality_h");
-	m_pShootingEffector->ppi.duality.v		= pSettings->r_float(section,"duality_v");
-	m_pShootingEffector->ppi.gray				= pSettings->r_float(section,"gray");
-	m_pShootingEffector->ppi.blur				= pSettings->r_float(section,"blur");
-	m_pShootingEffector->ppi.noise.intensity	= pSettings->r_float(section,"noise_intensity");
-	m_pShootingEffector->ppi.noise.grain		= pSettings->r_float(section,"noise_grain");
-	m_pShootingEffector->ppi.noise.fps		= pSettings->r_float(section,"noise_fps");
-	VERIFY(!fis_zero(m_pShootingEffector->ppi.noise.fps));
-
-	sscanf(pSettings->r_string(section,"color_base"),	"%f,%f,%f", &m_pShootingEffector->ppi.color_base.r, &m_pShootingEffector->ppi.color_base.g, &m_pShootingEffector->ppi.color_base.b);
-	sscanf(pSettings->r_string(section,"color_gray"),	"%f,%f,%f", &m_pShootingEffector->ppi.color_gray.r, &m_pShootingEffector->ppi.color_gray.g, &m_pShootingEffector->ppi.color_gray.b);
-	sscanf(pSettings->r_string(section,"color_add"),	"%f,%f,%f", &m_pShootingEffector->ppi.color_add.r,  &m_pShootingEffector->ppi.color_add.g,	&m_pShootingEffector->ppi.color_add.b);
-
-	m_pShootingEffector->time				= pSettings->r_float(section,"time");
-	m_pShootingEffector->time_attack		= pSettings->r_float(section,"time_attack");
-	m_pShootingEffector->time_release		= pSettings->r_float(section,"time_release");
-
-}*/
 
 void CActor::LoadSleepEffector(LPCSTR section)
 {
