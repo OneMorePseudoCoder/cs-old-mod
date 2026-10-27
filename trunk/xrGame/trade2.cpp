@@ -26,12 +26,15 @@ bool CTrade::CanTrade()
 		{
 			// Может ли объект торговать
 			pEntity = smart_cast<CEntity*>(m_nearest[i]);
-			if (pEntity && !pEntity->g_Alive()) return false;
-			if (SetPartner(pEntity)) break;
+			if (pEntity && !pEntity->g_Alive())
+				return false;
+			if (SetPartner(pEntity))
+				break;
 		}
 	}
 
-	if (!pPartner.base) return false;
+	if (!pPartner.base)
+		return false;
 
 	// Объект рядом
 	float dist = pPartner.base->Position().distance_to(pThis.base->Position());
@@ -50,8 +53,7 @@ bool CTrade::CanTrade()
 	yaw = angle_normalize(yaw);
 	yaw2 = angle_normalize(yaw2);
 
-	float Res = rad2deg(_abs(yaw - yaw2) < PI ? _abs(yaw - yaw2) :
-		PI_MUL_2 - _abs(yaw - yaw2));
+	float Res = rad2deg(_abs(yaw - yaw2) < PI ? _abs(yaw - yaw2) : PI_MUL_2 - _abs(yaw - yaw2));
 	if (Res < 165.f || Res > 195.f)
 	{
 		RemovePartner();
@@ -84,7 +86,7 @@ void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 	if (!bBuying)
 		swap(O1, O2);
 
-	NET_Packet				P;
+	NET_Packet P;
 	O1->u_EventGen(P, GE_TRADE_SELL, O1->ID());
 	P.w_u16(pItem->object().ID());
 	O1->u_EventSend(P);
@@ -103,7 +105,6 @@ void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 		pThis.inv_owner->set_money(pThis.inv_owner->get_money() - dwTransferMoney, false);
 	else
 		pPartner.inv_owner->set_money(pPartner.inv_owner->get_money() - dwTransferMoney, false);
-
 
 	CAI_Trader* pTrader = NULL;
 
@@ -128,8 +129,6 @@ void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 CInventory& CTrade::GetTradeInv(SInventoryOwner owner)
 {
 	R_ASSERT(TT_NONE != owner.type);
-
-	//return ((TT_TRADER == owner.type) ? (*owner.inv_owner->m_trade_storage) : (owner.inv_owner->inventory()));
 	return owner.inv_owner->inventory();
 }
 
@@ -137,6 +136,7 @@ CTrade* CTrade::GetPartnerTrade()
 {
 	return pPartner.inv_owner->GetTrade();
 }
+
 CInventory* CTrade::GetPartnerInventory()
 {
 	return &GetTradeInv(pPartner);
@@ -152,8 +152,9 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 	CArtefact* pArtefact = smart_cast<CArtefact*>(pItem);
 
 	// computing base_cost
-	float					base_cost;
-	if (pArtefact && (pThis.type == TT_ACTOR) && (pPartner.type == TT_TRADER)) {
+	float base_cost;
+	if (pArtefact && (pThis.type == TT_ACTOR) && (pPartner.type == TT_TRADER)) 
+	{
 		CAI_Trader* pTrader = smart_cast<CAI_Trader*>(pPartner.inv_owner);
 		VERIFY(pTrader);
 		base_cost = (float)pTrader->ArtefactPrice(pArtefact);
@@ -163,12 +164,12 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 
 	// computing condition factor
 	// for "dead" weapon we use 10% from base cost, for "good" weapon we use full base cost
-	float					condition_factor = powf(pItem->GetCondition() * 0.9f + .1f, 0.75f);
+	float condition_factor = powf(pItem->GetCondition(), 0.75f) * 0.9f + .1f;
 
 	// computing relation factor
-	float					relation_factor;
+	float relation_factor;
 
-	CHARACTER_GOODWILL		attitude = RELATION_REGISTRY().GetAttitude(pPartner.inv_owner, pThis.inv_owner);
+	CHARACTER_GOODWILL attitude = RELATION_REGISTRY().GetAttitude(pPartner.inv_owner, pThis.inv_owner);
 
 	if (NO_GOODWILL == attitude)
 		relation_factor = 0.f;
@@ -178,72 +179,53 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 	clamp(relation_factor, 0.f, 1.f);
 
 	const SInventoryOwner* _partner = 0;
-	bool					buying = true;
-	bool					is_actor = (pThis.type == TT_ACTOR) || (pPartner.type == TT_ACTOR);
-	if (is_actor) {
-		//.		buying				= (pPartner.type == TT_ACTOR);
+	bool buying = true;
+	bool is_actor = (pThis.type == TT_ACTOR) || (pPartner.type == TT_ACTOR);
+	if (is_actor) 
+	{
 		buying = b_buying;
 		_partner = &(buying ? pThis : pPartner);
 	}
-	else {
+	else 
+	{
 		// rare case
 		_partner = &pPartner;
 	}
-	//.	const SInventoryOwner	&partner = *_partner;
 
-		// computing action factor
+	// computing action factor
 	const CTradeFactors* p_trade_factors;
 
-
-	if (buying) {
-		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_buy(0), pItem->object().cNameSect())) return 0;
+	if (buying) 
+	{
+		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_buy(0), pItem->object().cNameSect()))
+			return 0;
 		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_buy(0), pItem->object().cNameSect());
 	}
-	else {
-		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_sell(0), pItem->object().cNameSect())) return 0;
+	else 
+	{
+		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_sell(0), pItem->object().cNameSect()))
+			return 0;
 		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_sell(0), pItem->object().cNameSect());
 	}
+
 	const CTradeFactors& trade_factors = *p_trade_factors;
-
-	float					action_factor;
+	float action_factor;
 	if (trade_factors.friend_factor() <= trade_factors.enemy_factor())
-		action_factor =
-		trade_factors.friend_factor() +
-		(
-			trade_factors.enemy_factor() -
-			trade_factors.friend_factor()
-			) *
-		(1.f - relation_factor);
+		action_factor = trade_factors.friend_factor() + (trade_factors.enemy_factor() - trade_factors.friend_factor()) * (1.f - relation_factor);
 	else
-		action_factor =
-		trade_factors.enemy_factor() +
-		(
-			trade_factors.friend_factor() -
-			trade_factors.enemy_factor()
-			) *
-		relation_factor;
+		action_factor = trade_factors.enemy_factor() + (trade_factors.friend_factor() - trade_factors.enemy_factor()) * relation_factor;
 
-	clamp(
-		action_factor,
-		_min(trade_factors.enemy_factor(), trade_factors.friend_factor()),
-		_max(trade_factors.enemy_factor(), trade_factors.friend_factor())
-	);
+	clamp(action_factor, _min(trade_factors.enemy_factor(), trade_factors.friend_factor()), _max(trade_factors.enemy_factor(), trade_factors.friend_factor()));
 
 	// computing deficit_factor
 #if 0
-	float					deficit_factor = partner.inv_owner->deficit_factor(pItem->object().cNameSect());
+	float deficit_factor = partner.inv_owner->deficit_factor(pItem->object().cNameSect());
 #else
-	float					deficit_factor = 1.f;
+	float deficit_factor = 1.f;
 #endif
 
 	// total price calculation
-	u32						result =
-		iFloor(
-			base_cost *
-			condition_factor *
-			action_factor *
-			deficit_factor
-		);
+	u32 result = iFloor(base_cost * condition_factor * action_factor * deficit_factor);
 
-	return					(result);
+	return result;
 }
