@@ -124,10 +124,6 @@ void CSoundRender_Core::env_load()
 		s_environment = xr_new<SoundEnvironment_LIB>();
 		s_environment->Load(fn);
 	}
-
-	// Load geometry
-
-	// Assosiate geometry
 }
 
 void CSoundRender_Core::env_unload()
@@ -136,8 +132,6 @@ void CSoundRender_Core::env_unload()
 	if (s_environment)
 		s_environment->Unload();
 	xr_delete(s_environment);
-
-	// Unload geometry
 }
 
 void CSoundRender_Core::_restart()
@@ -147,24 +141,18 @@ void CSoundRender_Core::_restart()
 	env_apply();
 }
 
-void CSoundRender_Core::set_handler(sound_event* E)
-{
-	Handler = E;
-}
+void CSoundRender_Core::set_handler(sound_event* E) { Handler = E; }
 
-void CSoundRender_Core::set_geometry_occ(CDB::MODEL* M)
-{
-	geom_MODEL = M;
-}
+void CSoundRender_Core::set_geometry_occ(CDB::MODEL* M) { geom_MODEL = M; }
+
+void CSoundRender_Core::reset_geometry_som() { xr_delete(geom_SOM); }
 
 void CSoundRender_Core::set_geometry_som(IReader* I)
 {
-#ifdef _EDITOR
-	ETOOLS::destroy_model(geom_SOM);
-#else
-	xr_delete(geom_SOM);
-#endif
-	if (0 == I)		return;
+	reset_geometry_som();
+
+	if (0 == I)
+		return;
 
 	// check version
 	R_ASSERT(I->find_chunk(0));
@@ -174,7 +162,8 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 	IReader* geom = I->open_chunk(1);
 	VERIFY2(geom, "Corrupted SOM file");
 	// Load tris and merge them
-	struct SOM_poly {
+	struct SOM_poly 
+	{
 		Fvector3	v1;
 		Fvector3	v2;
 		Fvector3	v3;
@@ -184,8 +173,9 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 	// Create AABB-tree
 #ifdef _EDITOR    
 	CDB::Collector* CL = ETOOLS::create_collector();
-	while (!geom->eof()) {
-		SOM_poly				P;
+	while (!geom->eof()) 
+	{
+		SOM_poly P;
 		geom->r(&P, sizeof(P));
 		ETOOLS::collector_add_face_pd(CL, P.v1, P.v2, P.v3, *(u32*)&P.occ, 0.01f);
 		if (P.b2sided)
@@ -194,9 +184,10 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 	geom_SOM = ETOOLS::create_model_cl(CL);
 	ETOOLS::destroy_collector(CL);
 #else
-	CDB::Collector				CL;
-	while (!geom->eof()) {
-		SOM_poly				P;
+	CDB::Collector CL;
+	while (!geom->eof()) 
+	{
+		SOM_poly P;
 		geom->r(&P, sizeof(P));
 		CL.add_face_packed_D(P.v1, P.v2, P.v3, *(u32*)&P.occ, 0.01f);
 		if (P.b2sided)
@@ -207,22 +198,24 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 #endif
 }
 
+void CSoundRender_Core::reset_geometry_env() { xr_delete(geom_ENV); }
+
 void CSoundRender_Core::set_geometry_env(IReader* I)
 {
-#ifdef _EDITOR
-	ETOOLS::destroy_model(geom_ENV);
-#else
-	xr_delete(geom_ENV);
-#endif
-	if (0 == I)				return;
-	if (0 == s_environment)	return;
+    reset_geometry_env();
+
+	if (0 == I)
+		return;
+
+	if (0 == s_environment)
+		return;
 
 	// Assosiate names
-	xr_vector<u16>			ids;
+	xr_vector<u16> ids;
 	IReader* names = I->open_chunk(0);
 	while (!names->eof())
 	{
-		string256			n;
+		string256 n;
 		names->r_stringZ(n, sizeof(n));
 		int id = s_environment->GetID(n);
 		R_ASSERT(id >= 0);

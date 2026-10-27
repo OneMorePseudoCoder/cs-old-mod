@@ -37,15 +37,12 @@ CAI_Trader::~CAI_Trader()
 
 void CAI_Trader::Load(LPCSTR section)
 {
-	//	setEnabled						(FALSE);
 	inherited::Load(section);
 
-	//fHealth							= pSettings->r_float	(section,"Health");
 	SetfHealth(pSettings->r_float(section, "Health"));
 
 	float max_weight = pSettings->r_float(section, "max_item_mass");
 	inventory().SetMaxWeight(max_weight * 1000);
-	//	inventory().SetMaxRuck(1000000);
 	inventory().CalcTotalWeight();
 }
 
@@ -67,18 +64,18 @@ void CAI_Trader::reload(LPCSTR section)
 	sound().reload(section);
 }
 
-
 bool CAI_Trader::bfAssignSound(CScriptEntityAction* tpEntityAction)
 {
-	if (!CScriptEntity::bfAssignSound(tpEntityAction)) {
+	if (!CScriptEntity::bfAssignSound(tpEntityAction)) 
+	{
 		//m_cur_head_anim_type	= MonsterSpace::eHeadAnimNone;
-		return					(false);
+		return false;
 	}
 
 	//CScriptSoundAction	&l_tAction	= tpEntityAction->m_tSoundAction;
 	//m_cur_head_anim_type = l_tAction.m_tHeadAnimType;
 
-	return				(true);
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,7 +84,6 @@ bool CAI_Trader::bfAssignSound(CScriptEntityAction* tpEntityAction)
 void CAI_Trader::BoneCallback(CBoneInstance* B)
 {
 	CAI_Trader* this_class = static_cast<CAI_Trader*>(B->Callback_Param);
-
 	this_class->LookAtActor(B);
 }
 
@@ -144,24 +140,21 @@ BOOL CAI_Trader::net_Spawn(CSE_Abstract* DC)
 	bone_head->set_callback(bctCustom, BoneCallback, this);
 
 	shedule.t_min = 100;
-	shedule.t_max = 2500; // This equaltiy is broken by Dima :-( // 30 * NET_Latency / 4;
+	shedule.t_max = 2500;
 
-	return					(TRUE);
+	return TRUE;
 }
 
 void CAI_Trader::net_Export(NET_Packet& P)
 {
 	R_ASSERT(Local());
-
-	//	P.w_float						(inventory().TotalWeight());
-	//	P.w_u32							(m_dwMoney);
 }
 
 void CAI_Trader::net_Import(NET_Packet& P)
 {
 	R_ASSERT(Remote());
 
-	float							fDummy;
+	float fDummy;
 	P.r_float(fDummy);
 	set_money(P.r_u32(), false);
 
@@ -177,18 +170,20 @@ void CAI_Trader::OnEvent(NET_Packet& P, u16 type)
 	u16 id;
 	CObject* Obj;
 
-	switch (type) {
+	switch (type) 
+	{
 	case GE_TRADE_BUY:
 	case GE_OWNERSHIP_TAKE:
 		P.r_u16(id);
 		Obj = Level().Objects.net_Find(id);
-		if (inventory().CanTakeItem(smart_cast<CInventoryItem*>(Obj))) {
+		if (inventory().CanTakeItem(smart_cast<CInventoryItem*>(Obj))) 
+		{
 			Obj->H_SetParent(this);
 			inventory().Take(smart_cast<CGameObject*>(Obj), false, false);
 		}
 		else
 		{
-			NET_Packet				_P;
+			NET_Packet _P;
 			u_EventGen(_P, GE_OWNERSHIP_REJECT, ID());
 			_P.w_u16(u16(Obj->ID()));
 			u_EventSend(_P);
@@ -204,9 +199,8 @@ void CAI_Trader::OnEvent(NET_Packet& P, u16 type)
 
 		Obj->SetTmpPreDestroy(just_before_destroy);
 		inventory().DropItem(smart_cast<CGameObject*>(Obj), just_before_destroy, dont_create_shell);
-		//if(inventory().DropItem(smart_cast<CGameObject*>(Obj), just_before_destroy)) 
-		//	Obj->H_SetParent(0, just_before_destroy); //moved to DropItem
-	}break;
+	}
+	break;
 	case GE_TRANSFER_AMMO:
 		break;
 	}
@@ -214,13 +208,17 @@ void CAI_Trader::OnEvent(NET_Packet& P, u16 type)
 
 void CAI_Trader::feel_touch_new(CObject* O)
 {
-	if (!g_Alive())		return;
-	if (Remote())		return;
+	if (!g_Alive())
+		return;
+
+	if (Remote())
+		return;
 
 	// Now, test for game specific logical objects to minimize traffic
 	CInventoryItem* I = smart_cast<CInventoryItem*>	(O);
 
-	if (I && I->useful_for_NPC()) {
+	if (I && I->useful_for_NPC()) 
+	{
 		Msg("Taking item %s!", *I->object().cName());
 		NET_Packet		P;
 		u_EventGen(P, GE_OWNERSHIP_TAKE, ID());
@@ -236,7 +234,7 @@ void CAI_Trader::DropItemSendMessage(CObject* O)
 
 	Msg("Dropping item!");
 	// We doesn't have similar weapon - pick up it
-	NET_Packet				P;
+	NET_Packet P;
 	u_EventGen(P, GE_OWNERSHIP_REJECT, ID());
 	P.w_u16(u16(O->ID()));
 	u_EventSend(P);
@@ -247,8 +245,10 @@ void CAI_Trader::shedule_Update(u32 dt)
 	inherited::shedule_Update(dt);
 	UpdateInventoryOwner(dt);
 
-	if (GetScriptControl()) ProcessScripts();
-	else Think();
+	if (GetScriptControl())
+		ProcessScripts();
+	else
+		Think();
 }
 
 void CAI_Trader::g_WeaponBones(int& L, int& R1, int& R2)
@@ -262,16 +262,15 @@ void CAI_Trader::g_WeaponBones(int& L, int& R1, int& R2)
 void CAI_Trader::g_fireParams(const CHudItem* pHudItem, Fvector& P, Fvector& D)
 {
 	VERIFY(inventory().ActiveItem());
-	if (g_Alive() && inventory().ActiveItem()) {
+	if (g_Alive() && inventory().ActiveItem()) 
+	{
 		Center(P);
 		D.setHP(0, 0);
 		D.normalize_safe();
 	}
 }
 
-void CAI_Trader::Think()
-{
-}
+void CAI_Trader::Think() {}
 
 void CAI_Trader::Die(CObject* who)
 {
@@ -289,14 +288,13 @@ void CAI_Trader::UpdateCL()
 	inherited::UpdateCL();
 	sound().update(Device.fTimeDelta);
 
-
 	if (!GetScriptControl() && !bfScriptAnimation())
 		animation().update_frame();
 }
 
 BOOL CAI_Trader::UsedAI_Locations()
 {
-	return					(TRUE);
+	return TRUE;
 }
 
 void CAI_Trader::OnStartTrade()
@@ -311,17 +309,14 @@ void CAI_Trader::OnStopTrade()
 	callback(GameObject::eTradeStop)();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-
-
 bool CAI_Trader::can_attach(const CInventoryItem* inventory_item) const
 {
-	return				(false);
+	return false;
 }
 
 bool CAI_Trader::use_bolts() const
 {
-	return				(false);
+	return false;
 }
 
 void CAI_Trader::spawn_supplies()
@@ -330,18 +325,17 @@ void CAI_Trader::spawn_supplies()
 	CInventoryOwner::spawn_supplies();
 }
 
-
 void CAI_Trader::save(NET_Packet& output_packet)
 {
 	inherited::save(output_packet);
 	CInventoryOwner::save(output_packet);
 }
+
 void CAI_Trader::load(IReader& input_packet)
 {
 	inherited::load(input_packet);
 	CInventoryOwner::load(input_packet);
 }
-
 
 //проверяет список артефактов в заказах
 u32 CAI_Trader::ArtefactPrice(CArtefact* pArtefact)
@@ -379,18 +373,18 @@ DLL_Pure* CAI_Trader::_construct()
 	CInventoryOwner::_construct();
 	CScriptEntity::_construct();
 
-	return						(this);
+	return this;
 }
 
 bool CAI_Trader::AllowItemToTrade(CInventoryItem const* item, EItemPlace place) const
 {
 	if (!g_Alive())
-		return					(true);
+		return true;
 
 	if (item->object().CLS_ID == CLSID_DEVICE_PDA)
-		return					(false);
+		return false;
 
-	return						(CInventoryOwner::AllowItemToTrade(item, place));
+	return CInventoryOwner::AllowItemToTrade(item, place);
 }
 
 void CAI_Trader::dialog_sound_start(LPCSTR phrase)
