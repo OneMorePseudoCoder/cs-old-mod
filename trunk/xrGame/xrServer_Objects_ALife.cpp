@@ -35,53 +35,57 @@ bool SortStringsByAlphabetPred(const shared_str& s1, const shared_str& s2)
 	return (xr_strcmp(s1, s2) < 0);
 };
 
-struct story_name_predicate {
-	IC	bool	operator()	(const xr_rtoken& _1, const xr_rtoken& _2) const
+struct story_name_predicate 
+{
+	IC bool operator()(const xr_rtoken& _1, const xr_rtoken& _2) const
 	{
 		VERIFY(_1.name.size());
 		VERIFY(_2.name.size());
 
-		return	(xr_strcmp(_1.name, _2.name) < 0);
+		return xr_strcmp(_1.name, _2.name) < 0;
 	}
 };
 
 #ifdef XRSE_FACTORY_EXPORTS
+struct SFillPropData 
+{
+	RTokenVec locations[4];
+	RStringVec level_ids;
+	RTokenVec story_names;
+	RTokenVec spawn_story_names;
+	RStringVec character_profiles;
 
-struct SFillPropData {
-	RTokenVec 	locations[4];
-	RStringVec	level_ids;
-	RTokenVec 	story_names;
-	RTokenVec 	spawn_story_names;
-	RStringVec	character_profiles;
-
-	u32			counter;
+	u32 counter;
 	SFillPropData()
 	{
 		counter = 0;
 	}
+
 	~SFillPropData()
 	{
 		VERIFY(0 == counter);
 	}
-	void		load()
+
+	void load()
 	{
 		// create ini
 #ifdef XRGAME_EXPORTS
 		CInifile* Ini = pGameIni;
 #else // XRGAME_EXPORTS
 		CInifile* Ini = 0;
-		string_path				gm_name;
+		string_path gm_name;
 		FS.update_path(gm_name, "$game_config$", GAME_CONFIG);
 		R_ASSERT3(FS.exist(gm_name), "Couldn't find file", gm_name);
 		Ini = xr_new<CInifile>(gm_name);
 #endif // XRGAME_EXPORTS
 
 		// location type
-		LPCSTR					N, V;
-		u32 					k;
-		for (int i = 0; i < GameGraph::LOCATION_TYPE_COUNT; ++i) {
+		LPCSTR N, V;
+		u32 k;
+		for (int i = 0; i < GameGraph::LOCATION_TYPE_COUNT; ++i) 
+		{
 			VERIFY(locations[i].empty());
-			string256			caSection, T;
+			string256 caSection, T;
 			strconcat(caSection, SECTION_HEADER, itoa(i, T, 10));
 			R_ASSERT(Ini->section_exist(caSection));
 			for (k = 0; Ini->r_line(caSection, k, &N, &V); ++k)
@@ -133,7 +137,7 @@ struct SFillPropData {
 		xr_delete(Ini);
 #endif // XRGAME_EXPORTS
 	}
-	void		unload()
+	void unload()
 	{
 		for (int i = 0; i < GameGraph::LOCATION_TYPE_COUNT; ++i)
 			locations[i].clear();
@@ -142,14 +146,14 @@ struct SFillPropData {
 		spawn_story_names.clear();
 		character_profiles.clear();
 	}
-	void 		dec()
+	void dec()
 	{
 		VERIFY(counter > 0);
 		--counter;
 		if (!counter)
 			unload();
 	}
-	void 		inc()
+	void inc()
 	{
 		VERIFY(counter < 0xffffffff);
 		if (!counter)
@@ -157,7 +161,7 @@ struct SFillPropData {
 		++counter;
 	}
 };
-static SFillPropData			fp_data;
+static SFillPropData fp_data;
 #endif
 
 void CSE_ALifeTraderAbstract::FillProps(LPCSTR pref, PropItemVec& items)
@@ -165,10 +169,7 @@ void CSE_ALifeTraderAbstract::FillProps(LPCSTR pref, PropItemVec& items)
 	PHelper().CreateU32(items, PrepareKey(pref, *base()->s_name, "Money"), &m_dwMoney, 0, u32(-1));
 	PHelper().CreateFlag32(items, PrepareKey(pref, *base()->s_name, "Trader\\Infinite ammo"), &m_trader_flags, eTraderFlagInfiniteAmmo);
 #ifdef XRSE_FACTORY_EXPORTS
-	RListValue* value = PHelper().CreateRList(items, PrepareKey(pref, *base()->s_name, "npc profile"),
-		&m_sCharacterProfile,
-		&*fp_data.character_profiles.begin(), fp_data.character_profiles.size());
-
+	RListValue* value = PHelper().CreateRList(items, PrepareKey(pref, *base()->s_name, "npc profile"), &m_sCharacterProfile, &*fp_data.character_profiles.begin(), fp_data.character_profiles.size());
 	value->OnChangeEvent.bind(this, &CSE_ALifeTraderAbstract::OnChangeProfile);
 #endif
 }
@@ -218,13 +219,10 @@ void CSE_ALifeGraphPoint::STATE_Write(NET_Packet& tNetPacket)
 	tNetPacket.w_u8(m_tLocations[2]);
 	tNetPacket.w_u8(m_tLocations[3]);
 };
-void CSE_ALifeGraphPoint::UPDATE_Read(NET_Packet& tNetPacket)
-{
-}
 
-void CSE_ALifeGraphPoint::UPDATE_Write(NET_Packet& tNetPacket)
-{
-}
+void CSE_ALifeGraphPoint::UPDATE_Read(NET_Packet& tNetPacket) {}
+
+void CSE_ALifeGraphPoint::UPDATE_Write(NET_Packet& tNetPacket) {}
 
 void CSE_ALifeGraphPoint::FillProps(LPCSTR pref, PropItemVec& items)
 {
@@ -268,12 +266,12 @@ CSE_ALifeObject::CSE_ALifeObject(LPCSTR caSection) : CSE_Abstract(caSection)
 CALifeSimulator& CSE_ALifeObject::alife() const
 {
 	VERIFY(m_alife_simulator);
-	return						(*m_alife_simulator);
+	return *m_alife_simulator;
 }
 
 Fvector CSE_ALifeObject::draw_level_position() const
 {
-	return						(Position());
+	return Position();
 }
 #endif
 
@@ -286,7 +284,7 @@ CSE_ALifeObject::~CSE_ALifeObject()
 
 bool CSE_ALifeObject::move_offline() const
 {
-	return						(!m_flags.test(flOfflineNoMove));
+	return !m_flags.test(flOfflineNoMove);
 }
 
 void CSE_ALifeObject::move_offline(bool value)
@@ -296,7 +294,7 @@ void CSE_ALifeObject::move_offline(bool value)
 
 bool CSE_ALifeObject::visible_for_map() const
 {
-	return						(!!m_flags.test(flVisibleForMap));
+	return !!m_flags.test(flVisibleForMap);
 }
 
 void CSE_ALifeObject::visible_for_map(bool value)
@@ -318,32 +316,34 @@ void CSE_ALifeObject::STATE_Write(NET_Packet& tNetPacket)
 
 void CSE_ALifeObject::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
-	if (m_wVersion >= 1) {
-		if (m_wVersion > 24) {
-			if (m_wVersion < 83) {
-				tNetPacket.r_float();//m_spawn_probability);
+	if (m_wVersion >= 1) 
+	{
+		if (m_wVersion > 24) 
+		{
+			if (m_wVersion < 83) 
+			{
+				tNetPacket.r_float();
 			}
 		}
-		else {
+		else 
+		{
 			tNetPacket.r_u8();
-			/**
-			u8					l_ucTemp;
-			tNetPacket.r_u8		(l_ucTemp);
-			m_spawn_probability	= (float)l_ucTemp;
-			/**/
 		}
-		if (m_wVersion < 83) {
+		if (m_wVersion < 83) 
+		{
 			tNetPacket.r_u32();
 		}
-		if (m_wVersion < 4) {
-			u16					wDummy;
+		if (m_wVersion < 4) 
+		{
+			u16 wDummy;
 			tNetPacket.r_u16(wDummy);
 		}
 		tNetPacket.r(&m_tGraphID, sizeof(m_tGraphID));
 		tNetPacket.r_float(m_fDistance);
 	}
-	if (m_wVersion >= 4) {
-		u32						dwDummy;
+	if (m_wVersion >= 4) 
+	{
+		u32 dwDummy;
 		tNetPacket.r_u32(dwDummy);
 		m_bDirectControl = !!dwDummy;
 	}
@@ -354,16 +354,19 @@ void CSE_ALifeObject::STATE_Read(NET_Packet& tNetPacket, u16 size)
 	if ((m_wVersion > 22) && (m_wVersion <= 79))
 		tNetPacket.r(&m_tSpawnID, sizeof(m_tSpawnID));
 
-	if ((m_wVersion > 23) && (m_wVersion < 84)) {
-		shared_str				temp;
-		tNetPacket.r_stringZ(temp);//m_spawn_control);
+	if ((m_wVersion > 23) && (m_wVersion < 84)) 
+	{
+		shared_str temp;
+		tNetPacket.r_stringZ(temp);
 	}
 
-	if (m_wVersion > 49) {
+	if (m_wVersion > 49) 
+	{
 		tNetPacket.r_u32(m_flags.flags);
 	}
 
-	if (m_wVersion > 57) {
+	if (m_wVersion > 57) 
+	{
 		if (m_ini_file)
 			xr_delete(m_ini_file);
 		tNetPacket.r_stringZ(m_ini_string);
@@ -376,19 +379,16 @@ void CSE_ALifeObject::STATE_Read(NET_Packet& tNetPacket, u16 size)
 		tNetPacket.r(&m_spawn_story_id, sizeof(m_spawn_story_id));
 }
 
-void CSE_ALifeObject::UPDATE_Write(NET_Packet& tNetPacket)
-{
-}
+void CSE_ALifeObject::UPDATE_Write(NET_Packet& tNetPacket) {}
 
-void CSE_ALifeObject::UPDATE_Read(NET_Packet& tNetPacket)
-{
-};
+void CSE_ALifeObject::UPDATE_Read(NET_Packet& tNetPacket) {};
 
 void CSE_ALifeObject::FillProps(LPCSTR pref, PropItemVec& items)
 {
 	inherited::FillProps(pref, items);
 	PHelper().CreateRText(items, PrepareKey(pref, *s_name, "Custom data"), &m_ini_string);
-	if (m_flags.is(flUseSwitches)) {
+	if (m_flags.is(flUseSwitches)) 
+	{
 		PHelper().CreateFlag32(items, PrepareKey(pref, *s_name, "ALife\\Can switch online"), &m_flags, flSwitchOnline);
 		PHelper().CreateFlag32(items, PrepareKey(pref, *s_name, "ALife\\Can switch offline"), &m_flags, flSwitchOffline);
 	}
@@ -402,18 +402,18 @@ void CSE_ALifeObject::FillProps(LPCSTR pref, PropItemVec& items)
 
 u32	CSE_ALifeObject::ef_equipment_type() const
 {
-	string16					temp; CLSID2TEXT(m_tClassID, temp);
+	string16 temp;
+	CLSID2TEXT(m_tClassID, temp);
 	R_ASSERT3(false, "Invalid alife equipment type request, virtual function is not properly overloaded!", temp);
-	return		(u32(-1));
-	//	return		(6);
+	return u32(-1);
 }
 
-u32	 CSE_ALifeObject::ef_main_weapon_type() const
+u32 CSE_ALifeObject::ef_main_weapon_type() const
 {
-	string16					temp; CLSID2TEXT(m_tClassID, temp);
+	string16 temp;
+	CLSID2TEXT(m_tClassID, temp);
 	R_ASSERT3(false, "Invalid alife main weapon type request, virtual function is not properly overloaded!", temp);
-	return		(u32(-1));
-	//	return		(5);
+	return u32(-1);
 }
 
 u32	 CSE_ALifeObject::ef_weapon_type() const
@@ -426,38 +426,35 @@ u32	 CSE_ALifeObject::ef_weapon_type() const
 
 u32	CSE_ALifeObject::ef_detector_type() const
 {
-	string16					temp; CLSID2TEXT(m_tClassID, temp);
+	string16 temp;
+	CLSID2TEXT(m_tClassID, temp);
 	R_ASSERT3(false, "Invalid alife detector type request, virtual function is not properly overloaded!", temp);
-	return		(u32(-1));
+	return u32(-1);
 }
 
 bool CSE_ALifeObject::used_ai_locations() const
 {
-	return						(!!m_flags.is(flUsedAI_Locations));
+	return !!m_flags.is(flUsedAI_Locations);
 }
 
 bool CSE_ALifeObject::can_switch_online() const
 {
-	return						(match_configuration() && !!m_flags.is(flSwitchOnline));
+	return match_configuration() && !!m_flags.is(flSwitchOnline);
 }
 
 bool CSE_ALifeObject::can_switch_offline() const
 {
-	return						(!match_configuration() || !!m_flags.is(flSwitchOffline));
+	return !match_configuration() || !!m_flags.is(flSwitchOffline);
 }
 
 bool CSE_ALifeObject::can_save() const
 {
-	return						(!!m_flags.is(flCanSave));
+	return !!m_flags.is(flCanSave);
 }
 
 bool CSE_ALifeObject::interactive() const
 {
-	return						(
-		!!m_flags.is(flInteractive) &&
-		!!m_flags.is(flVisibleForAI) &&
-		!!m_flags.is(flUsefulForAI)
-		);
+	return (!!m_flags.is(flInteractive) && !!m_flags.is(flVisibleForAI) && !!m_flags.is(flUsefulForAI));
 }
 
 void CSE_ALifeObject::can_switch_online(bool value)
@@ -488,17 +485,15 @@ CSE_ALifeGroupAbstract::CSE_ALifeGroupAbstract(LPCSTR caSection)
 
 CSE_Abstract* CSE_ALifeGroupAbstract::init()
 {
-	return						(base());
+	return base();
 }
 
-CSE_ALifeGroupAbstract::~CSE_ALifeGroupAbstract()
-{
-}
+CSE_ALifeGroupAbstract::~CSE_ALifeGroupAbstract() {}
 
 void CSE_ALifeGroupAbstract::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
 	u16 m_wVersion = base()->m_wVersion;
-	u32							dwDummy;
+	u32 dwDummy;
 	tNetPacket.r_u32(dwDummy);
 	m_bCreateSpawnPositions = !!dwDummy;
 	tNetPacket.r_u16(m_wCount);
@@ -515,7 +510,7 @@ void CSE_ALifeGroupAbstract::STATE_Write(NET_Packet& tNetPacket)
 
 void CSE_ALifeGroupAbstract::UPDATE_Read(NET_Packet& tNetPacket)
 {
-	u32							dwDummy;
+	u32 dwDummy;
 	tNetPacket.r_u32(dwDummy);
 	m_bCreateSpawnPositions = !!dwDummy;
 };
@@ -578,13 +573,11 @@ CSE_ALifeDynamicObjectVisual::CSE_ALifeDynamicObjectVisual(LPCSTR caSection) : C
 		set_visual(pSettings->r_string(caSection, "visual"));
 }
 
-CSE_ALifeDynamicObjectVisual::~CSE_ALifeDynamicObjectVisual()
-{
-}
+CSE_ALifeDynamicObjectVisual::~CSE_ALifeDynamicObjectVisual() {}
 
 CSE_Visual* CSE_ALifeDynamicObjectVisual::visual()
 {
-	return						(this);
+	return this;
 }
 
 void CSE_ALifeDynamicObjectVisual::STATE_Write(NET_Packet& tNetPacket)
@@ -625,18 +618,13 @@ CSE_ALifePHSkeletonObject::CSE_ALifePHSkeletonObject(LPCSTR caSection) : CSE_ALi
 	m_flags.set(flSwitchOffline, FALSE);
 }
 
-CSE_ALifePHSkeletonObject::~CSE_ALifePHSkeletonObject()
-{
-
-}
-
+CSE_ALifePHSkeletonObject::~CSE_ALifePHSkeletonObject() {}
 
 void CSE_ALifePHSkeletonObject::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
 	inherited1::STATE_Read(tNetPacket, size);
 	if (m_wVersion >= 64)
 		inherited2::STATE_Read(tNetPacket, size);
-
 }
 
 void CSE_ALifePHSkeletonObject::STATE_Write(NET_Packet& tNetPacket)
@@ -645,12 +633,12 @@ void CSE_ALifePHSkeletonObject::STATE_Write(NET_Packet& tNetPacket)
 	inherited2::STATE_Write(tNetPacket);
 }
 
-
 void CSE_ALifePHSkeletonObject::load(NET_Packet& tNetPacket)
 {
 	inherited1::load(tNetPacket);
 	inherited2::load(tNetPacket);
 }
+
 void CSE_ALifePHSkeletonObject::UPDATE_Write(NET_Packet& tNetPacket)
 {
 	inherited1::UPDATE_Write(tNetPacket);
@@ -665,7 +653,7 @@ void CSE_ALifePHSkeletonObject::UPDATE_Read(NET_Packet& tNetPacket)
 
 bool CSE_ALifePHSkeletonObject::can_save() const
 {
-	return						CSE_PHSkeleton::need_save();
+	return CSE_PHSkeleton::need_save();
 }
 
 bool CSE_ALifePHSkeletonObject::used_ai_locations() const
@@ -691,23 +679,21 @@ CSE_ALifeSpaceRestrictor::CSE_ALifeSpaceRestrictor(LPCSTR caSection) : CSE_ALife
 	m_flags.set(flCheckForSeparator, TRUE);
 }
 
-CSE_ALifeSpaceRestrictor::~CSE_ALifeSpaceRestrictor()
-{
-}
+CSE_ALifeSpaceRestrictor::~CSE_ALifeSpaceRestrictor() {}
 
 bool CSE_ALifeSpaceRestrictor::can_switch_offline() const
 {
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeSpaceRestrictor::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 ISE_Shape* CSE_ALifeSpaceRestrictor::shape()
 {
-	return						(this);
+	return this;
 }
 
 void CSE_ALifeSpaceRestrictor::STATE_Read(NET_Packet& tNetPacket, u16 size)
@@ -735,12 +721,13 @@ void CSE_ALifeSpaceRestrictor::UPDATE_Write(NET_Packet& tNetPacket)
 	inherited1::UPDATE_Write(tNetPacket);
 }
 
-xr_token defaul_retrictor_types[] = {
-	{ "NOT A restrictor",			RestrictionSpace::eRestrictorTypeNone},
-	{ "NONE default restrictor",	RestrictionSpace::eDefaultRestrictorTypeNone},
-	{ "OUT default restrictor",		RestrictionSpace::eDefaultRestrictorTypeOut	},
-	{ "IN default restrictor",		RestrictionSpace::eDefaultRestrictorTypeIn	},
-	{ 0,							0}
+xr_token defaul_retrictor_types[] = 
+{
+	{ "NOT A restrictor", RestrictionSpace::eRestrictorTypeNone },
+	{ "NONE default restrictor", RestrictionSpace::eDefaultRestrictorTypeNone },
+	{ "OUT default restrictor", RestrictionSpace::eDefaultRestrictorTypeOut },
+	{ "IN default restrictor", RestrictionSpace::eDefaultRestrictorTypeIn },
+	{ 0, 0 }
 };
 
 void CSE_ALifeSpaceRestrictor::FillProps(LPCSTR pref, PropItemVec& items)
@@ -775,11 +762,13 @@ CSE_ALifeLevelChanger::~CSE_ALifeLevelChanger()
 void CSE_ALifeLevelChanger::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
 	inherited::STATE_Read(tNetPacket, size);
-	if (m_wVersion < 34) {
+	if (m_wVersion < 34) 
+	{
 		tNetPacket.r_u32();
 		tNetPacket.r_u32();
 	}
-	else {
+	else 
+	{
 		tNetPacket.r(&m_tNextGraphID, sizeof(m_tNextGraphID));
 		tNetPacket.r_u32(m_dwNextNodeID);
 		tNetPacket.r_float(m_tNextPosition.x);
@@ -795,7 +784,6 @@ void CSE_ALifeLevelChanger::STATE_Read(NET_Packet& tNetPacket, u16 size)
 
 	if (m_wVersion > 116)
 		m_bSilentMode = !!tNetPacket.r_u8();
-
 }
 
 void CSE_ALifeLevelChanger::STATE_Write(NET_Packet& tNetPacket)
@@ -850,24 +838,25 @@ CSE_ALifeObjectPhysic::CSE_ALifeObjectPhysic(LPCSTR caSection) : CSE_ALifeDynami
 	m_flags.set(flUsedAI_Locations, FALSE);
 }
 
-CSE_ALifeObjectPhysic::~CSE_ALifeObjectPhysic()
-{
-}
+CSE_ALifeObjectPhysic::~CSE_ALifeObjectPhysic() {}
 
 void CSE_ALifeObjectPhysic::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
 	if (m_wVersion >= 14)
-		if (m_wVersion >= 16) {
+		if (m_wVersion >= 16) 
+		{
 			inherited1::STATE_Read(tNetPacket, size);
 			if (m_wVersion < 32)
 				visual_read(tNetPacket, m_wVersion);
 		}
-		else {
+		else 
+		{
 			CSE_ALifeObject::STATE_Read(tNetPacket, size);
 			visual_read(tNetPacket, m_wVersion);
 		}
 
-	if (m_wVersion >= 64) inherited2::STATE_Read(tNetPacket, size);
+	if (m_wVersion >= 64)
+		inherited2::STATE_Read(tNetPacket, size);
 
 	tNetPacket.r_u32(type);
 	tNetPacket.r_float(mass);
@@ -880,13 +869,14 @@ void CSE_ALifeObjectPhysic::STATE_Read(NET_Packet& tNetPacket, u16 size)
 
 	if (m_wVersion < 64)
 	{
-		if (m_wVersion > 39)		// > 39 		
+		if (m_wVersion > 39)
 			tNetPacket.r_u8(_flags.flags);
 
 		if (m_wVersion > 56)
 			tNetPacket.r_u16(source_id);
 
-		if (m_wVersion > 60 && _flags.test(flSavedData)) {
+		if (m_wVersion > 60 && _flags.test(flSavedData)) 
+		{
 			data_load(tNetPacket);
 		}
 	}
@@ -900,10 +890,7 @@ void CSE_ALifeObjectPhysic::STATE_Write(NET_Packet& tNetPacket)
 	tNetPacket.w_u32(type);
 	tNetPacket.w_float(mass);
 	tNetPacket.w_stringZ(fixed_bones);
-
 }
-
-
 
 void CSE_ALifeObjectPhysic::UPDATE_Read(NET_Packet& tNetPacket)
 {
@@ -917,22 +904,19 @@ void CSE_ALifeObjectPhysic::UPDATE_Write(NET_Packet& tNetPacket)
 	inherited2::UPDATE_Write(tNetPacket);
 }
 
-
-
-
 void CSE_ALifeObjectPhysic::load(NET_Packet& tNetPacket)
 {
 	inherited1::load(tNetPacket);
 	inherited2::load(tNetPacket);
 }
 
-
-xr_token po_types[] = {
-	{ "Box",			epotBox			},
-	{ "Fixed chain",	epotFixedChain	},
-	{ "Free chain",		epotFreeChain	},
-	{ "Skeleton",		epotSkeleton	},
-	{ 0,				0				}
+xr_token po_types[] = 
+{
+	{ "Box", epotBox },
+	{ "Fixed chain", epotFixedChain },
+	{ "Free chain", epotFreeChain },
+	{ "Skeleton", epotSkeleton },
+	{ 0, 0 }
 };
 
 void CSE_ALifeObjectPhysic::FillProps(LPCSTR pref, PropItemVec& values)
@@ -950,12 +934,12 @@ void CSE_ALifeObjectPhysic::FillProps(LPCSTR pref, PropItemVec& values)
 
 bool CSE_ALifeObjectPhysic::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeObjectPhysic::can_save() const
 {
-	return						CSE_PHSkeleton::need_save();
+	return CSE_PHSkeleton::need_save();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -979,9 +963,7 @@ CSE_ALifeObjectHangingLamp::CSE_ALifeObjectHangingLamp(LPCSTR caSection) : CSE_A
 	glow_radius = 0.7f;
 }
 
-CSE_ALifeObjectHangingLamp::~CSE_ALifeObjectHangingLamp()
-{
-}
+CSE_ALifeObjectHangingLamp::~CSE_ALifeObjectHangingLamp() {}
 
 void CSE_ALifeObjectHangingLamp::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -992,7 +974,8 @@ void CSE_ALifeObjectHangingLamp::STATE_Read(NET_Packet& tNetPacket, u16 size)
 	if (m_wVersion < 32)
 		visual_read(tNetPacket, m_wVersion);
 
-	if (m_wVersion < 49) {
+	if (m_wVersion < 49) 
+	{
 		shared_str s_tmp;
 		float	f_tmp;
 		// model
@@ -1013,16 +996,19 @@ void CSE_ALifeObjectHangingLamp::STATE_Read(NET_Packet& tNetPacket, u16 size)
 
 		set_editor_flag(flVisualAnimationChange);
 
-		if (m_wVersion > 42) {
+		if (m_wVersion > 42) 
+		{
 			tNetPacket.r_stringZ(s_tmp);
 			tNetPacket.r_float(f_tmp);
 		}
 
-		if (m_wVersion > 43) {
+		if (m_wVersion > 43) 
+		{
 			tNetPacket.r_stringZ(fixed_bones);
 		}
 
-		if (m_wVersion > 44) {
+		if (m_wVersion > 44) 
+		{
 			tNetPacket.r_float(m_health);
 		}
 	}
@@ -1038,7 +1024,8 @@ void CSE_ALifeObjectHangingLamp::STATE_Read(NET_Packet& tNetPacket, u16 size)
 		tNetPacket.r_stringZ(fixed_bones);
 		tNetPacket.r_float(m_health);
 	}
-	if (m_wVersion > 55) {
+	if (m_wVersion > 55) 
+	{
 		tNetPacket.r_float(m_virtual_size);
 		tNetPacket.r_float(m_ambient_radius);
 		tNetPacket.r_float(m_ambient_power);
@@ -1049,10 +1036,12 @@ void CSE_ALifeObjectHangingLamp::STATE_Read(NET_Packet& tNetPacket, u16 size)
 		tNetPacket.r_stringZ(glow_texture);
 		tNetPacket.r_float(glow_radius);
 	}
-	if (m_wVersion > 96) {
+	if (m_wVersion > 96) 
+	{
 		tNetPacket.r_stringZ(light_ambient_bone);
 	}
-	else {
+	else 
+	{
 		light_ambient_bone = light_main_bone;
 	}
 }
@@ -1085,7 +1074,6 @@ void CSE_ALifeObjectHangingLamp::STATE_Write(NET_Packet& tNetPacket)
 	tNetPacket.w_stringZ(light_ambient_bone);
 }
 
-
 void CSE_ALifeObjectHangingLamp::UPDATE_Read(NET_Packet& tNetPacket)
 {
 	inherited1::UPDATE_Read(tNetPacket);
@@ -1096,7 +1084,6 @@ void CSE_ALifeObjectHangingLamp::UPDATE_Write(NET_Packet& tNetPacket)
 {
 	inherited1::UPDATE_Write(tNetPacket);
 	inherited2::UPDATE_Write(tNetPacket);
-
 }
 
 void CSE_ALifeObjectHangingLamp::load(NET_Packet& tNetPacket)
@@ -1122,7 +1109,6 @@ void CSE_ALifeObjectHangingLamp::FillProps(LPCSTR pref, PropItemVec& values)
 	PHelper().CreateFlag16(values, PrepareKey(pref, *s_name, "Flags\\Allow R2"), &flags, flR2);
 	P = PHelper().CreateFlag16(values, PrepareKey(pref, *s_name, "Flags\\Allow Ambient"), &flags, flPointAmbient);
 	P->OnChangeEvent.bind(this, &CSE_ALifeObjectHangingLamp::OnChangeFlag);
-	// 
 	P = PHelper().CreateFlag16(values, PrepareKey(pref, *s_name, "Light\\Type"), &flags, flTypeSpot, "Point", "Spot");
 	P->OnChangeEvent.bind(this, &CSE_ALifeObjectHangingLamp::OnChangeFlag);
 	PHelper().CreateColor(values, PrepareKey(pref, *s_name, "Light\\Main\\Color"), &color);
@@ -1135,7 +1121,8 @@ void CSE_ALifeObjectHangingLamp::FillProps(LPCSTR pref, PropItemVec& values)
 	if (flags.is(flTypeSpot))
 		PHelper().CreateAngle(values, PrepareKey(pref, *s_name, "Light\\Main\\Cone Angle"), &spot_cone_angle, deg2rad(1.f), deg2rad(120.f));
 
-	if (flags.is(flPointAmbient)) {
+	if (flags.is(flPointAmbient)) 
+	{
 		PHelper().CreateFloat(values, PrepareKey(pref, *s_name, "Light\\Ambient\\Radius"), &m_ambient_radius, 0.f, 1000.f);
 		PHelper().CreateFloat(values, PrepareKey(pref, *s_name, "Light\\Ambient\\Power"), &m_ambient_power);
 		PHelper().CreateChoose(values, PrepareKey(pref, *s_name, "Light\\Ambient\\Texture"), &m_ambient_texture, smTexture, "lights");
@@ -1151,24 +1138,29 @@ void CSE_ALifeObjectHangingLamp::FillProps(LPCSTR pref, PropItemVec& values)
 	PHelper().CreateFloat(values, PrepareKey(pref, *s_name, "Game\\Health"), &m_health, 0.f, 100.f);
 }
 
-#define VIS_RADIUS 		0.25f
+#define VIS_RADIUS 0.25f
 void CSE_ALifeObjectHangingLamp::on_render(CDUInterface* du, ISE_AbstractLEOwner* _owner, bool bSelected, const Fmatrix& parent, int priority, bool strictB2F)
 {
 	inherited1::on_render(du, _owner, bSelected, parent, priority, strictB2F);
-	if ((1 == priority) && (false == strictB2F)) {
+	if ((1 == priority) && (false == strictB2F)) 
+	{
 		u32 clr = bSelected ? 0x00FFFFFF : 0x00FFFF00;
 		Fmatrix main_xform, ambient_xform;
 		_owner->get_bone_xform(*light_main_bone, main_xform);
 		main_xform.mulA_43(parent);
-		if (flags.is(flPointAmbient)) {
+		if (flags.is(flPointAmbient)) 
+		{
 			_owner->get_bone_xform(*light_ambient_bone, ambient_xform);
 			ambient_xform.mulA_43(parent);
 		}
-		if (bSelected) {
-			if (flags.is(flTypeSpot)) {
+		if (bSelected) 
+		{
+			if (flags.is(flTypeSpot)) 
+			{
 				du->DrawSpotLight(main_xform.c, main_xform.k, range, spot_cone_angle, clr);
 			}
-			else {
+			else 
+			{
 				du->DrawLineSphere(main_xform.c, range, clr, true);
 			}
 			if (flags.is(flPointAmbient))
@@ -1182,28 +1174,25 @@ void CSE_ALifeObjectHangingLamp::on_render(CDUInterface* du, ISE_AbstractLEOwner
 
 bool CSE_ALifeObjectHangingLamp::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeObjectHangingLamp::validate()
 {
 	if (flags.test(flR1) || flags.test(flR2))
-		return					(true);
+		return true;
 
 	Msg("! Render type is not set properly!");
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeObjectHangingLamp::match_configuration() const
 {
 	R_ASSERT3(flags.test(flR1) || flags.test(flR2), "no renderer type set for hanging-lamp ", name_replace());
 #ifdef XRGAME_EXPORTS
-	return						(
-		(flags.test(flR1) && (::Render->get_generation() == IRender_interface::GENERATION_R1)) ||
-		(flags.test(flR2) && (::Render->get_generation() == IRender_interface::GENERATION_R2))
-		);
+	return ((flags.test(flR1) && (::Render->get_generation() == IRender_interface::GENERATION_R1)) || (flags.test(flR2) && (::Render->get_generation() == IRender_interface::GENERATION_R2)));
 #else
-	return						(true);
+	return true;
 #endif
 }
 
@@ -1217,9 +1206,7 @@ CSE_ALifeObjectProjector::CSE_ALifeObjectProjector(LPCSTR caSection) : CSE_ALife
 	m_flags.set(flSwitchOffline, FALSE);
 }
 
-CSE_ALifeObjectProjector::~CSE_ALifeObjectProjector()
-{
-}
+CSE_ALifeObjectProjector::~CSE_ALifeObjectProjector() {}
 
 void CSE_ALifeObjectProjector::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -1248,7 +1235,7 @@ void CSE_ALifeObjectProjector::FillProps(LPCSTR pref, PropItemVec& values)
 
 bool CSE_ALifeObjectProjector::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1262,18 +1249,16 @@ CSE_ALifeSchedulable::CSE_ALifeSchedulable(LPCSTR caSection)
 	m_schedule_counter = u64(-1);
 }
 
-CSE_ALifeSchedulable::~CSE_ALifeSchedulable()
-{
-}
+CSE_ALifeSchedulable::~CSE_ALifeSchedulable() {}
 
 bool CSE_ALifeSchedulable::need_update(CSE_ALifeDynamicObject* object)
 {
-	return						(!object || (object->m_bDirectControl && /**object->interactive() && /**/object->used_ai_locations() && !object->m_bOnline));
+	return !object || (object->m_bDirectControl && object->used_ai_locations() && !object->m_bOnline);
 }
 
 CSE_Abstract* CSE_ALifeSchedulable::init()
 {
-	return						(base());
+	return base();
 }
 
 u32	CSE_ALifeSchedulable::ef_creature_type() const
@@ -1315,13 +1300,11 @@ CSE_ALifeHelicopter::CSE_ALifeHelicopter(LPCSTR caSection) : CSE_ALifeDynamicObj
 	m_flags.set(flInteractive, FALSE);
 }
 
-CSE_ALifeHelicopter::~CSE_ALifeHelicopter()
-{
-}
+CSE_ALifeHelicopter::~CSE_ALifeHelicopter() {}
 
 CSE_Motion* CSE_ALifeHelicopter::motion()
 {
-	return						(this);
+	return this;
 }
 
 void CSE_ALifeHelicopter::STATE_Read(NET_Packet& tNetPacket, u16 size)
@@ -1362,9 +1345,10 @@ void CSE_ALifeHelicopter::load(NET_Packet& tNetPacket)
 	inherited1::load(tNetPacket);
 	inherited3::load(tNetPacket);
 }
+
 bool CSE_ALifeHelicopter::can_save() const
 {
-	return						CSE_PHSkeleton::need_save();
+	return CSE_PHSkeleton::need_save();
 }
 
 void CSE_ALifeHelicopter::FillProps(LPCSTR pref, PropItemVec& values)
@@ -1378,7 +1362,7 @@ void CSE_ALifeHelicopter::FillProps(LPCSTR pref, PropItemVec& values)
 
 bool CSE_ALifeHelicopter::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1386,7 +1370,6 @@ bool CSE_ALifeHelicopter::used_ai_locations() const
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeCar::CSE_ALifeCar(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection), CSE_PHSkeleton(caSection)
 {
-
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection, "visual"))
 		set_visual(pSettings->r_string(caSection, "visual"));
 	m_flags.set(flUseSwitches, FALSE);
@@ -1394,9 +1377,7 @@ CSE_ALifeCar::CSE_ALifeCar(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSe
 	health = 1.0f;
 }
 
-CSE_ALifeCar::~CSE_ALifeCar()
-{
-}
+CSE_ALifeCar::~CSE_ALifeCar() {}
 
 void CSE_ALifeCar::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -1432,27 +1413,23 @@ void CSE_ALifeCar::UPDATE_Write(NET_Packet& tNetPacket)
 
 bool CSE_ALifeCar::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeCar::can_save() const
 {
-	return						CSE_PHSkeleton::need_save();
+	return CSE_PHSkeleton::need_save();
 }
 
 void CSE_ALifeCar::load(NET_Packet& tNetPacket)
 {
 	inherited1::load(tNetPacket);
 	inherited2::load(tNetPacket);
-
 }
 
 void CSE_ALifeCar::data_load(NET_Packet& tNetPacket)
 {
-	//inherited1::data_load(tNetPacket);
 	inherited2::data_load(tNetPacket);
-	//VERIFY(door_states.empty());
-
 	tNetPacket.r_vec3(o_Position);
 	tNetPacket.r_vec3(o_Angle);
 	door_states.clear();
@@ -1472,9 +1449,9 @@ void CSE_ALifeCar::data_load(NET_Packet& tNetPacket)
 	}
 	health = tNetPacket.r_float();
 }
+
 void CSE_ALifeCar::data_save(NET_Packet& tNetPacket)
 {
-	//inherited1::data_save(tNetPacket);
 	inherited2::data_save(tNetPacket);
 	tNetPacket.w_vec3(o_Position);
 	tNetPacket.w_vec3(o_Angle);
@@ -1485,7 +1462,6 @@ void CSE_ALifeCar::data_save(NET_Packet& tNetPacket)
 		{
 			i->write(tNetPacket);
 		}
-		//door_states.clear();
 	}
 	{
 		tNetPacket.w_u16(u16(wheel_states.size()));
@@ -1494,14 +1470,15 @@ void CSE_ALifeCar::data_save(NET_Packet& tNetPacket)
 		{
 			i->write(tNetPacket);
 		}
-		//wheel_states.clear();
 	}
 	tNetPacket.w_float(health);
 }
+
 void CSE_ALifeCar::SDoorState::read(NET_Packet& P)
 {
 	open_state = P.r_u8(); health = P.r_float();
 }
+
 void CSE_ALifeCar::SDoorState::write(NET_Packet& P)
 {
 	P.w_u8(open_state); P.w_float(health);
@@ -1511,6 +1488,7 @@ void CSE_ALifeCar::SWheelState::read(NET_Packet& P)
 {
 	health = P.r_float();
 }
+
 void CSE_ALifeCar::SWheelState::write(NET_Packet& P)
 {
 	P.w_float(health);
@@ -1533,9 +1511,7 @@ CSE_ALifeObjectBreakable::CSE_ALifeObjectBreakable(LPCSTR caSection) : CSE_ALife
 	m_flags.set(flSwitchOffline, FALSE);
 }
 
-CSE_ALifeObjectBreakable::~CSE_ALifeObjectBreakable()
-{
-}
+CSE_ALifeObjectBreakable::~CSE_ALifeObjectBreakable() {}
 
 void CSE_ALifeObjectBreakable::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -1567,36 +1543,28 @@ void CSE_ALifeObjectBreakable::FillProps(LPCSTR pref, PropItemVec& values)
 
 bool CSE_ALifeObjectBreakable::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeObjectBreakable::can_switch_offline() const
 {
-	return						(false);
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeObjectClimable
 ////////////////////////////////////////////////////////////////////////////
-CSE_ALifeObjectClimable::CSE_ALifeObjectClimable(LPCSTR caSection) : CSE_Shape(), CSE_ALifeDynamicObject(caSection)
-{
-	//m_health					= 100.f;
-	//m_flags.set					(flUseSwitches,FALSE);
-	//m_flags.set					(flSwitchOffline,FALSE);
-}
+CSE_ALifeObjectClimable::CSE_ALifeObjectClimable(LPCSTR caSection) : CSE_Shape(), CSE_ALifeDynamicObject(caSection) {}
 
-CSE_ALifeObjectClimable::~CSE_ALifeObjectClimable()
-{
-}
+CSE_ALifeObjectClimable::~CSE_ALifeObjectClimable() {}
 
 ISE_Shape* CSE_ALifeObjectClimable::shape()
 {
-	return						(this);
+	return this;
 }
 
 void CSE_ALifeObjectClimable::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
-	//inherited1::STATE_Read		(tNetPacket,size);
 	if (m_wVersion == 99)
 		CSE_ALifeObject::STATE_Read(tNetPacket, size);
 	if (m_wVersion > 99)
@@ -1606,51 +1574,35 @@ void CSE_ALifeObjectClimable::STATE_Read(NET_Packet& tNetPacket, u16 size)
 
 void CSE_ALifeObjectClimable::STATE_Write(NET_Packet& tNetPacket)
 {
-	//inherited1::STATE_Write		(tNetPacket);
 	inherited2::STATE_Write(tNetPacket);
 	cform_write(tNetPacket);
 }
 
-void CSE_ALifeObjectClimable::UPDATE_Read(NET_Packet& tNetPacket)
-{
-	//inherited1::UPDATE_Read		(tNetPacket);
-	//inherited2::UPDATE_Read		(tNetPacket);
+void CSE_ALifeObjectClimable::UPDATE_Read(NET_Packet& tNetPacket) {}
 
-}
-
-void CSE_ALifeObjectClimable::UPDATE_Write(NET_Packet& tNetPacket)
-{
-	//inherited1::UPDATE_Write		(tNetPacket);
-	//inherited2::UPDATE_Write		(tNetPacket);
-}
+void CSE_ALifeObjectClimable::UPDATE_Write(NET_Packet& tNetPacket) {}
 
 void CSE_ALifeObjectClimable::FillProps(LPCSTR pref, PropItemVec& values)
 {
-	//inherited1::FillProps			(pref,values);
 	inherited2::FillProps(pref, values);
-	//PHelper().CreateFloat		(values, PrepareKey(pref,*s_name,"Health"),			&m_health,			0.f, 100.f);
 }
 
 bool CSE_ALifeObjectClimable::used_ai_locations() const
 {
-	return						(false);
+	return false;
 }
 
 bool CSE_ALifeObjectClimable::can_switch_offline() const
 {
-	return						(false);
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeMountedWeapon
 ////////////////////////////////////////////////////////////////////////////
-CSE_ALifeMountedWeapon::CSE_ALifeMountedWeapon(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection)
-{
-}
+CSE_ALifeMountedWeapon::CSE_ALifeMountedWeapon(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection) {}
 
-CSE_ALifeMountedWeapon::~CSE_ALifeMountedWeapon()
-{
-}
+CSE_ALifeMountedWeapon::~CSE_ALifeMountedWeapon() {}
 
 void CSE_ALifeMountedWeapon::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -1677,14 +1629,9 @@ void CSE_ALifeMountedWeapon::FillProps(LPCSTR pref, PropItemVec& values)
 	inherited::FillProps(pref, values);
 }
 
+CSE_ALifeStationaryMgun::CSE_ALifeStationaryMgun(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection) {}
 
-CSE_ALifeStationaryMgun::CSE_ALifeStationaryMgun(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection)
-{
-}
-
-CSE_ALifeStationaryMgun::~CSE_ALifeStationaryMgun()
-{
-}
+CSE_ALifeStationaryMgun::~CSE_ALifeStationaryMgun() {}
 
 void CSE_ALifeStationaryMgun::UPDATE_Read(NET_Packet& tNetPacket)
 {
@@ -1699,7 +1646,6 @@ void CSE_ALifeStationaryMgun::UPDATE_Write(NET_Packet& tNetPacket)
 	tNetPacket.w_u8(m_bWorking ? 1 : 0);
 	save_data(m_destEnemyDir, tNetPacket);
 }
-
 
 void CSE_ALifeStationaryMgun::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -1724,9 +1670,7 @@ CSE_ALifeTeamBaseZone::CSE_ALifeTeamBaseZone(LPCSTR caSection) : CSE_ALifeSpaceR
 	m_team = 0;
 }
 
-CSE_ALifeTeamBaseZone::~CSE_ALifeTeamBaseZone()
-{
-}
+CSE_ALifeTeamBaseZone::~CSE_ALifeTeamBaseZone() {}
 
 void CSE_ALifeTeamBaseZone::STATE_Read(NET_Packet& tNetPacket, u16 size)
 {
@@ -1760,29 +1704,25 @@ void CSE_ALifeTeamBaseZone::FillProps(LPCSTR pref, PropItemVec& items)
 // CSE_ALifeSmartZone
 ////////////////////////////////////////////////////////////////////////////
 
-CSE_ALifeSmartZone::CSE_ALifeSmartZone(LPCSTR caSection) : CSE_ALifeSpaceRestrictor(caSection), CSE_ALifeSchedulable(caSection)
-{
-}
+CSE_ALifeSmartZone::CSE_ALifeSmartZone(LPCSTR caSection) : CSE_ALifeSpaceRestrictor(caSection), CSE_ALifeSchedulable(caSection) {}
 
-CSE_ALifeSmartZone::~CSE_ALifeSmartZone()
-{
-}
+CSE_ALifeSmartZone::~CSE_ALifeSmartZone() {}
 
 CSE_Abstract* CSE_ALifeSmartZone::base()
 {
-	return						(this);
+	return this;
 }
 
 const CSE_Abstract* CSE_ALifeSmartZone::base() const
 {
-	return						(this);
+	return this;
 }
 
 CSE_Abstract* CSE_ALifeSmartZone::init()
 {
 	inherited1::init();
 	inherited2::init();
-	return						(this);
+	return this;
 }
 
 void CSE_ALifeSmartZone::STATE_Read(NET_Packet& tNetPacket, u16 size)
@@ -1810,15 +1750,11 @@ void CSE_ALifeSmartZone::FillProps(LPCSTR pref, PropItemVec& items)
 	inherited1::FillProps(pref, items);
 }
 
-void CSE_ALifeSmartZone::update()
-{
-}
+void CSE_ALifeSmartZone::update() {}
 
 float CSE_ALifeSmartZone::detect_probability()
 {
-	return						(0.f);
+	return 0.f;
 }
 
-void CSE_ALifeSmartZone::smart_touch(CSE_ALifeMonsterAbstract* monster)
-{
-}
+void CSE_ALifeSmartZone::smart_touch(CSE_ALifeMonsterAbstract* monster) {}
