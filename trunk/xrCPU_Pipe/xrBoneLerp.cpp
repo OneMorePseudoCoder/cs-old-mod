@@ -4,7 +4,7 @@
 #ifdef _EDITOR
 #include "SkeletonAnimated.h"
 #else
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 #endif
 
 IC float myasin(const float x)

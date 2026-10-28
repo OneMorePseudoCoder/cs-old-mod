@@ -10,7 +10,7 @@
 #include "script_entity.h"
 #include "CustomMonster.h"
 #include "../xr_3da/feel_vision.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 #include "script_entity_action.h"
 #include "weapon.h"
 #include "ParticlesObject.h"

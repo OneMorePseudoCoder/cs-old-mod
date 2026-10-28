@@ -44,8 +44,8 @@
 #include "skeletonX.h"
 #include "skeletoncustom.h"
 #else
-#include "../layers/xrRender/SkeletonX.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonX.h"
+#include "../xrRender/SkeletonCustom.h"
 #endif
 // -- offsets -------------------------------------------------------
 #define M11 0

@@ -1,7 +1,7 @@
 // -- includes ------------------------------------------------------
 #include "stdafx.h"
-#include "../layers/xrRender/SkeletonX.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonX.h"
+#include "../xrRender/SkeletonCustom.h"
 #pragma warning(disable:4537)
 
 // -- offsets -------------------------------------------------------

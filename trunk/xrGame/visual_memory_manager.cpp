@@ -10,7 +10,7 @@
 #include "visual_memory_manager.h"
 #include "ai/stalker/ai_stalker.h"
 #include "memory_space_impl.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "clsid_game.h"
 #include "ai_object_location.h"
 #include "level_graph.h"
@@ -27,13 +27,11 @@
 #include "client_spawn_manager.h"
 #include "client_spawn_manager.h"
 #include "memory_manager.h"
+#include "clsid_game.h"
+#include "ai_debug.h"
 
-//#ifndef MASTER_GOLD
-#	include "clsid_game.h"
-#	include "ai_debug.h"
-//#endif // MASTER_GOLD
-
-struct SRemoveOfflinePredicate {
+struct SRemoveOfflinePredicate 
+{
 	bool		operator()						(const CVisibleObject& object) const
 	{
 		VERIFY(object.m_object);
@@ -47,7 +45,8 @@ struct SRemoveOfflinePredicate {
 	}
 };
 
-struct CVisibleObjectPredicate {
+struct CVisibleObjectPredicate 
+{
 	u32			m_id;
 	CVisibleObjectPredicate(u32 id) :
 		m_id(id)
@@ -61,7 +60,8 @@ struct CVisibleObjectPredicate {
 	}
 };
 
-struct CNotYetVisibleObjectPredicate {
+struct CNotYetVisibleObjectPredicate 
+{
 	const CGameObject* m_game_object;
 
 	IC				CNotYetVisibleObjectPredicate(const CGameObject* game_object)

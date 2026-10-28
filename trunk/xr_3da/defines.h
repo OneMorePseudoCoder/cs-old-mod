@@ -2,7 +2,7 @@
 #define DefinesH
 
 #ifdef	DEBUG
-ENGINE_API	extern BOOL			bDebug;
+ENGINE_API extern BOOL bDebug;
 #else
 #define bDebug 0
 #endif
@@ -11,10 +11,11 @@ ENGINE_API	extern BOOL			bDebug;
 #define _SHOW_REF(msg, x)   { if(x) { x->AddRef(); Log(msg,u32(x->Release()));}}
 
 // textures
-ENGINE_API extern	int		psTextureLOD;
+ENGINE_API extern int psTextureLOD;
 
 // psDeviceFlags
-enum {
+enum 
+{
 	rsFullscreen = (1ul << 0ul),
 	rsClearBB = (1ul << 1ul),
 	rsVSync = (1ul << 2ul),
@@ -37,7 +38,6 @@ enum {
 	mtParticles = (1ul << 17ul),
 
 	rsCameraPos = (1ul << 18ul),
-	rsR2 = (1ul << 19ul),
 
 	// 20-32 bit - reserved to Editor
 };
@@ -45,19 +45,18 @@ enum {
 constexpr float UI_BASE_WIDTH = 1024.0f;
 constexpr float UI_BASE_HEIGHT = 768.0f;
 
-//. ENGINE_API extern	u32			psCurrentMode		;
-ENGINE_API extern	u32			psCurrentVidMode[];
-ENGINE_API extern	u32			psCurrentBPP;
-ENGINE_API extern	Flags32		psDeviceFlags;
+ENGINE_API extern u32 psCurrentVidMode[];
+ENGINE_API extern u32 psCurrentBPP;
+ENGINE_API extern Flags32 psDeviceFlags;
 
 // game path definition
-#define _game_data_				"$game_data$"
-#define _game_textures_			"$game_textures$"
-#define _game_levels_			"$game_levels$"
-#define _game_sounds_			"$game_sounds$"
-#define _game_meshes_			"$game_meshes$"
-#define _game_shaders_			"$game_shaders$"
-#define _game_config_			"$game_config$"
+#define _game_data_ "$game_data$"
+#define _game_textures_ "$game_textures$"
+#define _game_levels_ "$game_levels$"
+#define _game_sounds_ "$game_sounds$"
+#define _game_meshes_ "$game_meshes$"
+#define _game_shaders_ "$game_shaders$"
+#define _game_config_ "$game_config$"
 
 // editor path definition
 #define _server_root_			"$server_root$"

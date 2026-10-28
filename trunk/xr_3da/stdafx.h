@@ -50,17 +50,17 @@
 
 extern ENGINE_API CInifile* pGameIni;
 
-#pragma comment( lib, "xrCore.lib"	)
-#pragma comment( lib, "xrCDB.lib"	)
-#pragma comment( lib, "xrSound.lib"	)
-#pragma comment( lib, "LuaJIT.lib"	)
-#pragma comment( lib, "Luabind.lib"	)
+#pragma comment(lib, "xrCore.lib")
+#pragma comment(lib, "xrCDB.lib")
+#pragma comment(lib, "xrSound.lib")
+#pragma comment(lib, "LuaJIT.lib")
+#pragma comment(lib, "Luabind.lib")
 
-#pragma comment( lib, "winmm.lib"		)
+#pragma comment(lib, "winmm.lib")
 
-#pragma comment( lib, "d3d9.lib"		)
-#pragma comment( lib, "dinput8.lib"		)
-#pragma comment( lib, "dxguid.lib"		)
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
 
 #ifndef DEBUG
 #	define LUABIND_NO_ERROR_CHECKING
@@ -71,7 +71,7 @@ extern ENGINE_API CInifile* pGameIni;
 #define LUABIND_NO_EXCEPTIONS
 #define BOOST_THROW_EXCEPTION_HPP_INCLUDED
 namespace std { class exception; }
-namespace boost { ENGINE_API	void throw_exception(const std::exception& A); };
+namespace boost { ENGINE_API void throw_exception(const std::exception& A); };
 #endif
 #define LUABIND_DONT_COPY_STRINGS
 

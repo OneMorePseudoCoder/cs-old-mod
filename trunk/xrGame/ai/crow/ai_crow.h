@@ -7,7 +7,7 @@
 #define __XRAY_AI_CROW__
 
 #include "../../entity_alive.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 
 class CMotionDef;
 class CBlend;

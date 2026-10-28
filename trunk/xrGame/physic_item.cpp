@@ -11,7 +11,7 @@
 #include "physicsshell.h"
 #include "xrserver_objects.h"
 #include "../xr_3da/FBasicVisual.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #define CHOOSE_MAX(x,inst_x,y,inst_y,z,inst_z)\
 	if(x>y)\
 	if(x>z){inst_x;}\

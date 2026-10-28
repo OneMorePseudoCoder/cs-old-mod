@@ -10,7 +10,7 @@
 #include "environment.h"
 #include "xr_input.h"
 #include "CustomHUD.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 #include "ResourceManager.h"
 
 #include "xr_object.h"
@@ -599,38 +599,6 @@ public:
 	virtual void	Save(IWriter* F) {};
 };
 
-
-
-ENGINE_API BOOL r2_sun_static = TRUE;
-
-u32				renderer_value = 0;
-class CCC_r2 : public CCC_Token
-{
-	typedef CCC_Token inherited;
-public:
-	CCC_r2(LPCSTR N) : inherited(N, &renderer_value, vid_quality_token) { renderer_value = 0; };
-
-	virtual void	Execute(LPCSTR args)
-	{
-#ifdef DEDICATED_SERVER
-		inherited::Execute("renderer_r1");
-#else
-		inherited::Execute(args);
-#endif // DEDICATED_SERVER
-
-		psDeviceFlags.set(rsR2, (renderer_value > 0));
-		r2_sun_static = (renderer_value != 2);
-	}
-
-	virtual void	Save(IWriter* F) {
-		if (!strstr(Core.Params, "-r2"))
-		{
-			inherited::Save(F);
-		}
-	}
-
-};
-
 class ENGINE_API CCC_HideConsole : public IConsole_Command
 {
 public:
@@ -655,22 +623,20 @@ public:
 //-----------------------------------------------------------------------
 ENGINE_API float	psHUD_FOV = 0.45f;
 
-extern int			psSkeletonUpdate;
-extern int			rsDVB_Size;
-extern int			rsDIB_Size;
-extern int			psNET_ClientUpdate;
-extern int			psNET_ClientPending;
-extern int			psNET_ServerUpdate;
-extern int			psNET_ServerPending;
-extern int			psNET_DedicatedSleep;
-extern char			psNET_Name[32];
-extern Flags32		psEnvFlags;
-extern float		r__dtex_range;
+extern int psSkeletonUpdate;
+extern int rsDVB_Size;
+extern int rsDIB_Size;
+extern int psNET_ClientUpdate;
+extern int psNET_ClientPending;
+extern int psNET_ServerUpdate;
+extern int psNET_ServerPending;
+extern int psNET_DedicatedSleep;
+extern char psNET_Name[32];
+extern Flags32 psEnvFlags;
+extern float r__dtex_range;
+extern int g_ErrorLineCount;
 
-extern int			g_ErrorLineCount;
-
-
-ENGINE_API int			ps_r__Supersample = 1;
+ENGINE_API int ps_r__Supersample = 1;
 void CCC_Register()
 {
 	// General
@@ -682,8 +648,6 @@ void CCC_Register()
 	CMD1(CCC_LoadCFG, "cfg_load");
 
 #ifdef DEBUG
-	//	CMD1(CCC_Crash,		"crash"					);
-
 	CMD1(CCC_MotionsStat, "stat_motions");
 	CMD1(CCC_TexturesStat, "stat_textures");
 #endif
@@ -730,20 +694,16 @@ void CCC_Register()
 	CMD3(CCC_Mask, "rs_stats", &psDeviceFlags, rsStatistic);
 	CMD4(CCC_Float, "rs_vis_distance", &psVisDistance, 0.4f, 1.5f);
 
-	//#ifdef DEBUG
 	CMD3(CCC_Mask, "rs_cam_pos", &psDeviceFlags, rsCameraPos);
 	CMD3(CCC_Mask, "rs_occ_draw", &psDeviceFlags, rsOcclusionDraw);
 	CMD3(CCC_Mask, "rs_occ_stats", &psDeviceFlags, rsOcclusionStats);
 	CMD4(CCC_Integer, "rs_skeleton_update", &psSkeletonUpdate, 2, 128);
-	//#endif // DEBUG
 
 	CMD2(CCC_Gamma, "rs_c_gamma", &ps_gamma);
 	CMD2(CCC_Gamma, "rs_c_brightness", &ps_brightness);
 	CMD2(CCC_Gamma, "rs_c_contrast", &ps_contrast);
-	//	CMD4(CCC_Integer,	"rs_vb_size",			&rsDVB_Size,		32,		4096);
-	//	CMD4(CCC_Integer,	"rs_ib_size",			&rsDIB_Size,		32,		4096);
 
-		// Texture manager	
+	// Texture manager	
 	CMD4(CCC_Integer, "texture_lod", &psTextureLOD, 0, 4);
 	CMD4(CCC_Integer, "net_dedicated_sleep", &psNET_DedicatedSleep, 0, 64);
 
@@ -760,8 +720,6 @@ void CCC_Register()
 	// Sound
 	CMD2(CCC_Float, "snd_volume_eff", &psSoundVEffects);
 	CMD2(CCC_Float, "snd_volume_music", &psSoundVMusic);
-	//.	CMD3(CCC_Token,		"snd_freq",				&psSoundFreq,		snd_freq_token			);
-	//.	CMD3(CCC_Token,		"snd_model",			&psSoundModel,		snd_model_token			);
 	CMD1(CCC_SND_Restart, "snd_restart");
 	CMD3(CCC_Mask, "snd_acceleration", &psSoundFlags, ss_Hardware);
 	CMD3(CCC_Mask, "snd_efx", &psSoundFlags, ss_EAX);
@@ -775,7 +733,6 @@ void CCC_Register()
 	CMD3(CCC_Mask, "snd_stats_ai_dist", &g_stats_flags, st_sound_ai_dist);
 	CMD3(CCC_Mask, "snd_stats_info_name", &g_stats_flags, st_sound_info_name);
 	CMD3(CCC_Mask, "snd_stats_info_object", &g_stats_flags, st_sound_info_object);
-
 	CMD4(CCC_Integer, "error_line_count", &g_ErrorLineCount, 6, 1024);
 #endif // DEBUG
 
@@ -788,12 +745,11 @@ void CCC_Register()
 	CMD2(CCC_Float, "cam_inert", &psCamInert);
 	CMD2(CCC_Float, "cam_slide_inert", &psCamSlideInert);
 
-	CMD1(CCC_r2, "renderer");
-	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);
-	psSoundOcclusionScale = pSettings->r_float("sound", "occlusion_scale"); clamp(psSoundOcclusionScale, 0.1f, .5f);
+	psSoundOcclusionScale = pSettings->r_float("sound", "occlusion_scale");
+	clamp(psSoundOcclusionScale, 0.1f, .5f);
 
-	extern	int	g_Dump_Export_Obj;
-	extern	int	g_Dump_Import_Obj;
+	extern int g_Dump_Export_Obj;
+	extern int g_Dump_Import_Obj;
 	CMD4(CCC_Integer, "net_dbg_dump_export_obj", &g_Dump_Export_Obj, 0, 1);
 	CMD4(CCC_Integer, "net_dbg_dump_import_obj", &g_Dump_Import_Obj, 0, 1);
 
@@ -805,10 +761,9 @@ void CCC_Register()
 		CMD4(CCC_DR_UsePoints, "demo_record_4step", &g_bDR_LM_4Steps, 0, 1);
 		CMD4(CCC_DR_UsePoints, "demo_record_step", &g_iDR_LM_Step, 0, 3);
 	}
+
 	CMD1(CCC_DumpResources, "dump_resources");
 	CMD1(CCC_DumpOpenFiles, "dump_open_files");
-	//#endif
-
 
 	extern int g_svTextConsoleUpdateRate;
 	CMD4(CCC_Integer, "sv_console_update_rate", &g_svTextConsoleUpdateRate, 1, 100);
@@ -818,7 +773,7 @@ void CCC_Register()
 
 	CMD1(CCC_HideConsole, "hide");
 
-#ifdef	DEBUG
+#ifdef DEBUG
 	extern BOOL debug_destroy;
 	extern BOOL snd_info;
 	CMD4(CCC_Integer, "debug_destroy", &debug_destroy, FALSE, TRUE);

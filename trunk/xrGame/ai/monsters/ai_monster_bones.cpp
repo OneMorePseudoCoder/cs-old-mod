@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ai_monster_bones.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 
 
 //****************************************************************************************************

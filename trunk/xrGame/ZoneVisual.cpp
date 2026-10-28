@@ -1,16 +1,11 @@
 #include "stdafx.h"
 #include "CustomZone.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 #include "ZoneVisual.h"
 #include "xrServer_Objects_ALife_Monsters.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
-CVisualZone::CVisualZone()
-{
-}
-CVisualZone::~CVisualZone()
-{
 
-}
+CVisualZone::CVisualZone() {}
+CVisualZone::~CVisualZone() {}
 
 BOOL CVisualZone::net_Spawn(CSE_Abstract* DC)
 {
@@ -24,27 +19,27 @@ BOOL CVisualZone::net_Spawn(CSE_Abstract* DC)
 	setVisible(TRUE);
 	return ret;
 }
+
 void CVisualZone::net_Destroy()
 {
 	inherited::net_Destroy();
-
 }
+
 void CVisualZone::AffectObjects()
 {
 	inherited::AffectObjects();
-	//	smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(*m_attack_animation);
 }
+
 void CVisualZone::SwitchZoneState(EZoneState new_state)
 {
 	if (m_eZoneState == eZoneStateBlowout && new_state != eZoneStateBlowout)
 	{
-		//	CKinematicsAnimated*	SA=smart_cast<CKinematicsAnimated*>(Visual());
 		smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(m_idle_animation);
 	}
 
 	inherited::SwitchZoneState(new_state);
-
 }
+
 void CVisualZone::Load(LPCSTR section)
 {
 	inherited::Load(section);
@@ -56,11 +51,9 @@ void CVisualZone::Load(LPCSTR section)
 void CVisualZone::UpdateBlowout()
 {
 	inherited::UpdateBlowout();
-	if (m_dwAttackAnimaionStart >= (u32)m_iPreviousStateTime &&
-		m_dwAttackAnimaionStart < (u32)m_iStateTime)
+	if (m_dwAttackAnimaionStart >= (u32)m_iPreviousStateTime && m_dwAttackAnimaionStart < (u32)m_iStateTime)
 		smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(m_attack_animation);
 
-	if (m_dwAttackAnimaionEnd >= (u32)m_iPreviousStateTime &&
-		m_dwAttackAnimaionEnd < (u32)m_iStateTime)
+	if (m_dwAttackAnimaionEnd >= (u32)m_iPreviousStateTime && m_dwAttackAnimaionEnd < (u32)m_iStateTime)
 		smart_cast<CKinematicsAnimated*>(Visual())->PlayCycle(m_idle_animation);
 }

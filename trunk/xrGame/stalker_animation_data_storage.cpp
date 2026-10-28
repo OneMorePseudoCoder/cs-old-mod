@@ -10,11 +10,12 @@
 #include "stalker_animation_data_storage.h"
 #include "stalker_animation_data.h"
 #include "object_broker.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 
 CStalkerAnimationDataStorage* g_stalker_animation_data_storage = 0;
 
-class data_predicate {
+class data_predicate 
+{
 private:
 	CKinematicsAnimated* m_object;
 

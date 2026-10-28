@@ -6,7 +6,7 @@
 #include "PHJointDestroyInfo.h"
 #include "Geometry.h"
 #include "MathUtils.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "PHCollideValidator.h"
 CPHShellSplitterHolder::CPHShellSplitterHolder(CPHShell* shell)
 {

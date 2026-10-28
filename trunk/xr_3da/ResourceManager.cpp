@@ -11,9 +11,8 @@
 
 #include "ResourceManager.h"
 #include "tss.h"
-#include "../layers/blenders/blender.h"
-#include "../layers/blenders/blender_recorder.h"
-
+#include "../xrRender/blender.h"
+#include "../xrRender/blender_recorder.h"
 
 void fix_texture_name(LPSTR fn)
 {

@@ -8,7 +8,7 @@
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "car.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "PHWorld.h"
 extern CPHWorld* ph_world;
 CCar::SCarSound::SCarSound(CCar* car)

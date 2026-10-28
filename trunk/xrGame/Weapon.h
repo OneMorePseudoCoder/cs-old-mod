@@ -8,12 +8,11 @@
 #include "ShootingObject.h"
 #include "hud_item_object.h"
 #include "Actor_Flags.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 #include "game_cl_single.h"
 #include "ai_sounds.h"
 #include "HudSound.h"
 #include "WeaponBinocularsVision.h"
-
 
 // refs
 class CEntity;
@@ -27,8 +26,7 @@ class CBinocularsVision;
 class CNightVisionEffector;
 class CUIStaticItem;
 
-class CWeapon : public CHudItemObject,
-	public CShootingObject
+class CWeapon : public CHudItemObject, public CShootingObject
 {
 private:
 	typedef CHudItemObject inherited;

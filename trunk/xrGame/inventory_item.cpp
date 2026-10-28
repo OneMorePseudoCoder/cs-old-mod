@@ -18,7 +18,7 @@
 #include "game_cl_base.h"
 #include "Actor.h"
 #include "string_table.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "ai_object_location.h"
 #include "object_broker.h"
 #include "../xr_3da/IGame_Persistent.h"

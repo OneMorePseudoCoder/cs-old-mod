@@ -9,7 +9,7 @@
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "Car.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "PHWorld.h"
 extern CPHWorld* ph_world;
 void read_bones(CKinematics* K, LPCSTR S, xr_vector<u16>& bones)

@@ -14,7 +14,7 @@
 #include "../../inventory.h"
 #include "../../weapon.h"
 #include "../../weaponmagazined.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "../../script_engine.h"
 #include "../../sight_manager.h"
 #include "../../stalker_movement_manager.h"

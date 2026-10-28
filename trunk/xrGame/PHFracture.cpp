@@ -3,7 +3,7 @@
 #include "Physics.h"
 #include "PHElement.h"
 #include "PHShell.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 
 #pragma warning(disable:4995)
 #pragma warning(disable:4267)

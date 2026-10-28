@@ -8,7 +8,7 @@
 #include "wound.h"
 #include "xrmessages.h"
 #include "level.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "relation_registry.h"
 #include "monster_community.h"
 #include "entitycondition.h"

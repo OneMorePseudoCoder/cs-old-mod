@@ -6,24 +6,22 @@
 #include "camerafirsteye.h"
 #include "actor.h"
 #include "weaponammo.h"
-
-
 #include "actoreffector.h"
 #include "effectorshot.h"
 #include "ai_sounds.h"
 #include "level.h"
 #include "xr_level_controller.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "game_object_space.h"
-
-//----------------------------------------------------------------------------------------
 
 void CWeaponMounted::BoneCallbackX(CBoneInstance* B)
 {
 	CWeaponMounted* P = static_cast<CWeaponMounted*>(B->Callback_Param);
 
-	if (P->Owner()) {
-		Fmatrix rX;		rX.rotateX(P->camera->pitch + P->m_dAngle.y);
+	if (P->Owner()) 
+	{
+		Fmatrix rX;
+		rX.rotateX(P->camera->pitch + P->m_dAngle.y);
 		B->mTransform.mulB_43(rX);
 	}
 }
@@ -32,12 +30,13 @@ void CWeaponMounted::BoneCallbackY(CBoneInstance* B)
 {
 	CWeaponMounted* P = static_cast<CWeaponMounted*>(B->Callback_Param);
 
-	if (P->Owner()) {
-		Fmatrix rY;		rY.rotateY(P->camera->yaw + P->m_dAngle.x);
+	if (P->Owner()) 
+	{
+		Fmatrix rY;	
+		rY.rotateY(P->camera->yaw + P->m_dAngle.x);
 		B->mTransform.mulB_43(rY);
 	}
 }
-//----------------------------------------------------------------------------------------
 
 CWeaponMounted::CWeaponMounted()
 {
@@ -50,7 +49,7 @@ CWeaponMounted::~CWeaponMounted()
 	xr_delete(camera);
 }
 
-void	CWeaponMounted::Load(LPCSTR section)
+void CWeaponMounted::Load(LPCSTR section)
 {
 	inherited::Load(section);
 	CShootingObject::Load(section);
@@ -66,17 +65,16 @@ void	CWeaponMounted::Load(LPCSTR section)
 	camMaxAngle = deg2rad(camMaxAngle);
 	camRelaxSpeed = pSettings->r_float(section, "cam_relax_speed");
 	camRelaxSpeed = deg2rad(camRelaxSpeed);
-
 }
 
-BOOL	CWeaponMounted::net_Spawn(CSE_Abstract* DC)
+BOOL CWeaponMounted::net_Spawn(CSE_Abstract* DC)
 {
 	CSE_Abstract* e = (CSE_Abstract*)(DC);
 	CSE_ALifeMountedWeapon* mw = smart_cast<CSE_ALifeMountedWeapon*>(e);
 	R_ASSERT(mw);
 
 	if (!inherited::net_Spawn(DC))
-		return			(FALSE);
+		return FALSE;
 
 	R_ASSERT(Visual() && smart_cast<CKinematics*>(Visual()));
 
@@ -107,12 +105,10 @@ BOOL	CWeaponMounted::net_Spawn(CSE_Abstract* DC)
 	setVisible(TRUE);
 	setEnabled(TRUE);
 
-
-
 	return TRUE;
 }
 
-void	CWeaponMounted::net_Destroy()
+void CWeaponMounted::net_Destroy()
 {
 	CShootingObject::Light_Destroy();
 
@@ -120,20 +116,21 @@ void	CWeaponMounted::net_Destroy()
 	xr_delete(m_pPhysicsShell);
 }
 
-void	CWeaponMounted::net_Export(NET_Packet& P)
+void CWeaponMounted::net_Export(NET_Packet& P)
 {
 	inherited::net_Export(P);
 }
 
-void	CWeaponMounted::net_Import(NET_Packet& P)
+void CWeaponMounted::net_Import(NET_Packet& P)
 {
 	inherited::net_Import(P);
 }
 
-void	CWeaponMounted::UpdateCL()
+void CWeaponMounted::UpdateCL()
 {
 	inherited::UpdateCL();
-	if (Owner()) {
+	if (Owner()) 
+	{
 		CKinematics* K = smart_cast<CKinematics*>(Visual());
 		K->CalculateBones();
 		// update fire pos & fire_dir
@@ -155,37 +152,41 @@ void	CWeaponMounted::UpdateCL()
 	}
 }
 
-void	CWeaponMounted::shedule_Update(u32 dt)
+void CWeaponMounted::shedule_Update(u32 dt)
 {
 	inherited::shedule_Update(dt);
 }
 
-void	CWeaponMounted::renderable_Render()
+void CWeaponMounted::renderable_Render()
 {
 	//нарисовать подсветку
 	RenderLight();
-
 	inherited::renderable_Render();
 }
 
-void	CWeaponMounted::OnMouseMove(int dx, int dy)
+void CWeaponMounted::OnMouseMove(int dx, int dy)
 {
-	if (Remote())	return;
+	if (Remote())
+		return;
 
 	CCameraBase* C = camera;
 	float scale = (C->f_fov / g_fov) * psMouseSens * psMouseSensScale / 50.f;
-	if (dx) {
+	if (dx) 
+	{
 		float d = float(dx) * scale;
 		C->Move((d < 0) ? kLEFT : kRIGHT, _abs(d));
 	}
-	if (dy) {
+	if (dy) 
+	{
 		float d = ((psMouseInvert.test(1)) ? -1 : 1) * float(dy) * scale * 3.f / 4.f;
 		C->Move((d > 0) ? kUP : kDOWN, _abs(d));
 	}
 }
-void	CWeaponMounted::OnKeyboardPress(int dik)
+
+void CWeaponMounted::OnKeyboardPress(int dik)
 {
-	if (Remote())							return;
+	if (Remote())
+		return;
 
 	switch (dik)
 	{
@@ -195,9 +196,11 @@ void	CWeaponMounted::OnKeyboardPress(int dik)
 	};
 
 }
-void	CWeaponMounted::OnKeyboardRelease(int dik)
+void CWeaponMounted::OnKeyboardRelease(int dik)
 {
-	if (Remote())							return;
+	if (Remote())
+		return;
+
 	switch (dik)
 	{
 	case kWPN_FIRE:
@@ -205,18 +208,16 @@ void	CWeaponMounted::OnKeyboardRelease(int dik)
 		break;
 	};
 }
-void	CWeaponMounted::OnKeyboardHold(int dik)
-{
-	if (Remote())							return;
 
-	//	switch(dik)
-	//	{
-	//	}
+void CWeaponMounted::OnKeyboardHold(int dik)
+{
+	if (Remote())
+		return;
 }
 
-void	CWeaponMounted::cam_Update(float dt, float fov)
+void CWeaponMounted::cam_Update(float dt, float fov)
 {
-	Fvector							P, Da;
+	Fvector P, Da;
 	Da.set(0, 0, 0);
 
 	CKinematics* K = smart_cast<CKinematics*>(Visual());
@@ -225,8 +226,8 @@ void	CWeaponMounted::cam_Update(float dt, float fov)
 	const Fmatrix& C = K->LL_GetTransform(camera_bone);
 	XFORM().transform_tiny(P, C.c);
 
-	if (OwnerActor()) {
-		// rotate head
+	if (OwnerActor()) 
+	{
 		OwnerActor()->Orientation().yaw = -Camera()->yaw;
 		OwnerActor()->Orientation().pitch = -Camera()->pitch;
 	}
@@ -234,11 +235,12 @@ void	CWeaponMounted::cam_Update(float dt, float fov)
 	Level().Cameras().UpdateFromCamera(Camera());
 }
 
-bool	CWeaponMounted::Use(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos)
+bool CWeaponMounted::Use(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos)
 {
 	return !Owner();
 }
-bool	CWeaponMounted::attach_Actor(CGameObject* actor)
+
+bool CWeaponMounted::attach_Actor(CGameObject* actor)
 {
 	m_dAngle.set(0.0f, 0.0f);
 	CHolderCustom::attach_Actor(actor);
@@ -256,11 +258,13 @@ bool	CWeaponMounted::attach_Actor(CGameObject* actor)
 	Fvector ap;
 	XFORM().transform_tiny(ap, A.c);
 	Fmatrix AP; AP.translate(ap);
-	if (OwnerActor()) OwnerActor()->SetPhPosition(AP);
+	if (OwnerActor())
+		OwnerActor()->SetPhPosition(AP);
 	processing_activate();
 	return true;
 }
-void	CWeaponMounted::detach_Actor()
+
+void CWeaponMounted::detach_Actor()
 {
 	CHolderCustom::detach_Actor();
 	// disable actor rotate callback
@@ -287,12 +291,12 @@ CCameraBase* CWeaponMounted::Camera()
 	return camera;
 }
 
-
 void CWeaponMounted::FireStart()
 {
 	m_dAngle.set(0.0f, 0.0f);
 	CShootingObject::FireStart();
 }
+
 void CWeaponMounted::FireEnd()
 {
 	m_dAngle.set(0.0f, 0.0f);
@@ -301,14 +305,11 @@ void CWeaponMounted::FireEnd()
 	RemoveShotEffector();
 }
 
-
 void CWeaponMounted::OnShot()
 {
 	VERIFY(Owner());
 
-	FireBullet(get_CurrentFirePoint(), fire_dir,
-		fireDispersionBase,
-		m_CurrentAmmo, Owner()->ID(), ID(), SendHitAllowed(Owner()));
+	FireBullet(get_CurrentFirePoint(), fire_dir, fireDispersionBase, m_CurrentAmmo, Owner()->ID(), ID(), SendHitAllowed(Owner()));
 
 	StartShotParticles();
 
@@ -324,28 +325,29 @@ void CWeaponMounted::OnShot()
 
 	//добавить эффектор стрельбы
 	AddShotEffector();
-	m_dAngle.set(::Random.randF(-fireDispersionBase, fireDispersionBase),
-		::Random.randF(-fireDispersionBase, fireDispersionBase));
+	m_dAngle.set(::Random.randF(-fireDispersionBase, fireDispersionBase), ::Random.randF(-fireDispersionBase, fireDispersionBase));
 }
 
 void CWeaponMounted::UpdateFire()
 {
 	fTime -= Device.fTimeDelta;
 
-
 	CShootingObject::UpdateFlameParticles();
 	CShootingObject::UpdateLight();
 
-	if (!IsWorking()) {
+	if (!IsWorking()) 
+	{
 		if (fTime < 0) fTime = 0.f;
 		return;
 	}
 
-	if (fTime <= 0) {
+	if (fTime <= 0) 
+	{
 		OnShot();
 		fTime += fTimeToFire;
 	}
-	else {
+	else 
+	{
 		angle_lerp(m_dAngle.x, 0.f, 5.f, Device.fTimeDelta);
 		angle_lerp(m_dAngle.y, 0.f, 5.f, Device.fTimeDelta);
 	}
@@ -361,7 +363,8 @@ void CWeaponMounted::AddShotEffector()
 	if (OwnerActor())
 	{
 		CCameraShotEffector* S = smart_cast<CCameraShotEffector*>(OwnerActor()->Cameras().GetCamEffector(eCEShot));
-		if (!S)	S = (CCameraShotEffector*)OwnerActor()->Cameras().AddCamEffector(xr_new<CCameraShotEffector>(camMaxAngle, camRelaxSpeed, 0.25f, 0.01f, 0.7f));
+		if (!S)
+			S = (CCameraShotEffector*)OwnerActor()->Cameras().AddCamEffector(xr_new<CCameraShotEffector>(camMaxAngle, camRelaxSpeed, 0.25f, 0.01f, 0.7f));
 		R_ASSERT(S);
 		S->Shot(0.01f);
 	}

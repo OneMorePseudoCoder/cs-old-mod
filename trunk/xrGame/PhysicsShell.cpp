@@ -10,7 +10,7 @@
 #include "PHSplitedShell.h"
 #include "gameobject.h"
 #include "physicsshellholder.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 
 extern CPHWorld* ph_world;
 CPhysicsShell::~CPhysicsShell()

@@ -4,8 +4,8 @@
 #include	"render.h"
 #include	"ResourceManager.h"
 #include	"tss.h"
-#include	"../layers/blenders/blender.h"
-#include	"../layers/blenders/blender_recorder.h"
+#include	"../xrRender/blender.h"
+#include	"../xrRender/blender_recorder.h"
 #include	"ai_script_space.h"
 #include	"ai_script_lua_extension.h"
 #include	"luabind/return_reference_to_policy.hpp"
@@ -207,17 +207,21 @@ void	CResourceManager::LS_Load()
 		];
 
 	// load shaders
-	xr_vector<char*>* folder = FS.file_list_open("$game_shaders$", ::Render->getShaderPath(), FS_ListFiles | FS_RootOnly);
+	xr_vector<char*>* folder = FS.file_list_open("$game_shaders$", "", FS_ListFiles | FS_RootOnly);
 	VERIFY(folder);
-	for (u32 it = 0; it < folder->size(); it++) {
-		string_path						namesp, fn;
+	for (u32 it = 0; it < folder->size(); it++) 
+	{
+		string_path namesp, fn;
 		strcpy_s(namesp, (*folder)[it]);
-		if (0 == strext(namesp) || 0 != xr_strcmp(strext(namesp), ".s"))	continue;
+		if (0 == strext(namesp) || 0 != xr_strcmp(strext(namesp), ".s"))
+			continue;
 		*strext(namesp) = 0;
-		if (0 == namesp[0])			strcpy_s(namesp, "_G");
-		strconcat(sizeof(fn), fn, ::Render->getShaderPath(), (*folder)[it]);
+		if (0 == namesp[0])
+			strcpy_s(namesp, "_G");
+		strconcat(sizeof(fn), fn, "", (*folder)[it]);
 		FS.update_path(fn, "$game_shaders$", fn);
-		try {
+		try 
+		{
 			Script::bfLoadFileIntoNamespace(LSVM, fn, namesp, true);
 		}
 		catch (...)

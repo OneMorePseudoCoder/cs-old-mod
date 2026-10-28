@@ -9,7 +9,7 @@
 
 #include "HUDManager.h"
 #include "level.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "../xr_3da/CameraBase.h"
 #include "inventory.h"
 #include "game_base_space.h"
@@ -211,22 +211,21 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return FALSE;
 
-	bool b_r2 = !!psDeviceFlags.test(rsR2);
-
 	CKinematics* K = smart_cast<CKinematics*>(Visual());
 	CInifile* pUserData = K->LL_UserData();
 	R_ASSERT3(pUserData, "Empty Torch user data!", torch->get_visual());
 	lanim = LALib.FindItem(pUserData->r_string("torch_definition", "color_animator"));
-	guid_bone = K->LL_BoneID(pUserData->r_string("torch_definition", "guide_bone"));	VERIFY(guid_bone != BI_NONE);
+	guid_bone = K->LL_BoneID(pUserData->r_string("torch_definition", "guide_bone"));
+	VERIFY(guid_bone != BI_NONE);
 
-	m_color = pUserData->r_fcolor("torch_definition", (b_r2) ? "color_r2" : "color");
+	m_color = pUserData->r_fcolor("torch_definition", "color");
 	fBrightness = m_color.intensity();
-	float range = pUserData->r_float("torch_definition", (b_r2) ? "range_r2" : "range");
+	float range = pUserData->r_float("torch_definition", "range");
 	light_render->set_color(m_color);
 	light_render->set_range(range);
 
-	Fcolor clr_o = pUserData->r_fcolor("torch_definition", (b_r2) ? "omni_color_r2" : "omni_color");
-	float range_o = pUserData->r_float("torch_definition", (b_r2) ? "omni_range_r2" : "omni_range");
+	Fcolor clr_o = pUserData->r_fcolor("torch_definition", "omni_color");
+	float range_o = pUserData->r_float("torch_definition", "omni_range");
 	light_omni->set_color(clr_o);
 	light_omni->set_range(range_o);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 
 struct SAnimState
 {

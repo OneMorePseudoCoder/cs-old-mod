@@ -2,7 +2,7 @@
 
 
 #include "limb.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 #include "../ik_anim_state.h"
 class	CKinematics;
 class	CDB::TRI;

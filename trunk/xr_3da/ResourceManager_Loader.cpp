@@ -2,17 +2,18 @@
 #pragma hdrstop
 
 #include "ResourceManager.h"
-#include "../layers/blenders/blender.h"
+#include "../xrRender/blender.h"
 
-
-void	CResourceManager::OnDeviceDestroy(BOOL)
+void CResourceManager::OnDeviceDestroy(BOOL)
 {
-	if (Device.b_is_Ready)				return;
-	m_textures_description.UnLoad();
-	//.	xr_delete			(m_description);
+	if (Device.b_is_Ready)
+		return;
 
-		// Matrices
-	for (map_Matrix::iterator m = m_matrices.begin(); m != m_matrices.end(); m++) {
+	m_textures_description.UnLoad();
+
+	// Matrices
+	for (map_Matrix::iterator m = m_matrices.begin(); m != m_matrices.end(); m++) 
+	{
 		R_ASSERT(1 == m->second->dwReference);
 		xr_delete(m->second);
 	}

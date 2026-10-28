@@ -2,7 +2,7 @@
 #include "phcollisiondamagereceiver.h"
 #include "PhysicsShellHolder.h"
 #include "xr_ini.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "geometry.h"
 #include "PhysicsShell.h"
 #include "GameMtlLib.h"

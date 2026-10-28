@@ -12,7 +12,7 @@
 #include "ai/stalker/ai_stalker_space.h"
 #include "ai_space.h"
 #include "../xr_3da/xr_object.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "profiler.h"
 #include "sound_collection_storage.h"
 #include "object_broker.h"

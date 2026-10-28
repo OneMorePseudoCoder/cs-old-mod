@@ -16,7 +16,7 @@ class ENGINE_API	CPerlinNoise1D;
 
 #define DAY_LENGTH		86400.f
 
-#include "../layers/blenders/blender.h"
+#include "../xrRender/blender.h"
 class CBlender_skybox : public IBlender
 {
 public:

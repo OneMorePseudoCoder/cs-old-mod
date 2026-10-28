@@ -3,7 +3,7 @@
 #include "PhysicsShell.h"
 #include "xrMessages.h"
 #include "ph_shell_interface.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "script_callback_ex.h"
 #include "Level.h"
 #include "PHCommander.h"
@@ -13,6 +13,7 @@
 #include "phworld.h"
 #include "phactivationshape.h"
 #include "phvalide.h"
+
 CPhysicsShellHolder::CPhysicsShellHolder()
 {
 	init();
@@ -37,14 +38,14 @@ static enum EEnableState
 	stDisable,
 	stNotDefitnite
 };
+
 static u8 st_enable_state = (u8)stNotDefitnite;
 BOOL CPhysicsShellHolder::net_Spawn(CSE_Abstract* DC)
 {
 	CParticlesPlayer::net_SpawnParticles();
 	st_enable_state = (u8)stNotDefitnite;
 	b_sheduled = true;
-	BOOL ret = inherited::net_Spawn(DC);//load
-	//create_physic_shell			();
+	BOOL ret = inherited::net_Spawn(DC);
 	if (PPhysicsShell() && PPhysicsShell()->isFullActive())
 	{
 		PPhysicsShell()->GetGlobalTransformDynamic(&XFORM());

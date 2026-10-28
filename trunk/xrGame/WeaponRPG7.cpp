@@ -5,15 +5,11 @@
 #include "explosiverocket.h"
 #include "entity.h"
 #include "level.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 
-CWeaponRPG7::CWeaponRPG7(void) : CWeaponCustomPistol("RPG7")
-{
-}
+CWeaponRPG7::CWeaponRPG7(void) : CWeaponCustomPistol("RPG7") {}
 
-CWeaponRPG7::~CWeaponRPG7(void)
-{
-}
+CWeaponRPG7::~CWeaponRPG7(void) {}
 
 void CWeaponRPG7::Load(LPCSTR section)
 {
@@ -28,7 +24,6 @@ void CWeaponRPG7::Load(LPCSTR section)
 	m_sRocketSection = pSettings->r_string(section, "rocket_class");
 }
 
-
 void CWeaponRPG7::UpdateMissileVisibility()
 {
 	bool vis_hud, vis_weap;
@@ -37,16 +32,17 @@ void CWeaponRPG7::UpdateMissileVisibility()
 
 	CKinematics* pHudVisual = smart_cast<CKinematics*>(m_pHUD->Visual());
 	VERIFY(pHudVisual);
-	if (H_Parent() != Level().CurrentEntity()) pHudVisual = NULL;
+	if (H_Parent() != Level().CurrentEntity())
+		pHudVisual = NULL;
 	CKinematics* pWeaponVisual = smart_cast<CKinematics*>(Visual());
 	VERIFY(pWeaponVisual);
 
-	if (pHudVisual) pHudVisual->LL_SetBoneVisible(pHudVisual->LL_BoneID(*m_sHudGrenadeBoneName), vis_hud, TRUE);
+	if (pHudVisual)
+		pHudVisual->LL_SetBoneVisible(pHudVisual->LL_BoneID(*m_sHudGrenadeBoneName), vis_hud, TRUE);
 	pWeaponVisual->LL_SetBoneVisible(pWeaponVisual->LL_BoneID(*m_sGrenadeBoneName), vis_weap, TRUE);
 	pWeaponVisual->CalculateBones_Invalidate();
 	pWeaponVisual->CalculateBones();
 }
-
 
 BOOL CWeaponRPG7::net_Spawn(CSE_Abstract* DC)
 {
@@ -82,6 +78,7 @@ void CWeaponRPG7::ReloadMagazine()
 		CRocketLauncher::SpawnRocket(*m_sRocketSection, this);
 	}
 }
+
 void CWeaponRPG7::SwitchState(u32 S)
 {
 	inherited::SwitchState(S);
@@ -107,7 +104,8 @@ void CWeaponRPG7::switch2_Fire()
 		d.set(get_LastFD());
 
 		CEntity* E = smart_cast<CEntity*>	(H_Parent());
-		if (E) {
+		if (E) 
+		{
 			CInventoryOwner* io = smart_cast<CInventoryOwner*>(H_Parent());
 			if (NULL == io->inventory().ActiveItem())
 			{
@@ -120,11 +118,10 @@ void CWeaponRPG7::switch2_Fire()
 			E->g_fireParams(this, p1, d);
 		}
 
-		Fmatrix								launch_matrix;
+		Fmatrix launch_matrix;
 		launch_matrix.identity();
 		launch_matrix.k.set(d);
-		Fvector::generate_orthonormal_basis(launch_matrix.k,
-			launch_matrix.j, launch_matrix.i);
+		Fvector::generate_orthonormal_basis(launch_matrix.k, launch_matrix.j, launch_matrix.i);
 		launch_matrix.c.set(p1);
 
 		d.normalize();
@@ -138,7 +135,7 @@ void CWeaponRPG7::switch2_Fire()
 
 		if (OnServer())
 		{
-			NET_Packet						P;
+			NET_Packet P;
 			u_EventGen(P, GE_LAUNCH_ROCKET, ID());
 			P.w_u16(u16(getCurrentRocket()->ID()));
 			u_EventSend(P);
@@ -150,18 +147,22 @@ void CWeaponRPG7::OnEvent(NET_Packet& P, u16 type)
 {
 	inherited::OnEvent(P, type);
 	u16 id;
-	switch (type) {
-	case GE_OWNERSHIP_TAKE: {
+	switch (type) 
+	{
+	case GE_OWNERSHIP_TAKE: 
+	{
 		P.r_u16(id);
 		CRocketLauncher::AttachRocket(id, this);
-	} break;
+	} 
+	break;
 	case GE_OWNERSHIP_REJECT:
 	case GE_LAUNCH_ROCKET:
 	{
 		bool bLaunch = (type == GE_LAUNCH_ROCKET);
 		P.r_u16(id);
 		CRocketLauncher::DetachRocket(id, bLaunch);
-	} break;
+	} 
+	break;
 	}
 }
 

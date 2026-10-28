@@ -3,7 +3,7 @@
 #include "../xr_3da/Fmesh.h"
 #include "../xr_3da/XR_IOConsole.h"
 #include "GameMtlLib.h"
-#include "../layers/xrRender/SkeletonCustom.h"
+#include "../xrRender/SkeletonCustom.h"
 #include "profiler.h"
 #include "MainMenu.h"
 #include "UICursor.h"

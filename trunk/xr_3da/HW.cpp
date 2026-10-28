@@ -13,21 +13,21 @@
 #include "XR_IOConsole.h"
 
 ENGINE_API xr_token* vid_disp_token = nullptr;
-ENGINE_API int       ps_rs_display = -1; // -1 = авто (как сейчас), 0..N-1 = конкретный монитор
+ENGINE_API int ps_rs_display = -1; // -1 = авто (как сейчас), 0..N-1 = конкретный монитор
 
 static LPCSTR xr_strdupA(const char* s) { size_t n = xr_strlen(s) + 1; char* p = (char*)xr_malloc(n); memcpy(p, s, n); return p; }
 
 #ifndef _EDITOR
-void	fill_vid_mode_list(CHW* _hw);
-void	free_vid_mode_list();
+void fill_vid_mode_list(CHW* _hw);
+void free_vid_mode_list();
 #else
-void	fill_vid_mode_list(CHW* _hw) {};
-void	free_vid_mode_list() {};
+void fill_vid_mode_list(CHW* _hw) {};
+void free_vid_mode_list() {};
 #endif
 
-void	free_vid_mode_list();
+void free_vid_mode_list();
 
-ENGINE_API CHW			HW;
+ENGINE_API CHW HW;
 
 #ifdef DEBUG
 IDirect3DStateBlock9* dwDebugSB = 0;
@@ -43,9 +43,9 @@ void CHW::Reset(HWND hwnd)
 
 #ifndef _EDITOR
 #ifndef DEDICATED_SERVER
-	BOOL	bWindowed = !psDeviceFlags.is(rsFullscreen);
+	BOOL bWindowed = !psDeviceFlags.is(rsFullscreen);
 #else
-	BOOL	bWindowed = TRUE;
+	BOOL bWindowed = TRUE;
 #endif
 
 	selectResolution(DevPP.BackBufferWidth, DevPP.BackBufferHeight, bWindowed);
@@ -60,12 +60,15 @@ void CHW::Reset(HWND hwnd)
 		DevPP.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 #endif
 
-	while (TRUE) {
+	while (TRUE) 
+	{
 		HRESULT _hr = HW.pDevice->Reset(&DevPP);
-		if (SUCCEEDED(_hr))					break;
+		if (SUCCEEDED(_hr))
+			break;
 		Msg("! ERROR: [%dx%d]: %s", DevPP.BackBufferWidth, DevPP.BackBufferHeight, Debug.error2string(_hr));
 		Sleep(100);
 	}
+
 	R_CHK(pDevice->GetRenderTarget(0, &pBaseRT));
 	R_CHK(pDevice->GetDepthStencilSurface(&pBaseZB));
 #ifdef DEBUG
@@ -80,8 +83,7 @@ xr_token* vid_mode_token = NULL;
 
 void CHW::CreateD3D()
 {
-	LPCSTR		_name = "d3d9.dll";
-
+	LPCSTR _name = "d3d9.dll";
 	hD3D9 = LoadLibrary(_name);
 	R_ASSERT2(hD3D9, "Can't find 'd3d9.dll'\nPlease install latest version of DirectX before running this program");
 	typedef IDirect3D9* WINAPI _Direct3DCreate9(UINT SDKVersion);
@@ -102,33 +104,30 @@ void CHW::DestroyD3D()
 D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)
 {
 	// R2 hack
-#pragma todo("R2 need to specify depth format")
-	if (psDeviceFlags.test(rsR2))	return D3DFMT_D24S8;
+	if (true)
+		return D3DFMT_D24S8;
 
 	// R1 usual
-	static	D3DFORMAT	fDS_Try1[6] =
-	{ D3DFMT_D24S8,D3DFMT_D24X4S4,D3DFMT_D32,D3DFMT_D24X8,D3DFMT_D16,D3DFMT_D15S1 };
+	static D3DFORMAT fDS_Try1[6] = { D3DFMT_D24S8, D3DFMT_D24X4S4, D3DFMT_D32, D3DFMT_D24X8, D3DFMT_D16, D3DFMT_D15S1 };
 
 	D3DFORMAT* fDS_Try = fDS_Try1;
-	int			fDS_Cnt = 6;
+	int fDS_Cnt = 6;
 
-	for (int it = 0; it < fDS_Cnt; it++) {
-		if (SUCCEEDED(pD3D->CheckDeviceFormat(
-			DevAdapter, DevT, fTarget,
-			D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, fDS_Try[it])))
+	for (int it = 0; it < fDS_Cnt; it++) 
+	{
+		if (SUCCEEDED(pD3D->CheckDeviceFormat(DevAdapter, DevT, fTarget, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, fDS_Try[it])))
 		{
-			if (SUCCEEDED(pD3D->CheckDepthStencilMatch(
-				DevAdapter, DevT,
-				fTarget, fTarget, fDS_Try[it])))
+			if (SUCCEEDED(pD3D->CheckDepthStencilMatch(DevAdapter, DevT, fTarget, fTarget, fDS_Try[it])))
 			{
 				return fDS_Try[it];
 			}
 		}
 	}
+
 	return D3DFMT_UNKNOWN;
 }
 
-void	CHW::DestroyDevice()
+void CHW::DestroyDevice()
 {
 	_SHOW_REF("refCount:pBaseZB", pBaseZB);
 	_RELEASE(pBaseZB);
@@ -152,7 +151,8 @@ void	CHW::DestroyDevice()
 #endif
 	free_mon_token_list();
 }
-void	CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
+
+void CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
 {
 	fill_vid_mode_list(this);
 #ifdef DEDICATED_SERVER
@@ -167,7 +167,7 @@ void	CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
 	else //check
 	{
 #ifndef _EDITOR
-		string64					buff;
+		string64 buff;
 		sprintf_s(buff, sizeof(buff), "%dx%d", psCurrentVidMode[0], psCurrentVidMode[1]);
 
 		if (_ParseItem(buff, vid_mode_token) == u32(-1)) //not found
@@ -181,7 +181,6 @@ void	CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
 #endif
 	}
 #endif
-
 }
 
 void CHW::CreateDevice(HWND m_hWnd)
@@ -279,7 +278,6 @@ void CHW::CreateDevice(HWND m_hWnd)
 		TerminateProcess(GetCurrentProcess(), 0);
 	}
 
-
 	// Set up the presentation parameters
 	D3DPRESENT_PARAMETERS& P = DevPP;
 	ZeroMemory(&P, sizeof(P));
@@ -287,9 +285,8 @@ void CHW::CreateDevice(HWND m_hWnd)
 #ifndef _EDITOR
 	selectResolution(P.BackBufferWidth, P.BackBufferHeight, bWindowed);
 #endif
+
 	// Back buffer
-	//.	P.BackBufferWidth		= dwWidth;
-	//. P.BackBufferHeight		= dwHeight;
 	P.BackBufferFormat = fTarget;
 	P.BackBufferCount = 1;
 
@@ -305,7 +302,7 @@ void CHW::CreateDevice(HWND m_hWnd)
 	// Depth/stencil
 	P.EnableAutoDepthStencil = TRUE;
 	P.AutoDepthStencilFormat = fDepth;
-	P.Flags = 0;	//. D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
+	P.Flags = 0;
 
 	// Refresh rate
 	P.PresentationInterval = selectPresentInterval();
@@ -316,22 +313,13 @@ void CHW::CreateDevice(HWND m_hWnd)
 
 	// Create the device
 	u32 GPU = selectGPU();
-	HRESULT R = HW.pD3D->CreateDevice(DevAdapter,
-		DevT,
-		m_hWnd,
-		GPU | D3DCREATE_MULTITHREADED,	//. ? locks at present
-		&P,
-		&pDevice);
+	HRESULT R = HW.pD3D->CreateDevice(DevAdapter, DevT, m_hWnd, GPU | D3DCREATE_MULTITHREADED, &P, &pDevice);
 
 	if (FAILED(R))
 	{
-		R = HW.pD3D->CreateDevice(DevAdapter,
-			DevT,
-			m_hWnd,
-			GPU | D3DCREATE_MULTITHREADED,	//. ? locks at present
-			&P,
-			&pDevice);
+		R = HW.pD3D->CreateDevice(DevAdapter, DevT, m_hWnd, GPU | D3DCREATE_MULTITHREADED, &P, &pDevice);
 	}
+
 	if (D3DERR_DEVICELOST == R)
 	{
 		// Fatal error! Cannot create rendering device AT STARTUP !!!
@@ -340,9 +328,11 @@ void CHW::CreateDevice(HWND m_hWnd)
 		MessageBox(NULL, "Failed to initialize graphics hardware.\nPlease try to restart the game.", "Error!", MB_OK | MB_ICONERROR);
 		TerminateProcess(GetCurrentProcess(), 0);
 	};
+
 	R_CHK(R);
 
 	_SHOW_REF("* CREATE: DeviceREF:", HW.pDevice);
+
 	switch (GPU)
 	{
 	case D3DCREATE_SOFTWARE_VERTEXPROCESSING:
@@ -376,7 +366,7 @@ void CHW::CreateDevice(HWND m_hWnd)
 
 u32	CHW::selectPresentInterval()
 {
-	D3DCAPS9	caps;
+	D3DCAPS9 caps;
 	pD3D->GetDeviceCaps(DevAdapter, DevT, &caps);
 
 	if (!psDeviceFlags.test(rsVSync))
@@ -394,7 +384,7 @@ u32 CHW::selectGPU()
 	if (Caps.bForceGPU_SW)
 		return D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 
-	D3DCAPS9	caps;
+	D3DCAPS9 caps;
 	pD3D->GetDeviceCaps(DevAdapter, DevT, &caps);
 
 	if (caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
@@ -408,7 +398,6 @@ u32 CHW::selectGPU()
 			else
 				return D3DCREATE_HARDWARE_VERTEXPROCESSING;
 		}
-		// return D3DCREATE_MIXED_VERTEXPROCESSING;
 	}
 	else
 		return D3DCREATE_SOFTWARE_VERTEXPROCESSING;
@@ -436,36 +425,46 @@ u32 CHW::selectRefresh(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt)
 	}
 }
 
-BOOL	CHW::support(D3DFORMAT fmt, DWORD type, DWORD usage)
+BOOL CHW::support(D3DFORMAT fmt, DWORD type, DWORD usage)
 {
 	HRESULT hr = pD3D->CheckDeviceFormat(DevAdapter, DevT, Caps.fTarget, usage, (D3DRESOURCETYPE)type, fmt);
-	if (FAILED(hr))	return FALSE;
-	else			return TRUE;
+	if (FAILED(hr))
+		return FALSE;
+	else
+		return TRUE;
 }
 
 
 static void ClampToMonitorRect(int& x, int& y, int& w, int& h, const RECT& mon)
 {
-	if (w > (mon.right - mon.left))  w = (mon.right - mon.left);
-	if (h > (mon.bottom - mon.top))  h = (mon.bottom - mon.top);
+	if (w > (mon.right - mon.left))
+		w = (mon.right - mon.left);
 
-	if (x < mon.left) x = mon.left;
-	if (y < mon.top)  y = mon.top;
+	if (h > (mon.bottom - mon.top))
+		h = (mon.bottom - mon.top);
 
-	if (x + w > mon.right)  x = mon.right - w;
-	if (y + h > mon.bottom) y = mon.bottom - h;
+	if (x < mon.left)
+		x = mon.left;
+
+	if (y < mon.top)
+		y = mon.top;
+
+	if (x + w > mon.right)
+		x = mon.right - w;
+
+	if (y + h > mon.bottom)
+		y = mon.bottom - h;
 }
 
 // --- «пришить» WS_POPUP к границам монитора с учётом DPI-виртуализации ---
-static void SnapBorderlessToMonitor(HWND hWnd, const RECT& mon,
-	int x, int y, int w, int h, UINT swpFlags)
+static void SnapBorderlessToMonitor(HWND hWnd, const RECT& mon, int x, int y, int w, int h, UINT swpFlags)
 {
 	// 1-й проход
-	SetWindowPos(hWnd, nullptr, x, y, w, h,
-		SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW | swpFlags);
+	SetWindowPos(hWnd, nullptr, x, y, w, h, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW | swpFlags);
 
 	// Проверяем, где окно оказалось реально
-	RECT wr; GetWindowRect(hWnd, &wr);
+	RECT wr;
+	GetWindowRect(hWnd, &wr);
 
 	int rw = wr.right - wr.left;
 	int rh = wr.bottom - wr.top;
@@ -478,8 +477,7 @@ static void SnapBorderlessToMonitor(HWND hWnd, const RECT& mon,
 		int dw = w - rw;
 		int dh = h - rh;
 
-		SetWindowPos(hWnd, nullptr, wr.left + dx, wr.top + dy, rw + dw, rh + dh,
-			SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW | swpFlags);
+		SetWindowPos(hWnd, nullptr, wr.left + dx, wr.top + dy, rw + dw, rh + dh, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW | swpFlags);
 	}
 }
 
@@ -496,8 +494,7 @@ void CHW::updateWindowProps(HWND hWnd)
 		// фуллскрин
 		SetWindowLong(hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 		SetWindowLong(hWnd, GWL_EXSTYLE, 0);
-		SetWindowPos(hWnd, nullptr, 0, 0, 0, 0,
-			SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+		SetWindowPos(hWnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 #ifndef DEDICATED_SERVER
 		ShowCursor(FALSE); SetForegroundWindow(hWnd);
 #endif
@@ -513,20 +510,24 @@ void CHW::updateWindowProps(HWND hWnd)
 	if (UserMonitor >= 0)
 	{
 		struct { UINT want, cur; HMONITOR res; } ctx{ (UINT)UserMonitor, 0, NULL };
-		auto cb = [](HMONITOR hm, HDC, LPRECT, LPARAM lp)->BOOL {
+		auto cb = [](HMONITOR hm, HDC, LPRECT, LPARAM lp)->BOOL 
+		{
 			auto& c = *reinterpret_cast<decltype(ctx)*>(lp);
 			if (c.cur == c.want)
 			{
 				c.res = hm;
 				return FALSE;
 			}
-			++c.cur; return TRUE;
-			};
+			++c.cur;
+			return TRUE;
+		};
 		EnumDisplayMonitors(nullptr, nullptr, (MONITORENUMPROC)cb, (LPARAM)&ctx);
 		target = ctx.res;
 	}
+
 	if (!target && UserAdapter != UINT_MAX && pD3D)
 		target = pD3D->GetAdapterMonitor(UserAdapter);
+
 	if (!target)
 		target = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
@@ -538,8 +539,7 @@ void CHW::updateWindowProps(HWND hWnd)
 	DWORD exstyle = 0;
 	SetWindowLong(hWnd, GWL_STYLE, style);
 	SetWindowLong(hWnd, GWL_EXSTYLE, exstyle);
-	SetWindowPos(hWnd, nullptr, 0, 0, 0, 0,
-		SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+	SetWindowPos(hWnd, nullptr, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
 	// ---------- размеры и позиция ----------
 	bool wantCenter = strstr(Core.Params, "-center_screen");
@@ -548,9 +548,7 @@ void CHW::updateWindowProps(HWND hWnd)
 	const int monH = mi.rcMonitor.bottom - mi.rcMonitor.top;
 
 	// авто: full-borderless только если backbuffer больше монитора
-	const bool makeFull =
-		(int)DevPP.BackBufferWidth > monW ||
-		(int)DevPP.BackBufferHeight > monH;
+	const bool makeFull = (int)DevPP.BackBufferWidth > monW || (int)DevPP.BackBufferHeight > monH;
 
 	int outW = (int)DevPP.BackBufferWidth;
 	int outH = (int)DevPP.BackBufferHeight;
@@ -579,8 +577,7 @@ void CHW::updateWindowProps(HWND hWnd)
 	}
 
 	ClampToMonitorRect(x, y, outW, outH, mi.rcMonitor);
-	SetWindowPos(hWnd, nullptr, x, y, outW, outH,
-		SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+	SetWindowPos(hWnd, nullptr, x, y, outW, outH, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
 #ifndef DEDICATED_SERVER
 	ShowCursor(FALSE);
@@ -606,20 +603,23 @@ void free_vid_mode_list()
 	vid_mode_token = NULL;
 }
 
-void	fill_vid_mode_list(CHW* _hw)
+void fill_vid_mode_list(CHW* _hw)
 {
-	if (vid_mode_token != NULL)		return;
-	xr_vector<LPCSTR>	_tmp;
+	if (vid_mode_token != NULL)
+		return;
+
+	xr_vector<LPCSTR> _tmp;
 	u32 cnt = _hw->pD3D->GetAdapterModeCount(_hw->DevAdapter, _hw->Caps.fTarget);
 
 	u32 i;
 	for (i = 0; i < cnt; ++i)
 	{
-		D3DDISPLAYMODE	Mode;
-		string32		str;
+		D3DDISPLAYMODE Mode;
+		string32 str;
 
 		_hw->pD3D->EnumAdapterModes(_hw->DevAdapter, _hw->Caps.fTarget, i, &Mode);
-		if (Mode.Width < 800)		continue;
+		if (Mode.Width < 800)
+			continue;
 
 		sprintf_s(str, sizeof(str), "%dx%d", Mode.Width, Mode.Height);
 
@@ -662,8 +662,7 @@ static std::wstring GetMonitorFriendlyByGdiName(const wchar_t* gdiName)
 
 	std::vector<DISPLAYCONFIG_PATH_INFO> paths(pathCount);
 	std::vector<DISPLAYCONFIG_MODE_INFO> modes(modeCount);
-	if (QueryDisplayConfig(QDC_ONLY_ACTIVE, &pathCount, paths.data(),
-		&modeCount, modes.data(), nullptr) != ERROR_SUCCESS)
+	if (QueryDisplayConfig(QDC_ONLY_ACTIVE, &pathCount, paths.data(), &modeCount, modes.data(), nullptr) != ERROR_SUCCESS)
 		return L"";
 
 	paths.resize(pathCount);
@@ -703,7 +702,8 @@ static std::wstring GetMonitorFriendlyByGdiName(const wchar_t* gdiName)
 
 static std::wstring GetMonitorFriendlyByHMONITOR(HMONITOR hm)
 {
-	if (!hm) return L"";
+	if (!hm)
+		return L"";
 
 	MONITORINFOEXW mi;
 	ZeroMemory(&mi, sizeof(mi));
@@ -713,7 +713,8 @@ static std::wstring GetMonitorFriendlyByHMONITOR(HMONITOR hm)
 
 	// основной путь
 	std::wstring s = GetMonitorFriendlyByGdiName(mi.szDevice);
-	if (!s.empty()) return s;
+	if (!s.empty())
+		return s;
 
 	// фолбэк через EnumDisplayDevices
 	DISPLAY_DEVICEW dd; ZeroMemory(&dd, sizeof(dd)); dd.cb = sizeof(dd);
@@ -725,7 +726,8 @@ static std::wstring GetMonitorFriendlyByHMONITOR(HMONITOR hm)
 }
 
 // ---- локальный контекст перечисления ----
-struct MonEnumCtx {
+struct MonEnumCtx 
+{
 	xr_vector<LPCSTR>* names;
 	int primary; // индекс primary (0..N-1), -1 если не определён
 };
@@ -734,8 +736,10 @@ void CHW::free_mon_token_list()
 {
 	if (!vid_disp_token)
 		return;
+
 	for (int i = 0; vid_disp_token[i].name; ++i)
 		xr_free(vid_disp_token[i].name);
+
 	xr_free(vid_disp_token);
 	vid_disp_token = NULL;
 }
@@ -760,7 +764,8 @@ static BOOL CALLBACK BuildMonTokenProc(HMONITOR hm, HDC, LPRECT, LPARAM lp)
 	xr_vector<LPCSTR>& out = *ctx->names;
 
 	MONITORINFOEXW mi; ZeroMemory(&mi, sizeof(mi)); mi.cbSize = sizeof(mi);
-	if (!GetMonitorInfoW(hm, reinterpret_cast<MONITORINFO*>(&mi))) {
+	if (!GetMonitorInfoW(hm, reinterpret_cast<MONITORINFO*>(&mi))) 
+	{
 		char fb[32]; xr_sprintf(fb, "MON_%d", int(out.size() + 1));
 		out.push_back(xr_strdup(fb));
 		return TRUE;
@@ -776,25 +781,25 @@ static BOOL CALLBACK BuildMonTokenProc(HMONITOR hm, HDC, LPRECT, LPARAM lp)
 	std::wstring friendly = GetMonitorFriendlyByHMONITOR(hm);
 
 	wchar_t nameW[256];
-	if (!friendly.empty()) {
+	if (!friendly.empty()) 
+	{
 		wcsncpy(nameW, friendly.c_str(), _countof(nameW) - 1);
 		nameW[_countof(nameW) - 1] = L'\0';
 		rtrim_w(nameW);                       // ВАЖНО: режем хвост
 	}
-	else {
+	else 
+	{
 		wcsncpy(nameW, mi.szDevice, _countof(nameW) - 1);
 		nameW[_countof(nameW) - 1] = L'\0';
 	}
 
 	// финальная подпись токена
 	wchar_t wtitle[256];
-	swprintf(wtitle, L"%s%s",
-		nameW,
-		(mi.dwFlags & MONITORINFOF_PRIMARY) ? L" (primary)" : L"");
+	swprintf(wtitle, L"%s%s", nameW, (mi.dwFlags & MONITORINFOF_PRIMARY) ? L" (primary)" : L"");
 
 	char title[256] = { 0 };
 	WideCharToMultiByte(CP_ACP, 0, wtitle, -1, title, sizeof(title), NULL, NULL);
-	rtrim_a(title);                            // защита от хвостов после конвертации
+	rtrim_a(title); // защита от хвостов после конвертации
 
 	out.push_back(xr_strdup(title));
 	return TRUE;
@@ -803,7 +808,8 @@ static BOOL CALLBACK BuildMonTokenProc(HMONITOR hm, HDC, LPRECT, LPARAM lp)
 // ---- сборка токена мониторов + установка дефолта ----
 void CHW::fill_mon_token_list()
 {
-	if (vid_disp_token) return;
+	if (vid_disp_token)
+		return;
 
 	xr_vector<LPCSTR> names; names.reserve(8);
 	MonEnumCtx ctx; ctx.names = &names; ctx.primary = -1;

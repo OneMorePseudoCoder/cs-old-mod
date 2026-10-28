@@ -9,7 +9,7 @@
 #include "stdafx.h"
 #include "stalker_animation_state.h"
 #include "object_broker.h"
-#include "../layers/xrRender/SkeletonAnimated.h"
+#include "../xrRender/SkeletonAnimated.h"
 
 CStalkerAnimationState::CStalkerAnimationState()
 {

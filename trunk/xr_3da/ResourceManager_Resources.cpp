@@ -11,8 +11,8 @@
 
 #include "ResourceManager.h"
 #include "tss.h"
-#include "../layers/blenders/blender.h"
-#include "../layers/blenders/blender_recorder.h"
+#include "../xrRender/blender.h"
+#include "../xrRender/blender_recorder.h"
 
 void fix_texture_name(LPSTR fn);
 
@@ -33,7 +33,7 @@ public:
 	HRESULT __stdcall	Open(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 	{
 		string_path				pname;
-		strconcat(sizeof(pname), pname, ::Render->getShaderPath(), pFileName);
+		strconcat(sizeof(pname), pname, "", pFileName);
 		IReader* R = FS.r_open("$game_shaders$", pname);
 		if (0 == R) {
 			// possibly in shared directory or somewhere else - open directly
@@ -177,7 +177,7 @@ SVS* CResourceManager::_CreateVS(LPCSTR _name)
 		LPD3DXSHADER_CONSTANTTABLE	pConstants = NULL;
 		HRESULT						_hr = S_OK;
 		string_path					cname;
-		strconcat(sizeof(cname), cname, ::Render->getShaderPath(), _name, ".vs");
+		strconcat(sizeof(cname), cname, "", _name, ".vs");
 		FS.update_path(cname, "$game_shaders$", cname);
 		//		LPCSTR						target		= NULL;
 
@@ -267,7 +267,7 @@ SPS* CResourceManager::_CreatePS(LPCSTR name)
 		// Open file
 		includer					Includer;
 		string_path					cname;
-		strconcat(sizeof(cname), cname, ::Render->getShaderPath(), name, ".ps");
+		strconcat(sizeof(cname), cname, "", name, ".ps");
 		FS.update_path(cname, "$game_shaders$", cname);
 
 		// duplicate and zero-terminate
