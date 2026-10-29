@@ -142,6 +142,21 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 			SetWeaponHideState(INV_STATE_LADDER, bOnClimbNow);
 		};
 	};
+	
+	if (mstate_real & mcSprint) 
+	{
+		if (eacLookAt == cam_active && (mstate_real & mcJump)) 
+		{
+			mstate_wishful ^= mcAccel; // interrupt sprinting when jumping to avoid model shaking
+		}
+	}
+	else 
+	{
+		if (eacLookAt == cam_active && (mstate_old & mcSprint) && (mstate_real & mcAccel) && m_bJumpKeyPressed) 
+		{
+			mstate_wishful ^= mcSprint; // continue sprinting
+		}
+	}
 };
 
 void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector& vControlAccel, float& Jump, float dt)
@@ -250,7 +265,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector& vControlAccel, float& Ju
 		else
 			mstate_real &= ~mcSprint;
 
-		if (!(mstate_real & (mcFwd | mcLStrafe | mcRStrafe)) || mstate_real & (mcCrouch | mcClimb) || !isActorAccelerated(mstate_wf, IsZoomAimingMode()))
+		if (!(mstate_real & (mcFwd | mcLStrafe | mcRStrafe)) || (mstate_real & mcFwd && mstate_real & mcBack) || (mstate_real & mcLStrafe && mstate_real & mcRStrafe) || mstate_real & (mcCrouch | mcClimb) || !isActorAccelerated(mstate_wf, IsZoomAimingMode())) 
 		{
 			mstate_real &= ~mcSprint;
 			mstate_wishful &= ~mcSprint;
@@ -305,7 +320,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector& vControlAccel, float& Ju
 	}
 
 	//transform local dir to world dir
-	Fmatrix				mOrient;
+	Fmatrix mOrient;
 	mOrient.rotateY(-r_model_yaw);
 	mOrient.transform_dir(vControlAccel);
 }
@@ -451,7 +466,8 @@ void CActor::g_cl_Orientate(u32 mstate_rl, float dt)
 		{
 			mstate_real &= ~mcTurn;
 		}
-		if (mstate_rl & mcTurn) {
+		if (mstate_rl & mcTurn) 
+		{
 			angle_lerp(r_model_yaw, r_model_yaw_dest, PI_MUL_2, dt);
 		}
 	}
@@ -502,7 +518,7 @@ bool CActor::CanRun()
 
 bool CActor::CanSprint()
 {
-	return  CanAccelerate() && !conditions().IsCantSprint() && Game().PlayerCanSprint(this) && CanRun() && !(mstate_real & mcLStrafe || mstate_real & mcRStrafe) && InventoryAllowSprint();
+	return CanAccelerate() && !conditions().IsCantSprint() && Game().PlayerCanSprint(this) && CanRun() && !(mstate_real & mcLStrafe || mstate_real & mcRStrafe) && InventoryAllowSprint();
 }
 
 bool CActor::CanJump()
