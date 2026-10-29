@@ -46,10 +46,10 @@
 #	include "debug_renderer.h"
 #endif
 
-int			g_cl_InterpolationType = 0;
-u32			g_cl_InterpolationMaxPoints = 0;
-int			g_dwInputUpdateDelta = 20;
-BOOL		net_cl_inputguaranteed = FALSE;
+int g_cl_InterpolationType = 0;
+u32 g_cl_InterpolationMaxPoints = 0;
+int g_dwInputUpdateDelta = 20;
+BOOL net_cl_inputguaranteed = FALSE;
 CActor* g_actor = NULL;
 
 CActor* Actor()
@@ -604,45 +604,21 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	LastPosH.clear();
 	LastPosL.clear();
 #endif
-	//*
 
-	//	if (OnServer())// && E->s_flags.is(M_SPAWN_OBJECT_LOCAL))
-	/*
-		if (OnClient())
-		{
-			if (!pStatGraph)
-			{
-				static g_Y = 0;
-				pStatGraph = xr_new<CStatGraph>();
-				pStatGraph->SetRect(0, g_Y, Device.dwWidth, 100, 0xff000000, 0xff000000);
-				g_Y += 110;
-				if (g_Y > 700) g_Y = 100;
-				pStatGraph->SetGrid(0, 0.0f, 10, 1.0f, 0xff808080, 0xffffffff);
-				pStatGraph->SetMinMax(0, 10, 300);
-				pStatGraph->SetStyle(CStatGraph::stBar);
-				pStatGraph->AppendSubGraph(CStatGraph::stCurve);
-				pStatGraph->AppendSubGraph(CStatGraph::stCurve);
-			}
-		}
-	*/
 	SetDefaultVisualOutfit(cNameVisual());
 
 	smart_cast<CKinematics*>(Visual())->CalculateBones();
 
-	//--------------------------------------------------------------
 	inventory().SetPrevActiveSlot(NO_ACTIVE_SLOT);
 
-
-	//-------------------------------------
 	m_States.empty();
-	//-------------------------------------
+
 	if (!g_Alive())
 	{
 		mstate_wishful &= ~mcAnyMove;
 		mstate_real &= ~mcAnyMove;
 		CKinematicsAnimated* K = smart_cast<CKinematicsAnimated*>(Visual());
 		K->PlayCycle("death_init");
-
 
 		//остановить звук тяжелого дыхания
 		m_HeavyBreathSnd.stop();
@@ -653,17 +629,16 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	callback.bind(this, &CActor::on_requested_spawn);
 	m_holder_id = E->m_holderID;
 	if (E->m_holderID != ALife::_OBJECT_ID(-1))
-		if (!g_dedicated_server)
-			Level().client_spawn_manager().add(E->m_holderID, ID(), callback);
-	//F
-	//-------------------------------------------------------------
+		Level().client_spawn_manager().add(E->m_holderID, ID(), callback);
+
 	m_iLastHitterID = u16(-1);
 	m_iLastHittingWeaponID = u16(-1);
 	m_s16LastHittedElement = -1;
 	m_bWasHitted = false;
 	m_dwILastUpdateTime = 0;
 
-	if (IsGameTypeSingle()) {
+	if (IsGameTypeSingle()) 
+	{
 		Level().MapManager().AddMapLocation("actor_location", ID());
 		Level().MapManager().AddMapLocation("actor_location_p", ID());
 
@@ -673,7 +648,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 		m_statistic_manager = xr_new<CActorStatisticMgr>();
 	}
 
-
 	spatial.type |= STYPE_REACTTOSOUND;
 	psHUD_Flags.set(HUD_WEAPON_RT, TRUE);
 
@@ -681,7 +655,8 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	{
 		setLocal(FALSE);
 	};
-	return					TRUE;
+
+	return TRUE;
 }
 
 void CActor::net_Destroy()
@@ -689,20 +664,19 @@ void CActor::net_Destroy()
 	inherited::net_Destroy();
 
 	if (m_holder_id != ALife::_OBJECT_ID(-1))
-		if (!g_dedicated_server)
-			Level().client_spawn_manager().remove(m_holder_id, ID());
+		Level().client_spawn_manager().remove(m_holder_id, ID());
 
 	delete_data(m_game_task_manager);
 	delete_data(m_statistic_manager);
 
-	if (!g_dedicated_server)
-		Level().MapManager().RemoveMapLocationByObjectID(ID());
+	Level().MapManager().RemoveMapLocationByObjectID(ID());
 
 #pragma todo("Dima to MadMax : do not comment inventory owner net_Destroy!!!")
 	CInventoryOwner::net_Destroy();
 	cam_UnsetLadder();
 	character_physics_support()->movement()->DestroyCharacter();
-	if (m_pPhysicsShell) {
+	if (m_pPhysicsShell) 
+	{
 		m_pPhysicsShell->Deactivate();
 		xr_delete<CPhysicsShell>(m_pPhysicsShell);
 	};
@@ -728,8 +702,8 @@ void CActor::net_Destroy()
 
 	SetDefaultVisualOutfit(NULL);
 
-
-	if (g_actor == this) g_actor = NULL;
+	if (g_actor == this)
+		g_actor = NULL;
 
 	Engine.Sheduler.Unregister(this);
 }
@@ -739,26 +713,31 @@ void CActor::net_Relcase(CObject* O)
 
 	VERIFY(O);
 	CGameObject* GO = smart_cast<CGameObject*>(O);
-	if (GO && m_pObjectWeLookingAt == GO) {
+	if (GO && m_pObjectWeLookingAt == GO) 
+	{
 		m_pObjectWeLookingAt = NULL;
 	}
+
 	CHolderCustom* HC = smart_cast<CHolderCustom*>(GO);
-	if (HC && HC == m_pVehicleWeLookingAt) {
+	if (HC && HC == m_pVehicleWeLookingAt) 
+	{
 		m_pVehicleWeLookingAt = NULL;
 	}
+
 	if (HC && HC == m_holder)
 	{
 		m_holder->detach_Actor();
 		m_holder = NULL;
 	}
+
 	inherited::net_Relcase(O);
 
-	if (!g_dedicated_server)
-		memory().remove_links(O);
+	memory().remove_links(O);
+
 	m_pPhysics_support->in_NetRelcase(O);
 }
 
-BOOL	CActor::net_Relevant()				// relevant for export to server
+BOOL CActor::net_Relevant()				// relevant for export to server
 {
 	if (OnServer())
 	{
@@ -770,7 +749,7 @@ BOOL	CActor::net_Relevant()				// relevant for export to server
 	};
 };
 
-void	CActor::SetCallbacks()
+void CActor::SetCallbacks()
 {
 	CKinematics* V = smart_cast<CKinematics*>(Visual());
 	VERIFY(V);

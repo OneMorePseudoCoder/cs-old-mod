@@ -45,13 +45,10 @@ void init_game_globals()
 {
 	CreateUIGeom();
 
-	if (!g_dedicated_server)
-	{
-		CInfoPortion::InitInternal();
-		CEncyclopediaArticle::InitInternal();
-		CPhraseDialog::InitInternal();
-		InventoryUtilities::CreateShaders();
-	};
+	CInfoPortion::InitInternal();
+	CEncyclopediaArticle::InitInternal();
+	CPhraseDialog::InitInternal();
+	InventoryUtilities::CreateShaders();
 	CCharacterInfo::InitInternal();
 	CSpecificCharacter::InitInternal();
 	CHARACTER_COMMUNITY::InitInternal();
@@ -78,19 +75,18 @@ void clean_game_globals()
 	story_ids.clear();
 	spawn_story_ids.clear();
 
-	if (!g_dedicated_server)
-	{
-		CInfoPortion::DeleteSharedData();
-		CInfoPortion::DeleteIdToIndexData();
 
-		CEncyclopediaArticle::DeleteSharedData();
-		CEncyclopediaArticle::DeleteIdToIndexData();
+	CInfoPortion::DeleteSharedData();
+	CInfoPortion::DeleteIdToIndexData();
 
-		CPhraseDialog::DeleteSharedData();
-		CPhraseDialog::DeleteIdToIndexData();
+	CEncyclopediaArticle::DeleteSharedData();
+	CEncyclopediaArticle::DeleteIdToIndexData();
 
-		InventoryUtilities::DestroyShaders();
-	}
+	CPhraseDialog::DeleteSharedData();
+	CPhraseDialog::DeleteIdToIndexData();
+
+	InventoryUtilities::DestroyShaders();
+
 	CCharacterInfo::DeleteSharedData();
 	CCharacterInfo::DeleteIdToIndexData();
 
@@ -101,7 +97,6 @@ void clean_game_globals()
 	CHARACTER_RANK::DeleteIdToIndexData();
 	CHARACTER_REPUTATION::DeleteIdToIndexData();
 	MONSTER_COMMUNITY::DeleteIdToIndexData();
-
 
 	//static shader for blood
 	CEntityAlive::UnloadBloodyWallmarks();

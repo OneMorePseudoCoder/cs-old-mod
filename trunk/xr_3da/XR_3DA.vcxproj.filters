@@ -432,9 +432,6 @@
     <ClInclude Include="r_constants_cache.h">
       <Filter>Render\Execution &amp; 3D\Shaders\Resources\dx9_R_shader</Filter>
     </ClInclude>
-    <ClInclude Include="Text_Console.h">
-      <Filter>Render\Execution &amp; 3D\TextConsole</Filter>
-    </ClInclude>
     <ClInclude Include="D3DUtils.h">
       <Filter>Render\Execution &amp; 3D\DebugDraw</Filter>
     </ClInclude>
@@ -576,9 +573,6 @@
       <Filter>Interfaces\Collidable</Filter>
     </ClCompile>
     <ClCompile Include="IGame_Level.cpp">
-      <Filter>Game API</Filter>
-    </ClCompile>
-    <ClCompile Include="IGame_Level_check_textures.cpp">
       <Filter>Game API</Filter>
     </ClCompile>
     <ClCompile Include="IGame_Persistent.cpp">
@@ -827,12 +821,6 @@
     <ClCompile Include="r_constants_cache.cpp">
       <Filter>Render\Execution &amp; 3D\Shaders\Resources\dx9_R_shader</Filter>
     </ClCompile>
-    <ClCompile Include="Text_Console.cpp">
-      <Filter>Render\Execution &amp; 3D\TextConsole</Filter>
-    </ClCompile>
-    <ClCompile Include="Text_Console_WndProc.cpp">
-      <Filter>Render\Execution &amp; 3D\TextConsole</Filter>
-    </ClCompile>
     <ClCompile Include="D3DUtils.cpp">
       <Filter>Render\Execution &amp; 3D\DebugDraw</Filter>
     </ClCompile>
@@ -889,9 +877,6 @@
     </ClCompile>
     <ClCompile Include="mailSlot.cpp">
       <Filter>Engine\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="_scripting.cpp">
-      <Filter>Engine\Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="ai_script_lua_debug.cpp">
       <Filter>Engine\Core\Scripting</Filter>

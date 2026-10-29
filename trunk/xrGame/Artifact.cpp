@@ -23,41 +23,42 @@
 		if(y>z){inst_y;}\
 		else{inst_z;}
 
-struct SArtefactActivation {
+struct SArtefactActivation 
+{
 	enum EActivationStates { eNone = 0, eStarting, eFlying, eBeforeSpawn, eSpawnZone, eMax };
-	struct SStateDef {
-		float		m_time;
-		shared_str	m_snd;
-		Fcolor		m_light_color;
-		float		m_light_range;
-		shared_str	m_particle;
-		shared_str	m_animation;
+	struct SStateDef 
+	{
+		float m_time;
+		shared_str m_snd;
+		Fcolor m_light_color;
+		float m_light_range;
+		shared_str m_particle;
+		shared_str m_animation;
 
-		SStateDef() :m_time(0.0f) {};
-		void		Load(LPCSTR section, LPCSTR name);
+		SStateDef() : m_time(0.0f) {};
+		void Load(LPCSTR section, LPCSTR name);
 	};
 
 	SArtefactActivation(CArtefact* af, u32 owner_id);
 	~SArtefactActivation();
 	CArtefact* m_af;
-	svector<SStateDef, eMax>		m_activation_states;
-	EActivationStates			m_cur_activation_state;
-	float						m_cur_state_time;
+	svector<SStateDef, eMax> m_activation_states;
+	EActivationStates m_cur_activation_state;
+	float m_cur_state_time;
 
-	ref_light					m_light;
-	ref_sound					m_snd;
+	ref_light m_light;
+	ref_sound m_snd;
 
-	u32							m_owner_id;
+	u32 m_owner_id;
 
-	void						UpdateActivation();
-	void						Load();
-	void						Start();
-	void						ChangeEffects();
-	void						UpdateEffects();
-	void						SpawnAnomaly();
-	void						PhDataUpdate(dReal step);
+	void UpdateActivation();
+	void Load();
+	void Start();
+	void ChangeEffects();
+	void UpdateEffects();
+	void SpawnAnomaly();
+	void PhDataUpdate(dReal step);
 };
-
 
 CArtefact::CArtefact(void)
 {
@@ -69,26 +70,22 @@ CArtefact::CArtefact(void)
 	m_additional_weight = 0.0f;
 }
 
-
-CArtefact::~CArtefact(void)
-{
-}
+CArtefact::~CArtefact(void) {}
 
 void CArtefact::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-
 	if (pSettings->line_exist(section, "particles"))
 		m_sParticlesName = pSettings->r_string(section, "particles");
 
 	m_bLightsEnabled = !!pSettings->r_bool(section, "lights_enabled");
-	if (m_bLightsEnabled) {
+	if (m_bLightsEnabled) 
+	{
 		sscanf(pSettings->r_string(section, "trail_light_color"), "%f,%f,%f",
 			&m_TrailLightColor.r, &m_TrailLightColor.g, &m_TrailLightColor.b);
 		m_fTrailLightRange = pSettings->r_float(section, "trail_light_range");
 	}
-
 
 	{
 		m_fHealthRestoreSpeed = pSettings->r_float(section, "health_restore_speed");
@@ -99,9 +96,9 @@ void CArtefact::Load(LPCSTR section)
 		if (pSettings->section_exist(/**cNameSect(), */pSettings->r_string(section, "hit_absorbation_sect")))
 			m_ArtefactHitImmunities.LoadImmunities(pSettings->r_string(section, "hit_absorbation_sect"), pSettings);
 	}
+
 	m_bCanSpawnZone = !!pSettings->line_exist("artefact_spawn_zones", section);
 	m_additional_weight = READ_IF_EXISTS(pSettings, r_float, section, "additional_inventory_weight", 0.0f);
-
 
 	animGet(m_anim_idle, pSettings->r_string(*hud_sect, "anim_idle"));
 	animGet(m_anim_idle_sprint, pSettings->r_string(*hud_sect, "anim_idle_sprint"));
@@ -596,7 +593,6 @@ void SArtefactActivation::ChangeEffects()
 		CKinematicsAnimated* K = smart_cast<CKinematicsAnimated*>(m_af->Visual());
 		if (K)K->PlayCycle(*state_def.m_animation);
 	}
-
 }
 
 void SArtefactActivation::UpdateEffects()
@@ -616,19 +612,14 @@ void SArtefactActivation::SpawnAnomaly()
 	VERIFY3(3 == _GetItemCount(str), "Bad record format in artefact_spawn_zones", str);
 	float zone_radius = (float)atof(_GetItem(str, 1, tmp));
 	float zone_power = (float)atof(_GetItem(str, 2, tmp));
-	LPCSTR zone_sect = _GetItem(str, 0, tmp); //must be last call of _GetItem... (LPCSTR !!!)
+	LPCSTR zone_sect = _GetItem(str, 0, tmp);
 
 	Fvector pos;
 	m_af->Center(pos);
-	CSE_Abstract* object = Level().spawn_item(zone_sect,
-		pos,
-		(g_dedicated_server) ? u32(-1) : m_af->ai_location().level_vertex_id(),
-		0xffff,
-		true
-	);
+	CSE_Abstract* object = Level().spawn_item(zone_sect, pos, m_af->ai_location().level_vertex_id(), 0xffff, true);
 	CSE_ALifeAnomalousZone* AlifeZone = smart_cast<CSE_ALifeAnomalousZone*>(object);
 	VERIFY(AlifeZone);
-	CShapeData::shape_def		_shape;
+	CShapeData::shape_def _shape;
 	_shape.data.sphere.P.set(0.0f, 0.0f, 0.0f);
 	_shape.data.sphere.R = zone_radius;
 	_shape.type = CShapeData::cfSphere;
@@ -637,35 +628,37 @@ void SArtefactActivation::SpawnAnomaly()
 	AlifeZone->m_owner_id = m_owner_id;
 	AlifeZone->m_space_restrictor_type = RestrictionSpace::eRestrictorTypeNone;
 
-	NET_Packet					P;
+	NET_Packet P;
 	object->Spawn_Write(P, TRUE);
 	Level().Send(P, net_flags(TRUE));
 	F_entity_Destroy(object);
-	//. #ifdef DEBUG
 	Msg("artefact [%s] spawned a zone [%s] at [%f]", *m_af->cName(), zone_sect, Device.fTimeGlobal);
-	//. #endif
 }
 
 shared_str clear_brackets(LPCSTR src)
 {
-	if (0 == src)					return	shared_str(0);
+	if (0 == src)
+		return	shared_str(0);
 
-	if (NULL == strchr(src, '"'))	return	shared_str(src);
+	if (NULL == strchr(src, '"'))
+		return	shared_str(src);
 
-	string512						_original;
+	string512 _original;
 	strcpy_s(_original, src);
-	u32			_len = xr_strlen(_original);
-	if (0 == _len)					return	shared_str("");
-	if ('"' == _original[_len - 1])	_original[_len - 1] = 0;					// skip end
-	if ('"' == _original[0])			return	shared_str(&_original[0] + 1);	// skip begin
-	return									shared_str(_original);
+	u32 _len = xr_strlen(_original);
+	if (0 == _len)
+		return	shared_str("");
+	if ('"' == _original[_len - 1])
+		_original[_len - 1] = 0;					// skip end
+	if ('"' == _original[0])
+		return	shared_str(&_original[0] + 1);	// skip begin
+	return shared_str(_original);
 
 }
 void SArtefactActivation::SStateDef::Load(LPCSTR section, LPCSTR name)
 {
 	LPCSTR str = pSettings->r_string(section, name);
 	VERIFY(_GetItemCount(str) == 8);
-
 
 	string128 tmp;
 
@@ -681,5 +674,4 @@ void SArtefactActivation::SStateDef::Load(LPCSTR section, LPCSTR name)
 
 	m_particle = clear_brackets(_GetItem(str, 6, tmp));
 	m_animation = clear_brackets(_GetItem(str, 7, tmp));
-
 }

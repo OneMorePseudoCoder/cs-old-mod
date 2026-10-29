@@ -42,11 +42,7 @@ void CHW::Reset(HWND hwnd)
 	_RELEASE(pBaseRT);
 
 #ifndef _EDITOR
-#ifndef DEDICATED_SERVER
 	BOOL bWindowed = !psDeviceFlags.is(rsFullscreen);
-#else
-	BOOL bWindowed = TRUE;
-#endif
 
 	selectResolution(DevPP.BackBufferWidth, DevPP.BackBufferHeight, bWindowed);
 	// Windoze
@@ -155,10 +151,7 @@ void CHW::DestroyDevice()
 void CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
 {
 	fill_vid_mode_list(this);
-#ifdef DEDICATED_SERVER
-	dwWidth = 640;
-	dwHeight = 480;
-#else
+
 	if (bWindowed)
 	{
 		dwWidth = psCurrentVidMode[0];
@@ -180,7 +173,6 @@ void CHW::selectResolution(u32& dwWidth, u32& dwHeight, BOOL bWindowed)
 		dwHeight = psCurrentVidMode[1];
 #endif
 	}
-#endif
 }
 
 void CHW::CreateDevice(HWND m_hWnd)
@@ -188,11 +180,7 @@ void CHW::CreateDevice(HWND m_hWnd)
 	CreateD3D();
 	fill_mon_token_list();
 
-#ifndef DEDICATED_SERVER
 	const BOOL bWindowed = !psDeviceFlags.is(rsFullscreen);
-#else
-	const BOOL bWindowed = TRUE;
-#endif
 
 	// базовый выбор устройства
 	DevAdapter = (UserAdapter != UINT_MAX) ? UserAdapter : D3DADAPTER_DEFAULT;
@@ -483,11 +471,7 @@ static void SnapBorderlessToMonitor(HWND hWnd, const RECT& mon, int x, int y, in
 
 void CHW::updateWindowProps(HWND hWnd)
 {
-#ifndef DEDICATED_SERVER
 	const BOOL bWindowed = !psDeviceFlags.is(rsFullscreen);
-#else
-	const BOOL bWindowed = TRUE;
-#endif
 
 	if (!bWindowed)
 	{
@@ -495,9 +479,7 @@ void CHW::updateWindowProps(HWND hWnd)
 		SetWindowLong(hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 		SetWindowLong(hWnd, GWL_EXSTYLE, 0);
 		SetWindowPos(hWnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
-#ifndef DEDICATED_SERVER
 		ShowCursor(FALSE); SetForegroundWindow(hWnd);
-#endif
 		return;
 	}
 
@@ -579,10 +561,8 @@ void CHW::updateWindowProps(HWND hWnd)
 	ClampToMonitorRect(x, y, outW, outH, mi.rcMonitor);
 	SetWindowPos(hWnd, nullptr, x, y, outW, outH, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
-#ifndef DEDICATED_SERVER
 	ShowCursor(FALSE);
 	SetForegroundWindow(hWnd);
-#endif
 }
 
 struct _uniq_mode

@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "occRasterizer.h"
 
-occRasterizer	Raster;
+occRasterizer Raster;
 
 void __stdcall fillDW_8x(void* _p, u32 size, u32 value)
 {
@@ -29,14 +29,17 @@ IC void propagade_depth(LPVOID p_dest, LPVOID p_src, int dim)
 		{
 			occD* base0 = src + (y * 2 + 0) * (dim * 2) + (x * 2);
 			occD* base1 = src + (y * 2 + 1) * (dim * 2) + (x * 2);
-			occD	f1 = base0[0];
-			occD	f2 = base0[1];
-			occD	f3 = base1[0];
-			occD	f4 = base1[1];
-			occD	f = f1;
-			if (f2 > f)	f = f2;
-			if (f3 > f)	f = f3;
-			if (f4 > f)	f = f4;
+			occD f1 = base0[0];
+			occD f2 = base0[1];
+			occD f3 = base1[0];
+			occD f4 = base1[1];
+			occD f = f1;
+			if (f2 > f)
+				f = f2;
+			if (f3 > f)
+				f = f3;
+			if (f4 > f)
+				f = f4;
 			dest[y * dim + x] = f;
 		}
 	}
@@ -46,15 +49,9 @@ IC void propagade_depth(LPVOID p_dest, LPVOID p_src, int dim)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-occRasterizer::occRasterizer()
-{
+occRasterizer::occRasterizer() {}
 
-}
-
-occRasterizer::~occRasterizer()
-{
-
-}
+occRasterizer::~occRasterizer() {}
 
 void occRasterizer::clear()
 {
@@ -66,10 +63,14 @@ void occRasterizer::clear()
 
 IC BOOL shared(occTri* T1, occTri* T2)
 {
-	if (T1 == T2)					return TRUE;
-	if (T1->adjacent[0] == T2)	return TRUE;
-	if (T1->adjacent[1] == T2)	return TRUE;
-	if (T1->adjacent[2] == T2)	return TRUE;
+	if (T1 == T2)
+		return TRUE;
+	if (T1->adjacent[0] == T2)
+		return TRUE;
+	if (T1->adjacent[1] == T2)
+		return TRUE;
+	if (T1->adjacent[2] == T2)
+		return TRUE;
 	return FALSE;
 }
 
@@ -82,7 +83,7 @@ void occRasterizer::propagade()
 	{
 		for (int x = 0; x < occ_dim_0; x++)
 		{
-			int				ox = x + 2, oy = y + 2;
+			int ox = x + 2, oy = y + 2;
 
 			// Y2-connect
 			int	pos = oy * occ_dim + ox;
@@ -91,23 +92,31 @@ void occRasterizer::propagade()
 			int	pos_down2 = pos_down + occ_dim;
 
 			occTri* Tu1 = pFrame[pos_up];
-			if (Tu1) {
+			if (Tu1) 
+			{
 				// We has pixel 1scan up
 				if (shared(Tu1, pFrame[pos_down]))
 				{
 					// We has pixel 1scan down
 					float ZR = (pDepth[pos_up] + pDepth[pos_down]) / 2;
-					if (ZR < pDepth[pos]) { pFrame[pos] = Tu1; pDepth[pos] = ZR; }
+					if (ZR < pDepth[pos])
+					{ 
+						pFrame[pos] = Tu1;
+						pDepth[pos] = ZR; 
+					}
 				}
 				else if (shared(Tu1, pFrame[pos_down2]))
 				{
 					// We has pixel 2scan down
 					float ZR = (pDepth[pos_up] + pDepth[pos_down2]) / 2;
-					if (ZR < pDepth[pos]) { pFrame[pos] = Tu1; pDepth[pos] = ZR; }
+					if (ZR < pDepth[pos])
+					{ 
+						pFrame[pos] = Tu1;
+						pDepth[pos] = ZR; 
+					}
 				}
 			}
 
-			//
 			float d = pDepth[pos];
 			clamp(d, -1.99f, 1.99f);
 			bufDepth_0[y][x] = df_2_s32(d);
@@ -120,12 +129,16 @@ void occRasterizer::propagade()
 	propagade_depth(bufDepth_3, bufDepth_2, occ_dim_3);
 }
 
-IC	BOOL			test_Level(occD* depth, int dim, float _x0, float _y0, float _x1, float _y1, occD z)
+IC BOOL test_Level(occD* depth, int dim, float _x0, float _y0, float _x1, float _y1, occD z)
 {
-	int x0 = iFloor(_x0 * dim + .5f);	clamp(x0, 0, dim - 1);
-	int x1 = iFloor(_x1 * dim + .5f);	clamp(x1, x0, dim - 1);
-	int y0 = iFloor(_y0 * dim + .5f);	clamp(y0, 0, dim - 1);
-	int y1 = iFloor(_y1 * dim + .5f);	clamp(y1, y0, dim - 1);
+	int x0 = iFloor(_x0 * dim + .5f);
+	clamp(x0, 0, dim - 1);
+	int x1 = iFloor(_x1 * dim + .5f);
+	clamp(x1, x0, dim - 1);
+	int y0 = iFloor(_y0 * dim + .5f);
+	clamp(y0, 0, dim - 1);
+	int y1 = iFloor(_y1 * dim + .5f);
+	clamp(y1, y0, dim - 1);
 
 	// MT-Sync (delayed as possible)
 	RImplementation.HOM.MT_SYNC();
@@ -143,14 +156,6 @@ IC	BOOL			test_Level(occD* depth, int dim, float _x0, float _y0, float _x1, floa
 
 BOOL occRasterizer::test(float _x0, float _y0, float _x1, float _y1, float _z)
 {
-	occD	z = df_2_s32up(_z) + 1;
-	return		test_Level(get_depth_level(0), occ_dim_0, _x0, _y0, _x1, _y1, z);
-	/*
-	if	(test_Level(get_depth_level(2),occ_dim_2,_x0,_y0,_x1,_y1,z))
-	{
-		// Visbible on level 2 - test level 0
-		return test_Level(get_depth_level(0),occ_dim_0,_x0,_y0,_x1,_y1,z);
-	}
-	return FALSE;
-	*/
+	occD z = df_2_s32up(_z) + 1;
+	return test_Level(get_depth_level(0), occ_dim_0, _x0, _y0, _x1, _y1, z);
 }

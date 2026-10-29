@@ -50,8 +50,6 @@
 #	include "physicobject.h"
 #endif
 
-ENGINE_API bool g_dedicated_server;
-
 extern BOOL	g_bDebugDumpPhysicsStep;
 
 CPHWorld* ph_world = 0;
@@ -71,7 +69,7 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal())
 	Server = NULL;
 
 	game = NULL;
-	//	game						= xr_new<game_cl_GameState>();
+
 	game_events = xr_new<NET_Queue_Event>();
 
 	game_configured = FALSE;
@@ -86,13 +84,10 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal())
 
 	m_pBulletManager = xr_new<CBulletManager>();
 
-	if (!g_dedicated_server)
-		m_map_manager = xr_new<CMapManager>();
-	else
-		m_map_manager = NULL;
+	m_map_manager = xr_new<CMapManager>();
 
-	//	m_pFogOfWarMngr				= xr_new<CFogOfWarMngr>();
-	//----------------------------------------------------
+	//	m_pFogOfWarMngr = xr_new<CFogOfWarMngr>();
+
 	m_bNeed_CrPr = false;
 	m_bIn_CrPr = false;
 	m_dwNumSteps = 0;
@@ -102,32 +97,15 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal())
 	physics_step_time_callback = (PhysicsStepTimeCallback*)&PhisStepsCallback;
 	m_seniority_hierarchy_holder = xr_new<CSeniorityHierarchyHolder>();
 
-	if (!g_dedicated_server)
-	{
-		m_level_sound_manager = xr_new<CLevelSoundManager>();
-		m_space_restriction_manager = xr_new<CSpaceRestrictionManager>();
-		m_client_spawn_manager = xr_new<CClientSpawnManager>();
-		m_autosave_manager = xr_new<CAutosaveManager>();
+	m_level_sound_manager = xr_new<CLevelSoundManager>();
+	m_space_restriction_manager = xr_new<CSpaceRestrictionManager>();
+	m_client_spawn_manager = xr_new<CClientSpawnManager>();
+	m_autosave_manager = xr_new<CAutosaveManager>();
 
 #ifdef DEBUG
-		m_debug_renderer = xr_new<CDebugRenderer>();
-		m_level_debug = xr_new<CLevelDebug>();
+	m_debug_renderer = xr_new<CDebugRenderer>();
+	m_level_debug = xr_new<CLevelDebug>();
 #endif
-
-	}
-	else
-	{
-		m_level_sound_manager = NULL;
-		m_client_spawn_manager = NULL;
-		m_autosave_manager = NULL;
-		m_space_restriction_manager = NULL;
-#ifdef DEBUG
-		m_debug_renderer = NULL;
-		m_level_debug = NULL;
-#endif
-	}
-
-
 
 	m_ph_commander = xr_new<CPHCommander>();
 	m_ph_commander_scripts = xr_new<CPHCommander>();
@@ -135,21 +113,19 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal())
 #ifdef DEBUG
 	m_bSynchronization = false;
 #endif	
-	//---------------------------------------------------------
+
 	pStatGraphR = NULL;
 	pStatGraphS = NULL;
-	//---------------------------------------------------------
+
 	pObjects4CrPr.clear();
 	pActors4CrPr.clear();
-	//---------------------------------------------------------
+
 	pCurrentControlEntity = NULL;
 
-	//---------------------------------------------------------
 	m_dwCL_PingLastSendTime = 0;
 	m_dwCL_PingDeltaSend = 1000;
 	m_dwRealPing = 0;
 
-	//---------------------------------------------------------	
 	m_sDemoName[0] = 0;
 	m_bDemoSaveMode = FALSE;
 	m_dwStoredDemoDataSize = 0;
@@ -157,44 +133,13 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal())
 	m_pOldCrashHandler = NULL;
 	m_we_used_old_crach_handler = false;
 
-	//	if ( !strstr( Core.Params, "-tdemo " ) && !strstr(Core.Params,"-tdemof "))
-	//	{
-	//		Demo_PrepareToStore();
-	//	};
-		//---------------------------------------------------------
-	//	m_bDemoPlayMode = FALSE;
-	//	m_aDemoData.clear();
-	//	m_bDemoStarted	= FALSE;
-
 	Msg("%s", Core.Params);
-	/*
-	if (strstr(Core.Params,"-tdemo ") || strstr(Core.Params,"-tdemof ")) {
-		string1024				f_name;
-		if (strstr(Core.Params,"-tdemo "))
-		{
-			sscanf					(strstr(Core.Params,"-tdemo ")+7,"%[^ ] ",f_name);
-			m_bDemoPlayByFrame = FALSE;
-
-			Demo_Load	(f_name);
-		}
-		else
-		{
-			sscanf					(strstr(Core.Params,"-tdemof ")+8,"%[^ ] ",f_name);
-			m_bDemoPlayByFrame = TRUE;
-
-			m_lDemoOfs = 0;
-			Demo_Load_toFrame(f_name, 100, m_lDemoOfs);
-		};
-	}
-	*/
-	//---------------------------------------------------------	
 }
 
 extern CAI_Space* g_ai_space;
 
 CLevel::~CLevel()
 {
-	//	g_pGameLevel		= NULL;
 	Msg("- Destroying level");
 
 	Engine.Event.Handler_Detach(eEntitySpawn, this);
@@ -220,7 +165,8 @@ CLevel::~CLevel()
 	sound_registry.clear();
 
 	// unload static sounds
-	for (u32 i = 0; i < static_Sounds.size(); ++i) {
+	for (u32 i = 0; i < static_Sounds.size(); ++i) 
+	{
 		static_Sounds[i]->destroy();
 		xr_delete(static_Sounds[i]);
 	}
@@ -240,12 +186,10 @@ CLevel::~CLevel()
 	xr_delete(m_debug_renderer);
 #endif
 
-	if (!g_dedicated_server)
-		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
 	xr_delete(game);
 	xr_delete(game_events);
-
 
 	//by Dandy
 	//destroy fog of war
@@ -271,7 +215,7 @@ CLevel::~CLevel()
 	//-----------------------------------------------------------
 	xr_delete(m_map_manager);
 	//	xr_delete					(m_pFogOfWarMngr);
-		//-----------------------------------------------------------
+	//-----------------------------------------------------------
 	Demo_Clear();
 	m_aDemoData.clear();
 
@@ -282,19 +226,17 @@ CLevel::~CLevel()
 
 	if (m_we_used_old_crach_handler)
 		Debug.set_crashhandler(m_pOldCrashHandler);
-
 }
 
-shared_str	CLevel::name() const
+shared_str CLevel::name() const
 {
-	return						(m_name);
+	return m_name;
 }
 
 void CLevel::GetLevelInfo(CServerInfo* si)
 {
 	Server->GetServerInfo(si);
 }
-
 
 void CLevel::PrefetchSound(LPCSTR name)
 {
@@ -311,57 +253,44 @@ void CLevel::PrefetchSound(LPCSTR name)
 		sound_registry[snd_name].create(snd_name.c_str(), st_Effect, sg_SourceType);
 }
 
-// Game interface ////////////////////////////////////////////////////
 int	CLevel::get_RPID(LPCSTR /**name/**/)
 {
-	/*
-	// Gain access to string
-	LPCSTR	params = pLevel->r_string("respawn_point",name);
-	if (0==params)	return -1;
-
-	// Read data
-	Fvector4	pos;
-	int			team;
-	sscanf		(params,"%f,%f,%f,%d,%f",&pos.x,&pos.y,&pos.z,&team,&pos.w); pos.y += 0.1f;
-
-	// Search respawn point
-	svector<Fvector4,maxRP>	&rp = Level().get_team(team).RespawnPoints;
-	for (int i=0; i<(int)(rp.size()); ++i)
-		if (pos.similar(rp[i],EPS_L))	return i;
-	*/
 	return -1;
 }
 
-BOOL		g_bDebugEvents = FALSE;
-
+BOOL g_bDebugEvents = FALSE;
 
 void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 {
-	//			Msg				("--- event[%d] for [%d]",type,dest);
 	CObject* O = Objects.net_Find(dest);
-	if (0 == O) {
+	if (0 == O) 
+	{
 #ifdef DEBUG
 		Msg("* WARNING: c_EVENT[%d] to [%d]: unknown dest", type, dest);
 #endif // DEBUG
 		return;
 	}
+
 	CGameObject* GO = smart_cast<CGameObject*>(O);
-	if (!GO) {
+	if (!GO) 
+	{
 		Msg("! ERROR: c_EVENT[%d] : non-game-object", dest);
 		return;
 	}
+
 	if (type != GE_DESTROY_REJECT)
 	{
 		if (type == GE_DESTROY)
 			Game().OnDestroy(GO);
 		GO->OnEvent(P, type);
 	}
-	else { // handle GE_DESTROY_REJECT here
-		u32				pos = P.r_tell();
-		u16				id = P.r_u16();
+	else 
+	{
+		u32 pos = P.r_tell();
+		u16 id = P.r_u16();
 		P.r_seek(pos);
 
-		bool			ok = true;
+		bool ok = true;
 
 		CObject* D = Objects.net_Find(id);
 		if (0 == D) {
@@ -467,8 +396,8 @@ void CLevel::OnFrame()
 		Engine.Event.Defer("kernel:disconnect");
 		return;
 	}
-	else {
-
+	else 
+	{
 		Device.Statistic->netClient1.Begin();
 
 		ClientReceive();
@@ -478,16 +407,16 @@ void CLevel::OnFrame()
 
 	ProcessGameEvents();
 
+	if (m_bNeed_CrPr)
+		make_NetCorrectionPrediction();
 
-	if (m_bNeed_CrPr)					make_NetCorrectionPrediction();
+	MapManager().Update();
 
-	if (!g_dedicated_server)
-		MapManager().Update();
 	// Inherited update
 	inherited::OnFrame();
 
 	// Draw client/server stats
-	if (!g_dedicated_server && psDeviceFlags.test(rsStatistic))
+	if (psDeviceFlags.test(rsStatistic))
 	{
 		CGameFont* F = HUD().Font().pFontDI;
 		if (!psNET_direct_connect)
@@ -510,10 +439,8 @@ void CLevel::OnFrame()
 					IClient* C = Server->client_Get(I);
 					Server->UpdateClientStatistic(C);
 					F->OutNext("P(%d), BPS(%2.1fK), MRR(%2d), MSR(%2d), Retried(%2d), Blocked(%2d)",
-						//Server->game->get_option_s(*C->Name,"name",*C->Name),
-						//					C->Name,
 						C->stats.getPing(),
-						float(C->stats.getBPS()),// /1024,
+						float(C->stats.getBPS()),
 						C->stats.getMPS_Receive(),
 						C->stats.getMPS_Send(),
 						C->stats.getRetriedCount(),
@@ -533,8 +460,6 @@ void CLevel::OnFrame()
 
 				F->SetColor(D3DCOLOR_XRGB(255, 255, 255));
 				F->OutNext("P(%d), BPS(%2.1fK), MRR(%2d), MSR(%2d), Retried(%2d), Blocked(%2d), Sended(%2d), SPS(%2d)",
-					//Server->game->get_option_s(C->Name,"name",C->Name),
-					//					C->Name,
 					net_Statistic.getPing(),
 					float(net_Statistic.getBPS()),// /1024,
 					net_Statistic.getMPS_Receive(),
@@ -548,49 +473,42 @@ void CLevel::OnFrame()
 		}
 	}
 
-	//	g_pGamePersistent->Environment().SetGameTime	(GetGameDayTimeSec(),GetGameTimeFactor());
 	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), GetGameTimeFactor());
 
-	//Device.Statistic->cripting.Begin	();
-	if (!g_dedicated_server)
-		ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel)->update();
-	//Device.Statistic->Scripting.End	();
+	ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel)->update();
+
 	m_ph_commander->update();
 	m_ph_commander_scripts->update();
-	//	autosave_manager().update			();
 
-		//просчитать полет пуль
+	//просчитать полет пуль
 	Device.Statistic->TEST0.Begin();
 	BulletManager().CommitRenderSet();
 	Device.Statistic->TEST0.End();
 
 	// update static sounds
-	if (!g_dedicated_server)
-	{
-		if (g_mt_config.test(mtLevelSounds))
-			Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
-		else
-			m_level_sound_manager->Update();
-	}
+	if (g_mt_config.test(mtLevelSounds))
+		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
+	else
+		m_level_sound_manager->Update();
+
 	// deffer LUA-GC-STEP
-	if (!g_dedicated_server)
-	{
-		if (g_mt_config.test(mtLUA_GC))	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
-		else							script_gc();
-	}
-	//-----------------------------------------------------
+	if (g_mt_config.test(mtLUA_GC))
+		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
+	else
+		script_gc();
+
 	if (pStatGraphR)
 	{
-		static	float fRPC_Mult = 10.0f;
-		static	float fRPS_Mult = 1.0f;
+		static float fRPC_Mult = 10.0f;
+		static float fRPS_Mult = 1.0f;
 
 		pStatGraphR->AppendItem(float(m_dwRPC) * fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS) * fRPS_Mult, 0xff00ff00, 0);
 	};
 }
 
-int		psLUA_GCSTEP = 10;
-void	CLevel::script_gc()
+int psLUA_GCSTEP = 10;
+void CLevel::script_gc()
 {
 	lua_gc(ai().script_engine().lua(), LUA_GCSTEP, psLUA_GCSTEP);
 }
@@ -611,14 +529,11 @@ void CLevel::OnRender()
 
 	Game().OnRender();
 	//отрисовать трассы пуль
-	//Device.Statistic->TEST1.Begin();
 	BulletManager().Render();
-	//Device.Statistic->TEST1.End();
 	//отрисовать интерфейc пользователя
 	HUD().RenderUI();
 
 	draw_wnds_rects();
-
 
 #ifdef DEBUG
 	ph_world->OnRender();

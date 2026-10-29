@@ -20,8 +20,10 @@ void CRenderDevice::_Destroy(BOOL bKeepTextures)
 	Memory.mem_compact();
 }
 
-void CRenderDevice::Destroy(void) {
-	if (!b_is_Ready)			return;
+void CRenderDevice::Destroy(void) 
+{
+	if (!b_is_Ready)
+		return;
 
 	Log("Destroying Direct3D...");
 
@@ -60,12 +62,8 @@ void CRenderDevice::Reset(bool precache)
 	u32 dwHeight_before = dwHeight;
 
 	ShowCursor(TRUE);
+
 	u32 tm_start = TimerAsync();
-	if (g_pGamePersistent) {
-
-		//.		g_pGamePersistent->Environment().OnDeviceDestroy();
-	}
-
 	Resources->reset_begin();
 	Memory.mem_compact();
 	HW.Reset(m_hWnd);
@@ -77,18 +75,18 @@ void CRenderDevice::Reset(bool precache)
 
 	if (g_pGamePersistent)
 	{
-		//.		g_pGamePersistent->Environment().OnDeviceCreate();
 		bNeed_re_create_env = TRUE;
 	}
+
 	_SetupStates();
+
 	if (precache)
 		PreCache(20);
+
 	u32 tm_end = TimerAsync();
 	Msg("*** RESET [%d ms]", tm_end - tm_start);
 
-#ifndef DEDICATED_SERVER
 	ShowCursor(FALSE);
-#endif
 
 	seqDeviceReset.Process(rp_DeviceReset);
 

@@ -27,7 +27,8 @@ BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
 		strcat_s(tmp, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
 		m_caClientOptions = tmp;
 	}
-	else {
+	else 
+	{
 		string1024	ret = "";
 		LPCSTR		begin = NameStart + xr_strlen("/name=");
 		sscanf(begin, "%[^/]", ret);
@@ -243,7 +244,7 @@ struct LevelLoadFinalizer
 				MainMenu()->OnLoadError("BattlEye/BEServer.dll");
 			}
 			else
-				if (g_connect_server_err == xrServer::ErrConnect && !psNET_direct_connect && !g_dedicated_server)
+				if (g_connect_server_err == xrServer::ErrConnect && !psNET_direct_connect)
 				{
 					MainMenu()->SwitchToMultiplayerMenu();
 				}
@@ -276,17 +277,14 @@ bool CLevel::net_start6()
 	{
 		if (strstr(Core.Params, "-$"))
 		{
-			string256				buf, cmd, param;
+			string256 buf, cmd, param;
 			sscanf(strstr(Core.Params, "-$") + 2, "%[^ ] %[^ ] ", cmd, param);
 			strconcat(sizeof(buf), buf, cmd, " ", param);
 			Console->Execute(buf);
 		}
 
-		if (!g_dedicated_server)
-		{
-			if (g_hud)
-				HUD().GetUI()->OnConnected();
-		}
+		if (g_hud)
+			HUD().GetUI()->OnConnected();
 	}
 
 	return false;

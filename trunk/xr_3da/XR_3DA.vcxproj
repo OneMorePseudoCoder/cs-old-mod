@@ -515,7 +515,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <PreprocessorDefinitions>DEDICATED_SERVER;_DEBUG;DEBUG;WIN32;_WINDOWS;ENGINE_BUILD;SECURE_GAMEDATA;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;DEBUG;WIN32;_WINDOWS;ENGINE_BUILD;SECURE_GAMEDATA;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -576,7 +576,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <PreprocessorDefinitions>DEDICATED_SERVER;DEBUG;MIXED;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;MIXED;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -633,7 +633,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <PreprocessorDefinitions>DEDICATED_SERVER;NDEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;ENGINE_BUILD;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -775,7 +775,6 @@
     <ClInclude Include="SH_Texture.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="r_constants_cache.h" />
-    <ClInclude Include="Text_Console.h" />
     <ClInclude Include="D3DUtils.h" />
     <ClInclude Include="DrawUtils.h" />
     <ClInclude Include="du_box.h" />
@@ -846,7 +845,6 @@
     <ClCompile Include="ISpatial_verify.cpp" />
     <ClCompile Include="ICollidable.cpp" />
     <ClCompile Include="IGame_Level.cpp" />
-    <ClCompile Include="IGame_Level_check_textures.cpp" />
     <ClCompile Include="IGame_Persistent.cpp" />
     <ClCompile Include="IGame_ObjectPool.cpp" />
     <ClCompile Include="pure_relcase.cpp" />
@@ -971,8 +969,6 @@
     <ClCompile Include="SH_Texture.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="r_constants_cache.cpp" />
-    <ClCompile Include="Text_Console.cpp" />
-    <ClCompile Include="Text_Console_WndProc.cpp" />
     <ClCompile Include="D3DUtils.cpp" />
     <ClCompile Include="du_box.cpp" />
     <ClCompile Include="du_cone.cpp" />
@@ -998,7 +994,6 @@
     <ClCompile Include="EngineAPI.cpp" />
     <ClCompile Include="EventAPI.cpp" />
     <ClCompile Include="mailSlot.cpp" />
-    <ClCompile Include="_scripting.cpp" />
     <ClCompile Include="ai_script_lua_debug.cpp" />
     <ClCompile Include="ai_script_lua_extension.cpp" />
     <ClCompile Include="perlin.cpp" />

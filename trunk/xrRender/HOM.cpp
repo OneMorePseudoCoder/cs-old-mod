@@ -7,15 +7,13 @@
 #include "occRasterizer.h"
 #include "../xr_3da/GameFont.h"
 
-float	psOSSR = .001f;
-
 void __stdcall	CHOM::MT_RENDER()
 {
 	MT.Enter();
 	bool b_main_menu_is_active = (g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive());
 	if (MT_frame_rendered != Device.dwFrame && !b_main_menu_is_active)
 	{
-		CFrustum					ViewBase;
+		CFrustum ViewBase;
 		ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 		Enable();
 		Render(ViewBase);

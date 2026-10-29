@@ -17,7 +17,6 @@
 #include "zone_effector.h"
 #include "breakableobject.h"
 
-//////////////////////////////////////////////////////////////////////////
 #define PREFETCHED_ARTEFACTS_NUM 1	//количество предварительно проспавненых артефактов
 #define WIND_RADIUS (4*Radius())	//расстояние до актера, когда появляется ветер 
 #define FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
@@ -38,11 +37,9 @@ CCustomZone::CCustomZone(void)
 	m_pIdleLight = NULL;
 	m_pIdleLAnim = NULL;
 
-
 	m_StateTime.resize(eZoneStateMax);
 	for (int i = 0; i < eZoneStateMax; i++)
 		m_StateTime[i] = 0;
-
 
 	m_dwAffectFrameNum = 0;
 	m_fArtefactSpawnProbability = 0.f;
@@ -139,9 +136,9 @@ void CCustomZone::Load(LPCSTR section)
 		m_entrance_sound.create(sound_str, st_Effect, sg_SourceType);
 	}
 
-
 	if (pSettings->line_exist(section, "idle_particles"))
 		m_sIdleParticles = pSettings->r_string(section, "idle_particles");
+
 	if (pSettings->line_exist(section, "blowout_particles"))
 		m_sBlowoutParticles = pSettings->r_string(section, "blowout_particles");
 
@@ -151,21 +148,24 @@ void CCustomZone::Load(LPCSTR section)
 	if (pSettings->line_exist(section, "awake_particles"))
 		m_sAwakingParticles = pSettings->r_string(section, "awake_particles");
 
-
 	if (pSettings->line_exist(section, "entrance_small_particles"))
 		m_sEntranceParticlesSmall = pSettings->r_string(section, "entrance_small_particles");
+
 	if (pSettings->line_exist(section, "entrance_big_particles"))
 		m_sEntranceParticlesBig = pSettings->r_string(section, "entrance_big_particles");
 
 	if (pSettings->line_exist(section, "hit_small_particles"))
 		m_sHitParticlesSmall = pSettings->r_string(section, "hit_small_particles");
+
 	if (pSettings->line_exist(section, "hit_big_particles"))
 		m_sHitParticlesBig = pSettings->r_string(section, "hit_big_particles");
 
 	if (pSettings->line_exist(section, "idle_small_particles"))
-		m_sIdleObjectParticlesBig = pSettings->r_string(section, "idle_big_particles");
-	if (pSettings->line_exist(section, "idle_big_particles"))
 		m_sIdleObjectParticlesSmall = pSettings->r_string(section, "idle_small_particles");
+
+	if (pSettings->line_exist(section, "idle_big_particles"))
+		m_sIdleObjectParticlesBig = pSettings->r_string(section, "idle_big_particles");
+
 	if (pSettings->line_exist(section, "idle_particles_dont_stop"))
 		m_bIdleObjectParticlesDontStop = pSettings->r_bool(section, "idle_particles_dont_stop");
 
@@ -175,12 +175,11 @@ void CCustomZone::Load(LPCSTR section)
 		m_effector->Load(pSettings->r_string(section, "postprocess"));
 	};
 
-
-
 	if (pSettings->line_exist(section, "blowout_particles_time"))
 	{
 		m_dwBlowoutParticlesTime = pSettings->r_u32(section, "blowout_particles_time");
-		if (s32(m_dwBlowoutParticlesTime) > m_StateTime[eZoneStateBlowout]) {
+		if (s32(m_dwBlowoutParticlesTime) > m_StateTime[eZoneStateBlowout]) 
+		{
 			m_dwBlowoutParticlesTime = m_StateTime[eZoneStateBlowout];
 			Msg("! ERROR: invalid 'blowout_particles_time' in '%s'", section);
 		}
@@ -191,7 +190,8 @@ void CCustomZone::Load(LPCSTR section)
 	if (pSettings->line_exist(section, "blowout_light_time"))
 	{
 		m_dwBlowoutLightTime = pSettings->r_u32(section, "blowout_light_time");
-		if (s32(m_dwBlowoutLightTime) > m_StateTime[eZoneStateBlowout]) {
+		if (s32(m_dwBlowoutLightTime) > m_StateTime[eZoneStateBlowout]) 
+		{
 			m_dwBlowoutLightTime = m_StateTime[eZoneStateBlowout];
 			Msg("! ERROR: invalid 'blowout_light_time' in '%s'", section);
 		}
@@ -202,7 +202,8 @@ void CCustomZone::Load(LPCSTR section)
 	if (pSettings->line_exist(section, "blowout_sound_time"))
 	{
 		m_dwBlowoutSoundTime = pSettings->r_u32(section, "blowout_sound_time");
-		if (s32(m_dwBlowoutSoundTime) > m_StateTime[eZoneStateBlowout]) {
+		if (s32(m_dwBlowoutSoundTime) > m_StateTime[eZoneStateBlowout]) 
+		{
 			m_dwBlowoutSoundTime = m_StateTime[eZoneStateBlowout];
 			Msg("! ERROR: invalid 'blowout_sound_time' in '%s'", section);
 		}
@@ -210,9 +211,11 @@ void CCustomZone::Load(LPCSTR section)
 	else
 		m_dwBlowoutSoundTime = 0;
 
-	if (pSettings->line_exist(section, "blowout_explosion_time")) {
+	if (pSettings->line_exist(section, "blowout_explosion_time")) 
+	{
 		m_dwBlowoutExplosionTime = pSettings->r_u32(section, "blowout_explosion_time");
-		if (s32(m_dwBlowoutExplosionTime) > m_StateTime[eZoneStateBlowout]) {
+		if (s32(m_dwBlowoutExplosionTime) > m_StateTime[eZoneStateBlowout]) 
+		{
 			m_dwBlowoutExplosionTime = m_StateTime[eZoneStateBlowout];
 			Msg("! ERROR: invalid 'blowout_explosion_time' in '%s'", section);
 		}
@@ -221,18 +224,19 @@ void CCustomZone::Load(LPCSTR section)
 		m_dwBlowoutExplosionTime = 0;
 
 	m_zone_flags.set(eBlowoutWind, pSettings->r_bool(section, "blowout_wind"));
-	if (m_zone_flags.test(eBlowoutWind)) {
+	if (m_zone_flags.test(eBlowoutWind)) 
+	{
 		m_dwBlowoutWindTimeStart = pSettings->r_u32(section, "blowout_wind_time_start");
 		m_dwBlowoutWindTimePeak = pSettings->r_u32(section, "blowout_wind_time_peak");
 		m_dwBlowoutWindTimeEnd = pSettings->r_u32(section, "blowout_wind_time_end");
 		R_ASSERT(m_dwBlowoutWindTimeStart < m_dwBlowoutWindTimePeak);
 		R_ASSERT(m_dwBlowoutWindTimePeak < m_dwBlowoutWindTimeEnd);
 
-		if ((s32)m_dwBlowoutWindTimeEnd < m_StateTime[eZoneStateBlowout]) {
+		if ((s32)m_dwBlowoutWindTimeEnd < m_StateTime[eZoneStateBlowout]) 
+		{
 			m_dwBlowoutWindTimeEnd = u32(m_StateTime[eZoneStateBlowout] - 1);
 			Msg("! ERROR: invalid 'blowout_wind_time_end' in '%s'", section);
 		}
-
 
 		m_fBlowoutWindPowerMax = pSettings->r_float(section, "blowout_wind_power");
 	}
@@ -240,7 +244,8 @@ void CCustomZone::Load(LPCSTR section)
 	//загрузить параметры световой вспышки от взрыва
 	m_zone_flags.set(eBlowoutLight, pSettings->r_bool(section, "blowout_light"));
 
-	if (m_zone_flags.test(eBlowoutLight)) {
+	if (m_zone_flags.test(eBlowoutLight)) 
+	{
 		sscanf(pSettings->r_string(section, "light_color"), "%f,%f,%f", &m_LightColor.r, &m_LightColor.g, &m_LightColor.b);
 		m_fLightRange = pSettings->r_float(section, "light_range");
 		m_fLightTime = pSettings->r_float(section, "light_time");
@@ -259,7 +264,6 @@ void CCustomZone::Load(LPCSTR section)
 		m_pIdleLAnim = LALib.FindItem(light_anim);
 		m_fIdleLightHeight = pSettings->r_float(section, "idle_light_height");
 	}
-
 
 	//загрузить параметры для разбрасывания артефактов
 	m_zone_flags.set(eSpawnBlowoutArtefacts, pSettings->r_bool(section, "spawn_blowout_artefacts"));
@@ -1184,7 +1188,6 @@ void CCustomZone::ZoneDisable()
 	SwitchZoneState(eZoneStateDisabled);
 };
 
-
 void CCustomZone::SpawnArtefact()
 {
 	//вычислить согласно распределению вероятностей
@@ -1202,24 +1205,27 @@ void CCustomZone::SpawnArtefact()
 
 	Fvector pos;
 	Center(pos);
-	Level().spawn_item(*m_ArtefactSpawn[i].section, pos, (g_dedicated_server) ? u32(-1) : ai_location().level_vertex_id(), ID());
+	Level().spawn_item(*m_ArtefactSpawn[i].section, pos, ai_location().level_vertex_id(), ID());
 }
 
 
 void CCustomZone::BornArtefact()
 {
-	if (!m_zone_flags.test(eSpawnBlowoutArtefacts) || m_SpawnedArtefacts.empty()) return;
+	if (!m_zone_flags.test(eSpawnBlowoutArtefacts) || m_SpawnedArtefacts.empty())
+		return;
 
-	if (::Random.randF(0.f, 1.f) > m_fArtefactSpawnProbability) return;
+	if (::Random.randF(0.f, 1.f) > m_fArtefactSpawnProbability)
+		return;
 
 	PrefetchArtefacts();
 	CArtefact* pArtefact = m_SpawnedArtefacts.back(); VERIFY(pArtefact);
 	m_SpawnedArtefacts.pop_back();
 
-	if (Local()) {
+	if (Local()) 
+	{
 		if (pArtefact->H_Parent() && (pArtefact->H_Parent()->ID() == this->ID()))	//. todo: need to remove on actual message parsing
 		{
-			NET_Packet						P;
+			NET_Packet P;
 			u_EventGen(P, GE_OWNERSHIP_REJECT, ID());
 			P.w_u16(pArtefact->ID());
 			u_EventSend(P);

@@ -50,10 +50,6 @@ game_cl_ArtefactHunt::game_cl_ArtefactHunt()
 
 void game_cl_ArtefactHunt::Init()
 {
-	//	pInventoryMenu	= xr_new<CUIInventoryWnd>();	
-	//	pPdaMenu = xr_new<CUIPdaWnd>();
-	//	pMapDesc = xr_new<CUIMapDesc>();
-
 	LoadTeamData(TEAM1_MENU);
 	LoadTeamData(TEAM2_MENU);
 
@@ -321,7 +317,8 @@ void game_cl_ArtefactHunt::GetMapEntities(xr_vector<SZoneMapEntityData>& dst)
 		return;
 	};
 
-	if (pParent && pParent->ID() == artefactBearerID && GetPlayerByGameID(artefactBearerID)) {
+	if (pParent && pParent->ID() == artefactBearerID && GetPlayerByGameID(artefactBearerID)) 
+	{
 		CObject* pBearer = Level().Objects.net_Find(artefactBearerID);
 		VERIFY(pBearer);
 		D.pos = pBearer->Position();
@@ -333,18 +330,16 @@ void game_cl_ArtefactHunt::GetMapEntities(xr_vector<SZoneMapEntityData>& dst)
 		dst.push_back(D);
 		return;
 	}
-
 }
 
 void game_cl_ArtefactHunt::shedule_Update(u32 dt)
 {
 	CStringTable st;
 	string1024 msg;
-	if (!m_game_ui && HUD().GetUI()) m_game_ui = smart_cast<CUIGameAHunt*>(HUD().GetUI()->UIGame());
+	if (!m_game_ui && HUD().GetUI())
+		m_game_ui = smart_cast<CUIGameAHunt*>(HUD().GetUI()->UIGame());
 
 	inherited::shedule_Update(dt);
-
-	if (g_dedicated_server)	return;
 
 	//out game information
 //	m_game_ui->SetReinforcementCaption("");
@@ -358,8 +353,7 @@ void game_cl_ArtefactHunt::shedule_Update(u32 dt)
 	{
 		if (local_player)
 		{
-			if (local_player->testFlag(GAME_PLAYER_FLAG_ONBASE) &&
-				!local_player->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))
+			if (local_player->testFlag(GAME_PLAYER_FLAG_ONBASE) && !local_player->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))
 			{
 				m_bBuyEnabled = TRUE;
 			}
@@ -373,7 +367,8 @@ void game_cl_ArtefactHunt::shedule_Update(u32 dt)
 		{
 			if (Level().CurrentControlEntity()->CLS_ID == CLSID_OBJECT_ACTOR)
 			{
-				if (m_game_ui) m_game_ui->SetBuyMsgCaption("");
+				if (m_game_ui)
+					m_game_ui->SetBuyMsgCaption("");
 				if (m_bBuyEnabled)
 				{
 					if (!(pCurBuyMenu && pCurBuyMenu->IsShown()) &&
@@ -441,46 +436,7 @@ void game_cl_ArtefactHunt::shedule_Update(u32 dt)
 			}
 			else
 				m_game_ui->m_pReinforcementInidcator->SetPos(0, 0);
-
-
-			s16 lt = local_player->team;
-			if (lt >= 0)
-			{
-				//					if(m_game_ui) m_game_ui->SetScoreCaption	(teams[0].score, teams[1].score);
-			};
-			/*
-					if ( (artefactBearerID==0))// && (artefactID!=0) )
-						{
-							m_game_ui->SetTodoCaption("Grab the Artefact");
-						}
-						else
-						{
-							if (teamInPossession != local_player->team )
-							{
-								m_game_ui->SetTodoCaption("Stop ArtefactBearer");
-							}
-							else
-							{
-								if (local_player->GameID == artefactBearerID)
-								{
-									m_game_ui->SetTodoCaption("You got the Artefact. Bring it to your base.");
-								}
-								else
-								{
-									m_game_ui->SetTodoCaption("Protect your ArtefactBearer");
-								};
-							};
-						};
-					*/
 		};
-		/*
-					if (Level().CurrentViewEntity() && m_game_ui)
-					{
-						game_PlayerState* ps = GetPlayerByGameID(Level().CurrentViewEntity()->ID());
-						if (ps&&m_game_ui) m_game_ui->SetRank(ps->team, ps->rank);
-						if (ps&&m_game_ui) m_game_ui->SetFraglimit(ps->kills, artefactsNum);
-					}
-		*/
 		SetScore();
 	}break;
 	case GAME_PHASE_TEAM1_ELIMINATED:
@@ -506,9 +462,8 @@ void game_cl_ArtefactHunt::shedule_Update(u32 dt)
 			StartStopMenu(m_game_ui->m_pBuySpawnMsgBox, true);
 		};
 	};
-	//-------------------------------------------
-
 }
+
 void game_cl_ArtefactHunt::SetScore()
 {
 	game_cl_TeamDeathmatch::SetScore();
@@ -524,33 +479,42 @@ void game_cl_ArtefactHunt::SetScore()
 			m_game_ui->SetFraglimit(ps->frags(), artefactsNum);
 	}
 }
+
 BOOL game_cl_ArtefactHunt::CanCallBuyMenu()
 {
-	if (!m_bBuyEnabled) return FALSE;
-	if (Phase() != GAME_PHASE_INPROGRESS) return false;
+	if (!m_bBuyEnabled)
+		return FALSE;
+
+	if (Phase() != GAME_PHASE_INPROGRESS)
+		return false;
 
 	if (m_game_ui->m_pUITeamSelectWnd && m_game_ui->m_pUITeamSelectWnd->IsShown())
 	{
 		return FALSE;
 	};
+
 	if (pCurSkinMenu && pCurSkinMenu->IsShown())
 	{
 		return FALSE;
 	};
+
 	if (m_game_ui->m_pInventoryMenu && m_game_ui->m_pInventoryMenu->IsShown())
 	{
 		return FALSE;
 	};
 
 	CActor* pCurActor = smart_cast<CActor*> (Level().CurrentEntity());
-	if (!pCurActor || !pCurActor->g_Alive()) return FALSE;
+	if (!pCurActor || !pCurActor->g_Alive())
+		return FALSE;
 
 	return TRUE;
 };
 
 bool game_cl_ArtefactHunt::CanBeReady()
 {
-	if (!local_player) return false;
+	if (!local_player)
+		return false;
+
 	m_bMenuCalledFromReady = TRUE;
 
 	SetCurrentSkinMenu();
@@ -574,7 +538,7 @@ bool game_cl_ArtefactHunt::CanBeReady()
 		ClearBuyMenu();
 
 	m_bMenuCalledFromReady = FALSE;
-	//	return inherited::CanBeReady();
+
 	return true;
 };
 
@@ -598,10 +562,12 @@ char* game_cl_ArtefactHunt::getTeamSection(int Team)
 #endif
 };
 
-bool	game_cl_ArtefactHunt::PlayerCanSprint(CActor* pActor)
+bool game_cl_ArtefactHunt::PlayerCanSprint(CActor* pActor)
 {
-	if (artefactBearerID == 0) return true;
-	if (bBearerCantSprint && pActor->ID() == artefactBearerID) return false;
+	if (artefactBearerID == 0)
+		return true;
+	if (bBearerCantSprint && pActor->ID() == artefactBearerID)
+		return false;
 	return true;
 };
 
@@ -680,19 +646,13 @@ void	game_cl_ArtefactHunt::UpdateMapLocations()
 
 bool game_cl_ArtefactHunt::NeedToSendReady_Spectator(int key, game_PlayerState* ps)
 {
-	CStringTable		st;
-	bool res = (GAME_PHASE_PENDING == Phase() && kWPN_FIRE == key) ||
-		((kJUMP == key) && GAME_PHASE_INPROGRESS == Phase() &&
-			CanBeReady());
+	CStringTable st;
+	bool res = (GAME_PHASE_PENDING == Phase() && kWPN_FIRE == key) || ((kJUMP == key) && GAME_PHASE_INPROGRESS == Phase() && CanBeReady());
 
-	if ((GAME_PHASE_INPROGRESS == Phase()) && (kJUMP == key) &&
-		(iReinforcementTime != 0) &&
-		(!m_game_ui->m_pBuySpawnMsgBox->IsShown()) &&
-		local_player && (local_player->money_for_round + m_iSpawn_Cost) >= 0)
+	if ((GAME_PHASE_INPROGRESS == Phase()) && (kJUMP == key) && (iReinforcementTime != 0) && (!m_game_ui->m_pBuySpawnMsgBox->IsShown()) && local_player && (local_player->money_for_round + m_iSpawn_Cost) >= 0)
 	{
 		string1024				BuySpawnText;
-		sprintf_s(BuySpawnText, *st.translate("mp_press_yes2pay"),
-			abs(local_player->money_for_round), abs(m_iSpawn_Cost));
+		sprintf_s(BuySpawnText, *st.translate("mp_press_yes2pay"), abs(local_player->money_for_round), abs(m_iSpawn_Cost));
 		m_game_ui->m_pBuySpawnMsgBox->SetText(BuySpawnText);
 
 		if (m_bTeamSelected && m_bSkinSelected)

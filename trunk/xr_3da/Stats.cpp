@@ -132,31 +132,32 @@ void CStats::Show()
 	}
 
 	// calc FPS & TPS
-	if (Device.fTimeDelta > EPS_S) {
+	if (Device.fTimeDelta > EPS_S) 
+	{
 		float fps = 1.f / Device.fTimeDelta;
-		//if (Engine.External.tune_enabled)	vtune.update	(fps);
 		float fOne = 0.3f;
 		float fInv = 1.f - fOne;
 		fFPS = fInv * fFPS + fOne * fps;
 
-		if (RenderTOTAL.result > EPS_S) {
+		if (RenderTOTAL.result > EPS_S) 
+		{
 			fTPS = fInv * fTPS + fOne * float(RCache.stat.polys) / (RenderTOTAL.result * 1000.f);
 			fRFPS = fInv * fRFPS + fOne * 1000.f / RenderTOTAL.result;
 		}
 	}
 	{
 		float mem_count = float(Memory.stat_calls);
-		if (mem_count > fMem_calls)	fMem_calls = mem_count;
-		else						fMem_calls = .9f * fMem_calls + .1f * mem_count;
+		if (mem_count > fMem_calls)
+			fMem_calls = mem_count;
+		else
+			fMem_calls = .9f * fMem_calls + .1f * mem_count;
 		Memory.stat_calls = 0;
 	}
 
-	////////////////////////////////////////////////
-	if (g_dedicated_server) return;
-	////////////////////////////////////////////////
 	int frm = 2000;
 	div_t ddd = div(Device.dwFrame, frm);
-	if (ddd.rem < frm / 2.0f) {
+	if (ddd.rem < frm / 2.0f) 
+	{
 		pFont->SetColor(0xFFFFFFFF);
 		pFont->OutSet(0, 0);
 		pFont->OutNext(*eval_line_1);
@@ -166,10 +167,11 @@ void CStats::Show()
 	}
 
 	CGameFont& F = *pFont;
-	float		f_base_size = 0.01f;
+	float f_base_size = 0.01f;
 	F.SetHeightI(f_base_size);
 
-	if (vtune.enabled()) {
+	if (vtune.enabled()) 
+	{
 		float sz = pFont->GetHeight();
 		pFont->SetHeightI(0.02f);
 		pFont->SetColor(0xFFFF0000);
@@ -182,12 +184,12 @@ void CStats::Show()
 	// Show them
 	if (psDeviceFlags.test(rsStatistic))
 	{
-		static float	r_ps = 0;
-		static float	b_ps = 0;
+		static float r_ps = 0;
+		static float b_ps = 0;
 		r_ps = .99f * r_ps + .01f * (clRAY.count / clRAY.result);
 		b_ps = .99f * b_ps + .01f * (clBOX.count / clBOX.result);
 
-		CSound_stats				snd_stat;
+		CSound_stats snd_stat;
 		::Sound->statistic(&snd_stat, 0);
 		F.SetColor(0xFFFFFFFF);
 
@@ -312,10 +314,12 @@ void CStats::Show()
 		pFont->OnRender();
 	};
 
-	if (psDeviceFlags.test(rsStatistic) || psDeviceFlags.test(rsCameraPos)) {
+	if (psDeviceFlags.test(rsStatistic) || psDeviceFlags.test(rsCameraPos)) 
+	{
 		_draw_cam_pos(pFont);
 		pFont->OnRender();
 	};
+
 #ifdef DEBUG
 	//////////////////////////////////////////////////////////////////////////
 	// PERF ALERT
@@ -325,19 +329,24 @@ void CStats::Show()
 		F.SetColor(color_rgba(255, 16, 16, 255));
 		F.OutSet(300, 300);
 		F.SetHeightI(f_base_size * 2);
-		if (fFPS < 30)					F.OutNext("FPS       < 30:   %3.1f", fFPS);
-		if (RCache.stat.verts > 500000)	F.OutNext("Verts     > 500k: %d", RCache.stat.verts);
-		//if (RCache.stat.polys>500000)	F.OutNext	("Polys     > 500k: %d",	RCache.stat.polys);
+		if (fFPS < 30)
+			F.OutNext("FPS       < 30:   %3.1f", fFPS);
+		if (RCache.stat.verts > 500000)
+			F.OutNext("Verts     > 500k: %d", RCache.stat.verts);
+
 		if (psDeviceFlags.test(rsStatistic))
 		{
-			if (RCache.stat.calls > 1000)		F.OutNext("DIP/DP    > 1k:   %d", RCache.stat.calls);
-			//if (RCache.stat.textures>1000)F.OutNext	("T_change  > 500:  %d",	RCache.stat.textures);
-			if (RenderDUMP_DT_Count > 1000)	F.OutNext("DT_count  > 1000: %u", RenderDUMP_DT_Count);
+			if (RCache.stat.calls > 1000)
+				F.OutNext("DIP/DP    > 1k:   %d", RCache.stat.calls);
+			if (RenderDUMP_DT_Count > 1000)
+				F.OutNext("DT_count  > 1000: %u", RenderDUMP_DT_Count);
 			F.OutSkip();
-			//if (fMem_calls>1500)			F.OutNext	("MMGR calls > 1500:%3.1f",	fMem_calls);
-			if (Sheduler.result > 3.f)		F.OutNext("Update     > 3ms:	%3.1f", Sheduler.result);
-			if (UpdateClient.result > 3.f)	F.OutNext("UpdateCL   > 3ms: %3.1f", UpdateClient.result);
-			if (Physics.result > 5.f)			F.OutNext("Physics    > 5ms: %3.1f", Physics.result);
+			if (Sheduler.result > 3.f)
+				F.OutNext("Update     > 3ms:	%3.1f", Sheduler.result);
+			if (UpdateClient.result > 3.f)
+				F.OutNext("UpdateCL   > 3ms: %3.1f", UpdateClient.result);
+			if (Physics.result > 5.f)
+				F.OutNext("Physics    > 5ms: %3.1f", Physics.result);
 		}
 	}
 
@@ -349,13 +358,10 @@ void CStats::Show()
 		F.SetColor(color_rgba(255, 16, 16, 191));
 		F.OutSet(200, 0);
 		F.SetHeightI(f_base_size);
-#if 0
-		for (u32 it = 0; it < errors.size(); it++)
-			F.OutNext("%s", errors[it].c_str());
-#else
+
 		for (u32 it = (u32)_max(int(0), (int)errors.size() - g_ErrorLineCount); it < errors.size(); it++)
 			F.OutNext("%s", errors[it].c_str());
-#endif
+
 		F.OnRender();
 	}
 #endif
@@ -420,7 +426,7 @@ void CStats::Show()
 	Particles_starting = Particles_active = Particles_destroy = 0;
 }
 
-void	_LogCallback(LPCSTR string)
+void _LogCallback(LPCSTR string)
 {
 	if (string && '!' == string[0] && ' ' == string[1])
 		Device.Statistic->errors.push_back(shared_str(string));
@@ -430,24 +436,18 @@ void CStats::OnDeviceCreate()
 {
 	g_bDisableRedText = strstr(Core.Params, "-xclsx") ? TRUE : FALSE;
 
-	//	if (!strstr(Core.Params, "-dedicated"))
-#ifndef DEDICATED_SERVER
 	pFont = xr_new<CGameFont>("stat_font", CGameFont::fsDeviceIndependent, false);
-#endif
 
-	if (!pSettings->section_exist("evaluation")
-		|| !pSettings->line_exist("evaluation", "line1")
-		|| !pSettings->line_exist("evaluation", "line2")
-		|| !pSettings->line_exist("evaluation", "line3"))
+	if (!pSettings->section_exist("evaluation") || !pSettings->line_exist("evaluation", "line1")|| !pSettings->line_exist("evaluation", "line2") || !pSettings->line_exist("evaluation", "line3"))
 		FATAL("");
 
 	eval_line_1 = pSettings->r_string_wb("evaluation", "line1");
 	eval_line_2 = pSettings->r_string_wb("evaluation", "line2");
 	eval_line_3 = pSettings->r_string_wb("evaluation", "line3");
 
-	// 
 #ifdef DEBUG
-	if (!g_bDisableRedText)			SetLogCB(_LogCallback);
+	if (!g_bDisableRedText)
+		SetLogCB(_LogCallback);
 #endif
 }
 
@@ -459,14 +459,17 @@ void CStats::OnDeviceDestroy()
 void CStats::OnRender()
 {
 #ifdef DEBUG
-	if (g_stats_flags.is(st_sound)) {
-		CSound_stats_ext				snd_stat_ext;
+	if (g_stats_flags.is(st_sound)) 
+	{
+		CSound_stats_ext snd_stat_ext;
 		::Sound->statistic(0, &snd_stat_ext);
-		CSound_stats_ext::item_vec_it	_I = snd_stat_ext.items.begin();
-		CSound_stats_ext::item_vec_it	_E = snd_stat_ext.items.end();
-		for (; _I != _E; _I++) {
+		CSound_stats_ext::item_vec_it _I = snd_stat_ext.items.begin();
+		CSound_stats_ext::item_vec_it _E = snd_stat_ext.items.end();
+		for (; _I != _E; _I++) 
+		{
 			const CSound_stats_ext::SItem& item = *_I;
-			if (item._3D) {
+			if (item._3D) 
+			{
 				RCache.set_xform_world(Fidentity);
 				RCache.set_Shader(Device.m_SelectionShader);
 				RCache.set_c("tfactor", 1, 1, 1, 1);
@@ -476,10 +479,12 @@ void CStats::OnRender()
 				if (g_stats_flags.is(st_sound_max_dist))
 					DU.DrawSphere(Fidentity, item.params.position, item.params.max_distance, 0x4000FF00, 0xFF008000, true, true);
 				xr_string out_txt = (g_stats_flags.is(st_sound_info_name)) ? item.name.c_str() : "";
-				if (item.game_object) {
+				if (item.game_object) 
+				{
 					if (g_stats_flags.is(st_sound_ai_dist))
 						DU.DrawSphere(Fidentity, item.params.position, item.params.max_ai_distance, 0x80FF0000, 0xFF800000, true, true);
-					if (g_stats_flags.is(st_sound_info_object)) {
+					if (g_stats_flags.is(st_sound_info_object)) 
+					{
 						out_txt += "  (";
 						out_txt += item.game_object->cNameSect().c_str();
 						out_txt += ")";

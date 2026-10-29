@@ -13,7 +13,7 @@
 void CLevel::cl_Process_Spawn(NET_Packet& P)
 {
 	// Begin analysis
-	shared_str			s_name;
+	shared_str s_name;
 	P.r_stringZ(s_name);
 
 	// Create DC (xrSE)
@@ -23,22 +23,16 @@ void CLevel::cl_Process_Spawn(NET_Packet& P)
 	E->Spawn_Read(P);
 	if (E->s_flags.is(M_SPAWN_UPDATE))
 		E->UPDATE_Read(P);
-	//-------------------------------------------------
-	//	Msg ("M_SPAWN - %s[%d][%x] - %d", *s_name,  E->ID, E,E->ID_Parent);
-	//-------------------------------------------------
-		//force object to be local for server client
-	if (OnServer()) {
+
+	//force object to be local for server client
+	if (OnServer()) 
+	{
 		E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
 	};
 
-	/*
-	game_spawn_queue.push_back(E);
-	if (g_bDebugEvents)		ProcessGameSpawns();
-	/*/
 	g_sv_Spawn(E);
 
 	F_entity_Destroy(E);
-	//*/
 };
 
 void CLevel::g_cl_Spawn(LPCSTR name, u8 rp, u16 flags, Fvector pos)
@@ -60,7 +54,7 @@ void CLevel::g_cl_Spawn(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 	E->o_Position = pos;
 
 	// Send
-	NET_Packet			P;
+	NET_Packet P;
 	E->Spawn_Write(P, TRUE);
 	Send(P, net_flags(TRUE));
 
@@ -69,69 +63,64 @@ void CLevel::g_cl_Spawn(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 }
 
 #ifdef DEBUG
-extern Flags32				psAI_Flags;
-extern float				debug_on_frame_gather_stats_frequency;
+extern Flags32 psAI_Flags;
+extern float debug_on_frame_gather_stats_frequency;
 #	include "ai_debug.h"
 #endif // DEBUG
 
 void CLevel::g_sv_Spawn(CSE_Abstract* E)
 {
 #ifdef DEBUG_MEMORY_MANAGER
-	u32							E_mem = 0;
-	if (g_bMEMO) {
+	u32 E_mem = 0;
+	if (g_bMEMO) 
+	{
 		lua_gc(ai().script_engine().lua(), LUA_GCCOLLECT, 0);
 		lua_gc(ai().script_engine().lua(), LUA_GCCOLLECT, 0);
 		E_mem = Memory.mem_usage();
 		Memory.stat_calls = 0;
 	}
 #endif // DEBUG_MEMORY_MANAGER
-	//-----------------------------------------------------------------
-//	CTimer		T(false);
-
-#ifdef DEBUG
-//	Msg					("* CLIENT: Spawn: %s, ID=%d", *E->s_name, E->ID);
-#endif
 
 	// Optimization for single-player only	- minimize traffic between client and server
-	if (GameID() == GAME_SINGLE)		psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, TRUE);
-	else								psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, FALSE);
+	if (GameID() == GAME_SINGLE)
+		psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, TRUE);
+	else
+		psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, FALSE);
 
 	// Client spawn
-//	T.Start		();
 	CObject* O = Objects.Create(*E->s_name);
-	// Msg				("--spawn--CREATE: %f ms",1000.f*T.GetAsync());
 
-//	T.Start		();
 #ifdef DEBUG_MEMORY_MANAGER
 	mem_alloc_gather_stats(false);
 #endif // DEBUG_MEMORY_MANAGER
 	if (0 == O || (!O->net_Spawn(E)))
 	{
 		O->net_Destroy();
-		if (!g_dedicated_server)
-			client_spawn_manager().clear(O->ID());
+		client_spawn_manager().clear(O->ID());
 		Objects.Destroy(O);
 		Msg("! Failed to spawn entity '%s'", *E->s_name);
 #ifdef DEBUG_MEMORY_MANAGER
 		mem_alloc_gather_stats(!!psAI_Flags.test(aiDebugOnFrameAllocs));
 #endif // DEBUG_MEMORY_MANAGER
 	}
-	else {
+	else 
+	{
 #ifdef DEBUG_MEMORY_MANAGER
 		mem_alloc_gather_stats(!!psAI_Flags.test(aiDebugOnFrameAllocs));
 #endif // DEBUG_MEMORY_MANAGER
-		if (!g_dedicated_server)
-			client_spawn_manager().callback(O);
-		//Msg			("--spawn--SPAWN: %f ms",1000.f*T.GetAsync());
-		if ((E->s_flags.is(M_SPAWN_OBJECT_LOCAL)) && (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))) {
+
+		client_spawn_manager().callback(O);
+
+		if ((E->s_flags.is(M_SPAWN_OBJECT_LOCAL)) && (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))) 
+		{
 			if (CurrentEntity() != NULL)
 			{
 				CGameObject* pGO = smart_cast<CGameObject*>(CurrentEntity());
-				if (pGO) pGO->On_B_NotCurrentEntity();
+				if (pGO)
+					pGO->On_B_NotCurrentEntity();
 			}
 			SetEntity(O);
 			SetControlEntity(O);
-			//			if (net_Syncronised)net_Syncronize	();	// start sync-thread again
 		}
 
 		if (0xffff != E->ID_Parent)
@@ -147,7 +136,8 @@ void CLevel::g_sv_Spawn(CSE_Abstract* E)
 	Game().OnSpawn(O);
 	//---------------------------------------------------------
 #ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO) {
+	if (g_bMEMO) 
+	{
 		lua_gc(ai().script_engine().lua(), LUA_GCCOLLECT, 0);
 		lua_gc(ai().script_engine().lua(), LUA_GCCOLLECT, 0);
 		Msg("* %20s : %d bytes, %d ops", *E->s_name, Memory.mem_usage() - E_mem, Memory.stat_calls);
@@ -160,7 +150,8 @@ CSE_Abstract* CLevel::spawn_item(LPCSTR section, const Fvector& position, u32 le
 	CSE_Abstract* abstract = F_entity_Create(section);
 	R_ASSERT3(abstract, "Cannot find item with section", section);
 	CSE_ALifeDynamicObject* dynamic_object = smart_cast<CSE_ALifeDynamicObject*>(abstract);
-	if (dynamic_object && ai().get_level_graph()) {
+	if (dynamic_object && ai().get_level_graph()) 
+	{
 		dynamic_object->m_tNodeID = level_vertex_id;
 		if (ai().level_graph().valid_vertex_id(level_vertex_id) && ai().get_game_graph() && ai().get_cross_table())
 			dynamic_object->m_tGraphID = ai().cross_table().vertex(level_vertex_id).game_vertex_id();
@@ -183,18 +174,19 @@ CSE_Abstract* CLevel::spawn_item(LPCSTR section, const Fvector& position, u32 le
 	abstract->s_flags.assign(M_SPAWN_OBJECT_LOCAL);
 	abstract->RespawnTime = 0;
 
-	if (!return_item) {
-		NET_Packet				P;
+	if (!return_item) 
+	{
+		NET_Packet P;
 		abstract->Spawn_Write(P, TRUE);
 		Send(P, net_flags(TRUE));
 		F_entity_Destroy(abstract);
-		return					(0);
+		return 0;
 	}
 	else
-		return				(abstract);
+		return abstract;
 }
 
-void	CLevel::ProcessGameSpawns()
+void CLevel::ProcessGameSpawns()
 {
 	while (!game_spawn_queue.empty())
 	{

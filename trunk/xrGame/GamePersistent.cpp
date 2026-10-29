@@ -191,10 +191,7 @@ void CGamePersistent::UpdateGameType()
 				else m_game_params.m_e_game_type = GAME_ANY;
 	//  [7/11/2005]
 
-	if (m_game_params.m_e_game_type == GAME_DEATHMATCH ||
-		m_game_params.m_e_game_type == GAME_TEAMDEATHMATCH ||
-		m_game_params.m_e_game_type == GAME_ARTEFACTHUNT
-		)
+	if (m_game_params.m_e_game_type == GAME_DEATHMATCH || m_game_params.m_e_game_type == GAME_TEAMDEATHMATCH || m_game_params.m_e_game_type == GAME_ARTEFACTHUNT)
 		g_current_keygroup = _mp;
 	else
 		g_current_keygroup = _sp;
@@ -212,7 +209,7 @@ void CGamePersistent::OnGameEnd()
 
 void CGamePersistent::WeathersUpdate()
 {
-	if (g_pGameLevel && !g_dedicated_server)
+	if (g_pGameLevel)
 	{
 		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
 		BOOL bIndoor = TRUE;
@@ -253,8 +250,10 @@ void CGamePersistent::WeathersUpdate()
 			}
 		}
 		// stop if time exceed or indoor
-		if (bIndoor || Device.dwTimeGlobal >= ambient_effect_stop_time) {
-			if (ambient_particles)					ambient_particles->Stop();
+		if (bIndoor || Device.dwTimeGlobal >= ambient_effect_stop_time) 
+		{
+			if (ambient_particles)
+				ambient_particles->Stop();
 			Environment().wind_gust_factor = 0.f;
 		}
 		// if particles not playing - destroy
@@ -267,18 +266,18 @@ void CGamePersistent::WeathersUpdate()
 
 void CGamePersistent::start_logo_intro()
 {
-#if 1//def DEBUG
-	if (0 != strstr(Core.Params, "-nointro")) {
+	if (0 != strstr(Core.Params, "-nointro")) 
+	{
 		m_intro_event = 0;
 		Console->Show();
 		Console->Execute("main_menu on");
 		return;
 	}
-#endif
+
 	if (Device.dwPrecacheFrame == 0)
 	{
 		m_intro_event.bind(this, &CGamePersistent::update_logo_intro);
-		if (!g_dedicated_server && 0 == xr_strlen(m_game_params.m_game_or_spawn) && NULL == g_pGameLevel)
+		if (0 == xr_strlen(m_game_params.m_game_or_spawn) && NULL == g_pGameLevel)
 		{
 			VERIFY(NULL == m_intro);
 			m_intro = xr_new<CUISequencer>();
@@ -287,9 +286,11 @@ void CGamePersistent::start_logo_intro()
 		}
 	}
 }
+
 void CGamePersistent::update_logo_intro()
 {
-	if (m_intro && (false == m_intro->IsActive())) {
+	if (m_intro && (false == m_intro->IsActive())) 
+	{
 		m_intro_event = 0;
 		xr_delete(m_intro);
 		Console->Execute("main_menu on");
@@ -298,15 +299,17 @@ void CGamePersistent::update_logo_intro()
 
 void CGamePersistent::start_game_intro()
 {
-#if 1//def DEBUG
-	if (0 != strstr(Core.Params, "-nointro")) {
+	if (0 != strstr(Core.Params, "-nointro")) 
+	{
 		m_intro_event = 0;
 		return;
 	}
-#endif
-	if (g_pGameLevel && g_pGameLevel->bReady && Device.dwPrecacheFrame <= 2) {
+
+	if (g_pGameLevel && g_pGameLevel->bReady && Device.dwPrecacheFrame <= 2) 
+	{
 		m_intro_event.bind(this, &CGamePersistent::update_game_intro);
-		if (0 == stricmp(m_game_params.m_new_or_load, "new")) {
+		if (0 == stricmp(m_game_params.m_new_or_load, "new")) 
+		{
 			VERIFY(NULL == m_intro);
 			m_intro = xr_new<CUISequencer>();
 			m_intro->Start("intro_game");
@@ -314,43 +317,55 @@ void CGamePersistent::start_game_intro()
 		}
 	}
 }
+
 void CGamePersistent::update_game_intro()
 {
-	if (m_intro && (false == m_intro->IsActive())) {
+	if (m_intro && (false == m_intro->IsActive())) 
+	{
 		xr_delete(m_intro);
 		m_intro_event = 0;
 	}
 }
+
 #include "holder_custom.h"
 extern CUISequencer* g_tutorial;
 extern CUISequencer* g_tutorial2;
 
 void CGamePersistent::OnFrame()
 {
-	if (g_tutorial2) {
+	if (g_tutorial2) 
+	{
 		g_tutorial2->Destroy();
 		xr_delete(g_tutorial2);
 	}
 
-	if (g_tutorial && !g_tutorial->IsActive()) {
+	if (g_tutorial && !g_tutorial->IsActive()) 
+	{
 		xr_delete(g_tutorial);
 	}
 
 #ifdef DEBUG
 	++m_frame_counter;
 #endif
-	if (!g_dedicated_server && !m_intro_event.empty())	m_intro_event();
+	if (!m_intro_event.empty())
+		m_intro_event();
 
 	if (!m_pMainMenu->IsActive())
 		m_pMainMenu->DestroyInternal(false);
 
-	if (!g_pGameLevel)			return;
-	if (!g_pGameLevel->bReady)	return;
+	if (!g_pGameLevel)
+		return;
 
-	if (Device.Paused()) {
+	if (!g_pGameLevel->bReady)
+		return;
+
+	if (Device.Paused()) 
+	{
 #ifndef MASTER_GOLD
-		if (Level().CurrentViewEntity()) {
-			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())) {
+		if (Level().CurrentViewEntity()) 
+		{
+			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())) 
+			{
 				CCustomMonster* custom_monster = smart_cast<CCustomMonster*>(Level().CurrentViewEntity());
 				if (custom_monster) // can be spectator in multiplayer
 					custom_monster->UpdateCamera();

@@ -19,7 +19,6 @@
 #	include "phdebug.h"
 #endif
 
-
 #define PLAYING_ANIM_TIME 10000
 
 #include "ui/UIProgressShape.h"
@@ -39,9 +38,7 @@ void create_force_progress()
 	xml_init.InitProgressShape(uiXml, "progress", 0, g_MissileForceShape);
 }
 
-CMissile::CMissile(void)
-{
-}
+CMissile::CMissile(void) {}
 
 CMissile::~CMissile(void)
 {
@@ -126,31 +123,26 @@ void CMissile::OnActiveItem()
 void CMissile::OnHiddenItem()
 {
 	inherited::OnHiddenItem();
-	if (m_pHUD) m_pHUD->Hide();
+	if (m_pHUD)
+		m_pHUD->Hide();
 	SetState(MS_HIDDEN);
 	SetNextState(MS_HIDDEN);
 }
 
-
 void CMissile::spawn_fake_missile()
 {
-	if (OnClient()) return;
+	if (OnClient())
+		return;
 
 	if (!getDestroy())
 	{
-		CSE_Abstract* object = Level().spawn_item(
-			*cNameSect(),
-			Position(),
-			(g_dedicated_server) ? u32(-1) : ai_location().level_vertex_id(),
-			ID(),
-			true
-		);
+		CSE_Abstract* object = Level().spawn_item(*cNameSect(), Position(), ai_location().level_vertex_id(), ID(), true);
 
 		CSE_ALifeObject* alife_object = smart_cast<CSE_ALifeObject*>(object);
 		VERIFY(alife_object);
 		alife_object->m_flags.set(CSE_ALifeObject::flCanSave, FALSE);
 
-		NET_Packet			P;
+		NET_Packet P;
 		object->Spawn_Write(P, TRUE);
 		Level().Send(P, net_flags(TRUE));
 		F_entity_Destroy(object);
@@ -160,11 +152,7 @@ void CMissile::spawn_fake_missile()
 void CMissile::OnH_A_Chield()
 {
 	inherited::OnH_A_Chield();
-
-	//	if(!m_fake_missile && !smart_cast<CMissile*>(H_Parent())) 
-	//		spawn_fake_missile	();
 }
-
 
 void CMissile::OnH_B_Independent(bool just_before_destroy)
 {
@@ -233,7 +221,8 @@ void CMissile::UpdateCL()
 
 void CMissile::PlayAnimIdle()
 {
-	if (TryPlayAnimIdle()) return;
+	if (TryPlayAnimIdle())
+		return;
 
 	VERIFY(GetState() == MS_IDLE);
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
@@ -263,9 +252,7 @@ void CMissile::shedule_Update(u32 dt)
 	}
 }
 
-void CMissile::StartIdleAnim()
-{
-}
+void CMissile::StartIdleAnim() {}
 
 void CMissile::State(u32 state)
 {
@@ -275,17 +262,20 @@ void CMissile::State(u32 state)
 	{
 		m_bPending = true;
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimShow), FALSE, this, GetState());
-	} break;
+	} 
+	break;
 	case MS_IDLE:
 	{
 		PlayAnimIdle();
 		m_bPending = false;
-	} break;
+	} 
+	break;
 	case MS_HIDING:
 	{
 		m_bPending = true;
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimHide), TRUE, this, GetState());
-	} break;
+	} 
+	break;
 	case MS_HIDDEN:
 	{
 
@@ -301,33 +291,39 @@ void CMissile::State(u32 state)
 			setEnabled(FALSE);
 		};
 		m_bPending = false;
-	} break;
+	} 
+	break;
 	case MS_THREATEN:
 	{
 		m_bPending = true;
 		m_fThrowForce = m_fMinForce;
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimThrowBegin), TRUE, this, GetState());
-	} break;
+	} 
+	break;
 	case MS_READY:
 	{
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimThrowIdle), TRUE, this, GetState());
-	} break;
+	} 
+	break;
 	case MS_THROW:
 	{
 		m_bPending = true;
 		m_throw = false;
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimThrowAct), TRUE, this, GetState());
-	} break;
+	} 
+	break;
 	case MS_END:
 	{
 		m_bPending = true;
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimThrowEnd), TRUE, this, GetState());
-	} break;
+	} 
+	break;
 	case MS_PLAYING:
 	{
 		PlaySound(sndPlaying, Position());
 		m_pHUD->animPlay(m_pHUD->animGet(*m_sAnimPlaying), TRUE, this, GetState());
-	} break;
+	} 
+	break;
 	}
 }
 
@@ -337,7 +333,6 @@ void CMissile::OnStateSwitch(u32 S)
 	State(S);
 }
 
-
 void CMissile::OnAnimationEnd(u32 state)
 {
 	switch (state)
@@ -346,17 +341,21 @@ void CMissile::OnAnimationEnd(u32 state)
 	{
 		setVisible(FALSE);
 		OnStateSwitch(MS_HIDDEN);
-	} break;
+	} 
+	break;
 	case MS_SHOWING:
 	{
 		setVisible(TRUE);
 		OnStateSwitch(MS_IDLE);
-	} break;
+	} 
+	break;
 	case MS_THREATEN:
 	{
-		if (!m_fake_missile) {
+		if (!m_fake_missile) 
+		{
 			CMissile* missile = smart_cast<CMissile*>(H_Parent());
-			if (!missile) {
+			if (!missile) 
+			{
 				CEntityAlive* entity_alive = smart_cast<CEntityAlive*>(H_Parent());
 				if (!entity_alive || entity_alive->g_Alive())
 				{
@@ -367,27 +366,28 @@ void CMissile::OnAnimationEnd(u32 state)
 
 		if (m_throw)
 			SwitchState(MS_THROW);
-		//				OnStateSwitch(MS_THROW); 
 		else
 			SwitchState(MS_READY);
-		//				OnStateSwitch(MS_READY);
-	} break;
+	} 
+	break;
 	case MS_THROW:
 	{
 		Throw();
 		OnStateSwitch(MS_END);
-	} break;
+	} 
+	break;
 	case MS_END:
 	{
 		OnStateSwitch(MS_SHOWING);
-	} break;
+	} 
+	break;
 	case MS_PLAYING:
 	{
 		OnStateSwitch(MS_IDLE);
-	} break;
+	} 
+	break;
 	}
 }
-
 
 void CMissile::UpdatePosition(const Fmatrix& trans)
 {

@@ -28,14 +28,14 @@
 #endif
 
 #define ITEM_REMOVE_TIME		30000
-struct net_update_IItem {
+struct net_update_IItem 
+{
 	u32					dwTimeStamp;
 	SPHNetState			State;
 };
-struct net_updateData {
 
-
-
+struct net_updateData 
+{
 	xr_deque<net_update_IItem>	NET_IItem;
 	/// spline coeff /////////////////////
 	float			SCoeff[3][4];
@@ -282,14 +282,15 @@ void CInventoryItem::OnEvent(NET_Packet& P, u16 type)
 		P.r_vec3(p);
 		CPHSynchronize* pSyncObj = NULL;
 		pSyncObj = object().PHGetSyncItem(0);
-		if (!pSyncObj) return;
+		if (!pSyncObj)
+			return;
 		SPHNetState state;
 		pSyncObj->get_State(state);
 		state.position = p;
 		state.previous_position = p;
 		pSyncObj->set_State(state);
-
-	}break;
+	}
+	break;
 	}
 }
 
@@ -298,16 +299,16 @@ void CInventoryItem::OnEvent(NET_Packet& P, u16 type)
 //объекте, поэтому функция должна быть переопределена
 bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item)
 {
-	if (OnClient()) return true;
+	if (OnClient())
+		return true;
 	if (b_spawn_item)
 	{
 		CSE_Abstract* D = F_entity_Create(item_section_name);
 		R_ASSERT(D);
-		CSE_ALifeDynamicObject* l_tpALifeDynamicObject =
-			smart_cast<CSE_ALifeDynamicObject*>(D);
+		CSE_ALifeDynamicObject* l_tpALifeDynamicObject = smart_cast<CSE_ALifeDynamicObject*>(D);
 		R_ASSERT(l_tpALifeDynamicObject);
 
-		l_tpALifeDynamicObject->m_tNodeID = (g_dedicated_server) ? u32(-1) : object().ai_location().level_vertex_id();
+		l_tpALifeDynamicObject->m_tNodeID = object().ai_location().level_vertex_id();
 
 		// Fill
 		D->s_name = item_section_name;
@@ -345,41 +346,37 @@ BOOL CInventoryItem::net_Spawn(CSE_Abstract* DC)
 {
 	m_flags.set(FInInterpolation, FALSE);
 	m_flags.set(FInInterpolate, FALSE);
-	//	m_bInInterpolation				= false;
-	//	m_bInterpolate					= false;
 
 	m_flags.set(Fuseful_for_NPC, TRUE);
 	CSE_Abstract* e = (CSE_Abstract*)(DC);
 	CSE_ALifeObject* alife_object = smart_cast<CSE_ALifeObject*>(e);
-	if (alife_object) {
+	if (alife_object) 
+	{
 		m_flags.set(Fuseful_for_NPC, alife_object->m_flags.test(CSE_ALifeObject::flUsefulForAI));
 	}
 
 	CSE_ALifeInventoryItem* pSE_InventoryItem = smart_cast<CSE_ALifeInventoryItem*>(e);
-	if (!pSE_InventoryItem)			return TRUE;
+	if (!pSE_InventoryItem)
+		return TRUE;
 
-	//!!!
 	m_fCondition = pSE_InventoryItem->m_fCondition;
 	if (GameID() != GAME_SINGLE)
 		object().processing_activate();
 
 	m_dwItemIndependencyTime = 0;
 
-	return							TRUE;
+	return TRUE;
 }
 
-void CInventoryItem::net_Destroy()
-{
-	//инвентарь которому мы принадлежали
-//.	m_pCurrentInventory = NULL;
-}
+void CInventoryItem::net_Destroy() {}
 
 void CInventoryItem::save(NET_Packet& packet)
 {
 	packet.w_u8((u8)m_eItemPlace);
 	packet.w_float(m_fCondition);
 
-	if (object().H_Parent()) {
+	if (object().H_Parent()) 
+	{
 		packet.w_u8(0);
 		return;
 	}

@@ -68,7 +68,7 @@ void light::set_active(bool a)
 		spatial_move();
 
 #ifdef DEBUG
-		Fvector	zero = { 0,-1000,0 };
+		Fvector	zero = { 0, -1000, 0 };
 		if (position.similar(zero)) 
 		{
 			Msg("- Uninitialized light position.");

@@ -9,8 +9,6 @@ u64		g_qwStartGameTime = 12 * 60 * 60 * 1000;
 float	g_fTimeFactor = pSettings->r_float("alife", "time_factor");
 u64		g_qwEStartGameTime = 12 * 60 * 60 * 1000;
 
-ENGINE_API	bool g_dedicated_server;
-
 xr_token game_types[];
 
 game_PlayerState::game_PlayerState()
@@ -170,56 +168,23 @@ game_GameState::game_GameState()
 
 CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 {
-	if (!g_dedicated_server)
-	{
-		string_path		S;
-		FS.update_path(S, "$game_config$", "script.ltx");
-		CInifile* l_tpIniFile = xr_new<CInifile>(S);
-		R_ASSERT(l_tpIniFile);
+	string_path S;
+	FS.update_path(S, "$game_config$", "script.ltx");
+	CInifile* l_tpIniFile = xr_new<CInifile>(S);
+	R_ASSERT(l_tpIniFile);
 
-		string256				I;
-		strcpy(I, l_tpIniFile->r_string("common", "game_type_clsid_factory"));
+	string256 I;
+	strcpy(I, l_tpIniFile->r_string("common", "game_type_clsid_factory"));
 
-		luabind::functor<LPCSTR>	result;
-		R_ASSERT(ai().script_engine().functor(I, result));
-		shared_str clsid = result(game_type_name, isServer);
+	luabind::functor<LPCSTR> result;
+	R_ASSERT(ai().script_engine().functor(I, result));
+	shared_str clsid = result(game_type_name, isServer);
 
-		xr_delete(l_tpIniFile);
-		if (clsid.size() == 0)
-			Debug.fatal(DEBUG_INFO, "Unknown game type: %s", game_type_name);
+	xr_delete(l_tpIniFile);
+	if (clsid.size() == 0)
+		Debug.fatal(DEBUG_INFO, "Unknown game type: %s", game_type_name);
 
-		return				(TEXT2CLSID(*clsid));
-	}
-
-	if (isServer) {
-		if (!xr_strcmp(game_type_name, "single"))
-			return			(TEXT2CLSID("SV_SINGL"));
-
-		if (!xr_strcmp(game_type_name, "deathmatch"))
-			return			(TEXT2CLSID("SV_DM"));
-
-		if (!xr_strcmp(game_type_name, "teamdeathmatch"))
-			return			(TEXT2CLSID("SV_TDM"));
-
-		if (!xr_strcmp(game_type_name, "artefacthunt"))
-			return			(TEXT2CLSID("SV_AHUNT"));
-
-		return				(TEXT2CLSID(""));
-	}
-
-	if (!xr_strcmp(game_type_name, "single"))
-		return				(TEXT2CLSID("CL_SINGL"));
-
-	if (!xr_strcmp(game_type_name, "deathmatch"))
-		return				(TEXT2CLSID("CL_DM"));
-
-	if (!xr_strcmp(game_type_name, "teamdeathmatch"))
-		return				(TEXT2CLSID("CL_TDM"));
-
-	if (!xr_strcmp(game_type_name, "artefacthunt"))
-		return				(TEXT2CLSID("CL_AHUNT"));
-
-	return					(TEXT2CLSID(""));
+	return TEXT2CLSID(*clsid);
 }
 
 void game_GameState::switch_Phase(u32 new_phase)
@@ -230,15 +195,14 @@ void game_GameState::switch_Phase(u32 new_phase)
 	m_start_time = Level().timeServer();
 }
 
-
 ALife::_TIME_ID game_GameState::GetGameTime()
 {
-	return			(m_qwStartGameTime + iFloor(m_fTimeFactor * float(Level().timeServer_Async() - m_qwStartProcessorTime)));
+	return m_qwStartGameTime + iFloor(m_fTimeFactor * float(Level().timeServer_Async() - m_qwStartProcessorTime));
 }
 
 float game_GameState::GetGameTimeFactor()
 {
-	return			(m_fTimeFactor);
+	return m_fTimeFactor;
 }
 
 void game_GameState::SetGameTimeFactor(const float fTimeFactor)
@@ -257,12 +221,12 @@ void game_GameState::SetGameTimeFactor(ALife::_TIME_ID GameTime, const float fTi
 
 ALife::_TIME_ID game_GameState::GetEnvironmentGameTime()
 {
-	return			(m_qwEStartGameTime + iFloor(m_fETimeFactor * float(Level().timeServer_Async() - m_qwEStartProcessorTime)));
+	return m_qwEStartGameTime + iFloor(m_fETimeFactor * float(Level().timeServer_Async() - m_qwEStartProcessorTime));
 }
 
 float game_GameState::GetEnvironmentGameTimeFactor()
 {
-	return			(m_fETimeFactor);
+	return m_fETimeFactor;
 }
 
 void game_GameState::SetEnvironmentGameTimeFactor(const float fTimeFactor)

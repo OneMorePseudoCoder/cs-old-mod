@@ -15,16 +15,18 @@
 #include "AI/Monsters/BaseMonster/base_monster.h"
 #include "../xr_3da/IGame_Persistent.h"
 
-#define RECT_SIZE	16
+#define RECT_SIZE 16
 
 extern u32 C_ON_ENEMY;
 extern u32 C_ON_NEUTRAL;
 extern u32 C_ON_FRIEND;
 
-struct FindVisObjByObject {
+struct FindVisObjByObject 
+{
 	const CObject* O;
 	FindVisObjByObject(const CObject* o) :O(o) {}
-	bool operator () (const SBinocVisibleObj* vis) {
+	bool operator () (const SBinocVisibleObj* vis) 
+	{
 		return (O == vis->m_object);
 	}
 };
@@ -41,7 +43,6 @@ void SBinocVisibleObj::create_default(u32 color)
 	m_rt.SetOriginalRect(RECT_SIZE, 0, RECT_SIZE, RECT_SIZE);
 	m_rb.SetOriginalRect(RECT_SIZE, RECT_SIZE, RECT_SIZE, RECT_SIZE);
 
-
 	u32 clr = subst_alpha(color, 128);
 	m_lt.SetTextureColor(clr);
 	m_lb.SetTextureColor(clr);
@@ -55,7 +56,8 @@ void SBinocVisibleObj::create_default(u32 color)
 
 void SBinocVisibleObj::Draw()
 {
-	if (m_flags.test(flVisObjNotValid)) return;
+	if (m_flags.test(flVisObjNotValid))
+		return;
 
 	m_lt.Draw();
 	m_lb.Draw();
@@ -67,14 +69,14 @@ void SBinocVisibleObj::Update()
 {
 	m_flags.set(flVisObjNotValid, TRUE);
 
+	Fbox b = m_object->Visual()->vis.box;
 
-	Fbox		b = m_object->Visual()->vis.box;
-
-	Fmatrix				xform;
+	Fmatrix xform;
 	xform.mul(Device.mFullTransform, m_object->XFORM());
-	Fvector2	mn = { flt_max,flt_max }, mx = { flt_min,flt_min };
+	Fvector2 mn = { flt_max,flt_max }, mx = { flt_min,flt_min };
 
-	for (u32 k = 0; k < 8; ++k) {
+	for (u32 k = 0; k < 8; ++k) 
+	{
 		Fvector p;
 		b.getpoint(k, p);
 		xform.transform(p);
@@ -83,14 +85,18 @@ void SBinocVisibleObj::Update()
 		mx.x = _max(mx.x, p.x);
 		mx.y = _max(mx.y, p.y);
 	}
+
 	static Frect screen_rect = { -1.0f, -1.0f, 1.0f, 1.0f };
 
-	Frect				new_rect;
+	Frect new_rect;
 	new_rect.lt = mn;
 	new_rect.rb = mx;
 
-	if (FALSE == screen_rect.intersected(new_rect)) return;
-	if (new_rect.in(screen_rect.lt) && new_rect.in(screen_rect.rb)) return;
+	if (FALSE == screen_rect.intersected(new_rect))
+		return;
+
+	if (new_rect.in(screen_rect.lt) && new_rect.in(screen_rect.rb))
+		return;
 
 	std::swap(mn.y, mx.y);
 	mn.x = (1.f + mn.x) / 2.f * UI_BASE_WIDTH;
@@ -98,23 +104,26 @@ void SBinocVisibleObj::Update()
 	mn.y = (1.f - mn.y) / 2.f * UI_BASE_HEIGHT;
 	mx.y = (1.f - mx.y) / 2.f * UI_BASE_HEIGHT;
 
-	if (m_flags.is(flTargetLocked)) {
+	if (m_flags.is(flTargetLocked)) 
+	{
 		cur_rect.lt.set(mn);
 		cur_rect.rb.set(mx);
 	}
-	else {
+	else 
+	{
 		cur_rect.lt.x += (mn.x - cur_rect.lt.x) * m_upd_speed * Device.fTimeDelta;
 		cur_rect.lt.y += (mn.y - cur_rect.lt.y) * m_upd_speed * Device.fTimeDelta;
 		cur_rect.rb.x += (mx.x - cur_rect.rb.x) * m_upd_speed * Device.fTimeDelta;
 		cur_rect.rb.y += (mx.y - cur_rect.rb.y) * m_upd_speed * Device.fTimeDelta;
-		if (mn.similar(cur_rect.lt, 2.f) && mx.similar(cur_rect.rb, 2.f)) {
+		if (mn.similar(cur_rect.lt, 2.f) && mx.similar(cur_rect.rb, 2.f)) 
+		{
 			// target locked
 			m_flags.set(flTargetLocked, TRUE);
 			u32 clr = subst_alpha(m_lt.GetTextureColor(), 255);
 
-			//-----------------------------------------------------
 			CActor* pActor = NULL;
-			if (IsGameTypeSingle()) pActor = Actor();
+			if (IsGameTypeSingle())
+				pActor = Actor();
 			else
 			{
 				if (Level().CurrentViewEntity())
@@ -124,13 +133,12 @@ void SBinocVisibleObj::Update()
 			}
 			if (pActor)
 			{
-				//-----------------------------------------------------
-
 				CInventoryOwner* our_inv_owner = smart_cast<CInventoryOwner*>(pActor);
 				CInventoryOwner* others_inv_owner = smart_cast<CInventoryOwner*>(m_object);
 				CBaseMonster* monster = smart_cast<CBaseMonster*>(m_object);
 
-				if (our_inv_owner && others_inv_owner && !monster) {
+				if (our_inv_owner && others_inv_owner && !monster) 
+				{
 					if (IsGameTypeSingle())
 					{
 						switch (RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner))
@@ -173,7 +181,6 @@ void SBinocVisibleObj::Update()
 	m_flags.set(flVisObjNotValid, FALSE);
 }
 
-
 CBinocularsVision::CBinocularsVision(const shared_str& sect)
 {
 	Load(sect);
@@ -187,11 +194,9 @@ CBinocularsVision::~CBinocularsVision()
 
 void CBinocularsVision::Update()
 {
-	if (g_dedicated_server)
-		return;
-	//-----------------------------------------------------
 	const CActor* pActor = NULL;
-	if (IsGameTypeSingle()) pActor = Actor();
+	if (IsGameTypeSingle())
+		pActor = Actor();
 	else
 	{
 		if (Level().CurrentViewEntity())
@@ -199,14 +204,15 @@ void CBinocularsVision::Update()
 			pActor = smart_cast<const CActor*> (Level().CurrentViewEntity());
 		}
 	}
-	if (!pActor) return;
-	//-----------------------------------------------------
+
+	if (!pActor)
+		return;
+
 	const CVisualMemoryManager::VISIBLES& vVisibles = pActor->memory().visual().objects();
 
 	VIS_OBJECTS_IT	it = m_active_objects.begin();
 	for (; it != m_active_objects.end(); ++it)
 		(*it)->m_flags.set(flVisObjNotValid, TRUE);
-
 
 	CVisualMemoryManager::VISIBLES::const_iterator v_it = vVisibles.begin();
 	for (; v_it != vVisibles.end(); ++v_it)
@@ -217,19 +223,20 @@ void CBinocularsVision::Update()
 
 		CObject* object_ = const_cast<CObject*>(_object_);
 
-
 		CEntityAlive* EA = smart_cast<CEntityAlive*>(object_);
-		if (!EA || !EA->g_Alive())						continue;
-
+		if (!EA || !EA->g_Alive())
+			continue;
 
 		FindVisObjByObject	f(object_);
 		VIS_OBJECTS_IT found;
 		found = std::find_if(m_active_objects.begin(), m_active_objects.end(), f);
 
-		if (found != m_active_objects.end()) {
+		if (found != m_active_objects.end()) 
+		{
 			(*found)->m_flags.set(flVisObjNotValid, FALSE);
 		}
-		else {
+		else 
+		{
 			m_active_objects.push_back(xr_new<SBinocVisibleObj>());
 			SBinocVisibleObj* new_vis_obj = m_active_objects.back();
 			new_vis_obj->m_flags.set(flVisObjNotValid, FALSE);
@@ -240,9 +247,11 @@ void CBinocularsVision::Update()
 				m_snd_found.play_at_pos(0, Fvector().set(0, 0, 0), sm_2D);
 		}
 	}
+
 	std::sort(m_active_objects.begin(), m_active_objects.end());
 
-	while (m_active_objects.size() && m_active_objects.back()->m_flags.test(flVisObjNotValid)) {
+	while (m_active_objects.size() && m_active_objects.back()->m_flags.test(flVisObjNotValid)) 
+	{
 		xr_delete(m_active_objects.back());
 		m_active_objects.pop_back();
 	}
@@ -250,7 +259,6 @@ void CBinocularsVision::Update()
 	it = m_active_objects.begin();
 	for (; it != m_active_objects.end(); ++it)
 		(*it)->Update();
-
 }
 
 void CBinocularsVision::Draw()
@@ -269,7 +277,7 @@ void CBinocularsVision::Load(const shared_str& section)
 
 void CBinocularsVision::remove_links(CObject* object)
 {
-	VIS_OBJECTS::iterator	I = std::find_if(m_active_objects.begin(), m_active_objects.end(), FindVisObjByObject(object));
+	VIS_OBJECTS::iterator I = std::find_if(m_active_objects.begin(), m_active_objects.end(), FindVisObjByObject(object));
 	if (I == m_active_objects.end())
 		return;
 

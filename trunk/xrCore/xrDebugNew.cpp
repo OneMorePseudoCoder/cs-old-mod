@@ -585,14 +585,13 @@ static void __cdecl def_new_handler()
 	FATAL("Out of memory.");
 }
 
-void	xrDebug::_initialize(const bool& dedicated)
+void	xrDebug::_initialize()
 {
 	handler = 0;
 	m_on_dialog = 0;
 	std::set_new_handler(def_new_handler);	// exception-handler for 'out of memory' condition
 }
 #else
-
 void _terminate()
 {
 	if (strstr(GetCommandLine(), "-silent_error_mode"))
@@ -747,17 +746,12 @@ static void illegal_instruction_handler(int signal)
 	handler_base("illegal instruction");
 }
 
-//	static void storage_access_handler		(int signal)
-//	{
-//		handler_base					("illegal storage access");
-//	}
-
 static void termination_handler(int signal)
 {
 	handler_base("termination with exit code 3");
 }
 
-void	xrDebug::_initialize(const bool& dedicated)
+void xrDebug::_initialize()
 {
 	debug_on_thread_spawn();
 
@@ -767,7 +761,6 @@ void	xrDebug::_initialize(const bool& dedicated)
 	signal(SIGFPE, floating_point_handler);
 	signal(SIGILL, illegal_instruction_handler);
 	signal(SIGINT, 0);
-	//		signal							(SIGSEGV,		storage_access_handler);
 	signal(SIGTERM, termination_handler);
 
 	_set_invalid_parameter_handler(&invalid_parameter_handler);
@@ -777,10 +770,6 @@ void	xrDebug::_initialize(const bool& dedicated)
 	std::set_new_handler(&std_out_of_memory_handler);
 
 	_set_purecall_handler(&pure_call_handler);
-
-#if 0// should be if we use exceptions
-	std::set_unexpected(_terminate);
-#endif
 
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
 }

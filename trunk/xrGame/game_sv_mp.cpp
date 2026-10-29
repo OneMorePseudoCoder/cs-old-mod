@@ -1390,9 +1390,6 @@ void game_sv_mp::DumpOnlineStatistic()
 	{
 		xrClientData* l_pC = (xrClientData*)m_server->client_Get(idx);
 
-		if (m_server->GetServerClient() == l_pC && g_dedicated_server)
-			continue;
-
 		if (!l_pC->net_Ready)
 			continue;
 
@@ -1474,8 +1471,6 @@ void game_sv_mp::DumpRoundStatistics()
 	for (u32 idx = 0; idx < m_server->client_Count(); ++idx)
 	{
 		xrClientData* l_pC = (xrClientData*)m_server->client_Get(idx);
-		if (m_server->GetServerClient() == l_pC && g_dedicated_server)
-			continue;
 
 		string16					num_buf;
 		sprintf_s(num_buf, "player_%d", idx);
@@ -1485,7 +1480,6 @@ void game_sv_mp::DumpRoundStatistics()
 	WriteGameState(ini, current_section.c_str(), true);
 
 	Game().m_WeaponUsageStatistic->SaveDataLtx(ini);
-	//Game().m_WeaponUsageStatistic->Clear();
 }
 
 void game_sv_mp::SvSendChatMessage(LPCSTR str)

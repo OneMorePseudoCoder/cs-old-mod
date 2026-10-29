@@ -18,7 +18,6 @@ BattlEyeSystem::BattlEyeSystem()
 	server = NULL;
 
 	m_test_load_client = false;
-	//-	auto_update = 1;
 }
 
 BattlEyeSystem::~BattlEyeSystem()
@@ -271,10 +270,6 @@ void BattlEyeSystem::ReadPacketServer(u32 sender, NET_Packet* pack)
 bool BattlEyeSystem::TestLoadClient()
 {
 	m_test_load_client = false;
-	if (g_dedicated_server)
-	{
-		return true; //false = Error
-	}
 
 	if (LoadClient()) // test load
 	{
@@ -283,6 +278,7 @@ bool BattlEyeSystem::TestLoadClient()
 
 		m_test_load_client = true;
 	}
+
 	return m_test_load_client;
 }
 

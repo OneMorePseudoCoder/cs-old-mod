@@ -34,16 +34,13 @@
 #	include "PHDebug.h"
 #endif
 
-ENGINE_API bool g_dedicated_server;
-
 CGameObject::CGameObject()
 {
 	init();
-	//-----------------------------------------
 	m_bCrPr_Activated = false;
 	m_dwCrPr_ActivationStep = 0;
 	m_spawn_time = 0;
-	m_ai_location = !g_dedicated_server ? xr_new<CAI_ObjectLocation>() : 0;
+	m_ai_location = xr_new<CAI_ObjectLocation>();
 	m_server_flags.one();
 
 	m_callbacks = xr_new<CALLBACK_MAP>();
@@ -72,9 +69,8 @@ void CGameObject::Load(LPCSTR section)
 {
 	inherited::Load(section);
 	ISpatial* self = smart_cast<ISpatial*> (this);
-	if (self) {
-		// #pragma todo("to Dima: All objects are visible for AI ???")
-		// self->spatial.type	|=	STYPE_VISIBLEFORAI;	
+	if (self) 
+	{
 		self->spatial.type &= ~STYPE_REACTTOSOUND;
 	}
 }
@@ -82,11 +78,12 @@ void CGameObject::Load(LPCSTR section)
 void CGameObject::reinit()
 {
 	m_visual_callback.clear();
-	if (!g_dedicated_server)
-		ai_location().reinit();
+
+	ai_location().reinit();
 
 	// clear callbacks	
-	for (CALLBACK_MAP_IT it = m_callbacks->begin(); it != m_callbacks->end(); ++it) it->second.clear();
+	for (CALLBACK_MAP_IT it = m_callbacks->begin(); it != m_callbacks->end(); ++it)
+		it->second.clear();
 }
 
 void CGameObject::reload(LPCSTR section)
@@ -277,7 +274,8 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* DC)
 	g_pGameLevel->Objects.net_Register(this);
 
 	m_server_flags.one();
-	if (O) {
+	if (O) 
+	{
 		m_server_flags = O->m_flags;
 		if (O->m_flags.is(CSE_ALifeObject::flVisibleForAI))
 			spatial.type |= STYPE_VISIBLEFORAI;
@@ -286,12 +284,13 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* DC)
 	}
 
 	reload(*cNameSect());
-	if (!g_dedicated_server)
-		CScriptBinder::reload(*cNameSect());
+
+	CScriptBinder::reload(*cNameSect());
 
 	reinit();
-	if (!g_dedicated_server)
-		CScriptBinder::reinit();
+
+	CScriptBinder::reinit();
+
 #ifdef DEBUG
 	if (ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject) && stricmp(PH_DBG_ObjectTrack(), *cName()) == 0)
 	{
@@ -301,19 +300,15 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* DC)
 	//load custom user data from server
 	if (!E->client_data.empty())
 	{
-		//		Msg				("client data is present for object [%d][%s], load is processed",ID(),*cName());
-		IReader			ireader = IReader(&*E->client_data.begin(), E->client_data.size());
+		IReader ireader = IReader(&*E->client_data.begin(), E->client_data.size());
 		net_Load(ireader);
-	}
-	else
-	{
-		//		Msg				("no client data for object [%d][%s], load is skipped",ID(),*cName());
 	}
 
 	// if we have a parent
-	if (0xffff != E->ID_Parent) {
-
-		if (!Parent) {
+	if (0xffff != E->ID_Parent) 
+	{
+		if (!Parent) 
+		{
 			// // we need this to prevent illegal ref_dec/ref_add
 			// this is obsolete, since ref_dec/ref_add are removed
 			// but I propose do not touch this, or touch and then
@@ -805,77 +800,76 @@ void CGameObject::shedule_Update(u32 dt)
 		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
 #endif
 		DestroyObject();
-
 	}
 
-	// Msg							("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
 	inherited::shedule_Update(dt);
 
-	if (!g_dedicated_server)
-		CScriptBinder::shedule_Update(dt);
+	CScriptBinder::shedule_Update(dt);
 }
 
 BOOL CGameObject::net_SaveRelevant()
 {
-	return	(CScriptBinder::net_SaveRelevant());
+	return CScriptBinder::net_SaveRelevant();
 }
 
 //игровое имя объекта
 LPCSTR CGameObject::Name() const
 {
-	return	(*cName());
+	return *cName();
 }
 
 u32	CGameObject::ef_creature_type() const
 {
-	string16	temp; CLSID2TEXT(CLS_ID, temp);
+	string16 temp;
+	CLSID2TEXT(CLS_ID, temp);
 	R_ASSERT3(false, "Invalid creature type request, virtual function is not properly overridden!", temp);
-	return		(u32(-1));
+	return u32(-1);
 }
 
 u32	CGameObject::ef_equipment_type() const
 {
-	string16	temp; CLSID2TEXT(CLS_ID, temp);
+	string16 temp;
+	CLSID2TEXT(CLS_ID, temp);
 	R_ASSERT3(false, "Invalid equipment type request, virtual function is not properly overridden!", temp);
-	return		(u32(-1));
-	//	return		(6);
+	return u32(-1);
 }
 
 u32	CGameObject::ef_main_weapon_type() const
 {
-	string16	temp; CLSID2TEXT(CLS_ID, temp);
+	string16 temp;
+	CLSID2TEXT(CLS_ID, temp);
 	R_ASSERT3(false, "Invalid main weapon type request, virtual function is not properly overridden!", temp);
-	return		(u32(-1));
-	//	return		(5);
+	return u32(-1);
 }
 
 u32	CGameObject::ef_anomaly_type() const
 {
-	string16	temp; CLSID2TEXT(CLS_ID, temp);
+	string16 temp;
+	CLSID2TEXT(CLS_ID, temp);
 	R_ASSERT3(false, "Invalid anomaly type request, virtual function is not properly overridden!", temp);
-	return		(u32(-1));
+	return u32(-1);
 }
 
 u32	CGameObject::ef_weapon_type() const
 {
-	string16	temp; CLSID2TEXT(CLS_ID, temp);
+	string16 temp;
+	CLSID2TEXT(CLS_ID, temp);
 	R_ASSERT3(false, "Invalid weapon type request, virtual function is not properly overridden!", temp);
-	return		(u32(-1));
-	//	return		(u32(0));
+	return u32(-1);
 }
 
 u32	CGameObject::ef_detector_type() const
 {
-	string16	temp; CLSID2TEXT(CLS_ID, temp);
+	string16 temp;
+	CLSID2TEXT(CLS_ID, temp);
 	R_ASSERT3(false, "Invalid detector type request, virtual function is not properly overridden!", temp);
-	return		(u32(-1));
+	return u32(-1);
 }
 
 void CGameObject::net_Relcase(CObject* O)
 {
 	inherited::net_Relcase(O);
-	if (!g_dedicated_server)
-		CScriptBinder::net_Relcase(O);
+	CScriptBinder::net_Relcase(O);
 }
 
 CGameObject::CScriptCallbackExVoid& CGameObject::callback(GameObject::ECallbackType type) const
@@ -887,7 +881,7 @@ LPCSTR CGameObject::visual_name(CSE_Abstract* server_entity)
 {
 	const CSE_Visual* visual = smart_cast<const CSE_Visual*>(server_entity);
 	VERIFY(visual);
-	return						(visual->get_visual());
+	return visual->get_visual();
 }
 
 void CGameObject::update_animation_movement_controller()
@@ -903,12 +897,12 @@ void CGameObject::update_animation_movement_controller()
 	destroy_anim_mov_ctrl();
 }
 
-void	CGameObject::UpdateCL()
+void CGameObject::UpdateCL()
 {
 	inherited::UpdateCL();
 }
 
-void	CGameObject::OnChangeVisual()
+void CGameObject::OnChangeVisual()
 {
 	inherited::OnChangeVisual();
 	if (animation_movement_controlled())
@@ -916,23 +910,22 @@ void	CGameObject::OnChangeVisual()
 		destroy_anim_mov_ctrl();
 	}
 }
+
 bool CGameObject::shedule_Needed()
 {
-	return						(!getDestroy());
-	//	return						(processing_enabled() || CScriptBinder::object());
+	return !getDestroy();
 };
 
-void	CGameObject::create_anim_mov_ctrl(CBlend* b)
+void CGameObject::create_anim_mov_ctrl(CBlend* b)
 {
-	//if(m_anim_mov_ctrl)
-		//destroy_anim_mov_ctrl( );
 	VERIFY(!animation_movement());
 	VERIFY(Visual());
 	CKinematics* K = Visual()->dcast_PKinematics();
 	VERIFY(K);
 	m_anim_mov_ctrl = xr_new<animation_movement_controller>(&XFORM(), K, b);
 }
-void	CGameObject::destroy_anim_mov_ctrl()
+
+void CGameObject::destroy_anim_mov_ctrl()
 {
 	xr_delete(m_anim_mov_ctrl);
 }

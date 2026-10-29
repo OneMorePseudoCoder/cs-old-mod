@@ -17,25 +17,24 @@
 void fix_texture_name(LPSTR fn)
 {
 	LPSTR _ext = strext(fn);
-	if (_ext &&
-		(0 == stricmp(_ext, ".tga") ||
-			0 == stricmp(_ext, ".dds") ||
-			0 == stricmp(_ext, ".bmp") ||
-			0 == stricmp(_ext, ".ogm")))
+	if (_ext && (0 == stricmp(_ext, ".tga") || 0 == stricmp(_ext, ".dds") || 0 == stricmp(_ext, ".bmp") || 0 == stricmp(_ext, ".ogm")))
 		*_ext = 0;
 }
-//--------------------------------------------------------------------------------------------------------------
+
 template <class T>
-BOOL	reclaim(xr_vector<T*>& vec, const T* ptr)
+BOOL reclaim(xr_vector<T*>& vec, const T* ptr)
 {
 	xr_vector<T*>::iterator it = vec.begin();
 	xr_vector<T*>::iterator end = vec.end();
 	for (; it != end; it++)
-		if (*it == ptr) { vec.erase(it); return TRUE; }
+		if (*it == ptr)
+		{ 
+			vec.erase(it);
+			return TRUE; 
+		}
 	return FALSE;
 }
 
-//--------------------------------------------------------------------------------------------------------------
 IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 {
 	R_ASSERT(Name && Name[0]);
@@ -43,33 +42,44 @@ IBlender* CResourceManager::_GetBlender(LPCSTR Name)
 	LPSTR N = LPSTR(Name);
 	map_Blender::iterator I = m_blenders.find(N);
 #ifdef _EDITOR
-	if (I == m_blenders.end())	return 0;
+	if (I == m_blenders.end())
+		return 0;
 #else
-	if (I == m_blenders.end()) { Debug.fatal(DEBUG_INFO, "Shader '%s' not found in library.", Name); return 0; }
+	if (I == m_blenders.end())
+	{ 
+		Debug.fatal(DEBUG_INFO, "Shader '%s' not found in library.", Name);
+		return 0; 
+	}
 #endif
-	else					return I->second;
+	else
+		return I->second;
 }
 
 IBlender* CResourceManager::_FindBlender(LPCSTR Name)
 {
-	if (!(Name && Name[0])) return 0;
+	if (!(Name && Name[0]))
+		return 0;
 
 	LPSTR N = LPSTR(Name);
 	map_Blender::iterator I = m_blenders.find(N);
-	if (I == m_blenders.end())	return 0;
-	else						return I->second;
+	if (I == m_blenders.end())
+		return 0;
+	else
+		return I->second;
 }
 
-void	CResourceManager::ED_UpdateBlender(LPCSTR Name, IBlender* data)
+void CResourceManager::ED_UpdateBlender(LPCSTR Name, IBlender* data)
 {
 	LPSTR N = LPSTR(Name);
 	map_Blender::iterator I = m_blenders.find(N);
-	if (I != m_blenders.end()) {
+	if (I != m_blenders.end()) 
+	{
 		R_ASSERT(data->getDescription().CLS == I->second->getDescription().CLS);
 		xr_delete(I->second);
 		I->second = data;
 	}
-	else {
+	else 
+	{
 		m_blenders.insert(mk_pair(xr_strdup(Name), data));
 	}
 }
@@ -77,9 +87,10 @@ void	CResourceManager::ED_UpdateBlender(LPCSTR Name, IBlender* data)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
+void CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 {
-	if (0 == names) 		names = "$null";
+	if (0 == names)
+ 		names = "$null";
 
 	ZeroMemory(&dest, sizeof(dest));
 	char* P = (char*)names;
@@ -87,17 +98,18 @@ void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 
 	while (*P)
 	{
-		if (*P == ',') {
+		if (*P == ',') 
+		{
 			// flush
 			N.push_back(0);
 			strlwr(N.begin());
 
 			fix_texture_name(N.begin());
-			//. andy			if (strext(N.begin())) *strext(N.begin())=0;
 			dest.push_back(N.begin());
 			N.clear();
 		}
-		else {
+		else 
+		{
 			N.push_back(*P);
 		}
 		P++;
@@ -109,18 +121,19 @@ void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 		strlwr(N.begin());
 
 		fix_texture_name(N.begin());
-		//. andy		if (strext(N.begin())) *strext(N.begin())=0;
 		dest.push_back(N.begin());
 	}
 }
 
 ShaderElement* CResourceManager::_CreateElement(ShaderElement& S)
 {
-	if (S.passes.empty())		return	0;
+	if (S.passes.empty())
+		return	0;
 
 	// Search equal in shaders array
 	for (u32 it = 0; it < v_elements.size(); it++)
-		if (S.equal(*(v_elements[it])))	return v_elements[it];
+		if (S.equal(*(v_elements[it])))
+			return v_elements[it];
 
 	// Create _new_ entry
 	ShaderElement* N = xr_new<ShaderElement>(S);
@@ -131,25 +144,28 @@ ShaderElement* CResourceManager::_CreateElement(ShaderElement& S)
 
 void CResourceManager::_DeleteElement(const ShaderElement* S)
 {
-	if (0 == (S->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_elements, S))						return;
+	if (0 == (S->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_elements, S))
+		return;
 	Msg("! ERROR: Failed to find compiled 'shader-element'");
 }
 
 Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-	CBlender_Compile	C;
-	Shader				S;
-
-	//.
-	// if (strstr(s_shader,"transparent"))	__asm int 3;
+	CBlender_Compile C;
+	Shader S;
 
 	// Access to template
 	C.BT = B;
 	C.bEditor = FALSE;
 	C.bDetail = FALSE;
 #ifdef _EDITOR
-	if (!C.BT) { ELog.Msg(mtError, "Can't find shader '%s'", s_shader); return 0; }
+	if (!C.BT)
+	{ 
+		ELog.Msg(mtError, "Can't find shader '%s'", s_shader);
+		return 0; 
+	}
 	C.bEditor = TRUE;
 #endif
 
@@ -162,7 +178,6 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	{
 		C.iElement = 0;
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
-		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		ShaderElement		E;
 		C._cpp_Compile(&E);
 		S.E[0] = _CreateElement(E);
@@ -171,7 +186,6 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 	// Compile element	(LOD1)
 	{
 		C.iElement = 1;
-		//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		C.bDetail = m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
 		ShaderElement		E;
 		C._cpp_Compile(&E);
@@ -227,80 +241,65 @@ Shader* CResourceManager::_cpp_Create(IBlender* B, LPCSTR s_shader, LPCSTR s_tex
 
 Shader* CResourceManager::_cpp_Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#ifndef DEDICATED_SERVER
-	return	_cpp_Create(_GetBlender(s_shader ? s_shader : "null"), s_shader, s_textures, s_constants, s_matrices);
-#else
-	return NULL;
-#endif
+	return _cpp_Create(_GetBlender(s_shader ? s_shader : "null"), s_shader, s_textures, s_constants, s_matrices);
 }
 
 Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#ifndef DEDICATED_SERVER
 	return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
-#else
-	return NULL;
-#endif
 }
 
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#ifndef DEDICATED_SERVER
 #ifndef _EDITOR
-	if (_lua_HasShader(s_shader))		return	_lua_Create(s_shader, s_textures);
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
 	else
 #endif
-		return	_cpp_Create(s_shader, s_textures, s_constants, s_matrices);
-#else
-	return NULL;
-#endif
+	return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 }
 
 void CResourceManager::Delete(const Shader* S)
 {
-	if (0 == (S->dwFlags & xr_resource_flagged::RF_REGISTERED))	return;
-	if (reclaim(v_shaders, S))						return;
+	if (0 == (S->dwFlags & xr_resource_flagged::RF_REGISTERED))
+		return;
+	if (reclaim(v_shaders, S))
+		return;
 	Msg("! ERROR: Failed to find complete shader");
 }
 
-void	CResourceManager::DeferredUpload()
+void CResourceManager::DeferredUpload()
 {
-	if (!Device.b_is_Ready)				return;
+	if (!Device.b_is_Ready)
+		return;
 	for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 	{
 		t->second->Load();
 	}
 }
-/*
-void	CResourceManager::DeferredUnload	()
-{
-	if (!Device.b_is_Ready)				return;
-	for (map_TextureIt t=m_textures.begin(); t!=m_textures.end(); t++)
-		t->second->Unload();
-}
-*/
+
 #ifdef _EDITOR
-void	CResourceManager::ED_UpdateTextures(AStringVec* names)
+void CResourceManager::ED_UpdateTextures(AStringVec* names)
 {
 	// 1. Unload
-	if (names) {
+	if (names) 
+	{
 		for (u32 nid = 0; nid < names->size(); nid++)
 		{
 			map_TextureIt I = m_textures.find((*names)[nid].c_str());
-			if (I != m_textures.end())	I->second->Unload();
+			if (I != m_textures.end())
+				I->second->Unload();
 		}
 	}
-	else {
+	else 
+	{
 		for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
 			t->second->Unload();
 	}
-
-	// 2. Load
-	// DeferredUpload	();
 }
 #endif
 
-void	CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
+void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
 {
 	m_base = c_base = m_lmaps = c_lmaps = 0;
 
@@ -314,15 +313,17 @@ void	CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u
 			c_lmaps++;
 			m_lmaps += m;
 		}
-		else {
+		else 
+		{
 			c_base++;
 			m_base += m;
 		}
 	}
 }
-void	CResourceManager::_DumpMemoryUsage()
+
+void CResourceManager::_DumpMemoryUsage()
 {
-	xr_multimap<u32, std::pair<u32, shared_str> >		mtex;
+	xr_multimap<u32, std::pair<u32, shared_str>> mtex;
 
 	// sort
 	{
@@ -330,8 +331,8 @@ void	CResourceManager::_DumpMemoryUsage()
 		map_Texture::iterator E = m_textures.end();
 		for (; I != E; I++)
 		{
-			u32			m = I->second->flags.MemoryUsage;
-			shared_str	n = I->second->cName;
+			u32 m = I->second->flags.MemoryUsage;
+			shared_str n = I->second->cName;
 			mtex.insert(mk_pair(m, mk_pair(I->second->dwReference, n)));
 		}
 	}
@@ -345,21 +346,8 @@ void	CResourceManager::_DumpMemoryUsage()
 	}
 }
 
-void	CResourceManager::Evict()
+void CResourceManager::Evict()
 {
 	CHK_DX(HW.pDevice->EvictManagedResources());
 }
-/*
-BOOL	CResourceManager::_GetDetailTexture(LPCSTR Name,LPCSTR& T, R_constant_setup* &CS)
-{
-	LPSTR N = LPSTR(Name);
-	map_TD::iterator I = m_td.find	(N);
-	if (I!=m_td.end())
-	{
-		T	= I->second.T;
-		CS	= I->second.cs;
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-}*/
+

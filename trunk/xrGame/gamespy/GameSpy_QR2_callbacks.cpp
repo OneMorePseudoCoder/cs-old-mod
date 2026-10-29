@@ -69,7 +69,7 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void* userdata)
 		break;
 	case HOSTPORT_KEY:		pQR2->BufferAdd_Int(outbuf, pServer->GetPort()); break;
 
-	case DEDICATED_KEY:		pQR2->BufferAdd_Int(outbuf, pServer->IsDedicated());		break;
+	case DEDICATED_KEY:		pQR2->BufferAdd_Int(outbuf, 0);		break;
 	case GAMETYPE_NAME_KEY: ADD_KEY_VAL(pServer->game, pQR2, BufferAdd_Int, outbuf, Type()); break; //pQR2->BufferAdd_Int(outbuf, pServer->game->Type()); break;
 	case NUMTEAMS_KEY:		ADD_KEY_VAL(gmMP, pQR2, BufferAdd_Int, outbuf, GetNumTeams()); break; //pQR2->BufferAdd_Int(outbuf, gmMP->GetNumTeams()); break;		
 	case G_MAX_PING_KEY:	pQR2->BufferAdd_Int(outbuf, g_sv_dwMaxClientPing); break;
@@ -102,7 +102,6 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void* userdata)
 	case G_BEARER_CANT_SPRINT_KEY:		ADD_KEY_VAL(gmAhunt, pQR2, BufferAdd_Int, outbuf, Get_BearerCantSprint()); break; //if (gmAhunt) pQR2->BufferAdd_Int(outbuf, gmAhunt->Get_BearerCantSprint		());			break;
 	default:
 	{
-		//			R_ASSERT2(0, "Unknown GameSpy Server key ");
 		pQR2->BufferAdd(outbuf, "");
 	}break;
 	}
@@ -117,15 +116,8 @@ void __cdecl callback_playerkey(int keyid, int index, void* outbuf, void* userda
 	CGameSpy_QR2* pQR2 = pServer->QR2();
 	if (!pQR2) return;
 
-	xrGameSpyClientData* pCD = NULL;
+	xrGameSpyClientData* pCD = (xrGameSpyClientData*)pServer->client_Get(index);
 
-	if (pServer->IsDedicated())
-	{
-		if (u32(index + 1) >= pServer->client_Count()) return;
-		pCD = (xrGameSpyClientData*)pServer->client_Get(index + 1);
-	}
-	else
-		pCD = (xrGameSpyClientData*)pServer->client_Get(index);
 	if (!pCD || !pCD->ps) return;
 
 	switch (keyid)

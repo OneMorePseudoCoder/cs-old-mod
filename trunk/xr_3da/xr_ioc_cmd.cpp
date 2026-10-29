@@ -20,6 +20,7 @@ xr_token							snd_freq_token[] = {
 	{ "44khz",						sf_44K										},
 	{ 0,							0											}
 };
+
 xr_token							snd_model_token[] = {
 	{ "Default",					0											},
 	{ "Normal",						1											},
@@ -30,7 +31,7 @@ xr_token							snd_model_token[] = {
 
 extern xr_token* vid_mode_token;
 extern xr_token* vid_disp_token;
-extern int									ps_rs_display;
+extern int ps_rs_display;
 
 xr_token							vid_quality_token[] = {
 	{ "renderer_r1",				0											},
@@ -630,7 +631,6 @@ extern int psNET_ClientUpdate;
 extern int psNET_ClientPending;
 extern int psNET_ServerUpdate;
 extern int psNET_ServerPending;
-extern int psNET_DedicatedSleep;
 extern char psNET_Name[32];
 extern Flags32 psEnvFlags;
 extern float r__dtex_range;
@@ -705,7 +705,6 @@ void CCC_Register()
 
 	// Texture manager	
 	CMD4(CCC_Integer, "texture_lod", &psTextureLOD, 0, 4);
-	CMD4(CCC_Integer, "net_dedicated_sleep", &psNET_DedicatedSleep, 0, 64);
 
 	// General video control
 	CMD1(CCC_VidMode, "vid_mode");
@@ -764,12 +763,6 @@ void CCC_Register()
 
 	CMD1(CCC_DumpResources, "dump_resources");
 	CMD1(CCC_DumpOpenFiles, "dump_open_files");
-
-	extern int g_svTextConsoleUpdateRate;
-	CMD4(CCC_Integer, "sv_console_update_rate", &g_svTextConsoleUpdateRate, 1, 100);
-
-	extern int g_svDedicateServerUpdateReate;
-	CMD4(CCC_Integer, "sv_dedicated_server_update_rate", &g_svDedicateServerUpdateReate, 1, 1000);
 
 	CMD1(CCC_HideConsole, "hide");
 

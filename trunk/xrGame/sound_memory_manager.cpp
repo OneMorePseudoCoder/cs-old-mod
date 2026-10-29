@@ -24,11 +24,8 @@
 #include "client_spawn_manager.h"
 #include "memory_manager.h"
 #include "../xr_3da/IGame_Persistent.h"
-
-//#ifndef MASTER_GOLD
-#	include "clsid_game.h"
-#	include "ai_debug.h"
-//#endif // MASTER_GOLD
+#include "clsid_game.h"
+#include "ai_debug.h"
 
 #define SILENCE
 //#define SAVE_OWN_SOUNDS
@@ -466,7 +463,8 @@ void CSoundMemoryManager::load(IReader& packet)
 		object.m_sound_type = (ESoundTypes)packet.r_u32();
 		object.m_power = packet.r_float();
 
-		if (object.m_object) {
+		if (object.m_object) 
+		{
 			add(object, true);
 			continue;
 		}
@@ -475,15 +473,7 @@ void CSoundMemoryManager::load(IReader& packet)
 
 		const CClientSpawnManager::CSpawnCallback* spawn_callback = Level().client_spawn_manager().callback(delayed_object.m_object_id, m_object->ID());
 		if (!spawn_callback || !spawn_callback->m_object_callback)
-			if (!g_dedicated_server)
-				Level().client_spawn_manager().add(delayed_object.m_object_id, m_object->ID(), callback);
-#ifdef DEBUG
-			else {
-				if (spawn_callback && spawn_callback->m_object_callback) {
-					VERIFY(spawn_callback->m_object_callback == callback);
-				}
-			}
-#endif // DEBUG
+			Level().client_spawn_manager().add(delayed_object.m_object_id, m_object->ID(), callback);
 	}
 }
 
@@ -493,8 +483,8 @@ void CSoundMemoryManager::clear_delayed_objects()
 		return;
 
 	CClientSpawnManager& manager = Level().client_spawn_manager();
-	DELAYED_SOUND_OBJECTS::const_iterator	I = m_delayed_objects.begin();
-	DELAYED_SOUND_OBJECTS::const_iterator	E = m_delayed_objects.end();
+	DELAYED_SOUND_OBJECTS::const_iterator I = m_delayed_objects.begin();
+	DELAYED_SOUND_OBJECTS::const_iterator E = m_delayed_objects.end();
 	for (; I != E; ++I)
 		if (manager.callback((*I).m_object_id, m_object->ID()))
 			manager.remove((*I).m_object_id, m_object->ID());
@@ -504,8 +494,8 @@ void CSoundMemoryManager::clear_delayed_objects()
 
 void CSoundMemoryManager::on_requested_spawn(CObject* object)
 {
-	DELAYED_SOUND_OBJECTS::iterator		I = m_delayed_objects.begin();
-	DELAYED_SOUND_OBJECTS::iterator		E = m_delayed_objects.end();
+	DELAYED_SOUND_OBJECTS::iterator I = m_delayed_objects.begin();
+	DELAYED_SOUND_OBJECTS::iterator E = m_delayed_objects.end();
 	for (; I != E; ++I) {
 		if ((*I).m_object_id != object->ID())
 			continue;

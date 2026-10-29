@@ -163,7 +163,6 @@ CActor::CActor() : CEntityAlive()
 
 	m_pUsableObject = NULL;
 
-
 	m_anims = xr_new<SActorMotions>();
 	m_vehicle_anims = xr_new<SActorVehicleAnims>();
 	m_entity_condition = NULL;
@@ -172,7 +171,7 @@ CActor::CActor() : CEntityAlive()
 	m_game_task_manager = NULL;
 	m_statistic_manager = NULL;
 	//-----------------------------------------------------------------------------------
-	m_memory = g_dedicated_server ? 0 : xr_new<CActorMemory>(this);
+	m_memory = xr_new<CActorMemory>(this);
 	m_bOutBorder = false;
 	hit_probability = 1.f;
 	m_feel_touch_characters = 0;
@@ -225,8 +224,8 @@ void CActor::reinit()
 	material().reinit();
 
 	m_pUsableObject = NULL;
-	if (!g_dedicated_server)
-		memory().reinit();
+
+	memory().reinit();
 
 	set_input_external_handler(0);
 	m_time_lock_accel = 0;
@@ -238,14 +237,12 @@ void CActor::reload(LPCSTR section)
 	CInventoryOwner::reload(section);
 	material().reload(section);
 	CStepManager::reload(section);
-	if (!g_dedicated_server)
-		memory().reload(section);
+	memory().reload(section);
 	m_location_manager->reload(section);
 }
 
 void CActor::Load(LPCSTR section)
 {
-	// Msg						("Loading actor: %s",section);
 	inherited::Load(section);
 	material().Load(section);
 	CInventoryOwner::Load(section);
@@ -328,40 +325,36 @@ void CActor::Load(LPCSTR section)
 	character_physics_support()->in_Load(section);
 
 	//загрузить параметры эффектора
-//	LoadShootingEffector	("shooting_effector");
+//	LoadShootingEffector("shooting_effector");
 	LoadSleepEffector("sleep_effector");
 
 	//загрузить параметры смещения firepoint
 	m_vMissileOffset = pSettings->r_fvector3(section, "missile_throw_offset");
 
-	//Weapons				= xr_new<CWeaponList> (this);
-
-	if (!g_dedicated_server)
+	LPCSTR hit_snd_sect = pSettings->r_string(section, "hit_sounds");
+	for (int hit_type = 0; hit_type < (int)ALife::eHitTypeMax; ++hit_type)
 	{
-		LPCSTR hit_snd_sect = pSettings->r_string(section, "hit_sounds");
-		for (int hit_type = 0; hit_type < (int)ALife::eHitTypeMax; ++hit_type)
+		LPCSTR hit_name = ALife::g_cafHitType2String((ALife::EHitType)hit_type);
+		LPCSTR hit_snds = READ_IF_EXISTS(pSettings, r_string, hit_snd_sect, hit_name, "");
+		int cnt = _GetItemCount(hit_snds);
+		string128 tmp;
+		VERIFY(cnt != 0);
+		for (int i = 0; i < cnt; ++i)
 		{
-			LPCSTR hit_name = ALife::g_cafHitType2String((ALife::EHitType)hit_type);
-			LPCSTR hit_snds = READ_IF_EXISTS(pSettings, r_string, hit_snd_sect, hit_name, "");
-			int cnt = _GetItemCount(hit_snds);
-			string128		tmp;
-			VERIFY(cnt != 0);
-			for (int i = 0; i < cnt; ++i)
-			{
-				sndHit[hit_type].push_back(ref_sound());
-				sndHit[hit_type].back().create(_GetItem(hit_snds, i, tmp), st_Effect, sg_SourceType);
-			}
-			char buf[256];
-
-			::Sound->create(sndDie[0], strconcat(sizeof(buf), buf, *cName(), "\\die0"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-			::Sound->create(sndDie[1], strconcat(sizeof(buf), buf, *cName(), "\\die1"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-			::Sound->create(sndDie[2], strconcat(sizeof(buf), buf, *cName(), "\\die2"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-			::Sound->create(sndDie[3], strconcat(sizeof(buf), buf, *cName(), "\\die3"), st_Effect, SOUND_TYPE_MONSTER_DYING);
-
-			m_HeavyBreathSnd.create(pSettings->r_string(section, "heavy_breath_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
-			m_BloodSnd.create(pSettings->r_string(section, "heavy_blood_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+			sndHit[hit_type].push_back(ref_sound());
+			sndHit[hit_type].back().create(_GetItem(hit_snds, i, tmp), st_Effect, sg_SourceType);
 		}
+		char buf[256];
+
+		::Sound->create(sndDie[0], strconcat(sizeof(buf), buf, *cName(), "\\die0"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+		::Sound->create(sndDie[1], strconcat(sizeof(buf), buf, *cName(), "\\die1"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+		::Sound->create(sndDie[2], strconcat(sizeof(buf), buf, *cName(), "\\die2"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+		::Sound->create(sndDie[3], strconcat(sizeof(buf), buf, *cName(), "\\die3"), st_Effect, SOUND_TYPE_MONSTER_DYING);
+
+		m_HeavyBreathSnd.create(pSettings->r_string(section, "heavy_breath_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
+		m_BloodSnd.create(pSettings->r_string(section, "heavy_blood_snd"), st_Effect, SOUND_TYPE_MONSTER_INJURING);
 	}
+
 	cam_Set(eacFirstEye);
 
 	// sheduler
@@ -412,7 +405,7 @@ struct playing_pred
 	}
 };
 
-void	CActor::Hit(SHit* pHDS)
+void CActor::Hit(SHit* pHDS)
 {
 	pHDS->aim_bullet = false;
 
@@ -435,16 +428,16 @@ void	CActor::Hit(SHit* pHDS)
 #endif // DEBUG
 
 	bool bPlaySound = true;
-	if (!g_Alive()) bPlaySound = false;
+	if (!g_Alive())
+		bPlaySound = false;
 
-	if (!IsGameTypeSingle() && !g_dedicated_server)
+	if (!IsGameTypeSingle())
 	{
 		game_PlayerState* ps = Game().GetPlayerByGameID(ID());
 		if (ps && ps->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))
 		{
 			bPlaySound = false;
-			if (Device.dwFrame != last_hit_frame &&
-				HDS.bone() != BI_NONE)
+			if (Device.dwFrame != last_hit_frame && HDS.bone() != BI_NONE)
 			{
 				// вычислить позицию и направленность партикла
 				Fmatrix pos;
@@ -464,13 +457,10 @@ void	CActor::Hit(SHit* pHDS)
 			};
 		};
 
-
 		last_hit_frame = Device.dwFrame;
 	};
 
-	if (!g_dedicated_server &&
-		!sndHit[HDS.hit_type].empty() &&
-		(ALife::eHitTypeTelepatic != HDS.hit_type))
+	if (!sndHit[HDS.hit_type].empty() && (ALife::eHitTypeTelepatic != HDS.hit_type))
 	{
 		ref_sound& S = sndHit[HDS.hit_type][Random.randI(sndHit[HDS.hit_type].size())];
 		bool b_snd_hit_playing = sndHit[HDS.hit_type].end() != std::find_if(sndHit[HDS.hit_type].begin(), sndHit[HDS.hit_type].end(), playing_pred());
@@ -480,7 +470,8 @@ void	CActor::Hit(SHit* pHDS)
 			if (this == Level().CurrentControlEntity())
 			{
 				S.set_volume(10.0f);
-				if (!m_sndShockEffector) {
+				if (!m_sndShockEffector) 
+				{
 					m_sndShockEffector = xr_new<SndShockEffector>();
 					m_sndShockEffector->Start(this, float(S._handle()->length_ms()), HDS.damage());
 				}
@@ -496,7 +487,6 @@ void	CActor::Hit(SHit* pHDS)
 		};
 	}
 
-
 	//slow actor, only when he gets hit
 	if (HDS.hit_type == ALife::eHitTypeWound || HDS.hit_type == ALife::eHitTypeStrike)
 	{
@@ -505,26 +495,20 @@ void	CActor::Hit(SHit* pHDS)
 	}
 	else
 		hit_slowmo = 0.f;
-	//---------------------------------------------------------------
-	if (Level().CurrentViewEntity() == this && !g_dedicated_server && HDS.hit_type == ALife::eHitTypeFireWound)
+
+	if (Level().CurrentViewEntity() == this && HDS.hit_type == ALife::eHitTypeFireWound)
 	{
 		CObject* pLastHitter = Level().Objects.net_Find(m_iLastHitterID);
 		CObject* pLastHittingWeapon = Level().Objects.net_Find(m_iLastHittingWeaponID);
 		HitSector(pLastHitter, pLastHittingWeapon);
 	};
 
-	if ((mstate_real & mcSprint) && Level().CurrentControlEntity() == this &&
-		HDS.hit_type != ALife::eHitTypeTelepatic &&
-		HDS.hit_type != ALife::eHitTypeRadiation
-		)
+	if ((mstate_real & mcSprint) && Level().CurrentControlEntity() == this && HDS.hit_type != ALife::eHitTypeTelepatic && HDS.hit_type != ALife::eHitTypeRadiation)
 	{
-		//		mstate_real	&=~mcSprint;
 		mstate_wishful &= ~mcSprint;
 	};
-	if (!g_dedicated_server)
-	{
-		HitMark(HDS.damage(), HDS.dir, HDS.who, HDS.bone(), HDS.p_in_bone_space, HDS.impulse, HDS.hit_type);
-	}
+
+	HitMark(HDS.damage(), HDS.dir, HDS.who, HDS.bone(), HDS.p_in_bone_space, HDS.impulse, HDS.hit_type);
 
 	switch (GameID())
 	{
@@ -532,16 +516,14 @@ void	CActor::Hit(SHit* pHDS)
 	{
 		float hit_power = HitArtefactsOnBelt(HDS.damage(), HDS.hit_type);
 
-		if (GodMode())//psActorFlags.test(AF_GODMODE))
+		if (GodMode())
 		{
 			HDS.power = 0.0f;
-			//				inherited::Hit(0.f,dir,who,element,position_in_bone_space,impulse, hit_type);
 			inherited::Hit(&HDS);
 			return;
 		}
 		else
 		{
-			//inherited::Hit		(hit_power,dir,who,element,position_in_bone_space, impulse, hit_type);
 			HDS.power = hit_power;
 			inherited::Hit(&HDS);
 		};
@@ -757,22 +739,20 @@ void CActor::Die(CObject* who)
 	mstate_wishful &= ~mcAnyMove;
 	mstate_real &= ~mcAnyMove;
 
-	if (!g_dedicated_server)
-	{
-		::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
+	::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
 
-		m_HeavyBreathSnd.stop();
-		m_BloodSnd.stop();
-	}
+	m_HeavyBreathSnd.stop();
+	m_BloodSnd.stop();
 
 	if (IsGameTypeSingle())
 	{
 		start_tutorial("game_over");
 	}
+
 	xr_delete(m_sndShockEffector);
 }
 
-void	CActor::SwitchOutBorder(bool new_border_state)
+void CActor::SwitchOutBorder(bool new_border_state)
 {
 	if (new_border_state)
 	{
@@ -780,7 +760,6 @@ void	CActor::SwitchOutBorder(bool new_border_state)
 	}
 	else
 	{
-		//.		Msg("enter level border");
 		callback(GameObject::eEnterLevelBorder)(lua_game_object());
 	}
 	m_bOutBorder = new_border_state;
@@ -1071,7 +1050,6 @@ void CActor::shedule_Update(u32 DT)
 
 	NET_Jump = 0;
 
-
 	inherited::shedule_Update(DT);
 
 	//эффектор включаемый при ходьбе
@@ -1080,10 +1058,11 @@ void CActor::shedule_Update(u32 DT)
 		pCamBobbing = xr_new<CEffectorBobbing>();
 		Cameras().AddCamEffector(pCamBobbing);
 	}
+
 	pCamBobbing->SetState(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
 	//звук тяжелого дыхания при уталости и хромании
-	if (this == Level().CurrentControlEntity() && !g_dedicated_server)
+	if (this == Level().CurrentControlEntity())
 	{
 		if (conditions().IsLimping() && g_Alive())
 		{
@@ -1091,11 +1070,13 @@ void CActor::shedule_Update(u32 DT)
 			{
 				m_HeavyBreathSnd.play_at_pos(this, Fvector().set(0, ACTOR_HEIGHT, 0), sm_Looped | sm_2D);
 			}
-			else {
+			else 
+			{
 				m_HeavyBreathSnd.set_position(Fvector().set(0, ACTOR_HEIGHT, 0));
 			}
 		}
-		else if (m_HeavyBreathSnd._feedback()) {
+		else if (m_HeavyBreathSnd._feedback()) 
+		{
 			m_HeavyBreathSnd.stop();
 		}
 

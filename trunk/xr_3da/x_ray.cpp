@@ -8,7 +8,6 @@
 #include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
-
 #include "xr_input.h"
 #include "xr_ioconsole.h"
 #include "x_ray.h"
@@ -18,7 +17,6 @@
 #include "LightAnimLibrary.h"
 #include "ispatial.h"
 #include "CopyProtection.h"
-#include "Text_Console.h"
 #include <process.h>
 
 ENGINE_API CInifile* pGameIni = NULL;
@@ -85,7 +83,8 @@ struct _SoundProcessor : public pureFrame
 		::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
 		Device.Statistic->Sound.End();
 	}
-}	SoundProcessor;
+}	
+SoundProcessor;
 
 //////////////////////////////////////////////////////////////////////////
 // global variables
@@ -130,16 +129,7 @@ void InitSettings()
 
 void InitConsole()
 {
-#ifdef DEDICATED_SERVER
-	{
-		Console = xr_new<CTextConsole>();
-	}
-#else
-	//	else
-	{
-		Console = xr_new<CConsole>();
-	}
-#endif
+	Console = xr_new<CConsole>();
 	Console->Initialize();
 
 	strcpy_s(Console->ConfigFile, "user.ltx");
@@ -153,11 +143,7 @@ void InitConsole()
 
 void InitInput()
 {
-	BOOL bCaptureInput = !strstr(Core.Params, "-i");
-	if (g_dedicated_server)
-		bCaptureInput = FALSE;
-
-	pInput = xr_new<CInput>(bCaptureInput);
+	pInput = xr_new<CInput>(!strstr(Core.Params, "-i"));
 }
 
 void destroyInput()
@@ -467,11 +453,8 @@ BOOL IsOutOfVirtualMemory()
 
 //#define RUSSIAN_BUILD
 
-ENGINE_API	bool g_dedicated_server = false;
-
 int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
-#ifndef DEDICATED_SERVER
 	// Check for virtual memory
 	if ((strstr(lpCmdLine, "--skipmemcheck") == NULL) && IsOutOfVirtualMemory())
 		return 0;
@@ -482,7 +465,8 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 
 	HANDLE hCheckPresenceMutex = INVALID_HANDLE_VALUE;
 	hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
-	if (hCheckPresenceMutex == NULL) {
+	if (hCheckPresenceMutex == NULL) 
+	{
 		// New mutex
 		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);
 		if (hCheckPresenceMutex == NULL)
@@ -496,9 +480,6 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 		return 1;
 	}
 #endif
-#else // DEDICATED_SERVER
-	g_dedicated_server = true;
-#endif // DEDICATED_SERVER
 
 	SetThreadAffinityMask(GetCurrentThread(), 1);
 
@@ -525,7 +506,6 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 
 	// AVI
 	g_bIntroFinished = TRUE;
-
 	g_sLaunchOnExit_app[0] = NULL;
 	g_sLaunchOnExit_params[0] = NULL;
 
@@ -541,11 +521,9 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 	Core._initialize("xray", NULL, TRUE, fsgame[0] ? fsgame : NULL);
 	InitSettings();
 
-#ifndef DEDICATED_SERVER
 	{
 		damn_keys_filter filter;
 		(void)filter;
-#endif // DEDICATED_SERVER
 
 		FPU::m24r();
 		InitEngine();
@@ -592,14 +570,13 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lp
 
 			_spawnv(_P_NOWAIT, _args[0], _args);
 		}
-#ifndef DEDICATED_SERVER
+
 #ifdef NO_MULTI_INSTANCES		
 		// Delete application presence mutex
 		CloseHandle(hCheckPresenceMutex);
 #endif
 	}
 	// here damn_keys_filter class instanse will be destroyed
-#endif // DEDICATED_SERVER
 
 	return 0;
 }
@@ -618,19 +595,11 @@ int stack_overflow_exception_filter(int exception_code)
 		return EXCEPTION_CONTINUE_SEARCH;
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance,
-	HINSTANCE hPrevInstance,
-	char* lpCmdLine,
-	int       nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
 	__try
 	{
-#ifdef DEDICATED_SERVER
-		Debug._initialize(true);
-#else // DEDICATED_SERVER
-		Debug._initialize(false);
-#endif // DEDICATED_SERVER
-
+		Debug._initialize();
 		WinMain_impl(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 	}
 	__except (stack_overflow_exception_filter(GetExceptionCode()))
@@ -681,7 +650,6 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags, bool need_prefix 
 		Device.seqRender.Add(F, REG_PRIORITY_LOW - 1000);
 	}
 	else
-
 		F->Initialize("font", font_tex_name, need_prefix);
 
 	if (pSettings->line_exist(section, "size"))
@@ -739,7 +707,6 @@ CApplication::~CApplication()
 	Device.seqFrameMT.Remove(&SoundProcessor);
 	Device.seqFrame.Remove(&SoundProcessor);
 	Device.seqFrame.Remove(this);
-
 
 	// events
 	Engine.Event.Handler_Detach(eDisconnect, this);
@@ -819,13 +786,12 @@ void CApplication::LoadBegin()
 	{
 		g_appLoaded = FALSE;
 
-#ifndef DEDICATED_SERVER
 		_InitializeFont(pFontSystem, "ui_font_graffiti19_russian", 0);
 
 		ll_hGeom.create(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
 		sh_progress.create("hud\\default", "ui\\ui_load");
 		ll_hGeom2.create(FVF::F_TL, RCache.Vertex.Buffer(), NULL);
-#endif
+
 		phase_timer.Start();
 		load_stage = 0;
 
@@ -863,10 +829,7 @@ void CApplication::LoadDraw()
 	if (!Device.Begin())
 		return;
 
-	if (g_dedicated_server)
-		Console->OnRender();
-	else
-		load_draw_internal();
+	load_draw_internal();
 
 	Device.End();
 	CheckCopyProtection();
@@ -972,7 +935,8 @@ int CApplication::Level_ID(LPCSTR name)
 	strconcat(sizeof(buffer), buffer, name, "\\");
 	for (u32 I = 0; I < Levels.size(); I++)
 	{
-		if (0 == stricmp(buffer, Levels[I].folder))	return int(I);
+		if (0 == stricmp(buffer, Levels[I].folder))
+			return int(I);
 	}
 	return -1;
 }
@@ -1090,8 +1054,8 @@ void CApplication::load_draw_internal()
 	back_text_coords.rb.add(back_text_coords.lt, Fvector2().set(1024.f, 768.f)); // in vanilla we have background's size 1024x768
 	back_coords.lt.set(offs, offs);
 	back_coords.rb.add(back_coords.lt, Fvector2().set(1024.f, 768.f));
-
-	back_coords.lt.mul(k); back_coords.rb.mul(k);
+	back_coords.lt.mul(k);
+	back_coords.rb.mul(k);
 
 	back_text_coords.lt.x /= tsz.x;
 	back_text_coords.lt.y /= tsz.y;
@@ -1106,8 +1070,8 @@ void CApplication::load_draw_internal()
 	pv++;
 	pv->set(back_coords.rb.x, back_coords.lt.y, C, back_text_coords.rb.x, back_text_coords.lt.y);
 	pv++;
-	RCache.Vertex.Unlock(4, ll_hGeom.stride());
 
+	RCache.Vertex.Unlock(4, ll_hGeom.stride());
 	RCache.set_Geometry(ll_hGeom);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
