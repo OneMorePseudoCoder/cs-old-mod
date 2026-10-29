@@ -120,7 +120,7 @@ void CLevel::net_Stop()
 
 void CLevel::ClientSend()
 {
-	if (GameID() != GAME_SINGLE || OnClient())
+	if (GameID() != GAME_SINGLE && OnClient())
 	{
 		if (!net_HasBandwidth())
 			return;
@@ -288,7 +288,8 @@ struct _NetworkProcessor : public pureFrame
 		if (g_pGameLevel && !Device.Paused())
 			g_pGameLevel->net_Update();
 	}
-}	NET_processor;
+}	
+NET_processor;
 
 pureFrame* g_pNetProcessor = &NET_processor;
 
@@ -415,13 +416,11 @@ void CLevel::OnConnectResult(NET_Packet* P)
 			fwrite(*m_sDemoHeader.ServerOptions, OptLen, 1, fTDemo);
 			fclose(fTDemo);
 		};
-		//-----------------------------------------
 	};
 };
 
-void			CLevel::ClearAllObjects()
+void CLevel::ClearAllObjects()
 {
-
 	bool ParentFound = true;
 
 	while (ParentFound)
@@ -436,10 +435,9 @@ void			CLevel::ClearAllObjects()
 			CObject* pObj = Level().Objects.o_get_by_iterator(i);
 			if (!pObj->H_Parent())
 				continue;
-			//-----------------------------------------------------------
+
 			NET_Packet					GEN;
 			GEN.w_begin(M_EVENT);
-			//------------------		---------------------------		
 			GEN.w_u32(Level().timeServer());
 			GEN.w_u16(GE_OWNERSHIP_REJECT);
 			GEN.w_u16(pObj->H_Parent()->ID());
@@ -447,9 +445,7 @@ void			CLevel::ClearAllObjects()
 			game_events->insert(GEN);
 			if (g_bDebugEvents)
 				ProcessGameEvents();
-			//-------------------------------------------------------------
 			ParentFound = true;
-			//-------------------------------------------------------------
 #ifdef DEBUG
 			Msg("Rejection of %s[%d] from %s[%d]", *(pObj->cNameSect()), pObj->ID(), *(pObj->H_Parent()->cNameSect()), pObj->H_Parent()->ID());
 #endif
@@ -462,18 +458,15 @@ void			CLevel::ClearAllObjects()
 	{
 		CObject* pObj = Level().Objects.o_get_by_iterator(i);
 		R_ASSERT(pObj->H_Parent() == NULL);
-		//-----------------------------------------------------------
-		NET_Packet			GEN;
+		NET_Packet GEN;
 		GEN.w_begin(M_EVENT);
-		//---------------------------------------------		
 		GEN.w_u32(Level().timeServer());
 		GEN.w_u16(GE_DESTROY);
 		GEN.w_u16(u16(pObj->ID()));
 		game_events->insert(GEN);
-		if (g_bDebugEvents)	ProcessGameEvents();
-		//-------------------------------------------------------------
+		if (g_bDebugEvents)
+			ProcessGameEvents();
 		ParentFound = true;
-		//-------------------------------------------------------------
 #ifdef DEBUG
 		Msg("Destruction of %s[%d]", *(pObj->cNameSect()), pObj->ID());
 #endif
@@ -481,37 +474,35 @@ void			CLevel::ClearAllObjects()
 	ProcessGameEvents();
 };
 
-void				CLevel::OnInvalidHost()
+void CLevel::OnInvalidHost()
 {
 	IPureClient::OnInvalidHost();
 	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
 		MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidHost);
 };
 
-void				CLevel::OnInvalidPassword()
+void CLevel::OnInvalidPassword()
 {
 	IPureClient::OnInvalidPassword();
 	MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidPassword);
 };
 
-void				CLevel::OnSessionFull()
+void CLevel::OnSessionFull()
 {
 	IPureClient::OnSessionFull();
 	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
 		MainMenu()->SetErrorDialog(CMainMenu::ErrSessionFull);
 }
 
-void				CLevel::OnConnectRejected()
+void CLevel::OnConnectRejected()
 {
 	IPureClient::OnConnectRejected();
-
-	//	if (MainMenu()->GetErrorDialogType() != CMainMenu::ErrNoError)
-	//		MainMenu()->SetErrorDialog(CMainMenu::ErrServerReject);
 };
 
-void				CLevel::net_OnChangeSelfName(NET_Packet* P)
+void CLevel::net_OnChangeSelfName(NET_Packet* P)
 {
-	if (!P) return;
+	if (!P)
+		return;
 	string64 NewName;
 	P->r_stringZ(NewName);
 	if (!strstr(*m_caClientOptions, "/name="))
