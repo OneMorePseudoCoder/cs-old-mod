@@ -1,0 +1,100 @@
+#include "common.h"
+#include "shadow.h"
+
+#define RAY_PATH	2.0h
+#define RAY_SAMPLES	20
+
+half4	volume_range;	//	x - near plane, y - far plane
+half4	sun_shafts_intensity;
+
+//#ifdef	USE_BRANCHING
+//	"If" in loop
+float4 	main (float2 tc : TEXCOORD0, float4 tcJ : TEXCOORD1 ) : COLOR
+{
+	half3 P = tex2D(s_position, tc).xyz;
+//	Fixed ray length, fixed step dencity
+//	half3 direction = (RAY_PATH/RAY_SAMPLES)*normalize(P);	
+//	Variable ray length, variable step dencity
+//	half3 direction = P/RAY_SAMPLES;
+//	Variable ray length, variable step dencity, use jittering
+	half4	J0 	= tex2D		(jitter0,tcJ);
+	half coeff = (RAY_SAMPLES - 2*J0.x)/(RAY_SAMPLES*RAY_SAMPLES);		
+	half3 direction = P*coeff;
+//	half3 direction = P/(RAY_SAMPLES+(J0.x*4-2));
+
+	half depth = P.z;
+	half deltaDepth = direction.z;
+	
+	half4 current	= mul (m_shadow,float4(P,1));
+	half4 delta 	= mul (m_shadow, float4(direction,0));
+
+	half res = 0;
+	half max_density = sun_shafts_intensity;
+	half density = max_density/RAY_SAMPLES;
+
+	if (depth<0.0001)
+		res = max_density;
+
+	for ( int i=0; i<RAY_SAMPLES; ++i )
+	{
+		if (depth>0.3)
+			res += density*shadow(current);
+		depth -= deltaDepth;
+		current -= delta;
+	}
+
+	return res*Ldynamic_color;
+}
+
+/**/
+/*
+float4 	main (float2 tc : TEXCOORD0, float4 tcJ : TEXCOORD1 ) : COLOR
+{
+	
+
+	half3 P = tex2D(s_position, tc).xyz;
+	half3 delta = 0.05*normalize(P);
+//	half3 delta = 0.1*normalize(P);
+
+	half res = 0;
+	half density = 0.5/40.0;
+
+	if (P.z<0.0001)
+		res = 0.5;
+
+	for ( int i=0; i<40; ++i )
+	{
+		float4 	PS = mul (m_shadow,float4(P,1));	  	
+//		if ((P.z>0)&&(P.z<=volume_range.y))
+		if (P.z>0)
+			res += density*shadow(PS);
+		P -= delta;
+	}
+
+	return res*Ldynamic_color;
+}                        
+/**/
+/*
+
+float4 	main (float2 tc : TEXCOORD0, float4 tcJ : TEXCOORD1 ) : COLOR
+{
+	
+
+	half3 P = tex2D (s_position, tc).xyz;
+	
+	half targetZ = max( P.z-RAY_PATH , 0);
+
+	half res = 0;
+	half density = 0.5*RAY_STEP/RAY_PATH;
+
+	half density = 0.1;
+
+	while ( P.z > targetZ )
+	{
+		res += density;
+		P.z -= RAY_STEP;
+	}
+
+	return half4(res,res,res,0);
+}
+*/
