@@ -31,8 +31,7 @@ void light::vis_prepare()
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_DONT_TEST_UNSHADOWED) && !flags.bShadow)
 		skiptest = true;
 
-	float k = (flags.type == IRender_Light::OMNIPART && flags.bShadow) ? 10.01f : 1.01f;
-	if (skiptest || Device.vCameraPosition.distance_to(spatial.sphere.P) <= (spatial.sphere.R * k + safe_area))
+	if (skiptest || Device.vCameraPosition.distance_to(spatial.sphere.P) <= (spatial.sphere.R * 1.01f + safe_area))
 	{
 		vis.visible = true;
 		vis.pending = false;
