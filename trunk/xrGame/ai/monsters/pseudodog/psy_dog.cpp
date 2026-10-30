@@ -22,6 +22,7 @@ CPsyDog::CPsyDog()
 {
 	m_aura = xr_new<CPsyDogAura>(this);
 }
+
 CPsyDog::~CPsyDog()
 {
 	xr_delete(m_aura);
@@ -40,21 +41,23 @@ void CPsyDog::Load(LPCSTR section)
 
 BOOL CPsyDog::net_Spawn(CSE_Abstract* dc)
 {
-	if (!inherited::net_Spawn(dc)) return FALSE;
+	if (!inherited::net_Spawn(dc))
+		return FALSE;
 
 	return TRUE;
 }
+
 void CPsyDog::reinit()
 {
 	inherited::reinit();
 	m_aura->reinit();
 	m_time_last_phantom_appear = 0;
 }
+
 void CPsyDog::reload(LPCSTR section)
 {
 	inherited::reload(section);
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Register/Unregister
@@ -79,7 +82,8 @@ void CPsyDog::unregister_phantom(CPsyDogPhantom* phantom)
 bool CPsyDog::spawn_phantom()
 {
 	u32 node;
-	if (!control().path_builder().get_node_in_radius(ai_location().level_vertex_id(), 4, 8, 5, node)) return false;
+	if (!control().path_builder().get_node_in_radius(ai_location().level_vertex_id(), 4, 8, 5, node))
+		return false;
 
 	// set id to created server object
 	CSE_Abstract* phantom = Level().spawn_item("psy_dog_phantom", ai().level_graph().vertex_position(node), node, 0xffff, true);
@@ -89,7 +93,7 @@ bool CPsyDog::spawn_phantom()
 	pSE_Monster->m_spec_object_id = ID();
 
 	// spawn here
-	NET_Packet					P;
+	NET_Packet P;
 	phantom->Spawn_Write(P, TRUE);
 	Level().Send(P, net_flags(TRUE));
 	F_entity_Destroy(phantom);
@@ -108,28 +112,33 @@ void CPsyDog::delete_all_phantoms()
 	m_storage.clear();
 }
 
-
 void CPsyDog::Think()
 {
 	inherited::Think();
-	if (!g_Alive()) return;
+
+	if (!g_Alive())
+		return;
 
 	m_aura->update_schedule();
 
 	// check spawn / destroy phantoms
-	if (EnemyMan.get_enemy() && (get_phantoms_count() < m_phantoms_max) && (m_time_last_phantom_appear + m_time_phantom_appear < time())) {
-		if (spawn_phantom()) m_time_last_phantom_appear = time();
+	if (EnemyMan.get_enemy() && (get_phantoms_count() < m_phantoms_max) && (m_time_last_phantom_appear + m_time_phantom_appear < time())) 
+	{
+		if (spawn_phantom())
+			m_time_last_phantom_appear = time();
 	}
-	else {
-		if (!EnemyMan.get_enemy() && !m_storage.empty()) {
+	else 
+	{
+		if (!EnemyMan.get_enemy() && !m_storage.empty()) 
+		{
 			delete_all_phantoms();
 		}
 	}
 }
 
-
 void CPsyDog::net_Destroy()
 {
+    m_aura->on_death();
 	delete_all_phantoms();
 	inherited::net_Destroy();
 }
@@ -154,15 +163,14 @@ u8 CPsyDog::get_phantoms_count()
 //////////////////////////////////////////////////////////////////////////
 // Phantom Psy Dog
 //////////////////////////////////////////////////////////////////////////
-CPsyDogPhantom::CPsyDogPhantom()
-{
-}
-CPsyDogPhantom::~CPsyDogPhantom()
-{
-}
+CPsyDogPhantom::CPsyDogPhantom() {}
+
+CPsyDogPhantom::~CPsyDogPhantom() {}
+
 BOOL CPsyDogPhantom::net_Spawn(CSE_Abstract* dc)
 {
-	if (!inherited::net_Spawn(dc)) return FALSE;
+	if (!inherited::net_Spawn(dc))
+		return FALSE;
 
 	CSE_ALifeMonsterBase* se_monster = smart_cast<CSE_ALifeMonsterBase*>(dc);
 	m_parent_id = se_monster->m_spec_object_id;
@@ -174,44 +182,50 @@ BOOL CPsyDogPhantom::net_Spawn(CSE_Abstract* dc)
 	setVisible(FALSE);
 	setEnabled(FALSE);
 
-	// load effector
-	// Load psi postprocess --------------------------------------------------------
-
 	load_effector(*cNameSect(), "appear_effector", m_appear_effector);
 
-	// --------------------------------------------------------------------------------
 	m_particles_appear = pSettings->r_string(*cNameSect(), "particles_appear");
 	m_particles_disappear = pSettings->r_string(*cNameSect(), "particles_disappear");
 
 	m_time_spawned = time();
 
-	return (TRUE);
+	return TRUE;
 }
 
 const u32 pmt_time_wait_parent = 10000;
 
 void CPsyDogPhantom::Think()
 {
-	if (is_wait_to_destroy_object()) return;
+	if (is_wait_to_destroy_object())
+		return;
+
 	inherited::Think();
 
 	try_to_register_to_parent();
 
 	// still have no parent ?
-	if (!m_parent) {
+	if (!m_parent) 
+	{
 		// if there is no parent long period of time - destroy me
-		if (m_time_spawned + pmt_time_wait_parent > time()) destroy_me();
+		if (m_time_spawned + pmt_time_wait_parent > time())
+			destroy_me();
 		return;
 	}
 
-	if (m_state != eWaitToAppear) return;
+	if (m_state != eWaitToAppear)
+		return;
 
 	EnemyMan.transfer_enemy(m_parent);
 
 	SVelocityParam& velocity_run = move().get_velocity(MonsterMovement::eVelocityParameterRunNormal);
-	if (control().movement().real_velocity() < 2 * velocity_run.velocity.linear / 3) return;
-	if (!EnemyMan.get_enemy()) return;
-	if (!control().direction().is_face_target(EnemyMan.get_enemy(), PI_DIV_6)) return;
+	if (control().movement().real_velocity() < 2 * velocity_run.velocity.linear / 3)
+		return;
+
+	if (!EnemyMan.get_enemy())
+		return;
+
+	if (!control().direction().is_face_target(EnemyMan.get_enemy(), PI_DIV_6))
+		return;
 
 	Fvector target;
 	target.mad(Position(), Direction(), 10.f);
@@ -221,7 +235,8 @@ void CPsyDogPhantom::Think()
 	u32 node = ai().level_graph().check_position_in_direction(ai_location().level_vertex_id(), Position(), target);
 	control().path_builder().restrictions().remove_border();
 
-	if (!ai().level_graph().valid_vertex_id(node) || !control().path_builder().accessible(node)) return;
+	if (!ai().level_graph().valid_vertex_id(node) || !control().path_builder().accessible(node))
+		return;
 
 	target.y += 1.f;
 	com_man().jump(target);
@@ -232,17 +247,20 @@ void CPsyDogPhantom::Think()
 
 	CParticlesPlayer::StartParticles(m_particles_appear, Fvector().set(0.0f, 0.1f, 0.0f), ID());
 
-	if (EnemyMan.get_enemy() != Actor()) return;
+	if (EnemyMan.get_enemy() != Actor())
+		return;
 
 	Actor()->Cameras().AddCamEffector(xr_new<CMonsterEffectorHit>(m_appear_effector.ce_time, m_appear_effector.ce_amplitude, m_appear_effector.ce_period_number, m_appear_effector.ce_power));
 	Actor()->Cameras().AddPPEffector(xr_new<CMonsterEffector>(m_appear_effector.ppi, m_appear_effector.time, m_appear_effector.time_attack, m_appear_effector.time_release));
 }
 
-//void CPsyDogPhantom::Hit(float P,Fvector &dir,CObject*who,s16 element,Fvector p_in_object_space,float impulse, ALife::EHitType hit_type)
-void	CPsyDogPhantom::Hit(SHit* pHDS)
+void CPsyDogPhantom::Hit(SHit* pHDS)
 {
-	if (is_wait_to_destroy_object()) return;
-	if ((pHDS->who == EnemyMan.get_enemy()) && (pHDS->who != 0)) destroy_me();
+	if (is_wait_to_destroy_object())
+		return;
+
+	if ((pHDS->who == EnemyMan.get_enemy()) && (pHDS->who != 0))
+		destroy_me();
 }
 
 void CPsyDogPhantom::net_Destroy()
@@ -251,7 +269,8 @@ void CPsyDogPhantom::net_Destroy()
 	Center(center);
 	PlayParticles(m_particles_disappear, center, Fvector().set(0.f, 1.f, 0.f));
 
-	if (m_parent && !is_wait_to_destroy_object()) {
+	if (m_parent && !is_wait_to_destroy_object()) 
+	{
 		m_parent->unregister_phantom(this);
 		m_parent = 0;
 		m_parent_id = 0xffff;
@@ -269,10 +288,12 @@ void CPsyDogPhantom::Die(CObject* who)
 void CPsyDogPhantom::try_to_register_to_parent()
 {
 	// parent not ready yet
-	if (m_parent) return;
+	if (m_parent)
+		return;
 
 	CObject* obj = Level().Objects.net_Find(m_parent_id);
-	if (obj) {
+	if (obj) 
+	{
 		CPsyDog* dog = smart_cast<CPsyDog*>(obj);
 		VERIFY(dog);
 
@@ -287,13 +308,14 @@ void CPsyDogPhantom::destroy_me()
 {
 	VERIFY(!is_wait_to_destroy_object());
 
-	if (m_parent) {
+	if (m_parent) 
+	{
 		m_parent->unregister_phantom(this);
 		m_parent = 0;
 		m_parent_id = 0xffff;
 	}
 
-	NET_Packet		P;
+	NET_Packet P;
 	u_EventGen(P, GE_DESTROY, ID());
 	u_EventSend(P);
 }
@@ -302,7 +324,7 @@ void CPsyDogPhantom::destroy_from_parent()
 {
 	m_parent_id = 0xffff;
 
-	NET_Packet		P;
+	NET_Packet P;
 	u_EventGen(P, GE_DESTROY, ID());
 	u_EventSend(P);
 }
