@@ -88,7 +88,6 @@ BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
 	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start6));
 
 	return net_start_result_total;
-
 }
 
 bool CLevel::net_start1()
@@ -106,7 +105,6 @@ bool CLevel::net_start1()
 		else
 			Server = xr_new<xrGameSpyServer>();
 
-		//		if (!strstr(*m_caServerOptions,"/alife")) 
 		if (xr_strcmp(p.m_alife, "alife"))
 		{
 			string64			l_name = "";
@@ -118,9 +116,10 @@ bool CLevel::net_start1()
 
 			m_name = l_name;
 
-			int						id = pApp->Level_ID(l_name);
+			int id = pApp->Level_ID(l_name);
 
-			if (id < 0) {
+			if (id < 0) 
+			{
 				pApp->LoadEnd();
 				Log("Can't find level: ", l_name);
 				net_start_result_total = FALSE;
@@ -140,7 +139,6 @@ bool CLevel::net_start2()
 		{
 			net_start_result_total = false;
 			Msg("! Failed to start server.");
-			//			Console->Execute("main_menu on");
 			return true;
 		}
 		Server->SLS_Default();
@@ -165,7 +163,8 @@ bool CLevel::net_start3()
 		m_caClientOptions = tmp;
 	}
 	//add password string to client, if don't have one
-	if (m_caServerOptions.size()) {
+	if (m_caServerOptions.size()) 
+	{
 		if (strstr(m_caServerOptions.c_str(), "psw=") && !strstr(m_caClientOptions.c_str(), "psw="))
 		{
 			string64	PasswordStr = "";
@@ -195,7 +194,8 @@ bool CLevel::net_start3()
 
 bool CLevel::net_start4()
 {
-	if (!net_start_result_total) return true;
+	if (!net_start_result_total)
+		return true;
 
 	g_loading_events.pop_front();
 
@@ -224,8 +224,9 @@ bool CLevel::net_start5()
 	};
 	return true;
 }
+
 #include "hudmanager.h"
-BOOL				g_start_total_res = TRUE;
+BOOL g_start_total_res = TRUE;
 xrServer::EConnect	g_connect_server_err = xrServer::ErrConnect;
 
 struct LevelLoadFinalizer
@@ -239,21 +240,18 @@ struct LevelLoadFinalizer
 			DEL_INSTANCE(g_pGameLevel);
 			Console->Execute("main_menu on");
 
-			if (g_connect_server_err == xrServer::ErrBELoad)
+			if (g_connect_server_err == xrServer::ErrConnect && !psNET_direct_connect)
 			{
-				MainMenu()->OnLoadError("BattlEye/BEServer.dll");
+				MainMenu()->SwitchToMultiplayerMenu();
 			}
 			else
-				if (g_connect_server_err == xrServer::ErrConnect && !psNET_direct_connect)
+			{
+				if (g_connect_server_err == xrServer::ErrNoLevel)
 				{
 					MainMenu()->SwitchToMultiplayerMenu();
+					MainMenu()->OnLoadError(ln.c_str());
 				}
-				else
-					if (g_connect_server_err == xrServer::ErrNoLevel)
-					{
-						MainMenu()->SwitchToMultiplayerMenu();
-						MainMenu()->OnLoadError(ln.c_str());
-					}
+			}
 		}
 		return true;
 	}
@@ -289,7 +287,6 @@ bool CLevel::net_start6()
 
 	return false;
 }
-
 
 void CLevel::InitializeClientGame(NET_Packet& P)
 {

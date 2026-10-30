@@ -16,9 +16,8 @@ void __cdecl SBCallback(void* sb, SBCallbackReason reason, void* server, void* i
 
 CGameSpy_Browser::CGameSpy_Browser()
 #ifdef PROFILE_CRITICAL_SECTIONS
-	:m_refresh_lock(MUTEX_PROFILE_ID(CGameSpy_Browser::m_refresh_lock))
+	: m_refresh_lock(MUTEX_PROFILE_ID(CGameSpy_Browser::m_refresh_lock))
 #endif // PROFILE_CRITICAL_SECTIONS
-
 {
 	//-------------------------
 	m_hGameSpyDLL = NULL;
@@ -26,10 +25,11 @@ CGameSpy_Browser::CGameSpy_Browser()
 	m_pGSBrowser = NULL;
 	m_pServerList = NULL;
 	//-------------------------
-	LPCSTR			g_name = "xrGameSpy.dll";
+	LPCSTR g_name = "xrGameSpy.dll";
 	Log("Loading DLL:", g_name);
 	m_hGameSpyDLL = LoadLibrary(g_name);
-	if (0 == m_hGameSpyDLL)	R_CHK(GetLastError());
+	if (0 == m_hGameSpyDLL)
+		R_CHK(GetLastError());
 	R_ASSERT2(m_hGameSpyDLL, "GameSpy DLL raised exception during loading or there is no game DLL at all");
 	//-------------------------
 	LoadGameSpy(m_hGameSpyDLL);
@@ -41,7 +41,6 @@ CGameSpy_Browser::CGameSpy_Browser(HMODULE hGameSpyDLL)
 #ifdef PROFILE_CRITICAL_SECTIONS
 	:m_refresh_lock(MUTEX_PROFILE_ID(CGameSpy_Browser::m_refresh_lock))
 #endif // PROFILE_CRITICAL_SECTIONS
-
 {
 	//-------------------------
 	m_hGameSpyDLL = NULL;
@@ -54,7 +53,7 @@ CGameSpy_Browser::CGameSpy_Browser(HMODULE hGameSpyDLL)
 	InitInternalData(hGameSpyDLL);
 };
 
-void	CGameSpy_Browser::InitInternalData(HMODULE hGameSpyDLL)
+void CGameSpy_Browser::InitInternalData(HMODULE hGameSpyDLL)
 {
 	m_pQR2 = xr_new<CGameSpy_QR2>(hGameSpyDLL);
 	m_pQR2->RegisterAdditionalKeys();
@@ -68,10 +67,6 @@ void	CGameSpy_Browser::InitInternalData(HMODULE hGameSpyDLL)
 	{
 		Msg("! Unable to init Server Browser!");
 	}
-	//	else
-	//		Msg("- GS Server Browser Inited!");
-
-
 };
 
 CGameSpy_Browser::~CGameSpy_Browser()
@@ -92,7 +87,7 @@ CGameSpy_Browser::~CGameSpy_Browser()
 	}
 };
 
-void	CGameSpy_Browser::LoadGameSpy(HMODULE hGameSpyDLL)
+void CGameSpy_Browser::LoadGameSpy(HMODULE hGameSpyDLL)
 {
 	GAMESPY_LOAD_FN(xrGS_ServerBrowserNew);
 	GAMESPY_LOAD_FN(xrGS_ServerBrowserFree);
@@ -326,11 +321,12 @@ void CGameSpy_Browser::GetServerInfoByIndex(ServerInfo* pServerInfo, int idx)
 	i->m_aInfos.push_back(GameInfo(t1, tmp));}\
 	else {i->m_aInfos.push_back(GameInfo(t1, *st.translate("mp_si_no")));}}
 
-void	CGameSpy_Browser::ReadServerInfo(ServerInfo* pServerInfo, void* pServer)
+void CGameSpy_Browser::ReadServerInfo(ServerInfo* pServerInfo, void* pServer)
 {
 	CStringTable st;
 
-	if (!pServer || !pServerInfo) return;
+	if (!pServer || !pServerInfo)
+		return;
 	sprintf_s(pServerInfo->m_Address, "%s:%d", xrGS_SBServerGetPublicAddress(pServer), xrGS_SBServerGetPublicQueryPort(pServer));
 	sprintf_s(pServerInfo->m_HostName, "%s", xrGS_SBServerGetPublicAddress(pServer));
 	sprintf_s(pServerInfo->m_ServerName, "%s", xrGS_SBServerGetStringValue(pServer, m_pQR2->xrGS_RegisteredKey(HOSTNAME_KEY), pServerInfo->m_HostName));
@@ -339,11 +335,6 @@ void	CGameSpy_Browser::ReadServerInfo(ServerInfo* pServerInfo, void* pServer)
 	sprintf_s(pServerInfo->m_ServerGameType, "%s", xrGS_SBServerGetStringValue(pServer, m_pQR2->xrGS_RegisteredKey(GAMETYPE_KEY), "Unknown"));
 	pServerInfo->m_bPassword = xrGS_SBServerGetBoolValue(pServer, m_pQR2->xrGS_RegisteredKey(PASSWORD_KEY), SBFalse) == SBTrue;
 	pServerInfo->m_bUserPass = xrGS_SBServerGetBoolValue(pServer, m_pQR2->xrGS_RegisteredKey(G_USER_PASSWORD_KEY), SBFalse) == SBTrue;
-
-#ifdef BATTLEYE
-	pServerInfo->m_bBattlEye = xrGS_SBServerGetBoolValue(pServer, m_pQR2->xrGS_RegisteredKey(G_BATTLEYE_KEY), SBFalse) == SBTrue;
-#endif // BATTLEYE
-
 	pServerInfo->m_Ping = (s16)(xrGS_SBServerGetPing(pServer) & 0xffff);
 	pServerInfo->m_ServerNumPlayers = (s16)xrGS_SBServerGetIntValue(pServer, m_pQR2->xrGS_RegisteredKey(NUMPLAYERS_KEY), 0);
 	pServerInfo->m_ServerMaxPlayers = (s16)xrGS_SBServerGetIntValue(pServer, m_pQR2->xrGS_RegisteredKey(MAXPLAYERS_KEY), 32);
@@ -370,24 +361,15 @@ void	CGameSpy_Browser::ReadServerInfo(ServerInfo* pServerInfo, void* pServer)
 	//-------------------------------------------------------//
 	if (xrGS_SBServerHasFullKeys(pServer) == SBFalse) return;
 
-	//	pServerInfo->m_aInfos.push_back(GameInfo("Version:", pServerInfo->m_ServerVersion));
 	pServerInfo->m_aInfos.push_back(GameInfo(*st.translate("mp_si_servername"), pServerInfo->m_ServerName));
 	pServerInfo->m_aInfos.push_back(GameInfo(*st.translate("mp_si_version"), pServerInfo->m_ServerVersion));
-
-#ifdef BATTLEYE
-	ADD_BOOL_INFO(pServerInfo, pServer, "BattlEye", G_BATTLEYE_KEY);
-#endif // BATTLEYE
 
 	ADD_INT_INFO_N(pServerInfo, pServer, 1, "Max ping", "", G_MAX_PING_KEY);
 	ADD_BOOL_INFO(pServerInfo, pServer, *st.translate("mp_si_maprotation"), G_MAP_ROTATION_KEY);
 
-	pServerInfo->m_aInfos.push_back(
-		GameInfo(*st.translate("mp_si_voting"),
-			(xrGS_SBServerGetBoolValue(pServer, m_pQR2->xrGS_RegisteredKey(G_VOTING_ENABLED_KEY), SBFalse) == SBTrue) ?
-			*st.translate("mp_si_enabled") : *st.translate("mp_si_disabled")));
+	pServerInfo->m_aInfos.push_back(GameInfo(*st.translate("mp_si_voting"), (xrGS_SBServerGetBoolValue(pServer, m_pQR2->xrGS_RegisteredKey(G_VOTING_ENABLED_KEY), SBFalse) == SBTrue) ? *st.translate("mp_si_enabled") : *st.translate("mp_si_disabled")));
 
-	//	ADD_BOOL_INFO(pServerInfo, pServer, *st.translate("mp_si_voting"), G_VOTING_ENABLED_KEY);
-		//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
 	pServerInfo->m_aInfos.push_back(GameInfo(*st.translate("mp_si_spectatormodes"), ""));
 	int SpectrModes = xrGS_SBServerGetIntValue(pServer, m_pQR2->xrGS_RegisteredKey(G_SPECTATOR_MODES_KEY), 0);
 

@@ -11,20 +11,21 @@
 extern u32 g_sv_dwMaxClientPing;
 void __cdecl callback_serverkey(int keyid, void* outbuf, void* userdata)
 {
-	if (!userdata) return;
+	if (!userdata)
+		return;
 	xrGameSpyServer* pServer = (xrGameSpyServer*)userdata;
-	if (!pServer) return;
+	if (!pServer)
+		return;
 	CGameSpy_QR2* pQR2 = pServer->QR2();
-	if (!pQR2) return;
-
-
+	if (!pQR2)
+		return;
 
 	game_sv_mp* gmMP = smart_cast<game_sv_mp*>(pServer->game);
 	game_sv_Deathmatch* gmDM = smart_cast<game_sv_Deathmatch*>(pServer->game);
 	game_sv_TeamDeathmatch* gmTDM = smart_cast<game_sv_TeamDeathmatch*>(pServer->game);
 	game_sv_ArtefactHunt* gmAhunt = smart_cast<game_sv_ArtefactHunt*>(pServer->game);
 
-	string4096		game_version;
+	string4096 game_version;
 
 	switch (keyid)
 	{
@@ -55,20 +56,7 @@ void __cdecl callback_serverkey(int keyid, void* outbuf, void* userdata)
 			pQR2->BufferAdd_Int(outbuf, 0);
 		}
 		break;
-	case G_BATTLEYE_KEY:
-#ifdef BATTLEYE
-		if (g_pGameLevel && Level().battleye_system.server)
-		{
-			pQR2->BufferAdd_Int(outbuf, 1);
-		}
-		else
-		{
-			pQR2->BufferAdd_Int(outbuf, 0);
-		}
-#endif // BATTLEYE
-		break;
 	case HOSTPORT_KEY:		pQR2->BufferAdd_Int(outbuf, pServer->GetPort()); break;
-
 	case DEDICATED_KEY:		pQR2->BufferAdd_Int(outbuf, 0);		break;
 	case GAMETYPE_NAME_KEY: ADD_KEY_VAL(pServer->game, pQR2, BufferAdd_Int, outbuf, Type()); break; //pQR2->BufferAdd_Int(outbuf, pServer->game->Type()); break;
 	case NUMTEAMS_KEY:		ADD_KEY_VAL(gmMP, pQR2, BufferAdd_Int, outbuf, GetNumTeams()); break; //pQR2->BufferAdd_Int(outbuf, gmMP->GetNumTeams()); break;		
@@ -189,9 +177,6 @@ void __cdecl callback_keylist(qr2_key_type keytype, void* keybuffer, void* userd
 		pQR2->KeyBufferAdd(keybuffer, GAMETYPE_NAME_KEY);
 		pQR2->KeyBufferAdd(keybuffer, NUMTEAMS_KEY);
 		pQR2->KeyBufferAdd(keybuffer, G_MAX_PING_KEY);
-#ifdef BATTLEYE
-		pQR2->KeyBufferAdd(keybuffer, G_BATTLEYE_KEY);
-#endif // BATTLEYE
 		//---- game_sv_base ---
 		pQR2->KeyBufferAdd(keybuffer, G_MAP_ROTATION_KEY);
 		pQR2->KeyBufferAdd(keybuffer, G_VOTING_ENABLED_KEY);

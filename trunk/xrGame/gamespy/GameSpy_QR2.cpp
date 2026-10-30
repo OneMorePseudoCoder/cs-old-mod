@@ -4,8 +4,6 @@
 
 #include "GameSpy_QR2_callbacks.h"
 
-//#include "../../xrNetServer/NET_utils.h"
-
 CGameSpy_QR2::CGameSpy_QR2()
 {
 	//-------------------------------
@@ -78,10 +76,6 @@ void	CGameSpy_QR2::RegisterAdditionalKeys()
 	xrGS_qr2_register_key(G_SPECTATOR_MODES_KEY, ("spectatormodes"));
 	xrGS_qr2_register_key(G_MAX_PING_KEY, ("max_ping_limit"));
 	xrGS_qr2_register_key(G_USER_PASSWORD_KEY, ("user_password"));
-#ifdef BATTLEYE
-	xrGS_qr2_register_key(G_BATTLEYE_KEY, ("use_battleye"));
-#endif // BATTLEYE
-
 	//---- game_sv_deathmatch ----
 	xrGS_qr2_register_key(G_FRAG_LIMIT_KEY, ("fraglimit"));
 	xrGS_qr2_register_key(G_TIME_LIMIT_KEY, ("timelimit"));

@@ -1,18 +1,19 @@
 #pragma once
 
 #include "GameSpy_FuncDefs.h"
-//#include "GameSpy_QR2.h"
 
 class CServerList;
 class CGameSpy_QR2;
 
-struct GameInfo {
+struct GameInfo 
+{
 	shared_str	InfoName;
 	shared_str	InfoData;
 	GameInfo(LPCSTR Name, LPCSTR Data) { InfoName._set(Name); InfoData._set(Data); };
 };
 
-struct PlayerInfo {
+struct PlayerInfo 
+{
 	string128	Name;
 	s16			Frags;
 	u16			Deaths;
@@ -27,8 +28,8 @@ struct TeamInfo
 	u8			Score;
 };
 
-struct ServerInfo {
-	//	SBServer pSBServer;
+struct ServerInfo 
+{
 	string128	m_Address;
 	string128	m_HostName;
 	string128	m_ServerName;
@@ -45,7 +46,6 @@ struct ServerInfo {
 	s16						m_s16FFire;
 	bool					m_bPassword;
 	bool					m_bUserPass;
-	bool					m_bBattlEye;
 	s16						m_Ping;
 	s16						m_Port, m_HPort;
 
@@ -61,14 +61,12 @@ struct ServerInfo {
 		strcpy(m_Address, NewAddress);
 	};
 
-	bool			operator	==		(LPCSTR Address) { int res = xr_strcmp(m_Address, Address); return	res == 0; };
+	bool operator==(LPCSTR Address) { int res = xr_strcmp(m_Address, Address); return res == 0; };
 };
 
 class CGameSpy_Browser
 {
 private:
-	//	string16	m_SecretKey;
-
 	HMODULE	m_hGameSpyDLL;
 	void* m_pGSBrowser;
 	CGameSpy_QR2* m_pQR2;
@@ -114,7 +112,6 @@ public:
 
 private:
 	//------------------------------- GameSpy_ServerBrowser -----------------------
-//	GAMESPY_FN_VAR_DECL(void*, ServerBrowserNew, (const char *queryForGamename, const char *queryFromGamename, const char *queryFromKey, int queryFromVersion, int maxConcUpdates, int queryVersion, SBBool bLAN_Only, fnSBCallback callback, void *instance));
 	GAMESPY_FN_VAR_DECL(void*, ServerBrowserNew, (SBBool bLAN_Only, fnSBCallback callback, void* instance));
 	GAMESPY_FN_VAR_DECL(void, ServerBrowserFree, (void* sb));
 	GAMESPY_FN_VAR_DECL(void, ServerBrowserClear, (void* sb));
@@ -122,10 +119,8 @@ private:
 	GAMESPY_FN_VAR_DECL(SBError, ServerBrowserThink, (void* sb));
 	GAMESPY_FN_VAR_DECL(SBState, ServerBrowserState, (void* sb));
 	GAMESPY_FN_VAR_DECL(void, ServerBrowserHalt, (void* sb));
-	//	GAMESPY_FN_VAR_DECL(SBError, ServerBrowserUpdate, (void* sb, SBBool async, SBBool disconnectOnComplete, const unsigned char *basicFields, int numBasicFields, const char *serverFilter));
 	GAMESPY_FN_VAR_DECL(SBError, ServerBrowserUpdate, (void* sb, SBBool async, SBBool disconnectOnComplete, const char* serverFilter));
 
-	//	GAMESPY_FN_VAR_DECL(SBError, ServerBrowserLANUpdate, (void* sb, SBBool async, unsigned short startSearchPort, unsigned short endSearchPort));
 	GAMESPY_FN_VAR_DECL(SBError, ServerBrowserLANUpdate, (void* sb, SBBool async));
 
 	GAMESPY_FN_VAR_DECL(int, ServerBrowserCount, (void* sb));

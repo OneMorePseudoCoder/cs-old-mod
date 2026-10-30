@@ -14,7 +14,6 @@
 #include "alife_space.h"
 #include "xrDebug.h"
 #include "xrServer.h"
-#include "battleye_system.h"
 
 class	CHUDManager;
 class	CParticlesObject;
@@ -178,12 +177,6 @@ public:
 	xrServer* Server;
 	GlobalFeelTouch				m_feel_deny;
 
-
-#ifdef BATTLEYE
-	BattlEyeSystem				battleye_system;
-	virtual bool				TestLoadBEClient();
-#endif // BATTLEYE
-
 private:
 	// preload sounds registry
 	DEFINE_MAP(shared_str, ref_sound, SoundRegistryMap, SoundRegistryMapIt);
@@ -304,13 +297,13 @@ public:
 	//игровое время в отформатированном виде
 	void				GetGameDateTime(u32& year, u32& month, u32& day, u32& hours, u32& mins, u32& secs, u32& milisecs);
 
-	float				GetGameTimeFactor();
-	void				SetGameTimeFactor(const float fTimeFactor);
-	void				SetGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor);
-	void				SetEnvironmentGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor);
+	float GetGameTimeFactor();
+	void SetGameTimeFactor(const float fTimeFactor);
+	void SetGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor);
+	void SetEnvironmentGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor);
 	//	void				SetGameTime				(ALife::_TIME_ID GameTime);
 
-		// gets current daytime [0..23]
+	// gets current daytime [0..23]
 	u8					GetDayTime();
 	u32					GetGameDayTimeMS();
 	float				GetGameDayTimeSec();
@@ -324,7 +317,7 @@ public:
 	CMapManager& MapManager() { return *m_map_manager; }
 	//	CFogOfWarMngr&			FogOfWarMngr				()	{return *m_pFogOfWarMngr;}
 
-		//работа с пулями
+	//работа с пулями
 protected:
 	CBulletManager* m_pBulletManager;
 public:
@@ -336,9 +329,10 @@ public:
 	CSE_Abstract* spawn_item(LPCSTR section, const Fvector& position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
 
 protected:
-	u32		m_dwCL_PingDeltaSend;
-	u32		m_dwCL_PingLastSendTime;
-	u32		m_dwRealPing;
+	u32 m_dwCL_PingDeltaSend;
+	u32 m_dwCL_PingLastSendTime;
+	u32 m_dwRealPing;
+
 public:
 	virtual	u32				GetRealPing() { return m_dwRealPing; };
 
@@ -401,11 +395,13 @@ IC CPHCommander& CLevel::ph_commander()
 	VERIFY(m_ph_commander);
 	return *m_ph_commander;
 }
+
 IC CPHCommander& CLevel::ph_commander_scripts()
 {
 	VERIFY(m_ph_commander_scripts);
 	return *m_ph_commander_scripts;
 }
+
 //by Mad Max 
 IC bool					OnServer() { return Level().IsServer(); }
 IC bool					OnClient() { return Level().IsClient(); }

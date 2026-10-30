@@ -9,11 +9,12 @@
 
 using namespace luabind;
 
-bool CUIListWnd::AddItem_script(CUIListItem* item) {
+bool CUIListWnd::AddItem_script(CUIListItem* item) 
+{
 	return AddItem(item, -1);
 }
 
-BOOL	xrRender_test_hw();
+BOOL xrRender_test_hw();
 bool xrRender_test_hw_script()
 {
 	return !!xrRender_test_hw();
@@ -23,17 +24,14 @@ struct CUIListItemWrapper : public CUIListItem, public luabind::wrap_base {};
 
 struct CUIListItemExWrapper : public CUIListItemEx, public luabind::wrap_base {};
 
-
 #pragma optimize("s",on)
 void CUIListWnd::script_register(lua_State* L)
 {
-
 	module(L)
 		[
 
 			class_<CUIListWnd, CUIWindow>("CUIListWnd")
 				.def(constructor<>())
-				//		.def("AddText",					&CUIListWnd::AddText_script)
 				.def("AddItem", &CUIListWnd::AddItem_script, adopt(_2))
 				.def("RemoveItem", &CUIListWnd::RemoveItem)
 				.def("RemoveAll", &CUIListWnd::RemoveAll)
@@ -76,9 +74,6 @@ void CUIListWnd::script_register(lua_State* L)
 				.def_readwrite("with_pass", &SServerFilters::with_pass)
 				.def_readwrite("without_pass", &SServerFilters::without_pass)
 				.def_readwrite("without_ff", &SServerFilters::without_ff)
-#ifdef BATTLEYE
-				.def_readwrite("with_battleye", &SServerFilters::with_battleye)
-#endif // BATTLEYE
 				.def_readwrite("listen_servers", &SServerFilters::listen_servers),
 
 				class_<CServerList, CUIWindow>("CServerList")

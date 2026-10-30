@@ -4,13 +4,11 @@
 #include "net_server.h"
 #include "net_messages.h"
 #include "NET_Log.h"
-#include "../xrGame/battleye.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
 #include "dxerr.h"
-//#pragma warning(pop)
 
 const GUID CLSID_DirectPlay8Client =
 { 0x743f1dc6, 0x5aba, 0x429f, { 0x8b, 0xdf, 0xc5, 0x4d, 0x03, 0x25, 0x3d, 0xc2 } };
@@ -41,7 +39,6 @@ const GUID CLSID_DirectPlay8NATResolver =
  ****************************************************************************/
 
 typedef REFIID	DP8REFIID;
-
 
 // {5102DACD-241B-11d3-AEA7-006097B01411}
 const GUID IID_IDirectPlay8Client =
@@ -291,22 +288,19 @@ IPureClient::_SendTo_LL(const void* data, u32 size, u32 flags, u32 timeout)
 
 //------------------------------------------------------------------------------
 
-void  IPureClient::_Recieve(const void* data, u32 data_size, u32 /*param*/)
+void IPureClient::_Recieve(const void* data, u32 data_size, u32 /*param*/)
 {
 	MSYS_PING* cfg = (MSYS_PING*)data;
 
-	if ((data_size > 2 * sizeof(u32))
-		&& (cfg->sign1 == 0x12071980)
-		&& (cfg->sign2 == 0x26111975)
-		)
+	if ((data_size > 2 * sizeof(u32)) && (cfg->sign1 == 0x12071980) && (cfg->sign2 == 0x26111975))
 	{
 		// Internal system message
 		if ((data_size == sizeof(MSYS_PING)))
 		{
 			// It is reverted(server) ping
-			u32		    time = TimerAsync(device_timer);
-			u32		    ping = time - (cfg->dwTime_ClientSend);
-			u32		    delta = cfg->dwTime_Server + ping / 2 - time;
+			u32 time = TimerAsync(device_timer);
+			u32 ping = time - (cfg->dwTime_ClientSend);
+			u32 delta = cfg->dwTime_Server + ping / 2 - time;
 
 			net_DeltaArray.push(delta);
 			Sync_Average();
@@ -316,16 +310,6 @@ void  IPureClient::_Recieve(const void* data, u32 data_size, u32 /*param*/)
 		if (data_size == sizeof(MSYS_CONFIG))
 		{
 			MSYS_CONFIG* msys_cfg = (MSYS_CONFIG*)data;
-			if (msys_cfg->is_battleye)
-			{
-#ifdef BATTLEYE
-				if (!TestLoadBEClient())
-				{
-					net_Connected = EnmConnectionFails;
-					return;
-				}
-#endif // BATTLEYE
-			}
 			net_Connected = EnmConnectionCompleted;
 			return;
 		}
@@ -335,7 +319,6 @@ void  IPureClient::_Recieve(const void* data, u32 data_size, u32 /*param*/)
 	else if (net_Connected == EnmConnectionCompleted)
 	{
 		// one of the messages - decompress it
-
 		if (psNET_Flags.test(NETFLAG_LOG_CL_PACKETS))
 		{
 			if (!pClNetLog)

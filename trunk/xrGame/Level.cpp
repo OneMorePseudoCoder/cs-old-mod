@@ -44,17 +44,17 @@
 #include "../xr_3da/XR_IOConsole.h"
 
 #ifdef DEBUG
-#	include "level_debug.h"
-#	include "ai/stalker/ai_stalker.h"
-#	include "debug_renderer.h"
-#	include "physicobject.h"
+#include "level_debug.h"
+#include "ai/stalker/ai_stalker.h"
+#include "debug_renderer.h"
+#include "physicobject.h"
 #endif
 
 extern BOOL	g_bDebugDumpPhysicsStep;
 
 CPHWorld* ph_world = 0;
-float		g_cl_lvInterp = 0;
-u32			lvInterpSteps = 0;
+float g_cl_lvInterp = 0;
+u32 lvInterpSteps = 0;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ CLevel::~CLevel()
 
 	//by Dandy
 	//destroy fog of war
-//	xr_delete					(m_pFogOfWar);
+	//	xr_delete					(m_pFogOfWar);
 	//destroy bullet manager
 	xr_delete(m_pBulletManager);
 	//-----------------------------------------------------------
@@ -241,11 +241,12 @@ void CLevel::GetLevelInfo(CServerInfo* si)
 void CLevel::PrefetchSound(LPCSTR name)
 {
 	// preprocess sound name
-	string_path					tmp;
+	string_path tmp;
 	strcpy_s(tmp, name);
 	xr_strlwr(tmp);
-	if (strext(tmp))			*strext(tmp) = 0;
-	shared_str	snd_name = tmp;
+	if (strext(tmp))
+		*strext(tmp) = 0;
+	shared_str snd_name = tmp;
 	// find in registry
 	SoundRegistryMapIt it = sound_registry.find(snd_name);
 	// if find failed - preload sound
@@ -952,27 +953,14 @@ u32	GameID()
 
 #include "../xr_3da/IGame_Persistent.h"
 
-bool	IsGameTypeSingle()
+bool IsGameTypeSingle()
 {
 	return g_pGamePersistent->GameType() == GAME_SINGLE || g_pGamePersistent->GameType() == GAME_ANY;
 }
 
-#ifdef BATTLEYE
+GlobalFeelTouch::GlobalFeelTouch() {}
 
-bool CLevel::TestLoadBEClient()
-{
-	return battleye_system.TestLoadClient();
-}
-
-#endif // BATTLEYE
-
-GlobalFeelTouch::GlobalFeelTouch()
-{
-}
-
-GlobalFeelTouch::~GlobalFeelTouch()
-{
-}
+GlobalFeelTouch::~GlobalFeelTouch() {}
 
 struct delete_predicate_by_time : public std::binary_function<Feel::Touch::DenyTouch, DWORD, bool>
 {
@@ -983,6 +971,7 @@ struct delete_predicate_by_time : public std::binary_function<Feel::Touch::DenyT
 		return false;
 	};
 };
+
 struct objects_ptrs_equal : public std::binary_function<Feel::Touch::DenyTouch, CObject const*, bool>
 {
 	bool operator() (Feel::Touch::DenyTouch const& left, CObject const* const right) const
@@ -996,18 +985,13 @@ struct objects_ptrs_equal : public std::binary_function<Feel::Touch::DenyTouch, 
 void GlobalFeelTouch::update()
 {
 	//we ignore P and R arguments, we need just delete evaled denied objects...
-	xr_vector<Feel::Touch::DenyTouch>::iterator new_end =
-		std::remove_if(feel_touch_disable.begin(), feel_touch_disable.end(),
-			std::bind2nd(delete_predicate_by_time(), Device.dwTimeGlobal));
+	xr_vector<Feel::Touch::DenyTouch>::iterator new_end = std::remove_if(feel_touch_disable.begin(), feel_touch_disable.end(), std::bind2nd(delete_predicate_by_time(), Device.dwTimeGlobal));
 	feel_touch_disable.erase(new_end, feel_touch_disable.end());
 }
 
 bool GlobalFeelTouch::is_object_denied(CObject const* O)
 {
-	/*Fvector temp_vector;
-	feel_touch_update(temp_vector, 0.f);*/
-	if (std::find_if(feel_touch_disable.begin(), feel_touch_disable.end(),
-		std::bind2nd(objects_ptrs_equal(), O)) == feel_touch_disable.end())
+	if (std::find_if(feel_touch_disable.begin(), feel_touch_disable.end(), std::bind2nd(objects_ptrs_equal(), O)) == feel_touch_disable.end())
 	{
 		return false;
 	}

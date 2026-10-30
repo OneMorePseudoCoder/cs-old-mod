@@ -6,8 +6,6 @@
 #include "UIFrameWindow.h"
 #include "UIEditBox.h"
 #include "UI3tButton.h"
-#include "../battleye.h"
-
 
 class CUIXml;
 class CGameSpy_Browser;
@@ -22,40 +20,41 @@ struct ServerInfo;
 #define DIF_HEIGHT		180
 #define LST_COLUMN_COUNT	7
 
-class SServerFilters {
+class SServerFilters 
+{
 public:
-	bool	empty;
-	bool	full;
-	bool	with_pass;
-	bool	without_pass;
-	bool	without_ff;
-	bool	with_battleye;
-	bool	listen_servers;
+	bool empty;
+	bool full;
+	bool with_pass;
+	bool without_pass;
+	bool without_ff;
+	bool listen_servers;
 };
 
-class CServerList : public CUIWindow {
+class CServerList : public CUIWindow 
+{
 public:
 	CServerList();
 	virtual ~CServerList();
 
-	virtual void 	Init(float x, float y, float width, float height);
-	virtual void 	Update();
-	virtual void 	SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-	void 	InitFromXml(CUIXml& xml_doc, LPCSTR path);
-	void 	InitHeader();
-	void 	InitSeparator();
-	void 	AddServerToList(ServerInfo* pServerInfo);
-	void 	UpdateServerInList(ServerInfo* pServerInfo, int index);
-	void 	UpdateServerInList(ServerInfo* pServerInfo, CUIListItemServer* pItem);
-	void 	ConnectToSelected();
-	void 	SetFilters(SServerFilters& sf);
-	void 	SetPlayerName(LPCSTR name);
-	void 	SetSortFunc(LPCSTR func_name, bool make_sort);
-	void	NetRadioChanged(bool Local);
-	virtual void	RefreshGameSpyList(bool Local);
-	void	RefreshQuick();
-	void	ShowServerInfo();
-	virtual	void	RefreshList();
+	virtual void Init(float x, float y, float width, float height);
+	virtual void Update();
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	void InitFromXml(CUIXml& xml_doc, LPCSTR path);
+	void InitHeader();
+	void InitSeparator();
+	void AddServerToList(ServerInfo* pServerInfo);
+	void UpdateServerInList(ServerInfo* pServerInfo, int index);
+	void UpdateServerInList(ServerInfo* pServerInfo, CUIListItemServer* pItem);
+	void ConnectToSelected();
+	void SetFilters(SServerFilters& sf);
+	void SetPlayerName(LPCSTR name);
+	void SetSortFunc(LPCSTR func_name, bool make_sort);
+	void NetRadioChanged(bool Local);
+	virtual void RefreshGameSpyList(bool Local);
+	void RefreshQuick();
+	void ShowServerInfo();
+	virtual	void RefreshList();
 
 protected:
 	bool IsValidItem(ServerInfo& item);
@@ -74,12 +73,12 @@ protected:
 	void ResetCurItem();
 	bool NeedToRefreshCurServer();
 
-	static	bool sort_by_ServerName(int p1, int p2);
-	static	bool sort_by_Map(int p1, int p2);
-	static	bool sort_by_GameType(int p1, int p2);
-	static	bool sort_by_Players(int p1, int p2);
-	static	bool sort_by_Ping(int p1, int p2);
-	static	bool sort_by_Version(int p1, int p2);
+	static bool sort_by_ServerName(int p1, int p2);
+	static bool sort_by_Map(int p1, int p2);
+	static bool sort_by_GameType(int p1, int p2);
+	static bool sort_by_Players(int p1, int p2);
+	static bool sort_by_Ping(int p1, int p2);
+	static bool sort_by_Version(int p1, int p2);
 
 	CUIColorAnimatorWrapper* m_pAnimation;
 
@@ -92,31 +91,32 @@ protected:
 	CUIFrameLineWnd	m_header_frames[LST_COLUMN_COUNT];
 	CUIEditBox		m_edit_gs_filter;
 	xr_string		m_playerName;
-	bool			m_bShowServerInfo;
-	bool			m_bAnimation;
-	float			m_fListH[2];
-	float			m_fEditPos[2];
-	int				m_cur_item;
-	bool			m_b_local;
+	bool m_bShowServerInfo;
+	bool m_bAnimation;
+	float m_fListH[2];
+	float m_fEditPos[2];
+	int m_cur_item;
+	bool m_b_local;
 
 	CUIMessageBoxEx* m_message_box;
 
 	CGameSpy_Browser* m_GSBrowser;
 
-	shared_str						m_sort_func;
-	xr_vector<int>					m_tmp_srv_lst;
-	struct SrvItem {
+	shared_str m_sort_func;
+	xr_vector<int> m_tmp_srv_lst;
+	struct SrvItem 
+	{
 		CUIListItemServer* m_ui_item;
-		bool				m_busy;
+		bool m_busy;
 	};
 	CUIListItemServer* GetFreeItem();
-	void						DestroySrvItems();
-	void						ClearSrvItems();
+	void DestroySrvItems();
+	void ClearSrvItems();
 
-	typedef xr_vector<SrvItem>	SrvItems;
-	typedef SrvItems::iterator	SrvItems_It;
-	SrvItems					m_items_cache;
-	u32							m_last_retreived_index;
-	u32							m_need_refresh_fr;
-	void						RefreshList_internal();
+	typedef xr_vector<SrvItem> SrvItems;
+	typedef SrvItems::iterator SrvItems_It;
+	SrvItems m_items_cache;
+	u32 m_last_retreived_index;
+	u32 m_need_refresh_fr;
+	void RefreshList_internal();
 };

@@ -126,10 +126,6 @@ void CLevel::ClientSend()
 			return;
 	};
 
-#ifdef BATTLEYE
-	battleye_system.UpdateClient();
-#endif // BATTLEYE
-
 	NET_Packet P;
 	u32 start = 0;
 

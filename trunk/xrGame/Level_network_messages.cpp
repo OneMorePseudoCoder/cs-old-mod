@@ -16,7 +16,6 @@
 
 void CLevel::ClientReceive()
 {
-
 	Demo_StartFrame();
 
 	Demo_Update();
@@ -53,22 +52,19 @@ void CLevel::ClientReceive()
 		{
 			if (!m_bGameConfigStarted || !bReady)
 			{
-				Msg("Unconventional M_SPAWN received : cgf[%s] | bReady[%s]",
-					(m_bGameConfigStarted) ? "true" : "false",
-					(bReady) ? "true" : "false");
+				Msg("Unconventional M_SPAWN received : cgf[%s] | bReady[%s]", (m_bGameConfigStarted) ? "true" : "false", (bReady) ? "true" : "false");
 				break;
 			}
-			/*/
-			cl_Process_Spawn(*P);
-			/*/
+
 			game_events->insert(*P);
-			if (g_bDebugEvents)		ProcessGameEvents();
-			//*/
+			if (g_bDebugEvents)
+				ProcessGameEvents();
 		}
 		break;
 		case M_EVENT:
 			game_events->insert(*P);
-			if (g_bDebugEvents)		ProcessGameEvents();
+			if (g_bDebugEvents)
+				ProcessGameEvents();
 			break;
 		case M_EVENT_PACK:
 			NET_Packet	tmpP;
@@ -79,7 +75,8 @@ void CLevel::ClientReceive()
 				tmpP.timeReceive = P->timeReceive;
 
 				game_events->insert(tmpP);
-				if (g_bDebugEvents)		ProcessGameEvents();
+				if (g_bDebugEvents)
+					ProcessGameEvents();
 			};
 			break;
 		case M_UPDATE:
@@ -107,19 +104,17 @@ void CLevel::ClientReceive()
 
 			u32 NumSteps = ph_world->CalcNumSteps(dTime);
 			SetNumCrSteps(NumSteps);
-		}break;
-		//		case M_UPDATE_OBJECTS:
-		//			{
-		//				Objects.net_Import		(P);
-		//			}break;
-				//----------- for E3 -----------------------------
+		}
+		break;
 		case M_CL_UPDATE:
 		{
-			if (OnClient()) break;
+			if (OnClient())
+				break;
 			P->r_u16(ID);
 			u32 Ping = P->r_u32();
 			CGameObject* O = smart_cast<CGameObject*>(Objects.net_Find(ID));
-			if (0 == O)		break;
+			if (0 == O)	
+				break;
 			O->net_Import(*P);
 			//---------------------------------------------------
 			UpdateDeltaUpd(timeServer());
@@ -131,9 +126,6 @@ void CLevel::ClientReceive()
 			u32 dTime = 0;
 			if ((Level().timeServer() + Ping) < P->timeReceive)
 			{
-#ifdef DEBUG
-				//					Msg("! TimeServer[%d] < TimeReceive[%d]", Level().timeServer(), P->timeReceive);
-#endif
 				dTime = Ping;
 			}
 			else
@@ -143,8 +135,8 @@ void CLevel::ClientReceive()
 
 			O->CrPr_SetActivationStep(u32(ph_world->m_steps_num) - NumSteps);
 			AddActor_To_Actors4CrPr(O);
-
-		}break;
+		}
+		break;
 		case M_MOVE_PLAYERS:
 		{
 			u8 Count = P->r_u8();
@@ -156,14 +148,16 @@ void CLevel::ClientReceive()
 				P->r_vec3(NewDir);
 
 				CActor* OActor = smart_cast<CActor*>(Objects.net_Find(_ID));
-				if (0 == OActor)		break;
+				if (0 == OActor)
+					break;
 				OActor->MoveActor(NewPos, NewDir);
 			};
 
 			NET_Packet PRespond;
 			PRespond.w_begin(M_MOVE_PLAYERS_RESPOND);
 			Send(PRespond, net_flags(TRUE, TRUE));
-		}break;
+		}
+		break;
 		//------------------------------------------------
 		case M_CL_INPUT:
 		{
@@ -171,9 +165,10 @@ void CLevel::ClientReceive()
 			CObject* O = Objects.net_Find(ID);
 			if (0 == O)		break;
 			O->net_ImportInput(*P);
-		}break;
+		}
+		break;
 		//---------------------------------------------------
-		case 	M_SV_CONFIG_NEW_CLIENT:
+		case M_SV_CONFIG_NEW_CLIENT:
 			InitializeClientGame(*P);
 			break;
 		case M_SV_CONFIG_GAME:
@@ -203,7 +198,7 @@ void CLevel::ClientReceive()
 		break;
 		case M_CHAT:
 		{
-			char	buffer[256];
+			char buffer[256];
 			P->r_stringZ(buffer);
 			Msg("- %s", buffer);
 		}
@@ -212,14 +207,15 @@ void CLevel::ClientReceive()
 		{
 			if (!game) break;
 			Game().OnGameMessage(*P);
-		}break;
+		}
+		break;
 		case M_RELOAD_GAME:
 		case M_LOAD_GAME:
 		case M_CHANGE_LEVEL:
 		{
 			if (m_type == M_LOAD_GAME)
 			{
-				string256						saved_name;
+				string256 saved_name;
 				P->r_stringZ(saved_name);
 				if (xr_strlen(saved_name) && ai().get_alife())
 				{
@@ -227,45 +223,52 @@ void CLevel::ClientReceive()
 					if (wrapper.level_id() == ai().level_graph().level_id())
 					{
 						Engine.Event.Defer("Game:QuickLoad", size_t(xr_strdup(saved_name)), 0);
-
 						break;
 					}
 				}
 			}
 			Engine.Event.Defer("KERNEL:disconnect");
 			Engine.Event.Defer("KERNEL:start", size_t(xr_strdup(*m_caServerOptions)), size_t(xr_strdup(*m_caClientOptions)));
-		}break;
+		}
+		break;
 		case M_SAVE_GAME:
 		{
 			ClientSave();
-		}break;
+		}
+		break;
 		case M_GAMESPY_CDKEY_VALIDATION_CHALLENGE:
 		{
 			OnGameSpyChallenge(P);
-		}break;
+		}
+		break;
 		case M_AUTH_CHALLENGE:
 		{
 			OnBuildVersionChallenge();
-		}break;
+		}
+		break;
 		case M_CLIENT_CONNECT_RESULT:
 		{
 			OnConnectResult(P);
-		}break;
+		}
+		break;
 		case M_CHAT_MESSAGE:
 		{
 			if (!game) break;
 			Game().OnChatMessage(P);
-		}break;
+		}
+		break;
 		case M_CLIENT_WARN:
 		{
 			if (!game) break;
 			Game().OnWarnMessage(P);
-		}break;
+		}
+		break;
 		case M_REMOTE_CONTROL_AUTH:
 		case M_REMOTE_CONTROL_CMD:
 		{
 			Game().OnRadminMessage(m_type, P);
-		}break;
+		}
+		break;
 		case M_CHANGE_LEVEL_GAME:
 		{
 			Msg("- M_CHANGE_LEVEL_GAME Received");
@@ -278,7 +281,6 @@ void CLevel::ClientReceive()
 			else
 			{
 				const char* m_SO = m_caServerOptions.c_str();
-				//					const char* m_CO = m_caClientOptions.c_str();
 
 				m_SO = strchr(m_SO, '/'); if (m_SO) m_SO++;
 				m_SO = strchr(m_SO, '/');
@@ -292,50 +294,49 @@ void CLevel::ClientReceive()
 				string4096 NewServerOptions = "";
 				sprintf_s(NewServerOptions, "%s/%s", LevelName, GameType);
 
-				if (m_SO) strcat(NewServerOptions, m_SO);
+				if (m_SO)
+					strcat(NewServerOptions, m_SO);
 				m_caServerOptions = NewServerOptions;
 
 				Engine.Event.Defer("KERNEL:disconnect");
 				Engine.Event.Defer("KERNEL:start", size_t(xr_strdup(*m_caServerOptions)), size_t(xr_strdup(*m_caClientOptions)));
 			};
-		}break;
+		}
+		break;
 		case M_CHANGE_SELF_NAME:
 		{
 			net_OnChangeSelfName(P);
-		}break;
+		}
+		break;
 		case M_BULLET_CHECK_RESPOND:
 		{
-			if (!game) break;
+			if (!game)
+				break;
 			if (GameID() != GAME_SINGLE)
 				Game().m_WeaponUsageStatistic->On_Check_Respond(P);
-		}break;
+		}
+		break;
 		case M_STATISTIC_UPDATE:
 		{
 			if (!game) break;
 			if (GameID() != GAME_SINGLE)
 				Game().m_WeaponUsageStatistic->OnUpdateRequest(P);
-		}break;
+		}
+		break;
 		case M_STATISTIC_UPDATE_RESPOND:
 		{
 			if (!game) break;
 			if (GameID() != GAME_SINGLE)
 				Game().m_WeaponUsageStatistic->OnUpdateRespond(P);
-		}break;
-		case M_BATTLEYE:
-		{
-#ifdef BATTLEYE
-			battleye_system.ReadPacketClient(P);
-#endif // BATTLEYE
-		}break;
+		}
+		break;
 		}
 
 		net_msg_Release();
 	}
-
-	//	if (!g_bDebugEvents) ProcessGameSpawns();
 }
 
-void				CLevel::OnMessage(void* data, u32 size)
+void CLevel::OnMessage(void* data, u32 size)
 {
 	DemoCS.Enter();
 
@@ -349,7 +350,6 @@ void				CLevel::OnMessage(void* data, u32 size)
 
 		if (!m_aDemoData.empty() && net_IsSyncronised())
 		{
-			//			NET_Packet *P = &(m_aDemoData.front());
 			DemoDataStruct* P = &(m_aDemoData.front());
 			u32 CurTime = timeServer_Async();
 			timeServer_UserDelta(P->m_dwTimeReceive - CurTime);
@@ -378,7 +378,8 @@ NET_Packet* CLevel::net_msg_Retreive()
 	DemoCS.Enter();
 
 	P = IPureClient::net_msg_Retreive();
-	if (!P) Demo_EndFrame();
+	if (!P)
+		Demo_EndFrame();
 
 	DemoCS.Leave();
 

@@ -3,7 +3,6 @@
 #define MAX_REGISTERED_KEYS 254
 #define NUM_RESERVED_KEYS 50
 
-
 #define HOSTNAME_KEY		1
 #define GAMENAME_KEY		2
 #define GAMEVER_KEY			3
@@ -82,5 +81,5 @@
 #define T_SCORE_T_KEY							132
 
 #define	G_MAX_PING_KEY							133
-#define	G_BATTLEYE_KEY							134
+//#define	G_BATTLEYE_KEY							134
 #define	G_USER_PASSWORD_KEY						135

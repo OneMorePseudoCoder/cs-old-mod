@@ -38,9 +38,11 @@ void xrServer::OnCL_Disconnected(IClient* CL)
 			if (entity->owner == CL)	PerformMigration(entity, (xrClientData*)CL, SelectBestClientToMigrateTo(entity, TRUE));
 		}
 	}
-	else {
+	else 
+	{
 		// Destroy entities
-		while (!entities.empty()) {
+		while (!entities.empty()) 
+		{
 			CSE_Abstract* entity = entities.begin()->second;
 			entity_Destroy(entity);
 		}
@@ -48,12 +50,4 @@ void xrServer::OnCL_Disconnected(IClient* CL)
 	csPlayers.Leave();
 
 	Server_Client_Check(CL);
-
-#ifdef BATTLEYE
-	if (g_pGameLevel && Level().battleye_system.server)
-	{
-		Level().battleye_system.server->RemovePlayer(CL->ID.value());
-	}
-#endif // BATTLEYE
-
 }

@@ -6,7 +6,8 @@
 // CL	== client 2 server message
 // SV	== server 2 client message
 
-enum {
+enum 
+{
 	M_UPDATE = 0,	// DUAL: Update state
 	M_SPAWN,					// DUAL: Spawning, full state
 
@@ -65,13 +66,13 @@ enum {
 	M_CHANGE_SELF_NAME,
 	M_REMOTE_CONTROL_AUTH,
 	M_REMOTE_CONTROL_CMD,
-	M_BATTLEYE,
 	M_MAP_SYNC,
 
 	MSG_FORCEDWORD = u32(-1)
 };
 
-enum {
+enum 
+{
 	GE_RESPAWN,
 	GE_OWNERSHIP_TAKE,			// DUAL: Client request for ownership of an item
 	GE_OWNERSHIP_TAKE_MP_FORCED,
@@ -89,7 +90,6 @@ enum {
 	GE_REMOVE_ALL_RESTRICTIONS,
 
 	GE_BUY,
-
 
 	GE_INFO_TRANSFER,			//transfer _new_ info on PDA
 
@@ -145,7 +145,8 @@ enum {
 };
 
 
-enum EGameMessages {  //game_cl <----> game_sv messages
+enum EGameMessages 
+{
 	GAME_EVENT_PLAYER_READY,
 	GAME_EVENT_PLAYER_KILL,			//player wants to die
 	GAME_EVENT_PLAYER_BUY_FINISHED,	//player end to buy items
@@ -187,7 +188,6 @@ enum EGameMessages {  //game_cl <----> game_sv messages
 	GAME_EVENT_VOTE_NO,
 	GAME_EVENT_VOTE_STOP,
 	GAME_EVENT_VOTE_END,
-	//	GAME_EVENT_VOTE_PLAYER_VOTED,
 
 	GAME_EVENT_PLAYER_AUTH,
 	GAME_EVENT_PLAYER_NAME,

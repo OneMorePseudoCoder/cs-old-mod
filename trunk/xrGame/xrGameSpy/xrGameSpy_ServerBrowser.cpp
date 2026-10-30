@@ -4,29 +4,24 @@
 
 #include "xrGameSpy_ServerBrowser.h"
 #include "gamespy/qr2/qr2regkeys.h"
-#include "../battleye.h"
 
 #define GAMETYPE_NAME_KEY						100
 #define	DEDICATED_KEY							101
-#define	G_BATTLEYE_KEY							134
 #define	G_USER_PASSWORD_KEY						135
 
 static unsigned char Fields_Of_Interest[] =
 {
-		HOSTNAME_KEY,
-		HOSTPORT_KEY,
-		NUMPLAYERS_KEY,
-		MAXPLAYERS_KEY,
-		MAPNAME_KEY,
-		GAMETYPE_KEY,
-		GAMEVER_KEY,
-		PASSWORD_KEY,
-		G_USER_PASSWORD_KEY,
-#ifdef BATTLEYE
-		G_BATTLEYE_KEY,
-#endif // BATTLEYE
-		DEDICATED_KEY,
-		GAMETYPE_NAME_KEY
+	HOSTNAME_KEY,
+	HOSTPORT_KEY,
+	NUMPLAYERS_KEY,
+	MAXPLAYERS_KEY,
+	MAPNAME_KEY,
+	GAMETYPE_KEY,
+	GAMEVER_KEY,
+	PASSWORD_KEY,
+	G_USER_PASSWORD_KEY,
+	DEDICATED_KEY,
+	GAMETYPE_NAME_KEY
 };
 
 XRGAMESPY_API int xrGS_GetQueryVersion()
@@ -34,10 +29,8 @@ XRGAMESPY_API int xrGS_GetQueryVersion()
 	return QVERSION_QR2;
 }
 
-//XRGAMESPY_API ServerBrowser xrGS_ServerBrowserNew(const gsi_char *queryForGamename, const gsi_char *queryFromGamename, const gsi_char *queryFromKey, int queryFromVersion, int maxConcUpdates, int queryVersion, SBBool bLAN_Only, ServerBrowserCallback callback, void *instance)
 XRGAMESPY_API ServerBrowser xrGS_ServerBrowserNew(SBBool bLAN_Only, ServerBrowserCallback callback, void* instance)
 {
-	//	return ServerBrowserNew(queryForGamename, queryFromGamename, queryFromKey, queryFromVersion, maxConcUpdates, queryVersion, bLAN_Only, callback, instance);
 	char SecretKey[16];
 	FillSecretKey(SecretKey);
 	return ServerBrowserNew(GAMESPY_GAMENAME, GAMESPY_GAMENAME, SecretKey, 0, GAMESPY_BROWSER_MAX_UPDATES, xrGS_GetQueryVersion(), bLAN_Only, callback, instance);

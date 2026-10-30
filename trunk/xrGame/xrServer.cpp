@@ -71,15 +71,6 @@ xrServer::~xrServer()
 	m_aDelayedPackets.clear();
 }
 
-bool  xrServer::HasBattlEye()
-{
-#ifdef BATTLEYE
-	return (g_pGameLevel && Level().battleye_system.server) ? true : false;
-#else
-	return false;
-#endif // BATTLEYE
-}
-
 //--------------------------------------------------------------------
 
 CSE_Abstract* xrServer::ID_to_entity(u16 ID)
@@ -414,16 +405,10 @@ void xrServer::SendUpdatesToAll()
 	g_sv_SendUpdate = 0;
 #endif			
 
-	if (game->sv_force_sync)	Perform_game_export();
+	if (game->sv_force_sync)
+		Perform_game_export();
 
 	VERIFY(verify_entities());
-
-#ifdef BATTLEYE
-	if (g_pGameLevel)
-	{
-		Level().battleye_system.UpdateServer(this);
-	}
-#endif // BATTLEYE
 }
 
 xr_vector<shared_str>	_tmp_log;
@@ -436,7 +421,8 @@ u32 xrServer::OnDelayedMessage(NET_Packet& P, ClientID sender)			// Non-Zero mea
 {
 	if (g_pGameLevel && Level().IsDemoSave())
 		Level().Demo_StoreServerData(P.B.data, P.B.count);
-	u16						type;
+
+	u16 type;
 	P.r_begin(type);
 
 	csPlayers.Enter();
@@ -572,13 +558,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			CL->ps->DeathTime = Device.dwTimeGlobal;
 			game->OnPlayerConnectFinished(sender);
 			CL->ps->setName(CL->name.c_str());
-
-#ifdef BATTLEYE
-			if (g_pGameLevel && Level().battleye_system.server)
-			{
-				Level().battleye_system.server->AddConnected_OnePlayer(CL);
-			}
-#endif // BATTLEYE
 		};
 		game->signal_Syncronize();
 		VERIFY(verify_entities());
@@ -686,32 +665,23 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	{
 		AddDelayedPacket(P, sender);
 	}break;
-	case M_BATTLEYE:
-	{
-#ifdef BATTLEYE
-		if (g_pGameLevel)
-		{
-			Level().battleye_system.ReadPacketServer(sender.value(), &P);
-		}
-#endif // BATTLEYE
-	}
 	}
 
 	VERIFY(verify_entities());
 
 	csPlayers.Leave();
 
-	return							IPureServer::OnMessage(P, sender);
+	return IPureServer::OnMessage(P, sender);
 }
 
 bool xrServer::CheckAdminRights(const shared_str& user, const shared_str& pass, string512 reason)
 {
 	bool res = false;
-	string_path			fn;
+	string_path fn;
 	FS.update_path(fn, "$app_data_root$", "radmins.ltx");
 	if (FS.exist(fn))
 	{
-		CInifile			ini(fn);
+		CInifile ini(fn);
 		if (ini.line_exist("radmins", user.c_str()))
 		{
 			if (ini.r_string("radmins", user.c_str()) == pass)
@@ -730,7 +700,7 @@ bool xrServer::CheckAdminRights(const shared_str& user, const shared_str& pass, 
 	else
 		strcpy(reason, "Access denied.");
 
-	return				res;
+	return res;
 }
 
 void xrServer::SendTo_LL(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
