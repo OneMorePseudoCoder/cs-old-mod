@@ -124,10 +124,11 @@ public:
 	float o_sun;
 	IDirect3DQuery9* q_sync_point[2];
 	u32 q_sync_count;
+	bool m_bFirstFrameAfterReset; // Determines weather the frame is the first after resetting device.
 
 private:
 	// Loading / Unloading
-	void LoadBuffers(CStreamReader* fs, BOOL	_alternative);
+	void LoadBuffers(CStreamReader* fs, BOOL _alternative);
 	void LoadVisuals(IReader* fs);
 	void LoadLights(IReader* fs);
 	void LoadPortals(IReader* fs);
@@ -189,7 +190,7 @@ public:
 		VERIFY(RC_sampler == C->type);
 		CTexture* T = RCache.get_ActiveTexture(u32(C->samp.index));
 		VERIFY(T);
-		float	mtl = T->m_material;
+		float mtl = T->m_material;
 #ifdef	DEBUG
 		if (ps_r2_ls_flags.test(R2FLAG_GLOBALMATERIAL))
 			mtl = ps_r2_gmaterial;
@@ -210,8 +211,8 @@ public:
 	virtual	void level_Load(IReader*);
 	virtual void level_Unload();
 
-	virtual IDirect3DBaseTexture9* texture_load(LPCSTR	fname, u32& msize);
-	virtual HRESULT shader_compile(LPCSTR name, LPCSTR pSrcData, UINT SrcDataLen, void* pDefines, void* pInclude, LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags, void* ppShader, void* ppErrorMsgs, void* ppConstantTable);
+	virtual IDirect3DBaseTexture9* texture_load(LPCSTR fname, u32& msize);
+	virtual HRESULT shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags, void*& result);
 
 	// Information
 	virtual void Statistics(CGameFont* F);
@@ -275,6 +276,9 @@ public:
 	// Constructor/destructor/loader
 	CRender();
 	virtual ~CRender();
+	
+private:
+	FS_FileSet m_file_set;
 };
 
 extern CRender RImplementation;

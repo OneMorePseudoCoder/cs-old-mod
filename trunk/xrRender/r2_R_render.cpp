@@ -23,13 +23,7 @@ void CRender::render_main(Fmatrix& m_ViewProjection, bool _fportals)
 		//!!!
 		{
 			// Traverse object database
-			g_SpatialSpace->q_frustum
-			(
-				lstRenderables,
-				ISpatial_DB::O_ORDERED,
-				STYPE_RENDERABLE + STYPE_LIGHTSOURCE,
-				ViewBase
-			);
+			g_SpatialSpace->q_frustum(lstRenderables, ISpatial_DB::O_ORDERED, STYPE_RENDERABLE + STYPE_LIGHTSOURCE, ViewBase);
 
 			// (almost) Exact sorting order (front-to-back)
 			std::sort(lstRenderables.begin(), lstRenderables.end(), pred_sp_sort);
@@ -224,11 +218,18 @@ void CRender::Render()
 		render_menu();
 		return;
 	};
+
 	if (!(g_pGameLevel && g_pGameLevel->pHUD))
 		return;
 
+	if (m_bFirstFrameAfterReset)
+	{
+		m_bFirstFrameAfterReset = false;
+		return;
+	}
+
 	// Configure
-	RImplementation.o.distortion = FALSE;		// disable distorion
+	RImplementation.o.distortion = FALSE; // disable distorion
 	Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
 	BOOL bSUN = ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
 	if (o.sunstatic)
@@ -307,8 +308,9 @@ void CRender::Render()
 	r_pmask(true, false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End();
 
-	BOOL	split_the_scene_to_minimize_wait = FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait = TRUE;
+	BOOL split_the_scene_to_minimize_wait = FALSE;
+	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))
+		split_the_scene_to_minimize_wait = TRUE;
 
 	//******* Main render :: PART-0	-- first
 	if (!split_the_scene_to_minimize_wait)
